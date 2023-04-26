@@ -1,816 +1,816 @@
 
-# Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh
+# cid.contact: one year on - Masih Derkani
 
-<img src="./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.jpg" alt="miniatur for Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh/>
+[Miniature](/thing23/CPlOdNqJ8og.jpg)
 
-[Youtube](https://youtube.com/watch?v=PmIf77thO_c)
-[Transcript](./thing23/Hello Helia - achingbrain-T_FlhkLSgH8.md)
-[Generated](./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.ai.md)
+[Youtube](https://youtube.com/watch?v=CPlOdNqJ8og)
+[Transcript](/thing23/CPlOdNqJ8og.md)
+[Generated](/thing23/CPlOdNqJ8og.ai.md)
 
-# Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh
+# Implementations Showcase: Helia - IPFS for the JS and Browser Environments - achingbrain
 
-<img src="./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.jpg" alt="miniatur for Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh/>
+[Miniature](/thing23/mqpMR7bbkgg.jpg)
 
-[Youtube](https://youtube.com/watch?v=PmIf77thO_c)
-[Transcript](./thing23/Compute on data in space - Yan Michalevsky-nCI2qgH1Ha4.md)
-[Generated](./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.ai.md)
+[Youtube](https://youtube.com/watch?v=mqpMR7bbkgg)
+[Transcript](/thing23/mqpMR7bbkgg.md)
+[Generated](/thing23/mqpMR7bbkgg.ai.md)
 
-# Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh
+# RAPIDE - @Jorropo
 
-<img src="./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.jpg" alt="miniatur for Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh/>
+[Miniature](/thing23/Cv01ePa0G58.jpg)
 
-[Youtube](https://youtube.com/watch?v=PmIf77thO_c)
-[Transcript](./thing23/Durin - IPFS on mobile - David Justice-QkhnKm-fCs4.md)
-[Generated](./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.ai.md)
+[Youtube](https://youtube.com/watch?v=Cv01ePa0G58)
+[Transcript](/thing23/Cv01ePa0G58.md)
+[Generated](/thing23/Cv01ePa0G58.ai.md)
 
-# Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh
+# Decentralizing IPFS Gateways with Project Rhea - @willscott
 
-<img src="./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.jpg" alt="miniatur for Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh/>
+[Miniature](/thing23/0eJd2aqqSy8.jpg)
 
-[Youtube](https://youtube.com/watch?v=PmIf77thO_c)
-[Transcript](./thing23/Efficient P2P Databases with IPLD Prolly Trees - Mauve Signweaver-TblRt1NA39U.md)
-[Generated](./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.ai.md)
+[Youtube](https://youtube.com/watch?v=0eJd2aqqSy8)
+[Transcript](/thing23/0eJd2aqqSy8.md)
+[Generated](/thing23/0eJd2aqqSy8.ai.md)
 
-# Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh
+# InterPlanetary Consensus (IPC): Adding a consensus layer wherever is needed - Alfonso De la Rocha
 
-<img src="./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.jpg" alt="miniatur for Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh/>
+[Miniature](/thing23/qPLhqPGDZyk.jpg)
 
-[Youtube](https://youtube.com/watch?v=PmIf77thO_c)
-[Transcript](./thing23/Are We Interplanetary Yet Designing IPFS for Space - Ryan Plauche-v1W66lYBJB0.md)
-[Generated](./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.ai.md)
+[Youtube](https://youtube.com/watch?v=qPLhqPGDZyk)
+[Transcript](/thing23/qPLhqPGDZyk.md)
+[Generated](/thing23/qPLhqPGDZyk.ai.md)
 
-# Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh
+# Are We Interplanetary Yet? Designing IPFS for Space - Ryan Plauche
 
-<img src="./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.jpg" alt="miniatur for Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh/>
+[Miniature](/thing23/v1W66lYBJB0.jpg)
 
-[Youtube](https://youtube.com/watch?v=PmIf77thO_c)
-[Transcript](./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.md)
-[Generated](./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.ai.md)
+[Youtube](https://youtube.com/watch?v=v1W66lYBJB0)
+[Transcript](/thing23/v1W66lYBJB0.md)
+[Generated](/thing23/v1W66lYBJB0.ai.md)
 
-# Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh
+# Boxo: Build Your Own IPFS Adventure - Gus Eggert
 
-<img src="./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.jpg" alt="miniatur for Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh/>
+[Miniature](/thing23/uFr4EtySorY.jpg)
 
-[Youtube](https://youtube.com/watch?v=PmIf77thO_c)
-[Transcript](./thing23/Foundations for Open-World Compute - Homestar, an IPVM Tale - zeeshanlakhani-BFAMy5-VHak.md)
-[Generated](./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.ai.md)
+[Youtube](https://youtube.com/watch?v=uFr4EtySorY)
+[Transcript](/thing23/uFr4EtySorY.md)
+[Generated](/thing23/uFr4EtySorY.ai.md)
 
-# Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh
+# Spec IPIPs Year in Review - lidel
 
-<img src="./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.jpg" alt="miniatur for Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh/>
+[Miniature](/thing23/WcHlV6sQuDI.jpg)
 
-[Youtube](https://youtube.com/watch?v=PmIf77thO_c)
-[Transcript](./thing23/Implementations Showcase - Helia - IPFS for the JS and Browser Environments - achingbrain-mqpMR7bbkgg.md)
-[Generated](./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.ai.md)
+[Youtube](https://youtube.com/watch?v=WcHlV6sQuDI)
+[Transcript](/thing23/WcHlV6sQuDI.md)
+[Generated](/thing23/WcHlV6sQuDI.ai.md)
 
-# Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh
+# IPFS War Stories - Mohsin Zaidi
 
-<img src="./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.jpg" alt="miniatur for Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh/>
+[Miniature](/thing23/mw0y8nCY_Ks.jpg)
 
-[Youtube](https://youtube.com/watch?v=PmIf77thO_c)
-[Transcript](./thing23/Building decentralized websites on IPFS - Ryan Shahine-TeFAHmzvIdg.md)
-[Generated](./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.ai.md)
+[Youtube](https://youtube.com/watch?v=mw0y8nCY_Ks)
+[Transcript](/thing23/mw0y8nCY_Ks.md)
+[Generated](/thing23/mw0y8nCY_Ks.ai.md)
 
-# Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh
+# Fetch Content Like A Border Collie: Introducing Lassie - Hannah Howard
 
-<img src="./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.jpg" alt="miniatur for Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh/>
+[Miniature](/thing23/d5SzSm8NkUU.jpg)
 
-[Youtube](https://youtube.com/watch?v=PmIf77thO_c)
-[Transcript](./thing23/IPFS Camp Announcement - Yuni Graham & Niki Gokani-w2uguWM3Hp0.md)
-[Generated](./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.ai.md)
+[Youtube](https://youtube.com/watch?v=d5SzSm8NkUU)
+[Transcript](/thing23/d5SzSm8NkUU.md)
+[Generated](/thing23/d5SzSm8NkUU.ai.md)
 
-# Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh
+# Foundations for Open-World Compute: Homestar, an IPVM Tale - zeeshanlakhani
 
-<img src="./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.jpg" alt="miniatur for Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh/>
+[Miniature](/thing23/BFAMy5-VHak.jpg)
 
-[Youtube](https://youtube.com/watch?v=PmIf77thO_c)
-[Transcript](./thing23/Project Lilypad - On Chain FVM Smart Contracts Invoking Off Chain Compute Over IPFS - Wes Floyd-X6LY01KEY8E.md)
-[Generated](./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.ai.md)
+[Youtube](https://youtube.com/watch?v=BFAMy5-VHak)
+[Transcript](/thing23/BFAMy5-VHak.md)
+[Generated](/thing23/BFAMy5-VHak.ai.md)
 
-# Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh
+# Track-o-rama - All track leads
 
-<img src="./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.jpg" alt="miniatur for Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh/>
+[Miniature](/thing23/IUtsueSs6d8.jpg)
 
-[Youtube](https://youtube.com/watch?v=PmIf77thO_c)
-[Transcript](./thing23/AI data & compute - AI scaling limits solved via decentralisation - moderated by Iryna Tsimashenka-1awacsikTho.md)
-[Generated](./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.ai.md)
+[Youtube](https://youtube.com/watch?v=IUtsueSs6d8)
+[Transcript](/thing23/IUtsueSs6d8.md)
+[Generated](/thing23/IUtsueSs6d8.ai.md)
 
-# Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh
+# IPFS Camp Announcement - Yuni Graham & Niki Gokani
 
-<img src="./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.jpg" alt="miniatur for Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh/>
+[Miniature](/thing23/w2uguWM3Hp0.jpg)
 
-[Youtube](https://youtube.com/watch?v=PmIf77thO_c)
-[Transcript](./thing23/Iroh - IPFS reimagined - dignifiedquire-9jR9EWZ2bO8.md)
-[Generated](./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.ai.md)
+[Youtube](https://youtube.com/watch?v=w2uguWM3Hp0)
+[Transcript](/thing23/w2uguWM3Hp0.md)
+[Generated](/thing23/w2uguWM3Hp0.ai.md)
 
-# Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh
+# Starmaps: a cross-team roadmapping tool - Bastien Dehaynin
 
-<img src="./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.jpg" alt="miniatur for Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh/>
+[Miniature](/thing23/_HoLDQreF28.jpg)
 
-[Youtube](https://youtube.com/watch?v=PmIf77thO_c)
-[Transcript](./thing23/Data Transfer batching Techniques featuring Blake3, CAR Mirror, and more - Philipp Krüger-VjZrOg1O-ac.md)
-[Generated](./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.ai.md)
+[Youtube](https://youtube.com/watch?v=_HoLDQreF28)
+[Transcript](/thing23/_HoLDQreF28.md)
+[Generated](/thing23/_HoLDQreF28.ai.md)
 
-# Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh
+# Double Hashing in IPNI: Reader Privacy at scale - Ivan Schasny
 
-<img src="./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.jpg" alt="miniatur for Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh/>
+[Miniature](/thing23/Q46zJ_mai2c.jpg)
 
-[Youtube](https://youtube.com/watch?v=PmIf77thO_c)
-[Transcript](./thing23/AquaVM - pi-calculus based distributed algorithms - Mike Voronov-PxOFMriqyUQ.md)
-[Generated](./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.ai.md)
+[Youtube](https://youtube.com/watch?v=Q46zJ_mai2c)
+[Transcript](/thing23/Q46zJ_mai2c.md)
+[Generated](/thing23/Q46zJ_mai2c.ai.md)
 
-# Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh
+# What Is The Web? - Robin Berjon
 
-<img src="./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.jpg" alt="miniatur for Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh/>
+[Miniature](/thing23/s878bm15mrk.jpg)
 
-[Youtube](https://youtube.com/watch?v=PmIf77thO_c)
-[Transcript](./thing23/Content Advertisement Mirroring - gammazero-6l0i8DjhpLg.md)
-[Generated](./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.ai.md)
+[Youtube](https://youtube.com/watch?v=s878bm15mrk)
+[Transcript](/thing23/s878bm15mrk.md)
+[Generated](/thing23/s878bm15mrk.ai.md)
 
-# Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh
+# Data Driven Protocol Design and Optimisation - Yiannis Psaras
 
-<img src="./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.jpg" alt="miniatur for Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh/>
+[Miniature](/thing23/O8Nk1FN04Q8.jpg)
 
-[Youtube](https://youtube.com/watch?v=PmIf77thO_c)
-[Transcript](./thing23/Are We Interplanetary Yet - Ryan Plauche-SCrnJ8fdCQo.md)
-[Generated](./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.ai.md)
+[Youtube](https://youtube.com/watch?v=O8Nk1FN04Q8)
+[Transcript](/thing23/O8Nk1FN04Q8.md)
+[Generated](/thing23/O8Nk1FN04Q8.ai.md)
 
-# Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh
+# What is Rhea? - @willscott
 
-<img src="./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.jpg" alt="miniatur for Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh/>
+[Miniature](/thing23/p89i9_AskIw.jpg)
 
-[Youtube](https://youtube.com/watch?v=PmIf77thO_c)
-[Transcript](./thing23/Pando - Notarized IPLD Data Network - Taosheng Shi-aYlrSxiUNyI.md)
-[Generated](./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.ai.md)
+[Youtube](https://youtube.com/watch?v=p89i9_AskIw)
+[Transcript](/thing23/p89i9_AskIw.md)
+[Generated](/thing23/p89i9_AskIw.ai.md)
 
-# Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh
+# How to Build a Decentralized Cloud Computing - Samy Fodil
 
-<img src="./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.jpg" alt="miniatur for Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh/>
+[Miniature](/thing23/tFTExuukQPk.jpg)
 
-[Youtube](https://youtube.com/watch?v=PmIf77thO_c)
-[Transcript](./thing23/Fetch Content Like A Border Collie - Introducing Lassie - Hannah Howard-d5SzSm8NkUU.md)
-[Generated](./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.ai.md)
+[Youtube](https://youtube.com/watch?v=tFTExuukQPk)
+[Transcript](/thing23/tFTExuukQPk.md)
+[Generated](/thing23/tFTExuukQPk.ai.md)
 
-# Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh
+# We Moved The Bytes, Where Did They Go? - Panel
 
-<img src="./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.jpg" alt="miniatur for Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh/>
+[Miniature](/thing23/k_GcYmV5QTQ.jpg)
 
-[Youtube](https://youtube.com/watch?v=PmIf77thO_c)
-[Transcript](./thing23/Self-hosting IPFS Gateway with bifrost-gateway - lidel-xhJPz_efAQE.md)
-[Generated](./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.ai.md)
+[Youtube](https://youtube.com/watch?v=k_GcYmV5QTQ)
+[Transcript](/thing23/k_GcYmV5QTQ.md)
+[Generated](/thing23/k_GcYmV5QTQ.ai.md)
 
-# Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh
+# Compute on data in space - Yan Michalevsky
 
-<img src="./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.jpg" alt="miniatur for Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh/>
+[Miniature](/thing23/nCI2qgH1Ha4.jpg)
 
-[Youtube](https://youtube.com/watch?v=PmIf77thO_c)
-[Transcript](./thing23/Game asset loading with IPFS - Anshuman Prasad-VdS7zmJx2X8.md)
-[Generated](./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.ai.md)
+[Youtube](https://youtube.com/watch?v=nCI2qgH1Ha4)
+[Transcript](/thing23/nCI2qgH1Ha4.md)
+[Generated](/thing23/nCI2qgH1Ha4.ai.md)
 
-# Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh
+# Implementations Showcase: Lassie - a new golang implementation - Hannah Howard
 
-<img src="./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.jpg" alt="miniatur for Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh/>
+[Miniature](/thing23/k6J6nZQCVRU.jpg)
 
-[Youtube](https://youtube.com/watch?v=PmIf77thO_c)
-[Transcript](./thing23/Moving the bytes with bao - Rüdiger Klaehn-bK9KDJxCfzI.md)
-[Generated](./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.ai.md)
+[Youtube](https://youtube.com/watch?v=k6J6nZQCVRU)
+[Transcript](/thing23/k6J6nZQCVRU.md)
+[Generated](/thing23/k6J6nZQCVRU.ai.md)
 
-# Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh
+# Federated Learning on FVM - TechieTeee
 
-<img src="./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.jpg" alt="miniatur for Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh/>
+[Miniature](/thing23/CZDIFUMACM8.jpg)
 
-[Youtube](https://youtube.com/watch?v=PmIf77thO_c)
-[Transcript](./thing23/Starmaps - a cross-team roadmapping tool - Bastien Dehaynin-_HoLDQreF28.md)
-[Generated](./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.ai.md)
+[Youtube](https://youtube.com/watch?v=CZDIFUMACM8)
+[Transcript](/thing23/CZDIFUMACM8.md)
+[Generated](/thing23/CZDIFUMACM8.ai.md)
 
-# Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh
+# libp2p performance - Max (mxinden) & Marco Munizaga
 
-<img src="./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.jpg" alt="miniatur for Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh/>
+[Miniature](/thing23/2h9jth3nvJw.jpg)
 
-[Youtube](https://youtube.com/watch?v=PmIf77thO_c)
-[Transcript](./thing23/Kenos - Data Operating System on Filecoin VM - Taosheng Shi-YLw93as5tOI.md)
-[Generated](./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.ai.md)
+[Youtube](https://youtube.com/watch?v=2h9jth3nvJw)
+[Transcript](/thing23/2h9jth3nvJw.md)
+[Generated](/thing23/2h9jth3nvJw.ai.md)
 
-# Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh
+# Game asset loading with IPFS - Anshuman Prasad
 
-<img src="./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.jpg" alt="miniatur for Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh/>
+[Miniature](/thing23/VdS7zmJx2X8.jpg)
 
-[Youtube](https://youtube.com/watch?v=PmIf77thO_c)
-[Transcript](./thing23/Implementations Showcase - Kubo - Steve Loeppky-vuXi9pT_Zdk.md)
-[Generated](./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.ai.md)
+[Youtube](https://youtube.com/watch?v=VdS7zmJx2X8)
+[Transcript](/thing23/VdS7zmJx2X8.md)
+[Generated](/thing23/VdS7zmJx2X8.ai.md)
 
-# Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh
+# IPFS native frontend development using Importmaps - Dilip Shukla
 
-<img src="./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.jpg" alt="miniatur for Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh/>
+[Miniature](/thing23/4HY_7DxScMo.jpg)
 
-[Youtube](https://youtube.com/watch?v=PmIf77thO_c)
-[Transcript](./thing23/Anchors Away (consistency in an IPFS world) - Aaron Goldman-S5-mBa0Yol8.md)
-[Generated](./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.ai.md)
+[Youtube](https://youtube.com/watch?v=4HY_7DxScMo)
+[Transcript](/thing23/4HY_7DxScMo.md)
+[Generated](/thing23/4HY_7DxScMo.ai.md)
 
-# Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh
+# A better web: secure, private, p2p apps with user-owned data and identity - Ian Preston
 
-<img src="./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.jpg" alt="miniatur for Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh/>
+[Miniature](/thing23/mSElk2jcFqY.jpg)
 
-[Youtube](https://youtube.com/watch?v=PmIf77thO_c)
-[Transcript](./thing23/Memory in Uncertainty - IPFS and digital preservation in the multi-crisis present - Cade Diehm-TdiQGXSZmCk.md)
-[Generated](./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.ai.md)
+[Youtube](https://youtube.com/watch?v=mSElk2jcFqY)
+[Transcript](/thing23/mSElk2jcFqY.md)
+[Generated](/thing23/mSElk2jcFqY.ai.md)
 
-# Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh
+# Anchors Away (consistency in an IPFS world) - Aaron Goldman
 
-<img src="./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.jpg" alt="miniatur for Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh/>
+[Miniature](/thing23/S5-mBa0Yol8.jpg)
 
-[Youtube](https://youtube.com/watch?v=PmIf77thO_c)
-[Transcript](./thing23/Bacalhau - decentralised compute over data - Iryna Tsimashenka-eaz7bhdY918.md)
-[Generated](./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.ai.md)
+[Youtube](https://youtube.com/watch?v=S5-mBa0Yol8)
+[Transcript](/thing23/S5-mBa0Yol8.md)
+[Generated](/thing23/S5-mBa0Yol8.ai.md)
 
-# Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh
+# IPFS Impact Awards - Addie Wagenknecht
 
-<img src="./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.jpg" alt="miniatur for Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh/>
+[Miniature](/thing23/Njsi9tKIv8w.jpg)
 
-[Youtube](https://youtube.com/watch?v=PmIf77thO_c)
-[Transcript](./thing23/Track-o-rama - All track leads-IUtsueSs6d8.md)
-[Generated](./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.ai.md)
+[Youtube](https://youtube.com/watch?v=Njsi9tKIv8w)
+[Transcript](/thing23/Njsi9tKIv8w.md)
+[Generated](/thing23/Njsi9tKIv8w.ai.md)
 
-# Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh
+# Interplanetary Specs - Henrique Dias (@hacdias)
 
-<img src="./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.jpg" alt="miniatur for Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh/>
+[Miniature](/thing23/vQVnjEIPuCE.jpg)
 
-[Youtube](https://youtube.com/watch?v=PmIf77thO_c)
-[Transcript](./thing23/Retrieval Compatibility in the IP Network - dvd-H0jw3jEjBMM.md)
-[Generated](./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.ai.md)
+[Youtube](https://youtube.com/watch?v=vQVnjEIPuCE)
+[Transcript](/thing23/vQVnjEIPuCE.md)
+[Generated](/thing23/vQVnjEIPuCE.ai.md)
 
-# Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh
+# Fireproof: Immutable Realtime Database - J Chris Anderson
 
-<img src="./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.jpg" alt="miniatur for Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh/>
+[Miniature](/thing23/R6gm-KXJoc0.jpg)
 
-[Youtube](https://youtube.com/watch?v=PmIf77thO_c)
-[Transcript](./thing23/Welcome & Opening, Community & Governance - Boris Mann, Robin Berjon-U2qvvQxIdws.md)
-[Generated](./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.ai.md)
+[Youtube](https://youtube.com/watch?v=R6gm-KXJoc0)
+[Transcript](/thing23/R6gm-KXJoc0.md)
+[Generated](/thing23/R6gm-KXJoc0.ai.md)
 
-# Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh
+# Opening the DHT to large content providers - Gui
 
-<img src="./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.jpg" alt="miniatur for Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh/>
+[Miniature](/thing23/bXaL64fp55c.jpg)
 
-[Youtube](https://youtube.com/watch?v=PmIf77thO_c)
-[Transcript](./thing23/IPFS native frontend development using Importmaps - Dilip Shukla-4HY_7DxScMo.md)
-[Generated](./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.ai.md)
+[Youtube](https://youtube.com/watch?v=bXaL64fp55c)
+[Transcript](/thing23/bXaL64fp55c.md)
+[Generated](/thing23/bXaL64fp55c.ai.md)
 
-# Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh
+# IPFS Service Worker Gateways - Adin Schmahmann
 
-<img src="./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.jpg" alt="miniatur for Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh/>
+[Miniature](/thing23/MRIyWXy0ZRc.jpg)
 
-[Youtube](https://youtube.com/watch?v=PmIf77thO_c)
-[Transcript](./thing23/A better web - secure, private, p2p apps with user-owned data and identity - Ian Preston-mSElk2jcFqY.md)
-[Generated](./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.ai.md)
+[Youtube](https://youtube.com/watch?v=MRIyWXy0ZRc)
+[Transcript](/thing23/MRIyWXy0ZRc.md)
+[Generated](/thing23/MRIyWXy0ZRc.ai.md)
 
-# Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh
+# AquaVM: pi-calculus based distributed algorithms - Mike Voronov
 
-<img src="./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.jpg" alt="miniatur for Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh/>
+[Miniature](/thing23/PxOFMriqyUQ.jpg)
 
-[Youtube](https://youtube.com/watch?v=PmIf77thO_c)
-[Transcript](./thing23/Welcome and Introduction to the Content Routing Track - Masih Derkani-oe7fjOl-q0s.md)
-[Generated](./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.ai.md)
+[Youtube](https://youtube.com/watch?v=PxOFMriqyUQ)
+[Transcript](/thing23/PxOFMriqyUQ.md)
+[Generated](/thing23/PxOFMriqyUQ.ai.md)
 
-# Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh
+# Decentralizing Auth, and UCAN Too - Brooklyn Zelenka
 
-<img src="./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.jpg" alt="miniatur for Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh/>
+[Miniature](/thing23/MuHfrqw9gQA.jpg)
 
-[Youtube](https://youtube.com/watch?v=PmIf77thO_c)
-[Transcript](./thing23/Data Transfer Track Intro - Hannah Howard-13_zr--akhs.md)
-[Generated](./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.ai.md)
+[Youtube](https://youtube.com/watch?v=MuHfrqw9gQA)
+[Transcript](/thing23/MuHfrqw9gQA.md)
+[Generated](/thing23/MuHfrqw9gQA.ai.md)
 
-# Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh
+# Querying Decentralized Data in Rhizomatic Systems - Quinn Wilton
 
-<img src="./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.jpg" alt="miniatur for Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh/>
+[Miniature](/thing23/KgPCX7Bu4y4.jpg)
 
-[Youtube](https://youtube.com/watch?v=PmIf77thO_c)
-[Transcript](./thing23/Decentralizing IPFS Gateways with Project Rhea - @willscott-0eJd2aqqSy8.md)
-[Generated](./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.ai.md)
+[Youtube](https://youtube.com/watch?v=KgPCX7Bu4y4)
+[Transcript](/thing23/KgPCX7Bu4y4.md)
+[Generated](/thing23/KgPCX7Bu4y4.ai.md)
 
-# Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh
+# IPFS Content Routing Workgroup, an introduction - Torfinn Olsen
 
-<img src="./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.jpg" alt="miniatur for Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh/>
+[Miniature](/thing23/MagS8ly_YXE.jpg)
 
-[Youtube](https://youtube.com/watch?v=PmIf77thO_c)
-[Transcript](./thing23/Opening the DHT to large content providers - Gui-bXaL64fp55c.md)
-[Generated](./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.ai.md)
+[Youtube](https://youtube.com/watch?v=MagS8ly_YXE)
+[Transcript](/thing23/MagS8ly_YXE.md)
+[Generated](/thing23/MagS8ly_YXE.ai.md)
 
-# Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh
+# Building decentralized websites on IPFS - Ryan Shahine
 
-<img src="./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.jpg" alt="miniatur for Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh/>
+[Miniature](/thing23/TeFAHmzvIdg.jpg)
 
-[Youtube](https://youtube.com/watch?v=PmIf77thO_c)
-[Transcript](./thing23/Welcome and Introduction - Dietrich Ayala-G2hlQqvjE-Y.md)
-[Generated](./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.ai.md)
+[Youtube](https://youtube.com/watch?v=TeFAHmzvIdg)
+[Transcript](/thing23/TeFAHmzvIdg.md)
+[Generated](/thing23/TeFAHmzvIdg.ai.md)
 
-# Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh
+# Data Transfer batching Techniques featuring Blake3, CAR Mirror, and more - Philipp Krüger
 
-<img src="./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.jpg" alt="miniatur for Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh/>
+[Miniature](/thing23/VjZrOg1O-ac.jpg)
 
-[Youtube](https://youtube.com/watch?v=PmIf77thO_c)
-[Transcript](./thing23/IPFS War Stories - Mohsin Zaidi-mw0y8nCY_Ks.md)
-[Generated](./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.ai.md)
+[Youtube](https://youtube.com/watch?v=VjZrOg1O-ac)
+[Transcript](/thing23/VjZrOg1O-ac.md)
+[Generated](/thing23/VjZrOg1O-ac.ai.md)
 
-# Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh
+# IPFS Principles - Robin Berjon
 
-<img src="./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.jpg" alt="miniatur for Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh/>
+[Miniature](/thing23/FI-2SNxz1Gk.jpg)
 
-[Youtube](https://youtube.com/watch?v=PmIf77thO_c)
-[Transcript](./thing23/Repco - Exchanging community media and metadata over IPLD - Franz Heinzmann-Qci5Fo_uwbk.md)
-[Generated](./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.ai.md)
+[Youtube](https://youtube.com/watch?v=FI-2SNxz1Gk)
+[Transcript](/thing23/FI-2SNxz1Gk.md)
+[Generated](/thing23/FI-2SNxz1Gk.ai.md)
 
-# Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh
+# CAR Mirror Reflections - James Walker
 
-<img src="./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.jpg" alt="miniatur for Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh/>
+[Miniature](/thing23/UeSb7vC0K7Y.jpg)
 
-[Youtube](https://youtube.com/watch?v=PmIf77thO_c)
-[Transcript](./thing23/Open Source governance, funding, etc. - Boris Mann-PysiACKo1dI.md)
-[Generated](./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.ai.md)
+[Youtube](https://youtube.com/watch?v=UeSb7vC0K7Y)
+[Transcript](/thing23/UeSb7vC0K7Y.md)
+[Generated](/thing23/UeSb7vC0K7Y.ai.md)
 
-# Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh
+# Automating Kubo's Development Process - @galargh
 
-<img src="./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.jpg" alt="miniatur for Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh/>
+[Miniature](/thing23/bILa9sPpBMs.jpg)
 
-[Youtube](https://youtube.com/watch?v=PmIf77thO_c)
-[Transcript](./thing23/Federated Learning on FVM - TechieTeee-CZDIFUMACM8.md)
-[Generated](./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.ai.md)
+[Youtube](https://youtube.com/watch?v=bILa9sPpBMs)
+[Transcript](/thing23/bILa9sPpBMs.md)
+[Generated](/thing23/bILa9sPpBMs.ai.md)
 
-# Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh
+# What Should We Governance? - Boris Mann, Robin Berjon
 
-<img src="./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.jpg" alt="miniatur for Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh/>
+[Miniature](/thing23/svqlHO3K_RQ.jpg)
 
-[Youtube](https://youtube.com/watch?v=PmIf77thO_c)
-[Transcript](./thing23/Interplanetary Specs - Henrique Dias (@hacdias)-vQVnjEIPuCE.md)
-[Generated](./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.ai.md)
+[Youtube](https://youtube.com/watch?v=svqlHO3K_RQ)
+[Transcript](/thing23/svqlHO3K_RQ.md)
+[Generated](/thing23/svqlHO3K_RQ.ai.md)
 
-# Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh
+# JavaScript performance - how to wring the most out of your Helia deployment - achingbrain
 
-<img src="./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.jpg" alt="miniatur for Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh/>
+[Miniature](/thing23/zPeLYosZ3Ak.jpg)
 
-[Youtube](https://youtube.com/watch?v=PmIf77thO_c)
-[Transcript](./thing23/The Name Name Service - Blaine Cook-CHiCEd36KtI.md)
-[Generated](./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.ai.md)
+[Youtube](https://youtube.com/watch?v=zPeLYosZ3Ak)
+[Transcript](/thing23/zPeLYosZ3Ak.md)
+[Generated](/thing23/zPeLYosZ3Ak.ai.md)
 
-# Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh
+# Kenos: Data Operating System on Filecoin VM - Taosheng Shi
 
-<img src="./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.jpg" alt="miniatur for Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh/>
+[Miniature](/thing23/YLw93as5tOI.jpg)
 
-[Youtube](https://youtube.com/watch?v=PmIf77thO_c)
-[Transcript](./thing23/How to build your own compatible libp2p stack from scratch in an afternoon - Marten Seemann-aDHymXQJ4bs.md)
-[Generated](./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.ai.md)
+[Youtube](https://youtube.com/watch?v=YLw93as5tOI)
+[Transcript](/thing23/YLw93as5tOI.md)
+[Generated](/thing23/YLw93as5tOI.ai.md)
 
-# Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh
+# IPFS + Friends Cafe - miwa Team
 
-<img src="./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.jpg" alt="miniatur for Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh/>
+[Miniature](/thing23/FII_9VTgDy8.jpg)
 
-[Youtube](https://youtube.com/watch?v=PmIf77thO_c)
-[Transcript](./thing23/IPFS Camp Committee - Yuni Graham & Niki Gokani-U5u54jwOg6k.md)
-[Generated](./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.ai.md)
+[Youtube](https://youtube.com/watch?v=FII_9VTgDy8)
+[Transcript](/thing23/FII_9VTgDy8.md)
+[Generated](/thing23/FII_9VTgDy8.ai.md)
 
-# Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh
+# Decentralized Off-chain Backends: How Autonolas utilizes IPFS across its stack - David Minarsch
 
-<img src="./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.jpg" alt="miniatur for Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh/>
+[Miniature](/thing23/bzSjPTF-6G4.jpg)
 
-[Youtube](https://youtube.com/watch?v=PmIf77thO_c)
-[Transcript](./thing23/WNFS - Versioned and Encrypted Data on IPFS - Philipp Krüger-LBMyRp4Ywew.md)
-[Generated](./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.ai.md)
+[Youtube](https://youtube.com/watch?v=bzSjPTF-6G4)
+[Transcript](/thing23/bzSjPTF-6G4.md)
+[Generated](/thing23/bzSjPTF-6G4.ai.md)
 
-# Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh
+# Measuring on the fast track - Asmir Avdicevic
 
-<img src="./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.jpg" alt="miniatur for Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh/>
+[Miniature](/thing23/tZmcNktfoxw.jpg)
 
-[Youtube](https://youtube.com/watch?v=PmIf77thO_c)
-[Transcript](./thing23/Private data - state of the art - Ian Preston-HVyrVUI2-RA.md)
-[Generated](./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.ai.md)
+[Youtube](https://youtube.com/watch?v=tZmcNktfoxw)
+[Transcript](/thing23/tZmcNktfoxw.md)
+[Generated](/thing23/tZmcNktfoxw.ai.md)
 
-# Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh
+# Retrieval Compatibility in the IP Network - dvd
 
-<img src="./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.jpg" alt="miniatur for Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh/>
+[Miniature](/thing23/H0jw3jEjBMM.jpg)
 
-[Youtube](https://youtube.com/watch?v=PmIf77thO_c)
-[Transcript](./thing23/CAR Mirror Reflections - James Walker-UeSb7vC0K7Y.md)
-[Generated](./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.ai.md)
+[Youtube](https://youtube.com/watch?v=H0jw3jEjBMM)
+[Transcript](/thing23/H0jw3jEjBMM.md)
+[Generated](/thing23/H0jw3jEjBMM.ai.md)
 
-# Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh
+# Private data: state of the art - Ian Preston
 
-<img src="./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.jpg" alt="miniatur for Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh/>
+[Miniature](/thing23/HVyrVUI2-RA.jpg)
 
-[Youtube](https://youtube.com/watch?v=PmIf77thO_c)
-[Transcript](./thing23/Automating Kubos Development Process - @galargh-bILa9sPpBMs.md)
-[Generated](./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.ai.md)
+[Youtube](https://youtube.com/watch?v=HVyrVUI2-RA)
+[Transcript](/thing23/HVyrVUI2-RA.md)
+[Generated](/thing23/HVyrVUI2-RA.ai.md)
 
-# Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh
+# Welcome and Introduction - Dietrich Ayala
 
-<img src="./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.jpg" alt="miniatur for Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh/>
+[Miniature](/thing23/G2hlQqvjE-Y.jpg)
 
-[Youtube](https://youtube.com/watch?v=PmIf77thO_c)
-[Transcript](./thing23/libp2p performance - Max (mxinden) & Marco Munizaga-2h9jth3nvJw.md)
-[Generated](./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.ai.md)
+[Youtube](https://youtube.com/watch?v=G2hlQqvjE-Y)
+[Transcript](/thing23/G2hlQqvjE-Y.md)
+[Generated](/thing23/G2hlQqvjE-Y.ai.md)
 
-# Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh
+# Implementations Showcase: Kubo - Steve Loeppky
 
-<img src="./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.jpg" alt="miniatur for Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh/>
+[Miniature](/thing23/vuXi9pT_Zdk.jpg)
 
-[Youtube](https://youtube.com/watch?v=PmIf77thO_c)
-[Transcript](./thing23/Welcome and Introduction to Integrating IPFS Track - Ryan Plauche-drvFcbykHYY.md)
-[Generated](./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.ai.md)
+[Youtube](https://youtube.com/watch?v=vuXi9pT_Zdk)
+[Transcript](/thing23/vuXi9pT_Zdk.md)
+[Generated](/thing23/vuXi9pT_Zdk.ai.md)
 
-# Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh
+# WNFS: Versioned and Encrypted Data on IPFS - Philipp Krüger
 
-<img src="./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.jpg" alt="miniatur for Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh/>
+[Miniature](/thing23/LBMyRp4Ywew.jpg)
 
-[Youtube](https://youtube.com/watch?v=PmIf77thO_c)
-[Transcript](./thing23/JavaScript performance - how to wring the most out of your Helia deployment - achingbrain-zPeLYosZ3Ak.md)
-[Generated](./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.ai.md)
+[Youtube](https://youtube.com/watch?v=LBMyRp4Ywew)
+[Transcript](/thing23/LBMyRp4Ywew.md)
+[Generated](/thing23/LBMyRp4Ywew.ai.md)
 
-# Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh
+# Moving the bytes with bao - Rüdiger Klaehn
 
-<img src="./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.jpg" alt="miniatur for Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh/>
+[Miniature](/thing23/bK9KDJxCfzI.jpg)
 
-[Youtube](https://youtube.com/watch?v=PmIf77thO_c)
-[Transcript](./thing23/Effectiveness of Bitswap Discovery Process - Gui-zppddk2O9UQ.md)
-[Generated](./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.ai.md)
+[Youtube](https://youtube.com/watch?v=bK9KDJxCfzI)
+[Transcript](/thing23/bK9KDJxCfzI.md)
+[Generated](/thing23/bK9KDJxCfzI.ai.md)
 
-# Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh
+# Explorations into Decentralized Publishing - David Justice
 
-<img src="./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.jpg" alt="miniatur for Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh/>
+[Miniature](/thing23/fn5QNvRXMIo.jpg)
 
-[Youtube](https://youtube.com/watch?v=PmIf77thO_c)
-[Transcript](./thing23/What Is The Web - Robin Berjon-s878bm15mrk.md)
-[Generated](./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.ai.md)
+[Youtube](https://youtube.com/watch?v=fn5QNvRXMIo)
+[Transcript](/thing23/fn5QNvRXMIo.md)
+[Generated](/thing23/fn5QNvRXMIo.ai.md)
 
-# Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh
+# Pando: Notarized IPLD Data Network - Taosheng Shi
 
-<img src="./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.jpg" alt="miniatur for Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh/>
+[Miniature](/thing23/aYlrSxiUNyI.jpg)
 
-[Youtube](https://youtube.com/watch?v=PmIf77thO_c)
-[Transcript](./thing23/State of Content Routing through the DHT - Latest developments & measurement results - Yiannis Psaras-8cGEjdCfm14.md)
-[Generated](./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.ai.md)
+[Youtube](https://youtube.com/watch?v=aYlrSxiUNyI)
+[Transcript](/thing23/aYlrSxiUNyI.md)
+[Generated](/thing23/aYlrSxiUNyI.ai.md)
 
-# Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh
+# Is IPFS Ready for Decentralized Video Streaming? - Zhengyu Wu
 
-<img src="./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.jpg" alt="miniatur for Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh/>
+[Miniature](/thing23/MuBFNnZeH08.jpg)
 
-[Youtube](https://youtube.com/watch?v=PmIf77thO_c)
-[Transcript](./thing23/IPFS Impact Awards - Addie Wagenknecht-Njsi9tKIv8w.md)
-[Generated](./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.ai.md)
+[Youtube](https://youtube.com/watch?v=MuBFNnZeH08)
+[Transcript](/thing23/MuBFNnZeH08.md)
+[Generated](/thing23/MuBFNnZeH08.ai.md)
 
-# Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh
+# Hello Helia - achingbrain
 
-<img src="./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.jpg" alt="miniatur for Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh/>
+[Miniature](/thing23/T_FlhkLSgH8.jpg)
 
-[Youtube](https://youtube.com/watch?v=PmIf77thO_c)
-[Transcript](./thing23/Explorations into Decentralized Publishing - David Justice-fn5QNvRXMIo.md)
-[Generated](./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.ai.md)
+[Youtube](https://youtube.com/watch?v=T_FlhkLSgH8)
+[Transcript](/thing23/T_FlhkLSgH8.md)
+[Generated](/thing23/T_FlhkLSgH8.ai.md)
 
-# Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh
+# Content Advertisement Mirroring - gammazero
 
-<img src="./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.jpg" alt="miniatur for Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh/>
+[Miniature](/thing23/6l0i8DjhpLg.jpg)
 
-[Youtube](https://youtube.com/watch?v=PmIf77thO_c)
-[Transcript](./thing23/Double Hashing in IPNI - Reader Privacy at scale - Ivan Schasny-Q46zJ_mai2c.md)
-[Generated](./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.ai.md)
+[Youtube](https://youtube.com/watch?v=6l0i8DjhpLg)
+[Transcript](/thing23/6l0i8DjhpLg.md)
+[Generated](/thing23/6l0i8DjhpLg.ai.md)
 
-# Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh
+# Live CDN Incentives and its Future - laudiacay
 
-<img src="./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.jpg" alt="miniatur for Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh/>
+[Miniature](/thing23/yrrAjR03TsU.jpg)
 
-[Youtube](https://youtube.com/watch?v=PmIf77thO_c)
-[Transcript](./thing23/ODD_js, a technical overview - icidasset-ByQbY3lNAck.md)
-[Generated](./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.ai.md)
+[Youtube](https://youtube.com/watch?v=yrrAjR03TsU)
+[Transcript](/thing23/yrrAjR03TsU.md)
+[Generated](/thing23/yrrAjR03TsU.ai.md)
 
-# Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh
+# State of Content Routing through the DHT: Latest developments & measurement results - Yiannis Psaras
 
-<img src="./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.jpg" alt="miniatur for Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh/>
+[Miniature](/thing23/8cGEjdCfm14.jpg)
 
-[Youtube](https://youtube.com/watch?v=PmIf77thO_c)
-[Transcript](./thing23/IPFS Content Routing Workgroup, an introduction - Torfinn Olsen-MagS8ly_YXE.md)
-[Generated](./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.ai.md)
+[Youtube](https://youtube.com/watch?v=8cGEjdCfm14)
+[Transcript](/thing23/8cGEjdCfm14.md)
+[Generated](/thing23/8cGEjdCfm14.ai.md)
 
-# Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh
+# Evaluating tradeoffs when representing database state - Carson Farmer
 
-<img src="./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.jpg" alt="miniatur for Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh/>
+[Miniature](/thing23/RuIUOKRVSK0.jpg)
 
-[Youtube](https://youtube.com/watch?v=PmIf77thO_c)
-[Transcript](./thing23/Interplanetary Databases - Welcome and Opening - J Chris Anderson-tjSuNmCTnyU.md)
-[Generated](./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.ai.md)
+[Youtube](https://youtube.com/watch?v=RuIUOKRVSK0)
+[Transcript](/thing23/RuIUOKRVSK0.md)
+[Generated](/thing23/RuIUOKRVSK0.ai.md)
 
-# Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh
+# Interplanetary Databases: Welcome and Opening - J Chris Anderson
 
-<img src="./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.jpg" alt="miniatur for Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh/>
+[Miniature](/thing23/tjSuNmCTnyU.jpg)
 
-[Youtube](https://youtube.com/watch?v=PmIf77thO_c)
-[Transcript](./thing23/Web3 CDN Saturn accelerates IPFS & Filecoin retrievals - Alex Kinstler-f9iUTLtPtKY.md)
-[Generated](./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.ai.md)
+[Youtube](https://youtube.com/watch?v=tjSuNmCTnyU)
+[Transcript](/thing23/tjSuNmCTnyU.md)
+[Generated](/thing23/tjSuNmCTnyU.ai.md)
 
-# Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh
+# Are We Interplanetary Yet? - Ryan Plauche
 
-<img src="./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.jpg" alt="miniatur for Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh/>
+[Miniature](/thing23/SCrnJ8fdCQo.jpg)
 
-[Youtube](https://youtube.com/watch?v=PmIf77thO_c)
-[Transcript](./thing23/Implementations Showcase - Nabu - Java IPFS - Ian Preston-TzCxmxmW4jQ.md)
-[Generated](./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.ai.md)
+[Youtube](https://youtube.com/watch?v=SCrnJ8fdCQo)
+[Transcript](/thing23/SCrnJ8fdCQo.md)
+[Generated](/thing23/SCrnJ8fdCQo.ai.md)
 
-# Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh
+# Welcome & Opening, Community & Governance - Boris Mann, Robin Berjon
 
-<img src="./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.jpg" alt="miniatur for Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh/>
+[Miniature](/thing23/U2qvvQxIdws.jpg)
 
-[Youtube](https://youtube.com/watch?v=PmIf77thO_c)
-[Transcript](./thing23/What is Rhea - @willscott-p89i9_AskIw.md)
-[Generated](./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.ai.md)
+[Youtube](https://youtube.com/watch?v=U2qvvQxIdws)
+[Transcript](/thing23/U2qvvQxIdws.md)
+[Generated](/thing23/U2qvvQxIdws.ai.md)
 
-# Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh
+# Memory in Uncertainty: IPFS and digital preservation in the multi-crisis present - Cade Diehm
 
-<img src="./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.jpg" alt="miniatur for Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh/>
+[Miniature](/thing23/TdiQGXSZmCk.jpg)
 
-[Youtube](https://youtube.com/watch?v=PmIf77thO_c)
-[Transcript](./thing23/Fireproof - Immutable Realtime Database - J Chris Anderson-R6gm-KXJoc0.md)
-[Generated](./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.ai.md)
+[Youtube](https://youtube.com/watch?v=TdiQGXSZmCk)
+[Transcript](/thing23/TdiQGXSZmCk.md)
+[Generated](/thing23/TdiQGXSZmCk.ai.md)
 
-# Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh
+# Project Lilypad: On Chain FVM Smart Contracts Invoking Off Chain Compute Over IPFS - Wes Floyd
 
-<img src="./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.jpg" alt="miniatur for Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh/>
+[Miniature](/thing23/X6LY01KEY8E.jpg)
 
-[Youtube](https://youtube.com/watch?v=PmIf77thO_c)
-[Transcript](./thing23/Querying Decentralized Data in Rhizomatic Systems - Quinn Wilton-KgPCX7Bu4y4.md)
-[Generated](./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.ai.md)
+[Youtube](https://youtube.com/watch?v=X6LY01KEY8E)
+[Transcript](/thing23/X6LY01KEY8E.md)
+[Generated](/thing23/X6LY01KEY8E.ai.md)
 
-# Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh
+# Web3 CDN Saturn accelerates IPFS & Filecoin retrievals - Alex Kinstler
 
-<img src="./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.jpg" alt="miniatur for Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh/>
+[Miniature](/thing23/f9iUTLtPtKY.jpg)
 
-[Youtube](https://youtube.com/watch?v=PmIf77thO_c)
-[Transcript](./thing23/Is IPFS Ready for Decentralized Video Streaming - Zhengyu Wu-MuBFNnZeH08.md)
-[Generated](./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.ai.md)
+[Youtube](https://youtube.com/watch?v=f9iUTLtPtKY)
+[Transcript](/thing23/f9iUTLtPtKY.md)
+[Generated](/thing23/f9iUTLtPtKY.ai.md)
 
-# Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh
+# DHT Double Hashing Updates & Migration Plan - Yiannis Psaras & Gui
 
-<img src="./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.jpg" alt="miniatur for Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh/>
+[Miniature](/thing23/FP4kKemco4w.jpg)
 
-[Youtube](https://youtube.com/watch?v=PmIf77thO_c)
-[Transcript](./thing23/Measuring IPFS - Yiannis Psaras-nvQ18xUua20.md)
-[Generated](./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.ai.md)
+[Youtube](https://youtube.com/watch?v=FP4kKemco4w)
+[Transcript](/thing23/FP4kKemco4w.md)
+[Generated](/thing23/FP4kKemco4w.ai.md)
 
-# Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh
+# Effectiveness of Bitswap Discovery Process - Gui
 
-<img src="./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.jpg" alt="miniatur for Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh/>
+[Miniature](/thing23/zppddk2O9UQ.jpg)
 
-[Youtube](https://youtube.com/watch?v=PmIf77thO_c)
-[Transcript](./thing23/Decentralized Data Compliance WG - Robin Berjon-bIlji91KEFQ.md)
-[Generated](./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.ai.md)
+[Youtube](https://youtube.com/watch?v=zppddk2O9UQ)
+[Transcript](/thing23/zppddk2O9UQ.md)
+[Generated](/thing23/zppddk2O9UQ.ai.md)
 
-# Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh
+# Self-hosting IPFS Gateway with bifrost-gateway - lidel
 
-<img src="./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.jpg" alt="miniatur for Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh/>
+[Miniature](/thing23/xhJPz_efAQE.jpg)
 
-[Youtube](https://youtube.com/watch?v=PmIf77thO_c)
-[Transcript](./thing23/UCAN Too - Irakli Gozalishvili & Alan Shaw-EIvZy58IhmI.md)
-[Generated](./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.ai.md)
+[Youtube](https://youtube.com/watch?v=xhJPz_efAQE)
+[Transcript](/thing23/xhJPz_efAQE.md)
+[Generated](/thing23/xhJPz_efAQE.ai.md)
 
-# Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh
+# Pail - DAG based sharded key/value store using Merkle Clocks and CRDTs - Alan Shaw
 
-<img src="./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.jpg" alt="miniatur for Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh/>
+[Miniature](/thing23/ukfrmBVrpo8.jpg)
 
-[Youtube](https://youtube.com/watch?v=PmIf77thO_c)
-[Transcript](./thing23/IPFS Principles - Robin Berjon-FI-2SNxz1Gk.md)
-[Generated](./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.ai.md)
+[Youtube](https://youtube.com/watch?v=ukfrmBVrpo8)
+[Transcript](/thing23/ukfrmBVrpo8.md)
+[Generated](/thing23/ukfrmBVrpo8.ai.md)
 
-# Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh
+# Bacalhau - decentralised compute over data - Iryna Tsimashenka
 
-<img src="./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.jpg" alt="miniatur for Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh/>
+[Miniature](/thing23/eaz7bhdY918.jpg)
 
-[Youtube](https://youtube.com/watch?v=PmIf77thO_c)
-[Transcript](./thing23/Implementations Showcase - Lassie - a new golang implementation - Hannah Howard-k6J6nZQCVRU.md)
-[Generated](./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.ai.md)
+[Youtube](https://youtube.com/watch?v=eaz7bhdY918)
+[Transcript](/thing23/eaz7bhdY918.md)
+[Generated](/thing23/eaz7bhdY918.ai.md)
 
-# Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh
+# Open Source governance, funding, etc. - Boris Mann
 
-<img src="./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.jpg" alt="miniatur for Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh/>
+[Miniature](/thing23/PysiACKo1dI.jpg)
 
-[Youtube](https://youtube.com/watch?v=PmIf77thO_c)
-[Transcript](./thing23/Live CDN Incentives and its Future - laudiacay-yrrAjR03TsU.md)
-[Generated](./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.ai.md)
+[Youtube](https://youtube.com/watch?v=PysiACKo1dI)
+[Transcript](/thing23/PysiACKo1dI.md)
+[Generated](/thing23/PysiACKo1dI.ai.md)
 
-# Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh
+# Delta Chat and Iroh - Floris Bruynooghe
 
-<img src="./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.jpg" alt="miniatur for Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh/>
+[Miniature](/thing23/E-e758AYkmA.jpg)
 
-[Youtube](https://youtube.com/watch?v=PmIf77thO_c)
-[Transcript](./thing23/DHT Double Hashing Updates & Migration Plan - Yiannis Psaras & Gui-FP4kKemco4w.md)
-[Generated](./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.ai.md)
+[Youtube](https://youtube.com/watch?v=E-e758AYkmA)
+[Transcript](/thing23/E-e758AYkmA.md)
+[Generated](/thing23/E-e758AYkmA.ai.md)
 
-# Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh
+# IPVM: Content Addressed Compute for an Open World - Brooklyn Zelenka
 
-<img src="./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.jpg" alt="miniatur for Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh/>
+[Miniature](/thing23/jhtEYr3ORfk.jpg)
 
-[Youtube](https://youtube.com/watch?v=PmIf77thO_c)
-[Transcript](./thing23/cid_contact - one year on - Masih Derkani-CPlOdNqJ8og.md)
-[Generated](./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.ai.md)
+[Youtube](https://youtube.com/watch?v=jhtEYr3ORfk)
+[Transcript](/thing23/jhtEYr3ORfk.md)
+[Generated](/thing23/jhtEYr3ORfk.ai.md)
 
-# Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh
+# Iroh - IPFS reimagined - dignifiedquire
 
-<img src="./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.jpg" alt="miniatur for Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh/>
+[Miniature](/thing23/9jR9EWZ2bO8.jpg)
 
-[Youtube](https://youtube.com/watch?v=PmIf77thO_c)
-[Transcript](./thing23/Connecting everything, everywhere, all at once with libp2p - Prithvi Shahi-4v-iIB0C9_8.md)
-[Generated](./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.ai.md)
+[Youtube](https://youtube.com/watch?v=9jR9EWZ2bO8)
+[Transcript](/thing23/9jR9EWZ2bO8.md)
+[Generated](/thing23/9jR9EWZ2bO8.ai.md)
 
-# Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh
+# Connecting everything, everywhere, all at once with libp2p - Prithvi Shahi
 
-<img src="./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.jpg" alt="miniatur for Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh/>
+[Miniature](/thing23/4v-iIB0C9_8.jpg)
 
-[Youtube](https://youtube.com/watch?v=PmIf77thO_c)
-[Transcript](./thing23/What Should We Governance - Boris Mann, Robin Berjon-svqlHO3K_RQ.md)
-[Generated](./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.ai.md)
+[Youtube](https://youtube.com/watch?v=4v-iIB0C9_8)
+[Transcript](/thing23/4v-iIB0C9_8.md)
+[Generated](/thing23/4v-iIB0C9_8.ai.md)
 
-# Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh
+# Durin: IPFS on mobile - David Justice
 
-<img src="./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.jpg" alt="miniatur for Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh/>
+[Miniature](/thing23/QkhnKm-fCs4.jpg)
 
-[Youtube](https://youtube.com/watch?v=PmIf77thO_c)
-[Transcript](./thing23/Spec IPIPs Year in Review - lidel-WcHlV6sQuDI.md)
-[Generated](./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.ai.md)
+[Youtube](https://youtube.com/watch?v=QkhnKm-fCs4)
+[Transcript](/thing23/QkhnKm-fCs4.md)
+[Generated](/thing23/QkhnKm-fCs4.ai.md)
 
-# Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh
+# Decentralized Data Compliance WG - Robin Berjon
 
-<img src="./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.jpg" alt="miniatur for Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh/>
+[Miniature](/thing23/bIlji91KEFQ.jpg)
 
-[Youtube](https://youtube.com/watch?v=PmIf77thO_c)
-[Transcript](./thing23/RAPIDE - @Jorropo-Cv01ePa0G58.md)
-[Generated](./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.ai.md)
+[Youtube](https://youtube.com/watch?v=bIlji91KEFQ)
+[Transcript](/thing23/bIlji91KEFQ.md)
+[Generated](/thing23/bIlji91KEFQ.ai.md)
 
-# Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh
+# The Name Name Service - Blaine Cook
 
-<img src="./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.jpg" alt="miniatur for Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh/>
+[Miniature](/thing23/CHiCEd36KtI.jpg)
 
-[Youtube](https://youtube.com/watch?v=PmIf77thO_c)
-[Transcript](./thing23/We Moved The Bytes, Where Did They Go - Panel-k_GcYmV5QTQ.md)
-[Generated](./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.ai.md)
+[Youtube](https://youtube.com/watch?v=CHiCEd36KtI)
+[Transcript](/thing23/CHiCEd36KtI.md)
+[Generated](/thing23/CHiCEd36KtI.ai.md)
 
-# Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh
+# Turbocharging decentralized websites with AI - Ryan Shahine
 
-<img src="./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.jpg" alt="miniatur for Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh/>
+[Miniature](/thing23/MT2y0spngvA.jpg)
 
-[Youtube](https://youtube.com/watch?v=PmIf77thO_c)
-[Transcript](./thing23/Data Driven Protocol Design and Optimisation - Yiannis Psaras-O8Nk1FN04Q8.md)
-[Generated](./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.ai.md)
+[Youtube](https://youtube.com/watch?v=MT2y0spngvA)
+[Transcript](/thing23/MT2y0spngvA.md)
+[Generated](/thing23/MT2y0spngvA.ai.md)
 
-# Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh
+# FVM: The Filecoin Virtual Machine - Matt Hamilton
 
-<img src="./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.jpg" alt="miniatur for Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh/>
+[Miniature](/thing23/LK9QjOJIPkQ.jpg)
 
-[Youtube](https://youtube.com/watch?v=PmIf77thO_c)
-[Transcript](./thing23/IPNI - the InterPlanetary Network Indexer - Masih Derkani-_EDJXeDtcX4.md)
-[Generated](./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.ai.md)
+[Youtube](https://youtube.com/watch?v=LK9QjOJIPkQ)
+[Transcript](/thing23/LK9QjOJIPkQ.md)
+[Generated](/thing23/LK9QjOJIPkQ.ai.md)
 
-# Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh
+# IPNI: the InterPlanetary Network Indexer - Masih Derkani
 
-<img src="./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.jpg" alt="miniatur for Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh/>
+[Miniature](/thing23/_EDJXeDtcX4.jpg)
 
-[Youtube](https://youtube.com/watch?v=PmIf77thO_c)
-[Transcript](./thing23/Content Based Addressing and the Web Security Model - Fabrice Desré-H_1JVGDnctI.md)
-[Generated](./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.ai.md)
+[Youtube](https://youtube.com/watch?v=_EDJXeDtcX4)
+[Transcript](/thing23/_EDJXeDtcX4.md)
+[Generated](/thing23/_EDJXeDtcX4.ai.md)
 
-# Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh
+# Introduction to Caboose - Aarsh Shah
 
-<img src="./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.jpg" alt="miniatur for Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh/>
+[Miniature](/thing23/z7a9E735l3Y.jpg)
 
-[Youtube](https://youtube.com/watch?v=PmIf77thO_c)
-[Transcript](./thing23/IPFS Service Worker Gateways - Adin Schmahmann-MRIyWXy0ZRc.md)
-[Generated](./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.ai.md)
+[Youtube](https://youtube.com/watch?v=z7a9E735l3Y)
+[Transcript](/thing23/z7a9E735l3Y.md)
+[Generated](/thing23/z7a9E735l3Y.ai.md)
 
-# Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh
+# Hole Punching in the wild - Max (mxinden)
 
-<img src="./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.jpg" alt="miniatur for Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh/>
+[Miniature](/thing23/R-ToBsdlEk4.jpg)
 
-[Youtube](https://youtube.com/watch?v=PmIf77thO_c)
-[Transcript](./thing23/Measuring on the fast track - Asmir Avdicevic-tZmcNktfoxw.md)
-[Generated](./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.ai.md)
+[Youtube](https://youtube.com/watch?v=R-ToBsdlEk4)
+[Transcript](/thing23/R-ToBsdlEk4.md)
+[Generated](/thing23/R-ToBsdlEk4.ai.md)
 
-# Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh
+# UCAN Too - Irakli Gozalishvili & Alan Shaw
 
-<img src="./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.jpg" alt="miniatur for Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh/>
+[Miniature](/thing23/EIvZy58IhmI.jpg)
 
-[Youtube](https://youtube.com/watch?v=PmIf77thO_c)
-[Transcript](./thing23/Implementations Showcase - Iroh - IPFS Reimagined - dignifiedquire-I5fIIXqMDjg.md)
-[Generated](./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.ai.md)
+[Youtube](https://youtube.com/watch?v=EIvZy58IhmI)
+[Transcript](/thing23/EIvZy58IhmI.md)
+[Generated](/thing23/EIvZy58IhmI.ai.md)
 
-# Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh
+# Welcome and Introduction to the Content Routing Track - Masih Derkani
 
-<img src="./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.jpg" alt="miniatur for Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh/>
+[Miniature](/thing23/oe7fjOl-q0s.jpg)
 
-[Youtube](https://youtube.com/watch?v=PmIf77thO_c)
-[Transcript](./thing23/Evaluating tradeoffs when representing database state - Carson Farmer-RuIUOKRVSK0.md)
-[Generated](./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.ai.md)
+[Youtube](https://youtube.com/watch?v=oe7fjOl-q0s)
+[Transcript](/thing23/oe7fjOl-q0s.md)
+[Generated](/thing23/oe7fjOl-q0s.ai.md)
 
-# Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh
+# Efficient P2P Databases with IPLD Prolly Trees - Mauve Signweaver
 
-<img src="./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.jpg" alt="miniatur for Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh/>
+[Miniature](/thing23/TblRt1NA39U.jpg)
 
-[Youtube](https://youtube.com/watch?v=PmIf77thO_c)
-[Transcript](./thing23/Introduction to Caboose - Aarsh Shah-z7a9E735l3Y.md)
-[Generated](./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.ai.md)
+[Youtube](https://youtube.com/watch?v=TblRt1NA39U)
+[Transcript](/thing23/TblRt1NA39U.md)
+[Generated](/thing23/TblRt1NA39U.ai.md)
 
-# Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh
+# Measuring IPFS - Yiannis Psaras
 
-<img src="./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.jpg" alt="miniatur for Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh/>
+[Miniature](/thing23/nvQ18xUua20.jpg)
 
-[Youtube](https://youtube.com/watch?v=PmIf77thO_c)
-[Transcript](./thing23/Pail - DAG based sharded key_value store using Merkle Clocks and CRDTs - Alan Shaw-ukfrmBVrpo8.md)
-[Generated](./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.ai.md)
+[Youtube](https://youtube.com/watch?v=nvQ18xUua20)
+[Transcript](/thing23/nvQ18xUua20.md)
+[Generated](/thing23/nvQ18xUua20.ai.md)
 
 # Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh
 
-<img src="./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.jpg" alt="miniatur for Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh/>
+[Miniature](/thing23/PmIf77thO_c.jpg)
 
 [Youtube](https://youtube.com/watch?v=PmIf77thO_c)
-[Transcript](./thing23/IPVM - Content Addressed Compute for an Open World - Brooklyn Zelenka-jhtEYr3ORfk.md)
-[Generated](./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.ai.md)
+[Transcript](/thing23/PmIf77thO_c.md)
+[Generated](/thing23/PmIf77thO_c.ai.md)
 
-# Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh
+# Welcome and Introduction to Integrating IPFS Track - Ryan Plauche
 
-<img src="./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.jpg" alt="miniatur for Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh/>
+[Miniature](/thing23/drvFcbykHYY.jpg)
 
-[Youtube](https://youtube.com/watch?v=PmIf77thO_c)
-[Transcript](./thing23/Delta Chat and Iroh - Floris Bruynooghe-E-e758AYkmA.md)
-[Generated](./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.ai.md)
+[Youtube](https://youtube.com/watch?v=drvFcbykHYY)
+[Transcript](/thing23/drvFcbykHYY.md)
+[Generated](/thing23/drvFcbykHYY.ai.md)
 
-# Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh
+# ODD.js, a technical overview - icidasset
 
-<img src="./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.jpg" alt="miniatur for Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh/>
+[Miniature](/thing23/ByQbY3lNAck.jpg)
 
-[Youtube](https://youtube.com/watch?v=PmIf77thO_c)
-[Transcript](./thing23/IPFS + Friends Cafe - miwa Team-FII_9VTgDy8.md)
-[Generated](./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.ai.md)
+[Youtube](https://youtube.com/watch?v=ByQbY3lNAck)
+[Transcript](/thing23/ByQbY3lNAck.md)
+[Generated](/thing23/ByQbY3lNAck.ai.md)
 
-# Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh
+# Data Transfer Track Intro - Hannah Howard
 
-<img src="./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.jpg" alt="miniatur for Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh/>
+[Miniature](/thing23/13_zr--akhs.jpg)
 
-[Youtube](https://youtube.com/watch?v=PmIf77thO_c)
-[Transcript](./thing23/Hole Punching in the wild - Max (mxinden)-R-ToBsdlEk4.md)
-[Generated](./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.ai.md)
+[Youtube](https://youtube.com/watch?v=13_zr--akhs)
+[Transcript](/thing23/13_zr--akhs.md)
+[Generated](/thing23/13_zr--akhs.ai.md)
 
-# Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh
+# IPFS Camp Committee - Yuni Graham & Niki Gokani
 
-<img src="./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.jpg" alt="miniatur for Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh/>
+[Miniature](/thing23/U5u54jwOg6k.jpg)
 
-[Youtube](https://youtube.com/watch?v=PmIf77thO_c)
-[Transcript](./thing23/How to Build a Decentralized Cloud Computing - Samy Fodil-tFTExuukQPk.md)
-[Generated](./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.ai.md)
+[Youtube](https://youtube.com/watch?v=U5u54jwOg6k)
+[Transcript](/thing23/U5u54jwOg6k.md)
+[Generated](/thing23/U5u54jwOg6k.ai.md)
 
-# Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh
+# Repco - Exchanging community media and metadata over IPLD - Franz Heinzmann
 
-<img src="./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.jpg" alt="miniatur for Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh/>
+[Miniature](/thing23/Qci5Fo_uwbk.jpg)
 
-[Youtube](https://youtube.com/watch?v=PmIf77thO_c)
-[Transcript](./thing23/The Incredible Benefits of libp2p + HTTP - Marten Seemann & Marco Munizaga-Ixyo1G2tJZE.md)
-[Generated](./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.ai.md)
+[Youtube](https://youtube.com/watch?v=Qci5Fo_uwbk)
+[Transcript](/thing23/Qci5Fo_uwbk.md)
+[Generated](/thing23/Qci5Fo_uwbk.ai.md)
 
-# Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh
+# AI data & compute - AI scaling limits solved via decentralisation - moderated by Iryna Tsimashenka
 
-<img src="./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.jpg" alt="miniatur for Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh/>
+[Miniature](/thing23/1awacsikTho.jpg)
 
-[Youtube](https://youtube.com/watch?v=PmIf77thO_c)
-[Transcript](./thing23/Decentralized Off-chain Backends - How Autonolas utilizes IPFS across its stack - David Minarsch-bzSjPTF-6G4.md)
-[Generated](./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.ai.md)
+[Youtube](https://youtube.com/watch?v=1awacsikTho)
+[Transcript](/thing23/1awacsikTho.md)
+[Generated](/thing23/1awacsikTho.ai.md)
 
-# Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh
+# Implementations Showcase: Nabu - Java IPFS - Ian Preston
 
-<img src="./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.jpg" alt="miniatur for Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh/>
+[Miniature](/thing23/TzCxmxmW4jQ.jpg)
 
-[Youtube](https://youtube.com/watch?v=PmIf77thO_c)
-[Transcript](./thing23/Boxo - Build Your Own IPFS Adventure - Gus Eggert-uFr4EtySorY.md)
-[Generated](./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.ai.md)
+[Youtube](https://youtube.com/watch?v=TzCxmxmW4jQ)
+[Transcript](/thing23/TzCxmxmW4jQ.md)
+[Generated](/thing23/TzCxmxmW4jQ.ai.md)
 
-# Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh
+# Content Based Addressing and the Web Security Model - Fabrice Desré
 
-<img src="./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.jpg" alt="miniatur for Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh/>
+[Miniature](/thing23/H_1JVGDnctI.jpg)
 
-[Youtube](https://youtube.com/watch?v=PmIf77thO_c)
-[Transcript](./thing23/Turbocharging decentralized websites with AI - Ryan Shahine-MT2y0spngvA.md)
-[Generated](./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.ai.md)
+[Youtube](https://youtube.com/watch?v=H_1JVGDnctI)
+[Transcript](/thing23/H_1JVGDnctI.md)
+[Generated](/thing23/H_1JVGDnctI.ai.md)
 
-# Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh
+# Implementations Showcase: Iroh - IPFS Reimagined - dignifiedquire
 
-<img src="./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.jpg" alt="miniatur for Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh/>
+[Miniature](/thing23/I5fIIXqMDjg.jpg)
 
-[Youtube](https://youtube.com/watch?v=PmIf77thO_c)
-[Transcript](./thing23/Decentralizing Auth, and UCAN Too - Brooklyn Zelenka-MuHfrqw9gQA.md)
-[Generated](./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.ai.md)
+[Youtube](https://youtube.com/watch?v=I5fIIXqMDjg)
+[Transcript](/thing23/I5fIIXqMDjg.md)
+[Generated](/thing23/I5fIIXqMDjg.ai.md)
 
-# Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh
+# The Incredible Benefits of libp2p + HTTP - Marten Seemann & Marco Munizaga
 
-<img src="./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.jpg" alt="miniatur for Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh/>
+[Miniature](/thing23/Ixyo1G2tJZE.jpg)
 
-[Youtube](https://youtube.com/watch?v=PmIf77thO_c)
-[Transcript](./thing23/FVM - The Filecoin Virtual Machine - Matt Hamilton-LK9QjOJIPkQ.md)
-[Generated](./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.ai.md)
+[Youtube](https://youtube.com/watch?v=Ixyo1G2tJZE)
+[Transcript](/thing23/Ixyo1G2tJZE.md)
+[Generated](/thing23/Ixyo1G2tJZE.ai.md)
 
-# Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh
+# How to build your own compatible libp2p stack from scratch in an afternoon - Marten Seemann
 
-<img src="./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.jpg" alt="miniatur for Testing Your IPFS Gateway Implementation: A Step-by-Step Guide - @galargh/>
+[Miniature](/thing23/aDHymXQJ4bs.jpg)
 
-[Youtube](https://youtube.com/watch?v=PmIf77thO_c)
-[Transcript](./thing23/InterPlanetary Consensus (IPC) - Adding a consensus layer wherever is needed - Alfonso De la Rocha-qPLhqPGDZyk.md)
-[Generated](./thing23/Testing Your IPFS Gateway Implementation - A Step-by-Step Guide - @galargh-PmIf77thO_c.ai.md)
+[Youtube](https://youtube.com/watch?v=aDHymXQJ4bs)
+[Transcript](/thing23/aDHymXQJ4bs.md)
+[Generated](/thing23/aDHymXQJ4bs.ai.md)
