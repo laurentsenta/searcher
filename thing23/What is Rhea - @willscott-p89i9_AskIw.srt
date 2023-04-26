@@ -1,0 +1,2613 @@
+1
+00:00:00,000 --> 00:00:10,000
+Cool. So what is Project Rhea? Rhea is an effort that a bunch of people around Particle
+
+
+2
+00:00:10,000 --> 00:00:17,760
+Labs started on in about January. And it is an effort to sort of take another iteration
+
+
+3
+00:00:17,760 --> 00:00:25,440
+at the current ipfs.io gateways. So to understand that context, like I did on the keynote two
+
+
+4
+00:00:25,440 --> 00:00:29,480
+days ago, I'm going to dive into what is going on with the gateways so that we can understand
+
+
+5
+00:00:29,480 --> 00:00:34,400
+what we might want to change with them. So I had a picture that looks sort of like this.
+
+
+6
+00:00:34,400 --> 00:00:41,240
+And this is the sort of bulk of requests that are coming in to the gateways right now. And
+
+
+7
+00:00:41,240 --> 00:00:46,240
+so that's where it's meaningful for us to take some effort to try and change it. You've
+
+
+8
+00:00:46,240 --> 00:00:53,040
+got a bunch of requests. There are a set of different actual requests that get made. But
+
+
+9
+00:00:53,040 --> 00:00:59,720
+sort of the most common ones look like ipfs slash sid. Some of these have some sort of
+
+
+10
+00:00:59,720 --> 00:01:04,840
+other things going on around them. They may use an IPNI domain where they've got a custom
+
+
+11
+00:01:04,840 --> 00:01:10,360
+domain. And so we have to consider and factor that in. There's some edges that go over and
+
+
+12
+00:01:10,360 --> 00:01:17,040
+ask for API v0 and some other sort of edge cases. And we may have some things around
+
+
+13
+00:01:17,040 --> 00:01:24,360
+the sid. So some requests ask for a raw block or a car file version of content directly.
+
+
+14
+00:01:24,360 --> 00:01:31,200
+And some requests will not ask directly for the sid, but will use the sid to point to
+
+
+15
+00:01:31,200 --> 00:01:34,360
+sort of a directory and then ask for a file within that directory. So they'll have a path
+
+
+16
+00:01:34,360 --> 00:01:40,960
+afterwards. These requests come into a load balancer. Right now, protocol labs for the
+
+
+17
+00:01:40,960 --> 00:01:49,200
+gateway that we run at ipfs.io has seven points of presence in Equinix data centers around
+
+
+18
+00:01:49,200 --> 00:01:54,080
+the world. Requests will come in. They'll hit an Nginx load balancer that will distribute
+
+
+19
+00:01:54,080 --> 00:02:03,480
+back to a bank or a set of Kubo IPFS nodes that then handle fractions of those requests.
+
+
+20
+00:02:03,480 --> 00:02:08,480
+These IPFS nodes right now are provisioned with pretty big caches. Think, you know, at
+
+
+21
+00:02:08,480 --> 00:02:13,480
+least hundreds of gigs of block store. And they're actually serving many of these requests
+
+
+22
+00:02:13,480 --> 00:02:20,280
+directly from their disk. So a lot of requests where we're having those direct IPFS nodes
+
+
+23
+00:02:20,280 --> 00:02:24,240
+just sort of they already know what that sid is and are able to directly serve it. And
+
+
+24
+00:02:24,240 --> 00:02:30,180
+when they don't, they act like a normal IPFS node. They go to the DHT. They figure out
+
+
+25
+00:02:30,180 --> 00:02:34,560
+other clients that might have it. Or they use, in many cases, their existing bitswap
+
+
+26
+00:02:34,560 --> 00:02:39,840
+connections because we've got relatively high connection limits. So they stay connected
+
+
+27
+00:02:39,840 --> 00:02:44,040
+to many peers. And so they'll ask over those ambient bitswap connections to find other
+
+
+28
+00:02:44,040 --> 00:02:50,760
+IPFS nodes that have the content, fetch it over bitswap, bring it back. The other thing
+
+
+29
+00:02:50,760 --> 00:02:56,360
+to think about, right, is where is this happening? If we were to access the gateway today, the
+
+
+30
+00:02:56,360 --> 00:03:04,480
+closest data center that there is an ipfs.io termination in is up in Amsterdam. We're down
+
+
+31
+00:03:04,480 --> 00:03:09,400
+in Brussels. But when we look at the route, if you were to trace route, you would see
+
+
+32
+00:03:09,400 --> 00:03:16,560
+the first thing that happens is that traffic goes to the data center that's about five
+
+
+33
+00:03:16,560 --> 00:03:22,320
+blocks up from us. So there is that data center that you can see in yellow up there. That's
+
+
+34
+00:03:22,320 --> 00:03:29,320
+the Brussels commercial Internet Exchange. Our traffic is going from the final metro
+
+
+35
+00:03:29,320 --> 00:03:35,760
+fiber that exists in the city, terminates and transfers over to a long distance carrier
+
+
+36
+00:03:35,760 --> 00:03:40,680
+that then takes it up to the Equinix data center. But if you were to look at most other
+
+
+37
+00:03:40,680 --> 00:03:45,240
+CDNs, Cloudflare, Netflix, et cetera, they're going to terminate right in the Brussels city
+
+
+38
+00:03:45,240 --> 00:03:49,000
+center. And so if we're thinking about how do we make this faster, the thing we'd really
+
+
+39
+00:03:49,000 --> 00:03:54,880
+like to figure out is some structure for your request to ipfs.io to also terminate at that
+
+
+40
+00:03:54,880 --> 00:04:01,480
+local data center or that local Internet Exchange. You'd like to have the five, ten millisecond
+
+
+41
+00:04:01,480 --> 00:04:05,560
+termination and response to your traffic, especially for common files, rather than that
+
+
+42
+00:04:05,560 --> 00:04:11,840
+taking 15, 20 milliseconds here. And in general, people will say something like up to 50 milliseconds
+
+
+43
+00:04:11,840 --> 00:04:18,640
+to get to a data center for your region. And so in the structure we've got right now, where
+
+
+44
+00:04:18,640 --> 00:04:25,200
+we've got these large block stores that sort of need to live in a data center, if Protocol
+
+
+45
+00:04:25,200 --> 00:04:30,040
+Labs was to go and say, okay, instead of having, you know, seven points of presence, we're
+
+
+46
+00:04:30,040 --> 00:04:34,800
+going to, you know, get 50, we'd still be in big data centers, we'd still be 50 milliseconds
+
+
+47
+00:04:34,800 --> 00:04:39,480
+away from things, and it would cost a lot. And so we need to figure out is there some
+
+
+48
+00:04:39,480 --> 00:04:45,280
+way for us to get this faster speed without it, you know, being orders of magnitude more
+
+
+49
+00:04:45,280 --> 00:04:52,000
+cost to just have that centralized infrastructure. So what would a decentralized alternative look
+
+
+50
+00:04:52,000 --> 00:04:58,040
+like? How do we find ways to get to a lower latency for most requests without it being
+
+
+51
+00:04:58,040 --> 00:05:03,840
+us running a lot of NGINX and a lot of Kubo nodes in not only data centers, but also these
+
+
+52
+00:05:03,840 --> 00:05:13,160
+metro city-level POPs or Internet Exchanges? So the good news is that from last fall, Protocol
+
+
+53
+00:05:13,160 --> 00:05:23,960
+Labs launched a CDN, an incentivized and decentralized CDN called Saturn. And so we might think we
+
+
+54
+00:05:23,960 --> 00:05:31,000
+can put in Saturn instead of this middle layer of NGINX and Kubo, right? We've got on the
+
+
+55
+00:05:31,000 --> 00:05:37,760
+order of a couple thousand nodes there. They're much closer to the end users from the measurements
+
+
+56
+00:05:37,760 --> 00:05:44,960
+that we've got. And so instead of having to hit that, you're hopefully hitting some local
+
+
+57
+00:05:44,960 --> 00:05:49,000
+Saturn endpoint, and then you'd like that Saturn endpoint to be able to fetch from the
+
+
+58
+00:05:49,000 --> 00:05:56,360
+backing IPFS node, Filecoin node, or other source of content address data. So that's
+
+
+59
+00:05:56,360 --> 00:06:00,760
+been the basic sort of path that we've been trying to follow is how do we make Saturn
+
+
+60
+00:06:00,760 --> 00:06:07,520
+work to replace this NGINX Kubo mix that we've been using as Protocol Labs for our gateways?
+
+
+61
+00:06:07,520 --> 00:06:13,960
+This is a lot of people that have been involved in this. I probably missed some, but I just
+
+
+62
+00:06:13,960 --> 00:06:17,760
+wanted to try and get as many of the people who've been involved in doing work on this
+
+
+63
+00:06:17,760 --> 00:06:22,800
+as I could up here, because it's a much bigger effort than me. I'm just trying to provide
+
+
+64
+00:06:22,800 --> 00:06:32,120
+sort of a general summary and direction. So we got given three sort of joint goals or
+
+
+65
+00:06:32,120 --> 00:06:37,120
+goals to jointly optimize around. It's not we're going to do one thing, but we want to
+
+
+66
+00:06:37,120 --> 00:06:41,280
+do a combination of these three, and we've got some flexibility. One is that we want
+
+
+67
+00:06:41,280 --> 00:06:47,880
+Filecoin retrievals to become a first class citizen, equivalent to IPFS retrievals that
+
+
+68
+00:06:47,880 --> 00:06:54,560
+the gateways do today. So right now, when we look at that path of NGINX going to Kubo,
+
+
+69
+00:06:54,560 --> 00:07:00,000
+we've got BitSwap really managing a lot of the peer selection and how things are going
+
+
+70
+00:07:00,000 --> 00:07:04,640
+to happen to get that origin content. And so we need to find some way where we can think
+
+
+71
+00:07:04,640 --> 00:07:10,520
+about getting content both from Filecoin storage providers, but as well as other IPFS peers,
+
+
+72
+00:07:10,520 --> 00:07:15,800
+where those are sort of equal choices. We want to make that more equal than what the
+
+
+73
+00:07:15,800 --> 00:07:21,880
+IPFS gateways are serving today. We want to validate Saturn as a CDN. So we want to have
+
+
+74
+00:07:21,880 --> 00:07:27,760
+real traffic going through, prove out with this IPFS gateway as a customer of Saturn,
+
+
+75
+00:07:27,760 --> 00:07:32,960
+that Saturn is able to live up to that CDN thing on this scale of traffic. And we want
+
+
+76
+00:07:32,960 --> 00:07:39,080
+to reduce the cost of having these central, relatively high bandwidth Equinix deployments
+
+
+77
+00:07:39,080 --> 00:07:48,480
+that are serving IPFS.io today. So over the next 15, 20 minutes, this is the
+
+
+78
+00:07:48,480 --> 00:07:52,640
+set of things that I'm going to try and cover. We've talked a little bit about what is RIA.
+
+
+79
+00:07:52,640 --> 00:07:57,200
+Hopefully you've got a sense of sort of the general trajectory that this set of work is
+
+
+80
+00:07:57,200 --> 00:08:02,360
+encompassing. I want to talk about what we've been thinking about with TrustModel. I think
+
+
+81
+00:08:02,360 --> 00:08:09,120
+that's probably the, I don't know, hairy, but like the tricky set of problems is what
+
+
+82
+00:08:09,120 --> 00:08:13,640
+are we trusting, what are the issues around trust that we've run into, because that ends
+
+
+83
+00:08:13,640 --> 00:08:18,840
+up being a lot of what drives design. How we're going about fetching content. The performance
+
+
+84
+00:08:18,840 --> 00:08:23,960
+that we've got so far and that we're sort of looking at. And then I'll finish by going
+
+
+85
+00:08:23,960 --> 00:08:27,800
+and connecting the various components that are getting built, what we're building, to
+
+
+86
+00:08:27,800 --> 00:08:34,200
+try and provide some better context for the rest of the talks today.
+
+
+87
+00:08:34,200 --> 00:08:41,520
+So let's talk about trust. When you go and get content in your web browser from IPFS
+
+
+88
+00:08:41,520 --> 00:08:47,400
+today, those rendered pages that you get back are not always a thing where you can say,
+
+
+89
+00:08:47,400 --> 00:08:52,160
+okay, I asked for this SID, I got back these bytes, are these bytes actually equivalent
+
+
+90
+00:08:52,160 --> 00:08:58,280
+to the SID I asked for? I asked for a SID of this directory, I get this nice rendered
+
+
+91
+00:08:58,280 --> 00:09:03,440
+HTML page showing the files in the directory, but what is my client going to do to know
+
+
+92
+00:09:03,440 --> 00:09:08,840
+that that rendered HTML page actually matches the hash of the SID that I asked for in the
+
+
+93
+00:09:08,840 --> 00:09:15,200
+first place? Because there's been some HTML templatey thing that's applied, right? The
+
+
+94
+00:09:15,200 --> 00:09:21,080
+SID that I asked for is not the SID of this HTML page, it's of a Unix directory, and then
+
+
+95
+00:09:21,080 --> 00:09:26,080
+all of this prettiness got returned in the page to make my browsing experience nice,
+
+
+96
+00:09:26,080 --> 00:09:32,780
+but that's very different from actually direct content address data being returned to me.
+
+
+97
+00:09:32,780 --> 00:09:39,100
+And so then we can say, okay, well, what's different? Could we do better? Like, should
+
+
+98
+00:09:39,100 --> 00:09:43,480
+I be able to verify on the client? And so there's two things to think about here. One
+
+
+99
+00:09:43,480 --> 00:09:48,580
+is sometimes we decorate the responses, like that pretty HTML page, but then also we'll
+
+
+100
+00:09:48,580 --> 00:09:53,400
+render a file, and so you'll potentially lose out on metadata blocks. So if I ask for a
+
+
+101
+00:09:53,400 --> 00:09:58,360
+file on the gateway and I get the image back, the thing I'm not getting, you can look at
+
+
+102
+00:09:58,360 --> 00:10:03,720
+like the car and the actual raw underlying content address data that that SID maps to,
+
+
+103
+00:10:03,720 --> 00:10:09,200
+and you can see, for instance, this is a single text file, and there's three blocks in here.
+
+
+104
+00:10:09,200 --> 00:10:15,320
+There's a raw block, which is the actual data, but we're rarely having the gateway actually
+
+
+105
+00:10:15,320 --> 00:10:20,000
+directly ask for that hash of the raw data. Instead, it's the file below that, which is
+
+
+106
+00:10:20,000 --> 00:10:26,480
+this DAGPB node that contains the metadata around, okay, this is a file containing these
+
+
+107
+00:10:26,480 --> 00:10:31,920
+bytes, but it has permissions and it has some metadata around it. And so that's the SID
+
+
+108
+00:10:31,920 --> 00:10:37,380
+you actually get given after you IPFS add. And so if the file is large, it may actually
+
+
+109
+00:10:37,380 --> 00:10:43,520
+have multiple chunks of data. So you're asking for a metadata SID that is the top of the
+
+
+110
+00:10:43,520 --> 00:10:50,840
+Merkle tree of your overall data. You're getting the rendered bytes contained in that file.
+
+
+111
+00:10:50,840 --> 00:10:54,520
+And from that, are you going to always be able to reconstruct back up to the SID that
+
+
+112
+00:10:54,520 --> 00:11:03,680
+you asked for? So right now, you could maybe guess. Our chunking isn't in general that
+
+
+113
+00:11:03,680 --> 00:11:08,280
+smart. So you could say, okay, I'm going to try and also re-chunk these bytes I got given
+
+
+114
+00:11:08,280 --> 00:11:13,400
+at every megabyte and then see if I can reconstruct what a metadata object might be and see if
+
+
+115
+00:11:13,400 --> 00:11:20,100
+I can get to the same SID and I got the right response. But you would have some false negatives.
+
+
+116
+00:11:20,100 --> 00:11:24,720
+You would maybe try at different chunks to see. And so you might be doing a lot of unnecessary
+
+
+117
+00:11:24,720 --> 00:11:30,440
+computation. And in general, this seems pretty sketchy as a way that we would try and do
+
+
+118
+00:11:30,440 --> 00:11:38,520
+it. And so then there's also cases where you just can't. Where especially if you ask for
+
+
+119
+00:11:38,520 --> 00:11:44,440
+like a range request, so you get part of a file, without getting all of the file, how
+
+
+120
+00:11:44,440 --> 00:11:48,240
+are you going to know what that top hash is going to be? Because you haven't been given
+
+
+121
+00:11:48,240 --> 00:11:53,760
+sort of enough of the middle pieces, only the bytes of the file, to actually efficiently
+
+
+122
+00:11:53,760 --> 00:11:57,400
+have any chance of reconstructing up that this is really the right part of the movie
+
+
+123
+00:11:57,400 --> 00:12:07,280
+that you were asking for. The other thing then is we don't have any real signal. So
+
+
+124
+00:12:07,280 --> 00:12:11,440
+when we think about, okay, so the client gets these bytes and the client is going to, you
+
+
+125
+00:12:11,440 --> 00:12:15,560
+know, if we were to implement a client side validation that it's getting the right things
+
+
+126
+00:12:15,560 --> 00:12:19,200
+by trying to reach chunk and trying to make sure it's got the right SID, we don't know
+
+
+127
+00:12:19,200 --> 00:12:22,120
+the client's going to do that. We know that there's a bunch of existing clients that aren't
+
+
+128
+00:12:22,120 --> 00:12:25,360
+doing that. They're just downloading. And so what they're doing by just downloading
+
+
+129
+00:12:25,360 --> 00:12:28,640
+is they're implicitly trusting the gateways to render correctly, to give them only the
+
+
+130
+00:12:28,640 --> 00:12:34,040
+data that they asked for. So we've ended up in a system right now where a lot of clients
+
+
+131
+00:12:34,040 --> 00:12:38,840
+have implicitly put a lot of trust in protocol labs or the gateway that they're using to
+
+
+132
+00:12:38,840 --> 00:12:44,760
+give them the right content address data. And that limits us quite a bit in taking this
+
+
+133
+00:12:44,760 --> 00:12:51,600
+current request flow and being able to make it less trusted or switch where that content's
+
+
+134
+00:12:51,600 --> 00:12:59,080
+coming from. This is in particular interesting as we consider
+
+
+135
+00:12:59,080 --> 00:13:04,160
+that. So Saturn, as I mentioned, is a couple thousand nodes, but they're people who are
+
+
+136
+00:13:04,160 --> 00:13:09,560
+just running a piece of software. So we don't trust them fully. If I go to a specific Saturn
+
+
+137
+00:13:09,560 --> 00:13:13,400
+node, how do I know that that Saturn node isn't going to give me malware back or isn't
+
+
+138
+00:13:13,400 --> 00:13:18,360
+going to give me some random bytes back? I don't necessarily trust a particular Saturn
+
+
+139
+00:13:18,360 --> 00:13:22,080
+node to the same extent that I'm going to trust protocol labs. And so we've got some
+
+
+140
+00:13:22,080 --> 00:13:28,200
+real issues in being willing to say, okay, either we're going to give IPFS.io as a DNS
+
+
+141
+00:13:28,200 --> 00:13:32,680
+and TLS certificate to these random nodes that now can potentially ruin the reputation
+
+
+142
+00:13:32,680 --> 00:13:39,240
+of the domain and serve malware on it, cause it to get added to blacklists. Or even if
+
+
+143
+00:13:39,240 --> 00:13:44,000
+we were to do something like redirecting the HDP with 302 or some other way to just the
+
+
+144
+00:13:44,000 --> 00:13:50,000
+IP of the specific or some other less trusted domain name, you've still got the question
+
+
+145
+00:13:50,000 --> 00:13:55,600
+of, okay, if I'm just doing a one-on-one browser download from some untrusted node, we've got
+
+
+146
+00:13:55,600 --> 00:13:59,640
+this implicit trust that you're getting the right content in the current request paths,
+
+
+147
+00:13:59,640 --> 00:14:06,040
+and we're not sure we can fulfill that with what Saturn's got right now.
+
+
+148
+00:14:06,040 --> 00:14:12,640
+So we've taken a couple paths towards how we're going to deal with that. The first is
+
+
+149
+00:14:12,640 --> 00:14:18,800
+that we're building out our trustless gateway specification. And so this is how do you get
+
+
+150
+00:14:18,800 --> 00:14:25,200
+content address data from an HTTP gateway when you don't necessarily trust the gateway?
+
+
+151
+00:14:25,200 --> 00:14:30,360
+And the general answer for that question is you ask for car files. You get the blocks
+
+
+152
+00:14:30,360 --> 00:14:34,960
+back. We don't do the rendering anymore. And as long as you put in your accept header,
+
+
+153
+00:14:34,960 --> 00:14:40,080
+that you're either going, you either want to accept IPLD.raw, which is going to give
+
+
+154
+00:14:40,080 --> 00:14:44,760
+you the direct SID block, so the specific bytes that hash directly to that SID that
+
+
+155
+00:14:44,760 --> 00:14:50,400
+you asked for, or you can ask for car, which will then give you the car archive of the
+
+
+156
+00:14:50,400 --> 00:14:55,960
+block of the SID and then the DAG below it, so the blocks that it points to. And so you'll
+
+
+157
+00:14:55,960 --> 00:15:00,440
+get the specific content address blocks that you can verify they're the right blocks that
+
+
+158
+00:15:00,440 --> 00:15:06,400
+you asked for, and then if you want to render it, that's now on the client.
+
+
+159
+00:15:06,400 --> 00:15:12,800
+But this is a different set of requests than what we have today. And that's worth remembering.
+
+
+160
+00:15:12,800 --> 00:15:18,240
+So we can build out this new pipeline and we can start promoting this type of request
+
+
+161
+00:15:18,240 --> 00:15:22,920
+of, hey, you should ask for car files and verify them yourself. Because we can serve
+
+
+162
+00:15:22,920 --> 00:15:27,600
+that with something like Saturn, and so we can do that more cheaply and more quickly
+
+
+163
+00:15:27,600 --> 00:15:32,220
+for you. But that's not the clients today. That's the clients that are going to be willing
+
+
+164
+00:15:32,220 --> 00:15:36,600
+to incorporate a client library or otherwise be willing to handle getting car files and
+
+
+165
+00:15:36,600 --> 00:15:41,320
+doing something with them. So for that, there's a couple things. There's
+
+
+166
+00:15:41,320 --> 00:15:47,400
+some of these longer-term efforts that Adin and that Alex are going to show in the rest
+
+
+167
+00:15:47,400 --> 00:15:52,400
+of this morning about what do client-side and sort of smarter client-side libraries
+
+
+168
+00:15:52,400 --> 00:15:57,560
+look like. So that we can start to move more traffic there. But we've also got some knobs
+
+
+169
+00:15:57,560 --> 00:16:04,000
+on our side, right? I think if you've used IPFS.io in the past, you know some requests
+
+
+170
+00:16:04,000 --> 00:16:09,360
+are not super fast. Or you get 429s of, hey, you've used too much. We can tune those. We
+
+
+171
+00:16:09,360 --> 00:16:15,480
+can make it so that your experience on these implicitly trusted things isn't great, such
+
+
+172
+00:16:15,480 --> 00:16:19,480
+that you're motivated, if you really want your users to be using it, to do the one that's
+
+
+173
+00:16:19,480 --> 00:16:24,600
+faster and cheaper. And so some combination of these knobs, having a good path that we
+
+
+174
+00:16:24,600 --> 00:16:30,500
+like along with various pressure to make people move over, seems like our best bet at shifting
+
+
+175
+00:16:30,500 --> 00:16:37,120
+traffic to something better. So this trustless gateway spec, you'll hear
+
+
+176
+00:16:37,120 --> 00:16:42,840
+more about it. I think that that's going to, you know, there's already some IPIP work.
+
+
+177
+00:16:42,840 --> 00:16:46,960
+That's likely a thing that we're going to be trying to standardize, get community involvement
+
+
+178
+00:16:46,960 --> 00:16:51,280
+on, get to something that everyone's happy with in terms of what is this way to be getting
+
+
+179
+00:16:51,280 --> 00:16:57,160
+cars. Okay. You get the requests. Right now, those
+
+
+180
+00:16:57,160 --> 00:17:01,840
+requests are served with Kubo with a big block cache. That's pretty expensive. What can we
+
+
+181
+00:17:01,840 --> 00:17:10,880
+do there? This is a secondary piece primarily around Filecoin retrievals and cost.
+
+
+182
+00:17:10,880 --> 00:17:18,400
+So if we want to be able to get Filecoin content with that challenge that that content should
+
+
+183
+00:17:18,400 --> 00:17:24,620
+be sort of a first class citizen equivalent to current IPFS nodes, we've got a few options.
+
+
+184
+00:17:24,620 --> 00:17:28,840
+One is we enable bitswap on Filecoin. And now it's all just bitswap. Great. It's all
+
+
+185
+00:17:28,840 --> 00:17:37,040
+equivalent. We could extend our bitswap library to be able to speak not just bitswap, but
+
+
+186
+00:17:37,040 --> 00:17:42,400
+also GraphSync that Filecoin speaks or some other protocol. And so in particular, this
+
+
+187
+00:17:42,400 --> 00:17:47,120
+is that there's bitswap, the protocol, and then there's bitswap, the piece of software
+
+
+188
+00:17:47,120 --> 00:17:50,940
+implementation that contains not only the protocol, but also a pretty significant scheduler
+
+
+189
+00:17:50,940 --> 00:17:57,240
+about which nodes should I ask for and when should I ask for blocks from which nodes.
+
+
+190
+00:17:57,240 --> 00:18:01,480
+And that scheduler is the thing that we need to figure out. Are we doing a refactor? Are
+
+
+191
+00:18:01,480 --> 00:18:07,600
+we diving into that? Or we're going to write another scheduler above bitswap that's able
+
+
+192
+00:18:07,600 --> 00:18:15,120
+to do a higher level scheduling between Filecoin protocols and bitswap protocols. Right? Because
+
+
+193
+00:18:15,120 --> 00:18:19,560
+these are sort of like the three places that you could come in and say, where are we doing
+
+
+194
+00:18:19,560 --> 00:18:24,040
+this extension? We're either going in or we've got some place that we're going to have to
+
+
+195
+00:18:24,040 --> 00:18:30,880
+have extensibility. The current approach has been to use Lassie. Hannah talked about this
+
+
+196
+00:18:30,880 --> 00:18:36,600
+two days ago. Which is going to be that higher level scheduler. And in some sense, you look
+
+
+197
+00:18:36,600 --> 00:18:39,640
+at that and you're like, okay, so you're adding another layer of complexity. Is this really
+
+
+198
+00:18:39,640 --> 00:18:45,160
+going to make our lives better? I think that is a hypothesis that we're hoping that we
+
+
+199
+00:18:45,160 --> 00:18:49,320
+introduce something that's a little bit simpler as that layer. And then we can iterate on
+
+
+200
+00:18:49,320 --> 00:18:57,520
+bitswap, but not in the critical path. Where is Lassie finding out about peers, then? Are
+
+
+201
+00:18:57,520 --> 00:19:03,920
+we doing that through bitswap still? We're currently using IPNI, the network indexers,
+
+
+202
+00:19:03,920 --> 00:19:08,520
+as a way to offload that peer discovery part. It reduces the need for all of these thousand
+
+
+203
+00:19:08,520 --> 00:19:13,560
+standard nodes to be querying the DHT all the time or to stay connected on bitswap all
+
+
+204
+00:19:13,560 --> 00:19:20,720
+the time to as many peers. There was a description of sort of what this looks like from Lassie
+
+
+205
+00:19:20,720 --> 00:19:25,900
+yesterday in the content routing track that goes deeper. But the basic structure here
+
+
+206
+00:19:25,900 --> 00:19:30,880
+is that when you hit IPNI with a query, who has a given SID, it then scatters it out to
+
+
+207
+00:19:30,880 --> 00:19:36,200
+a few things. It's got a local database, store the index, that is stuff that's been published
+
+
+208
+00:19:36,200 --> 00:19:45,000
+into IPNI. It has an accelerated DHT client called cascade DHT that already has a full
+
+
+209
+00:19:45,000 --> 00:19:51,320
+DHT routing table and so is able to do a one hop query of someone who has that part of
+
+
+210
+00:19:51,320 --> 00:19:58,160
+the DHT space to ask them. So it's able to do that reasonably efficiently for a DHT query.
+
+
+211
+00:19:58,160 --> 00:20:23,360
+And then it has a piece of software that's able to do that.
+
+
+212
+00:20:00,000 --> 00:20:30,000
+ELLERThat we built over the last month, thanks to mossy also called cassette that stays connected to a set of bit swap peers and and sort of cascades the query to them. But now that happens from only, I think we've sort of got one cassette Primary peer ID, so all of these thousand nodes appear as one query stream that's able to batch. So you get a bit swap one half with, you know, that second worth of all of the SIDS that various peers want.
+
+
+213
+00:20:30,000 --> 00:20:32,460
+And that's then the way that it cascades back
+
+
+214
+00:20:32,460 --> 00:20:34,460
+when content isn't available,
+
+
+215
+00:20:34,460 --> 00:20:37,300
+either through IPNI or to the DHT.
+
+
+216
+00:20:39,000 --> 00:20:41,900
+The sort of high level of what Lassie is doing
+
+
+217
+00:20:41,900 --> 00:20:45,420
+is it gets in requests for a DAG.
+
+
+218
+00:20:45,420 --> 00:20:49,180
+It's got a subsystem called the Candidate Finder
+
+
+219
+00:20:49,180 --> 00:20:52,100
+that is going to IPNI to find peers
+
+
+220
+00:20:53,400 --> 00:20:54,860
+that are potentially interesting.
+
+
+221
+00:20:54,860 --> 00:20:58,440
+That comes back as a stream of found peers.
+
+
+222
+00:20:58,440 --> 00:21:00,120
+And then as these candidates come in
+
+
+223
+00:21:00,120 --> 00:21:01,600
+within the scope of that session,
+
+
+224
+00:21:01,600 --> 00:21:03,960
+as soon as it gets one for BitSwap,
+
+
+225
+00:21:03,960 --> 00:21:05,740
+it starts a BitSwap session
+
+
+226
+00:21:05,740 --> 00:21:08,440
+to begin trying to get those blocks on BitSwap.
+
+
+227
+00:21:08,440 --> 00:21:10,640
+If it sees them over GraphSync,
+
+
+228
+00:21:10,640 --> 00:21:14,080
+it'll start up a GraphSync query to try and get them.
+
+
+229
+00:21:14,080 --> 00:21:15,560
+There's a little bit of session logic there
+
+
+230
+00:21:15,560 --> 00:21:17,060
+of should we be duplicating?
+
+
+231
+00:21:17,060 --> 00:21:20,480
+Should we, you know, okay, I started on GraphSync,
+
+
+232
+00:21:20,480 --> 00:21:21,940
+but it hasn't really started.
+
+
+233
+00:21:21,940 --> 00:21:24,640
+Maybe we should also spin up BitSwap.
+
+
+234
+00:21:24,640 --> 00:21:25,780
+And that's likely to evolve.
+
+
+235
+00:21:25,780 --> 00:21:28,760
+This is that level above the BitSwap scheduler.
+
+
+236
+00:21:28,760 --> 00:21:31,120
+And so that's likely going to,
+
+
+237
+00:21:31,120 --> 00:21:33,120
+as we add complexity there,
+
+
+238
+00:21:33,120 --> 00:21:35,320
+we'll be able to potentially then remove it
+
+
+239
+00:21:35,320 --> 00:21:37,180
+from the BitSwap layer.
+
+
+240
+00:21:37,180 --> 00:21:38,240
+So that's the basic structure
+
+
+241
+00:21:38,240 --> 00:21:40,100
+of what's going on in these nodes.
+
+
+242
+00:21:40,100 --> 00:21:41,280
+The nice thing here,
+
+
+243
+00:21:41,280 --> 00:21:42,840
+and this is really just reiterating
+
+
+244
+00:21:42,840 --> 00:21:45,320
+a lot of what Hannah was saying
+
+
+245
+00:21:45,320 --> 00:21:47,200
+in introducing Lassie two days ago,
+
+
+246
+00:21:47,200 --> 00:21:51,740
+is that we're doing less sort of stable state
+
+
+247
+00:21:51,740 --> 00:21:55,660
+ongoing traffic than what previously has been happening
+
+
+248
+00:21:55,660 --> 00:21:59,140
+on Kubo in this Nginx Kubo deployments.
+
+
+249
+00:21:59,140 --> 00:22:02,160
+We don't have a 200 gig block store
+
+
+250
+00:22:02,160 --> 00:22:05,400
+that we're maintaining and paying for storage on.
+
+
+251
+00:22:05,400 --> 00:22:09,760
+And we aren't sort of needing to stay connected
+
+
+252
+00:22:09,760 --> 00:22:12,540
+to all of the BitSwap peers for performance,
+
+
+253
+00:22:12,540 --> 00:22:13,980
+is the hope longer term,
+
+
+254
+00:22:13,980 --> 00:22:15,640
+that these are just doing retrievals
+
+
+255
+00:22:15,640 --> 00:22:18,780
+and are able to be a little bit lighter weight, essentially.
+
+
+256
+00:22:20,200 --> 00:22:23,080
+So we can look at sort of what that looks like
+
+
+257
+00:22:23,080 --> 00:22:24,480
+in terms of caching and performance
+
+
+258
+00:22:24,480 --> 00:22:25,980
+to see where we are right now.
+
+
+259
+00:22:28,040 --> 00:22:31,560
+Just to provide sort of a basic diagram of comparison
+
+
+260
+00:22:31,560 --> 00:22:33,460
+of what these request flows look like.
+
+
+261
+00:22:34,760 --> 00:22:36,400
+I think this is sort of a useful thing.
+
+
+262
+00:22:36,400 --> 00:22:38,800
+The top line is what we have today, right?
+
+
+263
+00:22:38,800 --> 00:22:41,120
+You as a client, you hit the Nginx Kubo
+
+
+264
+00:22:41,120 --> 00:22:42,200
+in an Equinix data center,
+
+
+265
+00:22:42,200 --> 00:22:44,200
+which then goes back to the origin potentially,
+
+
+266
+00:22:44,200 --> 00:22:46,760
+or hits it, or is able to serve from cache locally.
+
+
+267
+00:22:47,800 --> 00:22:49,920
+The middle line is how this changes
+
+
+268
+00:22:49,920 --> 00:22:51,760
+for the current request flow.
+
+
+269
+00:22:51,760 --> 00:22:56,400
+So the client is going to hit a lightweight Bifrost proxy,
+
+
+270
+00:22:56,400 --> 00:22:59,560
+which is going to validate responses from Saturn
+
+
+271
+00:22:59,560 --> 00:23:02,520
+and render them in the same way that you've got them today.
+
+
+272
+00:23:02,520 --> 00:23:04,640
+Saturn is going to fetch it and return the cars
+
+
+273
+00:23:04,640 --> 00:23:06,120
+back to that Bifrost proxy,
+
+
+274
+00:23:07,480 --> 00:23:09,880
+and then get it from the origin when it needs to.
+
+
+275
+00:23:09,880 --> 00:23:11,840
+The bottom one is for new verifying clients
+
+
+276
+00:23:11,840 --> 00:23:13,840
+that'll be able to go to Saturn directly.
+
+
+277
+00:23:13,840 --> 00:23:16,760
+So they'll directly get this car file from Saturn.
+
+
+278
+00:23:16,760 --> 00:23:19,160
+And so you'll be able to skip having to go through
+
+
+279
+00:23:19,160 --> 00:23:23,240
+these PL-operated centralized Bifrost proxies.
+
+
+280
+00:23:25,440 --> 00:23:26,560
+In terms of caching,
+
+
+281
+00:23:28,680 --> 00:23:30,400
+when we look at the system today,
+
+
+282
+00:23:30,400 --> 00:23:35,400
+that Nginx and Kubo nodes are able to cache something
+
+
+283
+00:23:35,400 --> 00:23:37,320
+on the order of 70% of traffic,
+
+
+284
+00:23:37,320 --> 00:23:40,040
+is terminating directly at the data center
+
+
+285
+00:23:40,040 --> 00:23:43,160
+and not going back to origin nodes, right?
+
+
+286
+00:23:43,160 --> 00:23:44,840
+So that's sort of like,
+
+
+287
+00:23:44,840 --> 00:23:47,360
+when we look at our request distribution,
+
+
+288
+00:23:47,360 --> 00:23:50,200
+a majority of traffic right now looks sort of like
+
+
+289
+00:23:50,200 --> 00:23:52,840
+you go to the CDN and the CDN serves it out of cache.
+
+
+290
+00:23:54,600 --> 00:23:58,280
+We expect in the lighter weight proxy,
+
+
+291
+00:23:58,280 --> 00:24:01,360
+we may keep some load balancing cache.
+
+
+292
+00:24:01,360 --> 00:24:02,760
+It'll be relatively small.
+
+
+293
+00:24:02,760 --> 00:24:05,280
+We can hope for maybe 30% cache rate
+
+
+294
+00:24:05,280 --> 00:24:07,640
+of the very most popular requests,
+
+
+295
+00:24:07,640 --> 00:24:11,000
+but we're not gonna have large amounts of storage
+
+
+296
+00:24:11,960 --> 00:24:13,240
+like a Kubo block store.
+
+
+297
+00:24:13,240 --> 00:24:15,240
+So we don't expect that we're gonna be able to reconstruct
+
+
+298
+00:24:15,240 --> 00:24:18,040
+or want to reconstruct all 70% of traffic there.
+
+
+299
+00:24:18,040 --> 00:24:19,560
+We're not gonna have terabytes and terabytes
+
+
+300
+00:24:19,560 --> 00:24:22,440
+of cache storage anymore.
+
+
+301
+00:24:22,440 --> 00:24:23,640
+That's pretty expensive.
+
+
+302
+00:24:25,640 --> 00:24:29,040
+However, what we hope is that the Saturn L1 caches,
+
+
+303
+00:24:29,040 --> 00:24:31,840
+which are relatively beefy caches in this decentralized CDN
+
+
+304
+00:24:31,840 --> 00:24:33,840
+are going to be able to be a caches.
+
+
+305
+00:24:33,840 --> 00:24:35,040
+And so we're gonna be moving that
+
+
+306
+00:24:35,040 --> 00:24:37,560
+where it's the Saturn nodes that act as that cache,
+
+
+307
+00:24:37,560 --> 00:24:40,760
+either in the untrusted or trusted cases.
+
+
+308
+00:24:40,760 --> 00:24:45,760
+Right now we're seeing on the order of 60% caches on them.
+
+
+309
+00:24:46,080 --> 00:24:47,840
+So it's a little bit less in terms of how we're doing it.
+
+
+310
+00:24:47,840 --> 00:24:49,080
+We'll see if that goes up over time
+
+
+311
+00:24:49,080 --> 00:24:51,120
+to be equivalent to what we've got right now
+
+
+312
+00:24:51,120 --> 00:24:52,880
+with Nginx and Kubo.
+
+
+313
+00:24:52,880 --> 00:24:54,680
+The storage is enough that it should be.
+
+
+314
+00:24:54,680 --> 00:24:55,520
+And so it's a matter of,
+
+
+315
+00:24:55,520 --> 00:24:58,360
+are we doing the right things to match that current caching?
+
+
+316
+00:25:01,280 --> 00:25:05,400
+Here's just a couple of graphs over the last week
+
+
+317
+00:25:05,400 --> 00:25:07,040
+of what we're seeing on caching.
+
+
+318
+00:25:08,000 --> 00:25:10,480
+And so this is splitting apart that 70%
+
+
+319
+00:25:10,480 --> 00:25:11,920
+that I was showing you before,
+
+
+320
+00:25:13,560 --> 00:25:14,800
+because that is two systems.
+
+
+321
+00:25:14,800 --> 00:25:17,320
+There's an Nginx load balancing cache
+
+
+322
+00:25:17,320 --> 00:25:20,280
+that's getting maybe 30% ish.
+
+
+323
+00:25:20,280 --> 00:25:22,000
+And so that's why we expect to continue
+
+
+324
+00:25:22,000 --> 00:25:23,720
+to have around 30% ish.
+
+
+325
+00:25:23,720 --> 00:25:28,120
+That top level Nginx thing is a relatively small HTTP cache
+
+
+326
+00:25:28,120 --> 00:25:30,840
+and for a four cache and that sort of thing.
+
+
+327
+00:25:30,840 --> 00:25:33,760
+And then you've got the Kubo block store cache,
+
+
+328
+00:25:33,760 --> 00:25:35,400
+which is the bulk of it.
+
+
+329
+00:25:35,400 --> 00:25:40,400
+And so this is where those two numbers are coming from.
+
+
+330
+00:25:40,600 --> 00:25:42,560
+So you've got 30%, yes.
+
+
+331
+00:25:42,560 --> 00:25:44,240
+And then of the remaining 70%, no,
+
+
+332
+00:25:44,240 --> 00:25:46,200
+you've got about a 60%, yes.
+
+
+333
+00:25:46,200 --> 00:25:47,280
+And so if you multiply those out,
+
+
+334
+00:25:47,280 --> 00:25:49,160
+you get a 70% overall cache.
+
+
+335
+00:25:51,760 --> 00:25:55,920
+When we look at where Saturn nodes are
+
+
+336
+00:25:55,920 --> 00:25:58,960
+from the Bifrost endpoints,
+
+
+337
+00:25:58,960 --> 00:26:01,960
+this is from our New York data center.
+
+
+338
+00:26:01,960 --> 00:26:03,320
+Just sort of, okay, where,
+
+
+339
+00:26:03,320 --> 00:26:05,800
+if we were to ping all of these different Saturn nodes,
+
+
+340
+00:26:05,800 --> 00:26:06,640
+where are they?
+
+
+341
+00:26:06,640 --> 00:26:08,320
+How far away are they?
+
+
+342
+00:26:08,320 --> 00:26:11,200
+The relevant thing here is the bottom ones
+
+
+343
+00:26:11,200 --> 00:26:12,560
+are under 50 milliseconds.
+
+
+344
+00:26:12,560 --> 00:26:14,680
+We've got a set of nodes that are pretty close.
+
+
+345
+00:26:14,680 --> 00:26:17,600
+And so that's the hope is that we're not adding much more
+
+
+346
+00:26:17,600 --> 00:26:22,600
+in that two phase unverified traffic requests
+
+
+347
+00:26:23,040 --> 00:26:24,240
+than the closest Saturn nodes.
+
+
+348
+00:26:24,240 --> 00:26:26,440
+We want most of the traffic from these Bifrost gateways
+
+
+349
+00:26:26,440 --> 00:26:28,880
+to go to a CDN endpoint that's near them, right?
+
+
+350
+00:26:28,880 --> 00:26:32,640
+And this is supporting the current traffic stream.
+
+
+351
+00:26:32,640 --> 00:26:35,200
+When you are your own node,
+
+
+352
+00:26:35,200 --> 00:26:37,200
+you're of course going to go to the closest Saturn node.
+
+
+353
+00:26:37,200 --> 00:26:39,760
+And so you're going to get that low latency, hopefully.
+
+
+354
+00:26:39,760 --> 00:26:43,280
+But if you're going to IPFS.io and getting a rendered file
+
+
+355
+00:26:43,280 --> 00:26:45,480
+where we can't offload you directly to Saturn,
+
+
+356
+00:26:45,480 --> 00:26:46,640
+then we're going to have to go to Saturn
+
+
+357
+00:26:46,640 --> 00:26:48,600
+and get the car, render it into the file.
+
+
+358
+00:26:48,600 --> 00:26:50,400
+And so we want to know how much additional latency
+
+
+359
+00:26:50,400 --> 00:26:51,400
+that's going to add.
+
+
+360
+00:26:55,000 --> 00:26:57,880
+Right now for the performance stuff,
+
+
+361
+00:26:57,880 --> 00:27:00,200
+we've got a pretty smooth request distribution
+
+
+362
+00:27:00,200 --> 00:27:02,120
+across the Saturn nodes.
+
+
+363
+00:27:02,120 --> 00:27:04,920
+And one of the things that we're working on tuning
+
+
+364
+00:27:04,920 --> 00:27:07,880
+is seeing how aggressively we can have requests
+
+
+365
+00:27:07,880 --> 00:27:09,960
+go just to the closest CDN nodes.
+
+
+366
+00:27:09,960 --> 00:27:14,080
+There's a tension here between if we send all of our traffic
+
+
+367
+00:27:14,080 --> 00:27:16,320
+to the one node that's closest to us,
+
+
+368
+00:27:16,320 --> 00:27:18,200
+we now potentially have that node fall over
+
+
+369
+00:27:18,200 --> 00:27:20,920
+and need to make sure we hot swap very quickly.
+
+
+370
+00:27:20,920 --> 00:27:23,400
+But also there's some questions around fairness,
+
+
+371
+00:27:23,400 --> 00:27:25,680
+making sure that we're properly incentivizing Saturn.
+
+
+372
+00:27:25,680 --> 00:27:28,680
+So that has been a conversation
+
+
+373
+00:27:28,680 --> 00:27:30,280
+that you'll hear more of from the Saturn team
+
+
+374
+00:27:30,280 --> 00:27:32,280
+about this tension of a customer
+
+
+375
+00:27:32,280 --> 00:27:34,520
+clearly wants the lowest latency,
+
+
+376
+00:27:34,520 --> 00:27:36,160
+whereas you also want to incentivize
+
+
+377
+00:27:36,160 --> 00:27:37,080
+the growth of your network
+
+
+378
+00:27:37,080 --> 00:27:40,160
+in addition to optimizing the current customer.
+
+
+379
+00:27:42,880 --> 00:27:44,640
+So what are we building?
+
+
+380
+00:27:46,240 --> 00:27:48,280
+I've given you these block diagrams.
+
+
+381
+00:27:48,280 --> 00:27:51,360
+I'll finish by making sure that I attach names
+
+
+382
+00:27:51,360 --> 00:27:53,600
+that you can talk to and try and talk to
+
+
+383
+00:27:53,600 --> 00:27:55,360
+about the people who are doing these various things
+
+
+384
+00:27:55,360 --> 00:27:57,560
+so you know who to ask questions about.
+
+
+385
+00:27:57,560 --> 00:28:00,760
+You first hit this proxy gateway on the current request flow
+
+
+386
+00:28:00,760 --> 00:28:02,520
+called Bifrost gateway.
+
+
+387
+00:28:02,520 --> 00:28:05,080
+Lytle is going to talk more
+
+
+388
+00:28:05,080 --> 00:28:06,400
+and provide a deep dive after lunch
+
+
+389
+00:28:06,400 --> 00:28:08,640
+about that component and what that looks like.
+
+
+390
+00:28:08,640 --> 00:28:11,480
+A bunch of that code has been pulled out of Kubo
+
+
+391
+00:28:11,480 --> 00:28:13,080
+and now lives in Boxo.
+
+
+392
+00:28:13,080 --> 00:28:14,960
+So Boxo slash gateway is a package
+
+
+393
+00:28:14,960 --> 00:28:16,800
+that does all of the HTTP semantics
+
+
+394
+00:28:16,800 --> 00:28:18,920
+of how are we gonna render the final file.
+
+
+395
+00:28:19,800 --> 00:28:22,560
+This Bifrost gateway combines that code
+
+
+396
+00:28:22,560 --> 00:28:24,040
+with a library called Caboose
+
+
+397
+00:28:24,040 --> 00:28:25,520
+that Arsh is gonna talk about.
+
+
+398
+00:28:25,520 --> 00:28:28,440
+And Caboose is a front-end client library for Saturn
+
+
+399
+00:28:28,440 --> 00:28:30,200
+that's gonna choose which Saturn node
+
+
+400
+00:28:30,200 --> 00:28:31,480
+gets content pulled from.
+
+
+401
+00:28:31,480 --> 00:28:34,640
+So it's basically maintaining a state of nearby nodes
+
+
+402
+00:28:34,640 --> 00:28:37,320
+and routing requests with failover
+
+
+403
+00:28:37,320 --> 00:28:40,320
+for which Saturn and CDN endpoint should get them.
+
+
+404
+00:28:42,080 --> 00:28:44,000
+On the Saturn L1 node,
+
+
+405
+00:28:44,000 --> 00:28:48,720
+which is Filecoin Saturn slash L1 node as a code repository,
+
+
+406
+00:28:48,720 --> 00:28:50,120
+that is integrating Lassie
+
+
+407
+00:28:51,520 --> 00:28:54,160
+in order to then pull contents from origins.
+
+
+408
+00:28:54,160 --> 00:28:56,520
+Lassie is using IPNI,
+
+
+409
+00:28:56,520 --> 00:28:59,120
+which has these components of Cascade DHT and Cassette
+
+
+410
+00:28:59,120 --> 00:29:01,240
+as part of the lookup of who has content.
+
+
+411
+00:29:02,760 --> 00:29:06,160
+Here's a couple more sort of deeper diagrams of that.
+
+
+412
+00:29:08,800 --> 00:29:10,360
+The first one of these you'll find
+
+
+413
+00:29:10,360 --> 00:29:12,000
+on the Bifrost gateway readme
+
+
+414
+00:29:12,000 --> 00:29:15,840
+that is the set of requests and semantics
+
+
+415
+00:29:15,840 --> 00:29:19,400
+that that proxy server expects to handle.
+
+
+416
+00:29:19,400 --> 00:29:21,400
+And the second one is then Lassie
+
+
+417
+00:29:21,400 --> 00:29:24,640
+and the sort of the general request flow
+
+
+418
+00:29:24,640 --> 00:29:26,760
+of how Lassie is expecting to get content.
+
+
+419
+00:29:29,480 --> 00:29:31,480
+So where are we right now?
+
+
+420
+00:29:31,480 --> 00:29:34,120
+We currently have on the order of 30%
+
+
+421
+00:29:34,120 --> 00:29:36,440
+of our production traffic being mirrored
+
+
+422
+00:29:36,440 --> 00:29:38,200
+through this new system to validate
+
+
+423
+00:29:38,200 --> 00:29:40,120
+that we're able to handle it at scale.
+
+
+424
+00:29:41,320 --> 00:29:44,040
+The sort of current piece that we're working on
+
+
+425
+00:29:44,040 --> 00:29:48,400
+is rolling out these Verifiable Car Requests to Saturn
+
+
+426
+00:29:48,400 --> 00:29:51,480
+and validating that we're always getting back
+
+
+427
+00:29:51,480 --> 00:29:53,160
+the right responses and that we're asking
+
+
+428
+00:29:53,160 --> 00:29:54,000
+for the right things.
+
+
+429
+00:29:54,000 --> 00:29:56,920
+So this is a change in Bifrost gateway
+
+
+430
+00:29:56,920 --> 00:29:59,040
+and in Boxo slash gateway.
+
+
+431
+00:30:00,080 --> 00:30:03,000
+Previously, when attached to Kubo,
+
+
+432
+00:30:03,000 --> 00:30:03,840
+you had a block store.
+
+
+433
+00:30:03,840 --> 00:30:06,040
+And so you'd ask for blocks as you needed them.
+
+
+434
+00:30:06,040 --> 00:30:07,360
+And as you got specific blocks,
+
+
+435
+00:30:07,360 --> 00:30:09,800
+you didn't have Kubo within spin up BitSwap
+
+
+436
+00:30:09,800 --> 00:30:11,080
+to ask for those blocks.
+
+
+437
+00:30:11,080 --> 00:30:13,040
+And so it was an iterative process.
+
+
+438
+00:30:13,040 --> 00:30:15,880
+Now we need to have something more declarative
+
+
+439
+00:30:15,880 --> 00:30:19,040
+where you figure out what is the shape of the data
+
+
+440
+00:30:19,040 --> 00:30:21,120
+that I'm likely to need to serve this whole request
+
+
+441
+00:30:21,120 --> 00:30:22,800
+and ask for a single car of that.
+
+
+442
+00:30:22,800 --> 00:30:24,600
+So we're tuning that to make sure we're asking
+
+
+443
+00:30:24,600 --> 00:30:26,240
+for the right things from Saturn.
+
+
+444
+00:30:28,160 --> 00:30:31,040
+We're currently fetching the car that we need
+
+
+445
+00:30:31,040 --> 00:30:33,920
+into a local block store for the scope of that request
+
+
+446
+00:30:33,920 --> 00:30:36,040
+and then able to serve it.
+
+
+447
+00:30:36,040 --> 00:30:37,880
+What we want to be able to do,
+
+
+448
+00:30:37,880 --> 00:30:40,920
+and so this is the work that's going on in Bifrost gateway,
+
+
+449
+00:30:40,920 --> 00:30:44,880
+is to also understand sort of the walk and the shape
+
+
+450
+00:30:44,880 --> 00:30:47,560
+enough that if we get part of the response,
+
+
+451
+00:30:47,560 --> 00:30:49,200
+we're able to make another car request
+
+
+452
+00:30:49,200 --> 00:30:50,680
+for what we are lacking,
+
+
+453
+00:30:50,680 --> 00:30:52,200
+rather than falling back to just the blocks
+
+
+454
+00:30:52,200 --> 00:30:54,120
+that we don't have.
+
+
+455
+00:30:54,120 --> 00:30:56,280
+So right now we've got enough to know the shape
+
+
+456
+00:30:56,280 --> 00:30:57,920
+of the overall thing that we need,
+
+
+457
+00:30:57,920 --> 00:30:59,920
+but if we get part of the response,
+
+
+458
+00:30:59,920 --> 00:31:02,360
+and then are we able to subtract that
+
+
+459
+00:31:02,360 --> 00:31:05,040
+and figure out a single next request that we need to make
+
+
+460
+00:31:05,040 --> 00:31:07,080
+as opposed to all of the individual blocks?
+
+
+461
+00:31:07,080 --> 00:31:08,760
+And that's where it gets a little tricky.
+
+
+462
+00:31:08,760 --> 00:31:11,320
+We're probably not, I think, expecting to get that
+
+
+463
+00:31:11,320 --> 00:31:14,280
+fully solved of always being able to ask for one more thing
+
+
+464
+00:31:14,280 --> 00:31:18,440
+of the full remaining weirdly shaped remainder,
+
+
+465
+00:31:18,440 --> 00:31:21,040
+but we should be able to do better than we are now.
+
+
+466
+00:31:22,080 --> 00:31:23,760
+In Caboose, Caboose is currently,
+
+
+467
+00:31:23,760 --> 00:31:26,920
+so this is which Saturn node do we talk to?
+
+
+468
+00:31:26,920 --> 00:31:29,520
+Right now we've got a stable hash ring,
+
+
+469
+00:31:29,520 --> 00:31:31,400
+so different parts of the SID space
+
+
+470
+00:31:31,400 --> 00:31:35,280
+are being routed to different Saturn nodes
+
+
+471
+00:31:35,280 --> 00:31:36,200
+that are close by.
+
+
+472
+00:31:37,440 --> 00:31:40,560
+We're currently using a dynamic set of nodes
+
+
+473
+00:31:40,560 --> 00:31:41,960
+that we've heard about recently
+
+
+474
+00:31:41,960 --> 00:31:44,680
+that we think are potentially near us,
+
+
+475
+00:31:44,680 --> 00:31:47,600
+and we change their weights of how much of the requests
+
+
+476
+00:31:47,600 --> 00:31:50,320
+they're getting based on how well they're performing.
+
+
+477
+00:31:50,320 --> 00:31:52,520
+What we'd like to do is reduce that churn,
+
+
+478
+00:31:52,520 --> 00:31:54,440
+because right now that means that there's some fraction
+
+
+479
+00:31:54,440 --> 00:31:56,640
+that are sort of trial nodes.
+
+
+480
+00:31:56,640 --> 00:31:58,760
+So we hear about someone we don't know if they're good,
+
+
+481
+00:31:58,760 --> 00:32:01,200
+we add them with a small slice of requests
+
+
+482
+00:32:01,200 --> 00:32:03,120
+to see if they're good, and then weight them down
+
+
+483
+00:32:03,120 --> 00:32:04,960
+or weight them up based on how well they perform.
+
+
+484
+00:32:04,960 --> 00:32:06,520
+But that means some of our production requests
+
+
+485
+00:32:06,520 --> 00:32:09,120
+are going to a node that's potentially pretty far away.
+
+
+486
+00:32:09,120 --> 00:32:11,480
+We'd like to get rid of that so that all of our requests
+
+
+487
+00:32:11,480 --> 00:32:13,720
+go to close by known good nodes,
+
+
+488
+00:32:13,720 --> 00:32:15,600
+and then we maybe mirror some of the traffic
+
+
+489
+00:32:15,600 --> 00:32:18,200
+to some trial nodes to see if we should include them.
+
+
+490
+00:32:20,200 --> 00:32:24,200
+The work within LASI, so this origin fetch component,
+
+
+491
+00:32:24,200 --> 00:32:26,760
+currently we've been identifying places
+
+
+492
+00:32:26,760 --> 00:32:28,120
+where we're overfetching.
+
+
+493
+00:32:28,120 --> 00:32:31,640
+So if we get asked for blocks,
+
+
+494
+00:32:31,640 --> 00:32:33,480
+are we going to prefetch additional blocks
+
+
+495
+00:32:33,480 --> 00:32:35,400
+expecting that those will also be asked,
+
+
+496
+00:32:35,400 --> 00:32:37,700
+and other cases where we've ended up having
+
+
+497
+00:32:37,700 --> 00:32:39,940
+more load back to origins than we were expecting
+
+
+498
+00:32:39,940 --> 00:32:41,840
+to make sure we're doing the right fetches
+
+
+499
+00:32:41,840 --> 00:32:43,040
+that we intend to be.
+
+
+500
+00:32:44,080 --> 00:32:47,540
+I think we're, at this point, largely happy
+
+
+501
+00:32:47,540 --> 00:32:50,480
+with the amount of traffic that we're generating from LASI.
+
+
+502
+00:32:50,480 --> 00:32:53,000
+And so the next piece of work that that component
+
+
+503
+00:32:53,000 --> 00:32:55,760
+is working on is including an HTTP transport
+
+
+504
+00:32:55,760 --> 00:33:00,360
+alongside BitSwap and GraphSync so that we can fetch
+
+
+505
+00:33:00,360 --> 00:33:04,320
+from a set of HTTP trustless gateway providers.
+
+
+506
+00:33:04,320 --> 00:33:06,720
+There have been a couple origins that have said
+
+
+507
+00:33:06,720 --> 00:33:09,560
+that it's much cheaper for them to serve an HTTP gateway
+
+
+508
+00:33:09,560 --> 00:33:11,800
+than a BitSwap origin.
+
+
+509
+00:33:11,800 --> 00:33:13,580
+And so we want to support that as well
+
+
+510
+00:33:13,580 --> 00:33:15,840
+using the same trustless gateway spec.
+
+
+511
+00:33:17,440 --> 00:33:19,640
+If you want to see more about where things are
+
+
+512
+00:33:19,640 --> 00:33:22,320
+and how they progress over the next month,
+
+
+513
+00:33:22,320 --> 00:33:27,320
+there is a public notion page that is extremely detailed
+
+
+514
+00:33:27,360 --> 00:33:30,600
+with all of the specific line items
+
+
+515
+00:33:30,600 --> 00:33:32,000
+that are happening each week.
+
+
+516
+00:33:32,000 --> 00:33:33,560
+You're welcome to follow that
+
+
+517
+00:33:33,560 --> 00:33:36,640
+with whatever level of detail you wish.
+
+
+518
+00:33:36,640 --> 00:33:41,320
+It, at its most, is probably too much information
+
+
+519
+00:33:41,320 --> 00:33:43,840
+for any of us, but it does contain
+
+
+520
+00:33:43,840 --> 00:33:45,840
+a really detailed progress in public
+
+
+521
+00:33:45,840 --> 00:33:47,240
+of how this effort is going.
+
+
+522
+00:33:49,480 --> 00:33:51,280
+So that's what I've got to say about Rhea.
+
+
+523
+00:33:51,280 --> 00:34:07,280
+Thank you.

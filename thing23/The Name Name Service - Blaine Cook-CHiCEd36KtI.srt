@@ -1,0 +1,1278 @@
+1
+00:00:00,000 --> 00:00:12,840
+Hello! Yay! That's what happens when you put plants in the crowd. Hi, I'm Blaine. I'm going
+
+
+2
+00:00:12,840 --> 00:00:23,720
+to talk about NNS, which is the NameName system. It is not the NomNom system. This talk will
+
+
+3
+00:00:23,720 --> 00:00:33,200
+be maybe a little bit weird. It's sort of, this is experimental, as I think most things
+
+
+4
+00:00:33,200 --> 00:00:39,400
+here are, so it's a system that's kind of imaginary, so I've tried to make the slides
+
+
+5
+00:00:39,400 --> 00:00:44,860
+kind of indicate that, but I don't know, most things at the IPFS level are kind of imaginary,
+
+
+6
+00:00:44,860 --> 00:00:54,440
+so I think it fits. So, what is NNS? It is a way to securely map names to data. That's
+
+
+7
+00:00:54,440 --> 00:01:01,240
+it. So, I'm just going to start and talk a little bit about what NNS might be for, and
+
+
+8
+00:01:01,240 --> 00:01:06,600
+these are just some ideas. There's lots of other things that you could use it for. So
+
+
+9
+00:01:06,600 --> 00:01:12,320
+if you want to find Alice at example.com's key without knowing which did method she uses,
+
+
+10
+00:01:12,320 --> 00:01:20,320
+so if it hasn't been gossiped to you, you might use NNS to look up that key. You might
+
+
+11
+00:01:20,320 --> 00:01:27,320
+want to know how you can contact Alice using an encrypted channel, so Signal today uses
+
+
+12
+00:01:27,320 --> 00:01:33,800
+text messaging to negotiate this, but you could use NNS. Where does Alice share content,
+
+
+13
+00:01:33,800 --> 00:01:43,800
+like her Instagram photos or Masteron posts or whatnot? Where can you get information
+
+
+14
+00:01:43,800 --> 00:01:54,840
+at a URL on IPFS? So, we have IPFS, we've got lots of CIDs in the content cloud, but
+
+
+15
+00:01:54,840 --> 00:02:01,180
+if you want to know where someone's blog exists in the IPFS network, that's a little bit harder
+
+
+16
+00:02:01,180 --> 00:02:08,600
+to deduce and you have to use some tricky things to get there. NNS, I think, is a nice
+
+
+17
+00:02:08,600 --> 00:02:14,560
+solution to that. And we've been talking about IPVM, which we'll hear more about tomorrow,
+
+
+18
+00:02:14,560 --> 00:02:20,920
+I think, but where can I get a piece of Wasm code that has a name rather than a CID? So
+
+
+19
+00:02:20,920 --> 00:02:28,000
+if you want to be able to evolve that code and update it, NNS I think can help us do
+
+
+20
+00:02:28,000 --> 00:02:38,600
+package naming. So let's step back just a little bit and talk about what a name is.
+
+
+21
+00:02:38,600 --> 00:02:50,520
+So as far as I can tell, and feel free to correct me, a name in this context is a public,
+
+
+22
+00:02:50,520 --> 00:02:58,200
+publicly unique and verifiable name. So verifiable means that it's possible to prove control
+
+
+23
+00:02:58,200 --> 00:03:05,580
+of the name using a DID. So for example, DNS hosts and domains, email addresses, social
+
+
+24
+00:03:05,580 --> 00:03:11,480
+media handles, all that kind of thing are names. So like my Twitter handle, atblame,
+
+
+25
+00:03:11,480 --> 00:03:19,380
+is a name that I can prove control of. But also things like HTTP URLs, ISBNs, it's sort
+
+
+26
+00:03:19,380 --> 00:03:24,120
+of notional that you could prove that, but your publisher could publish a key somewhere
+
+
+27
+00:03:24,120 --> 00:03:30,440
+and then give you the ability to prove that you published a book. Orchids, the academic
+
+
+28
+00:03:30,440 --> 00:03:34,480
+IDs, social security numbers, if the government provided a way to prove that you own that
+
+
+29
+00:03:34,480 --> 00:03:43,400
+name, public keys, et cetera. So a DID is not a name. And I think this is an important
+
+
+30
+00:03:43,400 --> 00:03:57,520
+but subtle point. No one's ever going to say my name is didkeyzbe0538247 out loud. It's
+
+
+31
+00:03:57,520 --> 00:04:04,080
+never going to happen. It's not a name. It's not something that people use as names. But
+
+
+32
+00:04:04,080 --> 00:04:07,720
+I think DIDs are really important because they give us a way to prove that we can control
+
+
+33
+00:04:07,720 --> 00:04:12,480
+a name. So all NNS names would have at least one valid DID. And so that's sort of a starting
+
+
+34
+00:04:12,480 --> 00:04:24,720
+definition. So I'm going to go into a quick little demo. Let's see here. Can we see that?
+
+
+35
+00:04:24,720 --> 00:04:32,920
+I can't see that. So I hope you can see it. So this is just a little web interface. And
+
+
+36
+00:04:32,920 --> 00:04:41,560
+it's sort of a simplified version of constructing a YouCan. And there we go. I've got my mouse.
+
+
+37
+00:04:41,560 --> 00:04:45,360
+So we're going to take this data and we're going to construct a YouCan out of it and
+
+
+38
+00:04:45,360 --> 00:04:55,440
+then we're going to send it into the NNS network. And yay. Oh, I can make it larger? Sure.
+
+
+39
+00:04:55,440 --> 00:05:14,400
+Uh oh. Oh, I am peerless. Uh oh. What has happened? Let's see here. Now I can't find
+
+
+40
+00:05:14,400 --> 00:05:28,200
+my VS code. Uh oh. It looks like VS code closed the window. So I'll open a window. And we
+
+
+41
+00:05:28,200 --> 00:05:38,160
+will take a look here. Live demos are always a mistake.
+
+
+42
+00:05:38,160 --> 00:06:02,640
+Okay. Let's try this again. There we go. Yay. Woohoo. Yay. So now I can go it's been stored
+
+
+43
+00:06:02,640 --> 00:06:08,200
+so I just have a little endpoint that I can go fetch the YouCan. And this YouCan is coming
+
+
+44
+00:06:08,200 --> 00:06:13,720
+from the NNS network based on you can see the name up there. I guess I'll make it bigger.
+
+
+45
+00:06:13,720 --> 00:06:17,600
+I can't make that bit bigger. Anyways, if you look up the bcook.ca, the name that I
+
+
+46
+00:06:17,600 --> 00:06:29,480
+stored the YouCan against, it returns it. This is all very exciting, I know. I'm going
+
+
+47
+00:06:29,480 --> 00:06:37,520
+to make a little change here. And I'm going to try and save my YouCan with my private
+
+
+48
+00:06:37,520 --> 00:06:44,920
+key into NNS. It's really hard to use the mouse like this. So I'm going to store this
+
+
+49
+00:06:44,920 --> 00:06:53,280
+into NNS but now with Boris's name. And it says that it doesn't work because my key that
+
+
+50
+00:06:53,280 --> 00:07:08,480
+I have posted at bcook.ca, if we look there, I've got a key stored against a DNS record
+
+
+51
+00:07:08,480 --> 00:07:15,600
+that doesn't match on bman.ca so I can't store into Boris's name because I don't control
+
+
+52
+00:07:15,600 --> 00:07:20,880
+Boris's name. This is all very, very basic but I think an important property because
+
+
+53
+00:07:20,880 --> 00:07:32,520
+now we have a way to store names into essentially DHT that we can only store if we control.
+
+
+54
+00:07:32,520 --> 00:07:39,160
+So that's the basics. Let's see here. Go back to the slides.
+
+
+55
+00:07:39,160 --> 00:07:48,560
+So I'm going to go back into the theory a little bit about what NNS is. One way of thinking
+
+
+56
+00:07:48,560 --> 00:07:57,760
+about it is that it's a hack on Zuko's triangle. So essentially, if you go really hard on the
+
+
+57
+00:07:57,760 --> 00:08:05,760
+decentralized requirement of Zuko's triangle, then yeah, you have to pick two. But NNS,
+
+
+58
+00:08:05,760 --> 00:08:13,240
+because we can put any name into it, so any of those like the HTTP namespace, the email,
+
+
+59
+00:08:13,240 --> 00:08:19,480
+emails from social media, et cetera, we're pulling in a whole bunch of decentralized
+
+
+60
+00:08:19,480 --> 00:08:24,240
+and federated and even centralized names that we can prove and we're putting them into one
+
+
+61
+00:08:24,240 --> 00:08:32,080
+system and so now we have human readable, secure, according to the name of the security
+
+
+62
+00:08:32,080 --> 00:08:39,580
+of the name system that you're rooting against. And then we can choose the level of centralization
+
+
+63
+00:08:39,580 --> 00:08:44,320
+or federation or decentralization that we want. And so I think it gets a lot of the
+
+
+64
+00:08:44,320 --> 00:08:50,440
+properties that Zuko's triangle says that we can't get at, but sort of lets us do it
+
+
+65
+00:08:50,440 --> 00:08:57,800
+in a nice way. NNS is not a pet name system. And I want to talk a little bit about pet
+
+
+66
+00:08:57,800 --> 00:09:00,920
+names because a lot of the time in the decentralized world, people are like, oh, you can solve
+
+
+67
+00:09:00,920 --> 00:09:07,080
+this with pet names. And I don't think you can solve this with pet names because pet
+
+
+68
+00:09:07,080 --> 00:09:13,760
+names don't cross connectivity boundaries, for one. So if we're riding in a bus and our
+
+
+69
+00:09:13,760 --> 00:09:18,280
+phones have died because we haven't had power in 12 hours and we've just had a really great
+
+
+70
+00:09:18,280 --> 00:09:26,880
+conversation but we don't know how to contact each other with a QR code, we're kind of hooped.
+
+
+71
+00:09:26,880 --> 00:09:31,820
+And so we need a name that we can say that we can remember in ourselves that we can share
+
+
+72
+00:09:31,820 --> 00:09:38,360
+with each other so that we can get in contact when we have connectivity again. And so I
+
+
+73
+00:09:38,360 --> 00:09:43,520
+think having that sort of human readability is really, really important.
+
+
+74
+00:09:43,520 --> 00:09:49,040
+The other thing is that pet names don't cross trust barriers. So if I share my pet name
+
+
+75
+00:09:49,040 --> 00:09:53,400
+database with you, you have no way of trusting whether or not those pet names match with
+
+
+76
+00:09:53,400 --> 00:10:00,360
+your expectation of what those names are. So that's a huge problem, actually. So we
+
+
+77
+00:10:00,360 --> 00:10:12,760
+can't use pet names. Got the Brooke chuckle. So NNS is also an attempt to rein in standards
+
+
+78
+00:10:12,760 --> 00:10:18,720
+proliferation. So we have all of these different naming systems, but they're all sort of independent.
+
+
+79
+00:10:18,720 --> 00:10:22,640
+And now if you want to use them, you have to kind of understand and interact with all
+
+
+80
+00:10:22,640 --> 00:10:32,000
+of them. NNS tries to encapsulate all of them so that we don't just have another standard.
+
+
+81
+00:10:32,000 --> 00:10:38,160
+It's something that can kind of work with all of the standards. I've excluded the PST
+
+
+82
+00:10:38,160 --> 00:10:42,000
+and the telephone network because there's no way to verify ownership of a phone number
+
+
+83
+00:10:42,000 --> 00:10:49,060
+that I'm aware of and pet names because those are sort of local contexts.
+
+
+84
+00:10:49,060 --> 00:10:55,760
+It might be a replacement for IPNS and DNS link. I'm going to quote Brooklyn on this
+
+
+85
+00:10:55,760 --> 00:11:06,240
+one. She said it was okay. No one really likes IPNS. It's kind of a Baroque system. It's
+
+
+86
+00:11:06,240 --> 00:11:14,080
+got some issues. And the names in it obviously are keys, right? Like they're not meaningful
+
+
+87
+00:11:14,080 --> 00:11:20,000
+to people. And so you have to use DNS link with IPNS anyways. So you kind of have this
+
+
+88
+00:11:20,000 --> 00:11:25,400
+weird indirection thing going on. And I think we can achieve most of or all of what we have
+
+
+89
+00:11:25,400 --> 00:11:34,880
+with IPNS and DNS link with NNS. DNS link also has the disadvantage that the DNS infrastructure,
+
+
+90
+00:11:34,880 --> 00:11:39,400
+which is frankly amazing and like working on NNS, I've done a bunch of digging into
+
+
+91
+00:11:39,400 --> 00:11:47,360
+DNS and it is amazing. But it does have some problems. So like latency and the fact that
+
+
+92
+00:11:47,360 --> 00:11:50,760
+you know, the security really only applies to the top level zone file and that kind of
+
+
+93
+00:11:50,760 --> 00:11:57,320
+thing is really problematic. So I think NNS might help with those. One way that might
+
+
+94
+00:11:57,320 --> 00:12:03,360
+resonate is that NNS you can think of as just a decentralized key base. That's it. Like
+
+
+95
+00:12:03,360 --> 00:12:06,880
+if you get that, you're done. You can go to a different talk. But my slides are pretty.
+
+
+96
+00:12:06,880 --> 00:12:12,760
+So you should probably stay. So it's a way, you know, if you can prove that you control
+
+
+97
+00:12:12,760 --> 00:12:17,660
+access to a name, if you can associate your name with a key, then it's NNS is a place
+
+
+98
+00:12:17,660 --> 00:12:23,060
+where you can publish that name and other people can get it. That's it. So how does
+
+
+99
+00:12:23,060 --> 00:12:29,440
+it all sort of work under the covers? We start with dids. Dids, it's I think worth noting
+
+
+100
+00:12:29,440 --> 00:12:35,000
+dids didn't really exist when key base was invented. So it's sort of, oh, I forgot to
+
+
+101
+00:12:35,000 --> 00:12:39,160
+mention key base would be great. We would just use that except they were centralized
+
+
+102
+00:12:39,160 --> 00:12:45,000
+and then sold to zoom and now they're like a proprietary chat software. So we had to
+
+
+103
+00:12:45,000 --> 00:12:54,760
+invent it here. So we're using dids. Dids are kind of complicated, but they're not really
+
+
+104
+00:12:54,760 --> 00:13:02,760
+complicated. I don't know if you can read that. I'm lying. They're really complicated,
+
+
+105
+00:13:02,760 --> 00:13:08,480
+but they're actually pretty simple. I think a lot of the cruft around dids is really complicated.
+
+
+106
+00:13:08,480 --> 00:13:14,440
+But if we, if we pair them back to what the core is, they're really simple. So we take
+
+
+107
+00:13:14,440 --> 00:13:23,440
+a did method, right? So for example, did DNS what that means is given a name like did DNS
+
+
+108
+00:13:23,440 --> 00:13:30,160
+example.com, it says go fetch the text record for underscore did dot example.com and you'll
+
+
+109
+00:13:30,160 --> 00:13:35,880
+get a public key and then you'll have a public key and you can use that public key to verify
+
+
+110
+00:13:35,880 --> 00:13:39,600
+that the owner of, you know, the person who was able to publish at underscore did dot
+
+
+111
+00:13:39,600 --> 00:13:45,680
+example.com signs with their private key. That's it. If you take one thing from this
+
+
+112
+00:13:45,680 --> 00:13:50,680
+talk, that's what it did is. And basically nothing else. All the other stuff around did
+
+
+113
+00:13:50,680 --> 00:13:56,480
+documents and everything I think is too complicated. But we can, a lot of these are imaginary.
+
+
+114
+00:13:56,480 --> 00:14:01,280
+They haven't been defined, but we can define these did methods. And we've been talking
+
+
+115
+00:14:01,280 --> 00:14:06,520
+about, you know, what if, what if it did method is wasm? There might be something interesting
+
+
+116
+00:14:06,520 --> 00:14:14,360
+there, but at the core, it's just get a public key for a name.
+
+
+117
+00:14:14,360 --> 00:14:21,080
+So the next part of, of sort of how we compose NNS is having a record. So this is like a
+
+
+118
+00:14:21,080 --> 00:14:26,680
+DNS zone file, but instead of using like a zone file, we're using a who can, sorry, a
+
+
+119
+00:14:26,680 --> 00:14:37,240
+you can maybe a who can. And all that is, is for a name, you take a, a you can that's
+
+
+120
+00:14:37,240 --> 00:14:43,640
+issued by a did that is valid for the name that you want to publish. So in our example,
+
+
+121
+00:14:43,640 --> 00:14:51,120
+my, my name, be cook.ca was valid for the you can that I published, but be man.ca was
+
+
+122
+00:14:51,120 --> 00:14:57,120
+and then we have facts. So we can say, all location or DNS link or, or, you know, any
+
+
+123
+00:14:57,120 --> 00:15:02,800
+number of different attributes can point to other stuff. So we're talking about doing
+
+
+124
+00:15:02,800 --> 00:15:08,640
+this for like account delegation for redirects, like all sorts of different, different things.
+
+
+125
+00:15:08,640 --> 00:15:15,140
+And then you just sign it with the key that's available for that did you know, this looks
+
+
+126
+00:15:15,140 --> 00:15:20,000
+a lot like a DNS record. We've got the resource record type. We've got the fully qualified
+
+
+127
+00:15:20,000 --> 00:15:25,800
+domain name. We have the resource record value. That's a DNS record. And then the signature
+
+
+128
+00:15:25,800 --> 00:15:31,400
+over the you can is basically what DNS sec does, except it's a lot simpler to do this
+
+
+129
+00:15:31,400 --> 00:15:38,880
+than publish something into, into DNS sec. And then the, the, the third and final part
+
+
+130
+00:15:38,880 --> 00:15:49,360
+of, of NNS is a DHT which I know is kind of a bad word around these parts. But basically
+
+
+131
+00:15:49,360 --> 00:15:57,840
+we just make these named values available in a decentralized way. So there's more to
+
+
+132
+00:15:57,840 --> 00:16:09,480
+say on the DHT part in particular, but yeah. So I'm just going to recap. So we, in order
+
+
+133
+00:16:09,480 --> 00:16:15,320
+to make it all work, we generate a you can that delegates from a name to some stuff authenticated
+
+
+134
+00:16:15,320 --> 00:16:23,960
+by a did that implies control of a name. We upload that you can to the NNS, NNSD DHT with
+
+
+135
+00:16:23,960 --> 00:16:31,600
+the key of, of the, of the name. And that will only succeed if and only if the, the,
+
+
+136
+00:16:31,600 --> 00:16:37,680
+you can sign in key matches that you can issue her and the name matches the issuer. And then
+
+
+137
+00:16:37,680 --> 00:16:43,320
+you fetch them and that's basically it. So the, the initial version of NNS just has an
+
+
+138
+00:16:43,320 --> 00:16:54,160
+HTTP API that fronts a lib P2P DHT that is currently Kadimlia, but we will talk about
+
+
+139
+00:16:54,160 --> 00:17:00,200
+that. So this is all just review. I've said all of this, but you know, I've added, you
+
+
+140
+00:17:00,200 --> 00:17:05,520
+know, maybe, maybe this is a decentralized DNS. I don't want to be too ambitious, but
+
+
+141
+00:17:05,520 --> 00:17:14,800
+this is IPFS land. So who knows? Yeah. DNS is great, but it's also pretty old and doesn't
+
+
+142
+00:17:14,800 --> 00:17:24,160
+serve a lot of the tasks that we need. It's, it's worth talking about what NNS isn't. So
+
+
+143
+00:17:24,160 --> 00:17:29,440
+it's NNS itself is not a way to prove ownership of a name, right? That's what the dids are
+
+
+144
+00:17:29,440 --> 00:17:36,800
+for. NNS helps you discover those proofs, but it doesn't root those proofs. So when
+
+
+145
+00:17:36,800 --> 00:17:43,000
+you download a, you can from, from NNS. So you say, Hey, I want, you know, brook at vision
+
+
+146
+00:17:43,000 --> 00:17:49,640
+dot codes information, her profile. I can go to NNS and ask for it. And I might trust
+
+
+147
+00:17:49,640 --> 00:17:54,900
+the NNS network to provide the correct you can, but they might be lying to me. But the
+
+
+148
+00:17:54,900 --> 00:17:59,960
+nice thing about this is that I can go and check myself and verify this information.
+
+
+149
+00:17:59,960 --> 00:18:09,600
+I don't need to trust the, the DHT in order to in order to use it. It's not a new namespace.
+
+
+150
+00:18:09,600 --> 00:18:13,600
+This is a personal bug bear. There's a lot of systems like I could name names, but I'm
+
+
+151
+00:18:13,600 --> 00:18:20,800
+not going to because I'm better than that. Where, where people go and create new namespaces
+
+
+152
+00:18:20,800 --> 00:18:26,160
+and basically say, okay, we've got a new, a new namespace. It's secure. It's got all
+
+
+153
+00:18:26,160 --> 00:18:32,120
+these great properties, pay us five bucks and we'll sell you a name. And I feel like
+
+
+154
+00:18:32,120 --> 00:18:40,840
+this is a it's quite a cynical capture. And often, you know, from a regulatory standpoint,
+
+
+155
+00:18:40,840 --> 00:18:46,360
+it's never, it's never going to be different than I can ultimately, because I can has sort
+
+
+156
+00:18:46,360 --> 00:18:54,360
+of fought through all of the regulatory uphill battles and come up with a regulatory structure.
+
+
+157
+00:18:54,360 --> 00:18:58,680
+That's, that's pretty good. That's not to say that you don't want your own namespace
+
+
+158
+00:18:58,680 --> 00:19:02,520
+and NNS, you could run internally to your organization, have your own namespace independent
+
+
+159
+00:19:02,520 --> 00:19:09,280
+from my cannon. Great. Away you go. But but I don't think the solution to this problem
+
+
+160
+00:19:09,280 --> 00:19:18,720
+is to create new namespaces. So, so NNS is not trying to do that. This one I'm less sure
+
+
+161
+00:19:18,720 --> 00:19:23,760
+of. I think it's probably one of the bigger questions with the NNS work which again is
+
+
+162
+00:19:23,760 --> 00:19:28,180
+very experimental at this point. It's not guaranteed to be globally consistent. We could
+
+
+163
+00:19:28,180 --> 00:19:33,580
+build this as like a rollout blockchain kind of thing and have global consistency and whatnot.
+
+
+164
+00:19:33,580 --> 00:19:37,560
+But I think there's enough diversity in the namespaces and how people want to use this
+
+
+165
+00:19:37,560 --> 00:19:45,120
+that it's better to basically use it as like just a unstructured DHT. You can just find
+
+
+166
+00:19:45,120 --> 00:19:50,960
+stuff in this, in this bucket and let the individual mechanism sort of describe how
+
+
+167
+00:19:50,960 --> 00:19:56,960
+consistency should happen rather than having one consistency model for all of the names.
+
+
+168
+00:19:56,960 --> 00:20:13,000
+So if this stuff works, we're talking about like trillions of keys.
+
+
+169
+00:20:00,000 --> 00:20:13,000
+so consistency is harder at that scale. Whereas if you can scope down what Consistency means for your use case, then it's a much better sort of scenario. And it's not a blockchain.
+
+
+170
+00:20:13,000 --> 00:20:32,000
+It probably depends on some blockchains like certificate transparency and that sort of thing, but it's not it's not itself kind of one one central blockchain. So why, why am I working on this?
+
+
+171
+00:20:32,000 --> 00:20:49,000
+Fission kind of needs this, but also we don't it's kind of, you know, DNS link mostly works. But I think I think there's a lot of opportunity in exploring what what other things we can enable.
+
+
+172
+00:20:49,000 --> 00:21:02,000
+So, you know, email, HTTP URLs, social handles are widely used really important in the way that people use the internet. There's lots of ways to like link DNS names to decentralize stuff on the internet.
+
+
+173
+00:21:02,000 --> 00:21:13,000
+There are very few or none that let you link email, HTTP and social handles in a decentralized way. Like I said earlier, key base was a great start, but it wasn't decentralized.
+
+
+174
+00:21:13,000 --> 00:21:25,000
+DIDS are great to go from the like the DIDURI to a key. But most often we don't have that DID in the first place, we need to get the DID to get going.
+
+
+175
+00:21:25,000 --> 00:21:37,000
+So this this hopefully helps bootstrap that process. Pet names I mentioned. And one of the really big ones here is enabling permissionless usage.
+
+
+176
+00:21:37,000 --> 00:21:51,000
+So if Google hasn't implemented some standard to enable like my email address to exist on the IPFS network or blue sky or something like that, I can't I can't participate.
+
+
+177
+00:21:51,000 --> 00:22:02,000
+But I'm not going to move off of Google and move my email address of 18 years or whatever, just because some new decentralized system says, well, you have to if you want to use us.
+
+
+178
+00:22:02,000 --> 00:22:11,000
+So the nice thing here is that NS allows us to take control of names that we don't own, that we don't own the infrastructure.
+
+
+179
+00:22:11,000 --> 00:22:30,000
+So with email, they're still playing with some of these these ideas, but there's we have a working sort of test case using DKIM and DMARC to basically sign a proof that says that I own an email address without any involvement from the service provider.
+
+
+180
+00:22:30,000 --> 00:22:42,000
+So basically, the DKIM and DMARC keys let you send an email that in the email you say I'm delegating to this key and then all of that signed and then you can put that into the you can as the proof.
+
+
+181
+00:22:42,000 --> 00:22:54,000
+There's a research paper pretty recent called Open Pubkey that does a similar thing with OpenID Connect, which is wild and super cool.
+
+
+182
+00:22:54,000 --> 00:23:03,000
+And I'm really excited to try that, but we haven't gotten there yet. But I think there are ways that we can actually bootstrap out of some of this corporate infrastructure.
+
+
+183
+00:23:03,000 --> 00:23:10,000
+And then, yeah, so so that's basically it. There are a lot of questions that I have still.
+
+
+184
+00:23:10,000 --> 00:23:15,000
+So there's a bunch of technical challenges, latency and locality, obviously.
+
+
+185
+00:23:15,000 --> 00:23:23,000
+I think NNS, if it's going to be successful, needs to have lowered latency than DNS for a much bigger key space.
+
+
+186
+00:23:23,000 --> 00:23:31,000
+I think that's possible, but we're going to have to do some thinking on the on the DHT side.
+
+
+187
+00:23:31,000 --> 00:23:36,000
+And it's also important for authorities to be able to opt into hosting parts of the namespace.
+
+
+188
+00:23:36,000 --> 00:23:41,000
+So obviously, we can do pinning, but that's expensive and complicated.
+
+
+189
+00:23:41,000 --> 00:23:46,000
+And realistically, a lot of this stuff is going to look like hosting a DNS server.
+
+
+190
+00:23:46,000 --> 00:23:53,000
+So you're going to have an organization that you're happy to pay to just sit there and say, like, I'm answering requests for names like Fission.
+
+
+191
+00:23:53,000 --> 00:23:58,000
+We'll definitely run one of these and we're definitely going to pay for it.
+
+
+192
+00:23:58,000 --> 00:24:03,000
+It would be great if we could tell the DHT, hey, we're here. We'll just answer your question.
+
+
+193
+00:24:03,000 --> 00:24:13,000
+Other people might post names that we don't host ourselves, but we'll be available and it'd be nice to be able to support that natively.
+
+
+194
+00:24:13,000 --> 00:24:29,000
+And then there is I kind of have punted on this consistency question, but I think we do need good answers for this sort of sub sections of names and what consistency looks like so that you can know that you're getting a recent version of someone's information and whatnot.
+
+
+195
+00:24:29,000 --> 00:24:34,000
+So those are sort of the some of the open questions on the DHT side of things.
+
+
+196
+00:24:34,000 --> 00:24:51,000
+I think there are some pretty good recent research into hierarchical DHTs. And because the naming system is sort of by definition hierarchical, we can leverage some of that to get better locality.
+
+
+197
+00:24:51,000 --> 00:24:58,000
+So that's sort of some of the coming work. But if you know anything about that, please let me know.
+
+
+198
+00:24:58,000 --> 00:25:09,000
+And that's all I have. If you have any questions, let me know. And this is a link to the talk page on the Fission site that will be migrating to a GitHub repo at some point soon.
+
+
+199
+00:25:09,000 --> 00:25:11,000
+Thank you.
+
+
+200
+00:25:11,000 --> 00:25:27,000
+This is awesome. This is really cool.
+
+
+201
+00:25:27,000 --> 00:25:39,000
+It's great to see this push when dids first were being built, which is also after where when IPNS it important historical note had IPNS happened after dids, it would look a lot more like this.
+
+
+202
+00:25:39,000 --> 00:25:47,000
+And it was kind of after trying to struggle with some of those problems that dids ended up going that direction. I think it's great.
+
+
+203
+00:25:47,000 --> 00:25:54,000
+I think we should think about how do we get it into an implementable structure so that it can kind of percolate through implementations.
+
+
+204
+00:25:54,000 --> 00:26:00,000
+Like, what does it look like for things like Kubo and others to learn how to resolve names through this?
+
+
+205
+00:26:00,000 --> 00:26:09,000
+And I think on the on the consistency piece, one clarifying question. At first, I thought you were sort of deferring to the did method to decide where to look.
+
+
+206
+00:26:09,000 --> 00:26:17,000
+But then it sounded like you're aggregating the proofs elsewhere in the in like what you're sort of describing as potentially DHT.
+
+
+207
+00:26:17,000 --> 00:26:21,000
+And I guess the question is, like, is that is that the case?
+
+
+208
+00:26:21,000 --> 00:26:32,000
+Yeah, yeah. Yeah, because otherwise you can't like I can't publish a in order to publish a proof for my email address for my Ramada at gmail.com email address.
+
+
+209
+00:26:32,000 --> 00:26:35,000
+Google's not going to host it. So I need somewhere else to put it. Yeah.
+
+
+210
+00:26:35,000 --> 00:26:49,000
+Yeah, that makes sense. You could come up with some way of mapping the the method to a canonical way of doing it, because some methods, some did methods will, like you were describing, mean vastly different numbers of key of names to resolve.
+
+
+211
+00:26:49,000 --> 00:26:55,000
+Yeah. Or vastly different frequencies at which these might change or different security requirements.
+
+
+212
+00:26:55,000 --> 00:27:02,000
+Like, is it really important? Is this like a bank? And is it really important that this is exactly one possible address?
+
+
+213
+00:27:02,000 --> 00:27:08,000
+Or is it kind of like the latest state of a chat? And is it OK if it's like a little bit delayed or whatever?
+
+
+214
+00:27:08,000 --> 00:27:26,000
+Yeah. And so I think maybe resolving that question in the name system itself would be good, because I think if you enforce the same consistency semantics across all methods, that'll get it'll sort of like it won't won't do well enough at the really important things to be to be adopted.
+
+
+215
+00:27:26,000 --> 00:27:32,000
+Totally. That makes sense. Yeah, this is really cool. Thanks.
+
+
+216
+00:27:32,000 --> 00:27:42,000
+Any? Robin first. Oh, no. OK.
+
+
+217
+00:27:42,000 --> 00:27:52,000
+So you know that terror you have when you turn up like three minutes into the start of like a talk and then you have a question, but you're really scared that it was the first thing you address.
+
+
+218
+00:27:52,000 --> 00:28:02,000
+So I'm not stupid. I'm just tardy. But my question is, is what's the thing that you look up? Right. What's the key to the key value?
+
+
+219
+00:28:02,000 --> 00:28:13,000
+And are you going to put any constraints on that? Or are you thinking like what do you think that should look like?
+
+
+220
+00:28:13,000 --> 00:28:25,000
+Where you turn to slide one. Yeah. Yeah. God. Any public, globally unique and verifiable name.
+
+
+221
+00:28:25,000 --> 00:28:36,000
+OK, but like so what why do I look up? What do I you're sort of saying is it does it look like Blaine Cook or does it look like so so Elephant Man or what?
+
+
+222
+00:28:36,000 --> 00:28:50,000
+Right. So like personal names wouldn't be named like wouldn't be names in NNS because, you know, even even though I've got an unusual name, there are other Blaine Cook's in the world and there's no way to disambiguate between them.
+
+
+223
+00:28:50,000 --> 00:29:02,000
+So there's no way that I can prove that I am Blaine Cook because other people can prove that my email address or my Twitter handle are global unique and only I can prove that I control them.
+
+
+224
+00:29:02,000 --> 00:29:18,000
+So so that would be the criteria. I think. Does that make sense? Do you think that there is going to be a challenge here about like defining like, for instance, your Twitter handle is at Blaine, right?
+
+
+225
+00:29:18,000 --> 00:29:36,000
+But do we end up going into a thing where we have to say, so what we really mean in this lookup is that Blaine at Twitter because Twitter dot com. And do you think we do you think you have to sort of paint some picture about what the internal structure of those names should look like?
+
+
+226
+00:29:36,000 --> 00:29:50,000
+Yeah, I think that's actually really good. I think URIs work really well for that. So schemes, URI schemes. I can't think of an example where we don't have a URI scheme that sort of does that.
+
+
+227
+00:29:50,000 --> 00:30:12,000
+And in most cases, you're going to have a context. So like if I let's imagine a sign in page that just like literally the only question is, what's your name or what's your handle? And you can either put in a discord handle or a Twitter handle or an email address or a URL or something like that.
+
+
+228
+00:30:12,000 --> 00:30:31,000
+In virtually all cases, there's actually not very many globally unique name schemes. And so you're going to be able to infer what that name is. So like you can say at Twitter, like at Blaine means it's a Twitter name, you know, that kind of thing. Or you can have like a little drop down to say which scheme is this.
+
+
+229
+00:30:31,000 --> 00:30:42,000
+Got it. Yeah. Yeah, you'll need that.
+
+
+230
+00:30:42,000 --> 00:30:52,000
+You mentioned Keybase a couple of times. Are you also aware of Keyoxide? I think the project is and if so, did you look at it? How does it compare?
+
+
+231
+00:30:52,000 --> 00:31:03,000
+Yeah, yeah. Yeah. So I did a bunch of research because I really didn't want to build this.
+
+
+232
+00:31:03,000 --> 00:31:24,000
+All of the existing sort of Keybase comparable ones, either so Keyoxide doesn't have a lookup mechanism. So there's no way to like, or it's a centralized lookup mechanism. Like it's I think at the Keybase site, if you go to Keybase.net or whatever, you can do a lookup. But there's no story around what that looks like decentralized.
+
+
+233
+00:31:24,000 --> 00:31:47,000
+So it has the same fundamental problem as Keybase did where if it if Keyoxide goes away, if it stops being maintained, then all of those names disappear. Same thing with like PGP key stores. And then there's I'm blanking on the name, but there's a decentralized DNS, GNU DNS, GNU NS, which does a lot of this stuff.
+
+
+234
+00:31:47,000 --> 00:32:10,000
+But it's only for DNS names, like they reinvented DNS, but then they didn't extend it to anything else besides DNS. So it was just an extension of that. So there was kind of nothing that did all of the things. But yeah.
+
+
+235
+00:32:10,000 --> 00:32:17,000
+And I should add, if you know of one that does do all the things, please let me know because then I can stop working on this.
+
+
+236
+00:32:17,000 --> 00:32:37,000
+I'm not getting too much into the implementation details, but why DHT? Like, I don't seem to be that big of a, like an address space, like there shouldn't be that many key values in the whole space of things. Like, why not just fully replicate everything across all nodes?
+
+
+237
+00:32:37,000 --> 00:32:52,000
+So one of the use cases I alluded to this was, I mean, first of all, like if you've got every email address on earth in here, it's potentially 5 billion names right there.
+
+
+238
+00:32:52,000 --> 00:33:17,000
+Or many more than that, I guess. But one of the things I alluded to was this HTTP redirection sort of scenario. So there was an issue that came up in the Mastodon network where when you post a link to a video, all of the Mastodon servers that see that feed go and fetch the oembed data for that video from the server.
+
+
+239
+00:33:17,000 --> 00:33:29,000
+And so there's sort of this situation where you have thousands or tens of thousands of servers descending on some unsuspecting server. And it was causing some problems for people.
+
+
+240
+00:33:29,000 --> 00:33:42,000
+You know, this is a thing that CDN solved very nicely, but a lot of the people out there don't have a CDN and aren't going to CDN enable their site because the Mastodon network kind of operates inefficiently.
+
+
+241
+00:33:42,000 --> 00:33:55,000
+With this, they could just publish a link up into NNS of their HTTP URL, like of the link of the address of that video of the oembed endpoint.
+
+
+242
+00:33:55,000 --> 00:34:14,000
+Sign it with the did DNS, so really, really simple, not anything as complicated as an HTTP signed exchange. And then all of the Mastodon clients could just go check in NNS and then go and get the content from IPFS and know that they're getting the correct content, that no one's interfered with the content.
+
+
+243
+00:34:14,000 --> 00:34:24,000
+So when you start doing things like that, we're talking like every HTTP URL could be in this. So that's not something that we're going to be able to replicate.
+
+
+244
+00:34:24,000 --> 00:34:31,000
+And I think we're done. Cool. Awesome.
+
+
+245
+00:34:31,000 --> 00:34:32,000
+Oh, one more question.
+
+
+246
+00:34:32,000 --> 00:34:49,000
+Sorry, one further clarifying question. So like Danny, I was, I had assumed that the naming was derived from the DID so that the way that you solve the uniqueness of the address of the namespace was by leaning on the DID namespace.
+
+
+247
+00:34:49,000 --> 00:34:55,000
+But then the answer they gave to Danny made me think that that's not the case. And I'm thinking of some other.
+
+
+248
+00:34:55,000 --> 00:35:08,000
+Yeah, that's true. So this is one of the problems with DIDs because a DID is a verification method, but it's not the name. Right? It's like, there's at least four DID methods that I can use to prove ownership of a domain name.
+
+
+249
+00:35:08,000 --> 00:35:26,000
+But in most cases, when you're using it, you only care that someone has proven that they control the domain name. You don't care how. And so the and most often people aren't going to know how you like which DID method you chose in advance, but they will know the domain name.
+
+
+250
+00:35:26,000 --> 00:35:48,000
+True, but the reason DIDs have those is that it's trying to self-describe the system by which you control the namespace. So DIDs have this like self-describing name system in them that let the method describe the sub namespace that you have to think about and look up through.
+
+
+251
+00:35:48,000 --> 00:36:01,000
+And if you kind of remove that, then you have to solve it the same way again. And you sort of like solve it the same way again, as you were giving the answer of like, oh, you have to say at Twitter and something else, which is kind of reinventing the DID method.
+
+
+252
+00:36:01,000 --> 00:36:10,000
+And so you might find a way of like, if you don't like kind of like how the DID naming scheme works, you might find a one to one mapping. Right.
+
+
+253
+00:36:10,000 --> 00:36:27,000
+But I would lean away from reinventing that piece because that's one of the strongest things that DIDs have to offer. And it's a very hard problem in like, you will encounter lots of namespaces that are like that will clash very strongly in the namespace that they have.
+
+
+254
+00:36:27,000 --> 00:36:32,000
+Like you can't look at just the the name string and resolve it without self-description in some way.
+
+
+255
+00:36:32,000 --> 00:36:38,000
+Yeah, for sure. Yeah, that's yeah. We should we should talk more about that. Awesome.
+
+
+256
+00:36:38,000 --> 00:36:40,000
+Thank you.

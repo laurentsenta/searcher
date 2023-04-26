@@ -1,0 +1,1163 @@
+1
+00:00:00,000 --> 00:00:08,640
+I'm Ryan, the co-founder of Portrait, and Portrait is a no-code decentralized website
+
+
+2
+00:00:08,640 --> 00:00:09,640
+builder.
+
+
+3
+00:00:09,640 --> 00:00:15,240
+Today I'll be talking about how we use GPT to build decentralized websites with a single
+
+
+4
+00:00:15,240 --> 00:00:16,600
+click.
+
+
+5
+00:00:16,600 --> 00:00:20,280
+So that's a short introduction on my side, co-founder of Portrait.
+
+
+6
+00:00:20,280 --> 00:00:28,380
+I'll talk a bit about what Portrait is, what we're aiming to solve, and then we'll dive
+
+
+7
+00:00:28,380 --> 00:00:29,660
+into a demo.
+
+
+8
+00:00:29,660 --> 00:00:36,960
+We'll dive into a demo on how we can actually generate a decentralized website with a single
+
+
+9
+00:00:36,960 --> 00:00:37,960
+click.
+
+
+10
+00:00:37,960 --> 00:00:38,960
+Everything's alright?
+
+
+11
+00:00:38,960 --> 00:00:39,960
+Okay, yeah.
+
+
+12
+00:00:39,960 --> 00:00:45,160
+And what kind of implications that has.
+
+
+13
+00:00:45,160 --> 00:00:50,620
+So after that, after the demo, we'll finish with a food for thought where we kind of consider
+
+
+14
+00:00:50,620 --> 00:00:55,240
+the ethical implications of AI.
+
+
+15
+00:00:55,240 --> 00:00:56,240
+So first off, Portrait.
+
+
+16
+00:00:56,240 --> 00:00:57,240
+Why Portrait?
+
+
+17
+00:00:57,240 --> 00:01:04,400
+Well, Web3 is kind of characterized by being in control of your identity, it's kind of
+
+
+18
+00:01:04,400 --> 00:01:07,560
+ownership over data, those type of things.
+
+
+19
+00:01:07,560 --> 00:01:15,280
+And when we look at Web3 today, we can ask ourselves, are we truly able to be in control
+
+
+20
+00:01:15,280 --> 00:01:16,920
+of our data?
+
+
+21
+00:01:16,920 --> 00:01:23,240
+So to give a short example, if you'd like to write in Web3, in Web2 you go to Medium
+
+
+22
+00:01:23,240 --> 00:01:25,860
+or use WordPress, for whatever that means.
+
+
+23
+00:01:25,860 --> 00:01:34,280
+But in Web3 you can use solutions such as Mirror, or Paragraph, or Sigil, which is an
+
+
+24
+00:01:34,280 --> 00:01:36,080
+alternative to Mirror.
+
+
+25
+00:01:36,080 --> 00:01:40,600
+There are many solutions out there to write your blogs.
+
+
+26
+00:01:40,600 --> 00:01:46,640
+And if you'd like to release an NFT collection, there are 135 solutions to actually do that.
+
+
+27
+00:01:46,640 --> 00:01:50,880
+So for every single dev, for every single use case, there are a lot of solutions out
+
+
+28
+00:01:50,880 --> 00:01:51,880
+there.
+
+
+29
+00:01:51,880 --> 00:01:56,080
+And if you'd like to find the conjunction between two things, or even more things, that's
+
+
+30
+00:01:56,080 --> 00:02:00,440
+where things really start to get more complicated.
+
+
+31
+00:02:00,440 --> 00:02:04,960
+Because what if you'd like to write and release an NFT, or you publish videos and you'd like
+
+
+32
+00:02:04,960 --> 00:02:07,480
+to blog about something?
+
+
+33
+00:02:07,480 --> 00:02:15,760
+So let's say Joe, who owns Joe.eth, would like to express himself in various different
+
+
+34
+00:02:15,760 --> 00:02:16,840
+ways.
+
+
+35
+00:02:16,840 --> 00:02:22,600
+So he uses an array of different devs to actually do that.
+
+
+36
+00:02:22,600 --> 00:02:28,880
+But Joe.eth is more than a textual representation of his identity.
+
+
+37
+00:02:28,880 --> 00:02:33,220
+There's also the ability to create a visual representation, and that's able to be done
+
+
+38
+00:02:33,220 --> 00:02:39,000
+through the content hash, which you actually can set in the NS Domain Manager.
+
+
+39
+00:02:39,000 --> 00:02:48,400
+And you can actually map your ENS domain to specific content located on IPFS.
+
+
+40
+00:02:48,400 --> 00:02:53,400
+On top of that, there are browsers out there, such as Brave and Opera, that natively support
+
+
+41
+00:02:53,400 --> 00:02:55,400
+resolving ENS domains.
+
+
+42
+00:02:55,400 --> 00:03:00,480
+So we kind of built the logic to build decentralized websites.
+
+
+43
+00:03:00,480 --> 00:03:05,720
+But the ability to...
+
+
+44
+00:03:05,720 --> 00:03:08,520
+So yeah, just to round it up.
+
+
+45
+00:03:08,520 --> 00:03:15,760
+As of now, you can only map one content hash to your ENS domain.
+
+
+46
+00:03:15,760 --> 00:03:23,600
+So that would mean that Joe can map only one way of expressing himself to his domain name.
+
+
+47
+00:03:23,600 --> 00:03:28,800
+And what Joe likes to do is map everything to his ENS domain, right?
+
+
+48
+00:03:28,800 --> 00:03:33,120
+And in order to do that today, Joe has to be part of the subset of Web3 creators that
+
+
+49
+00:03:33,120 --> 00:03:34,840
+are actually technical.
+
+
+50
+00:03:34,840 --> 00:03:38,880
+And then he'd have to design and code his own website and publish that either through
+
+
+51
+00:03:38,880 --> 00:03:43,160
+Fleek or 3rdWeb, and then map the content hash to his ENS domain.
+
+
+52
+00:03:43,160 --> 00:03:48,120
+Now, I think everyone in this room is quite technical, and for everyone in this room,
+
+
+53
+00:03:48,120 --> 00:03:49,680
+that would be an easy job.
+
+
+54
+00:03:49,680 --> 00:03:55,540
+But we are part of the subset of the more technical individuals in the space.
+
+
+55
+00:03:55,540 --> 00:03:58,800
+So for the entire set, there's no solution out there.
+
+
+56
+00:03:58,800 --> 00:03:59,800
+And that's what we're building.
+
+
+57
+00:03:59,800 --> 00:04:03,940
+So we're building a no-code decentralized website builder that allows anyone to truly
+
+
+58
+00:04:03,940 --> 00:04:07,480
+express themselves through Web3.
+
+
+59
+00:04:07,480 --> 00:04:12,160
+As you can see, on the left-hand side, there's an example of what we've built.
+
+
+60
+00:04:12,160 --> 00:04:15,840
+You truly control your own website from A to Z.
+
+
+61
+00:04:15,840 --> 00:04:21,220
+And this is just a quick visual of what we're building.
+
+
+62
+00:04:21,220 --> 00:04:26,880
+So when you're building a solution for Web3, or for the new internet, so to speak, you
+
+
+63
+00:04:26,880 --> 00:04:32,340
+kind of have to think about, are we just building X for blockchain?
+
+
+64
+00:04:32,340 --> 00:04:34,260
+Are we building Uber for blockchain?
+
+
+65
+00:04:34,260 --> 00:04:36,640
+Are we doing Airbnb for Web3?
+
+
+66
+00:04:36,640 --> 00:04:42,720
+Because if you're doing that, you should really stop doing that and kind of try to find a
+
+
+67
+00:04:42,720 --> 00:04:43,960
+new purpose in life.
+
+
+68
+00:04:43,960 --> 00:04:51,160
+But if you're building a solution for Web3, you should start from the beginning and wonder,
+
+
+69
+00:04:51,160 --> 00:04:57,960
+what does Web3 actually bring that we can build a better version of, let's say, a Webflow?
+
+
+70
+00:04:57,960 --> 00:05:01,280
+And Portrait is not Webflow.
+
+
+71
+00:05:01,280 --> 00:05:04,120
+Portrait is fundamentally different than Webflow.
+
+
+72
+00:05:04,120 --> 00:05:09,400
+And I'll tell you, I'll showcase that in a bit, because Web2 is obviously siloed and
+
+
+73
+00:05:09,400 --> 00:05:11,280
+Web3 is open.
+
+
+74
+00:05:11,280 --> 00:05:14,600
+And we took some time to think about that.
+
+
+75
+00:05:14,600 --> 00:05:21,380
+And we realized your Ethereum address will be mapped to a website, to a visual representation.
+
+
+76
+00:05:21,380 --> 00:05:25,040
+But there's a lot of data out there which is mapped to your Ethereum address.
+
+
+77
+00:05:25,040 --> 00:05:29,160
+Think about event attendances through PoE apps.
+
+
+78
+00:05:29,160 --> 00:05:34,080
+Think about linking your Ethereum address to your Forecaster account.
+
+
+79
+00:05:34,080 --> 00:05:38,600
+Such things do have implications, and we'll dive a bit deeper into that.
+
+
+80
+00:05:38,600 --> 00:05:43,800
+But for us as the founders of Portrait, when we decided to build a product, we thought
+
+
+81
+00:05:43,800 --> 00:05:46,800
+about how can we create a better user experience.
+
+
+82
+00:05:46,800 --> 00:05:48,840
+So there are kind of two sides to it.
+
+
+83
+00:05:48,840 --> 00:05:51,320
+From one side, it's very easy to build a decentralized website.
+
+
+84
+00:05:51,320 --> 00:05:54,400
+On the other side, there will be some implications.
+
+
+85
+00:05:54,400 --> 00:06:01,200
+All right, so now I'll dive into a demo of what we're actually doing.
+
+
+86
+00:06:01,200 --> 00:06:10,680
+And we can kick this off with trying to find a certain individual on Etherscan or whatsoever,
+
+
+87
+00:06:10,680 --> 00:06:12,360
+and actually find his address.
+
+
+88
+00:06:12,360 --> 00:06:15,960
+And we can actually generate a portrait for that person.
+
+
+89
+00:06:15,960 --> 00:06:20,240
+So let's take Vitalik.
+
+
+90
+00:06:20,240 --> 00:06:24,080
+Kind of looking up his address.
+
+
+91
+00:06:24,080 --> 00:06:25,080
+We can put that into...
+
+
+92
+00:06:25,080 --> 00:06:26,080
+So we're actually...
+
+
+93
+00:06:26,080 --> 00:06:29,960
+This is actually live right now, so our users have access to this.
+
+
+94
+00:06:29,960 --> 00:06:39,880
+But I'll run a local demo.
+
+
+95
+00:06:39,880 --> 00:06:43,160
+And it truly is with a single click.
+
+
+96
+00:06:43,160 --> 00:06:48,360
+So well, these are two clicks actually, but we do have to add a disclaimer that you're
+
+
+97
+00:06:48,360 --> 00:06:56,080
+actually running better software, and who knows what GPT will spit out, right?
+
+
+98
+00:06:56,080 --> 00:07:01,320
+We're also kind of adding tags to create recommendations, but that has nothing to do with portrait AI.
+
+
+99
+00:07:01,320 --> 00:07:06,800
+So when we think about Vitalik, what kind of tags would you select?
+
+
+100
+00:07:06,800 --> 00:07:09,360
+Anyone in the crowd?
+
+
+101
+00:07:09,360 --> 00:07:11,160
+Sorry?
+
+
+102
+00:07:11,160 --> 00:07:13,120
+It's hard to see.
+
+
+103
+00:07:13,120 --> 00:07:16,600
+Is this better?
+
+
+104
+00:07:16,600 --> 00:07:20,080
+I think we can kind of go for...
+
+
+105
+00:07:20,080 --> 00:07:21,080
+Technologist?
+
+
+106
+00:07:21,080 --> 00:07:25,520
+That would be a good one.
+
+
+107
+00:07:25,520 --> 00:07:34,000
+Game changer, possibly?
+
+
+108
+00:07:34,000 --> 00:07:35,000
+Problem solver.
+
+
+109
+00:07:35,000 --> 00:07:36,000
+All right.
+
+
+110
+00:07:36,000 --> 00:07:41,760
+I think software engineer would be probably a right fit as well.
+
+
+111
+00:07:41,760 --> 00:07:46,200
+Right, so now we're generating the portrait.
+
+
+112
+00:07:46,200 --> 00:07:52,160
+Just make sure that...
+
+
+113
+00:07:52,160 --> 00:07:54,240
+And you actually have kind of this...
+
+
+114
+00:07:54,240 --> 00:07:58,840
+You actually see this kind of monologue with portrait AI, and he kind of will introduce
+
+
+115
+00:07:58,840 --> 00:08:09,440
+himself as portrait AI, the navigator of the cyber realm.
+
+
+116
+00:08:09,440 --> 00:08:15,160
+And so Vitalik has quite some data mapped to his Ethereum address, so it might take
+
+
+117
+00:08:15,160 --> 00:08:16,680
+a minute.
+
+
+118
+00:08:16,680 --> 00:08:17,840
+So your portrait is ready.
+
+
+119
+00:08:17,840 --> 00:08:23,160
+And that was quite interesting, because we're not in control of what GPT spits out.
+
+
+120
+00:08:23,160 --> 00:08:27,600
+So every time we generate a new portrait, even for Vitalik, new information will kind
+
+
+121
+00:08:27,600 --> 00:08:28,640
+of emerge.
+
+
+122
+00:08:28,640 --> 00:08:35,640
+So today we saw that he was in favor of removing...
+
+
+123
+00:08:35,640 --> 00:08:37,680
+Or in favor of daylight savings, right?
+
+
+124
+00:08:37,680 --> 00:08:39,320
+And abolishing.
+
+
+125
+00:08:39,320 --> 00:08:40,800
+So it was abolishing daylight savings.
+
+
+126
+00:08:40,800 --> 00:08:47,040
+I mean, that's pretty personal, kind of relevant information there.
+
+
+127
+00:08:47,040 --> 00:08:54,320
+And all we did was just kind of fetch data mapped to his Ethereum address.
+
+
+128
+00:08:54,320 --> 00:08:59,840
+So we'll actually visit the portrait that's been generated as well.
+
+
+129
+00:08:59,840 --> 00:09:07,840
+I know that you might be able to see kind of his face here.
+
+
+130
+00:09:07,840 --> 00:09:10,560
+But we can spit out a personal website.
+
+
+131
+00:09:10,560 --> 00:09:16,840
+Here we'll see some NFTs, but these are probably airdrop to him.
+
+
+132
+00:09:16,840 --> 00:09:20,040
+And then we'll also see a biography about him.
+
+
+133
+00:09:20,040 --> 00:09:22,060
+And we're even adding his personal links.
+
+
+134
+00:09:22,060 --> 00:09:26,400
+So that's one example.
+
+
+135
+00:09:26,400 --> 00:09:29,440
+We'll actually dive into another example right away.
+
+
+136
+00:09:29,440 --> 00:09:34,840
+And with that example, I will also dive a bit more into kind of the implications of
+
+
+137
+00:09:34,840 --> 00:09:39,420
+AI and Web3 together.
+
+
+138
+00:09:39,420 --> 00:09:41,040
+So let's try this one again.
+
+
+139
+00:09:41,040 --> 00:09:43,960
+We can actually stay right here.
+
+
+140
+00:09:43,960 --> 00:09:46,320
+And let's take Brian Armstrong, for example.
+
+
+141
+00:09:46,320 --> 00:09:51,560
+So Brian Armstrong Ethereum address.
+
+
+142
+00:09:51,560 --> 00:09:54,640
+I'm not even aware of what his Ethereum address is.
+
+
+143
+00:09:54,640 --> 00:09:57,400
+I'm just simply Googling it.
+
+
+144
+00:09:57,400 --> 00:10:01,580
+I'll click the first link that pops up.
+
+
+145
+00:10:01,580 --> 00:10:03,180
+And I'll copy his Ethereum address.
+
+
+146
+00:10:03,180 --> 00:10:08,880
+I'm not even sure whether this is his Ethereum address or not.
+
+
+147
+00:10:08,880 --> 00:10:09,880
+Let's paste that in.
+
+
+148
+00:10:09,880 --> 00:10:18,480
+And we'll do the same thing again.
+
+
+149
+00:10:18,480 --> 00:10:28,640
+Starting from zero, use portrait AI.
+
+
+150
+00:10:28,640 --> 00:10:34,100
+And for Brian, we can kind of select similar tags.
+
+
+151
+00:10:34,100 --> 00:10:36,820
+But let's take a few new ones.
+
+
+152
+00:10:36,820 --> 00:10:38,520
+We can take technologists as well.
+
+
+153
+00:10:38,520 --> 00:10:42,400
+Let's take kind of political advocate because of his...
+
+
+154
+00:10:42,400 --> 00:10:43,400
+Yeah, okay.
+
+
+155
+00:10:43,400 --> 00:10:46,520
+Let's take political advocate as well.
+
+
+156
+00:10:46,520 --> 00:10:50,160
+And progressive thinker.
+
+
+157
+00:10:50,160 --> 00:10:55,640
+Now we're generating a personal portrait for Brian.
+
+
+158
+00:10:55,640 --> 00:11:04,520
+Hopefully, if that's his actual address.
+
+
+159
+00:11:04,520 --> 00:11:24,680
+Lo and behold, we know that the Ethereum address is mapped to Brian Armstrong.
+
+
+160
+00:11:24,680 --> 00:11:31,600
+Not only that, so we actually know that he...
+
+
+161
+00:11:31,600 --> 00:11:34,440
+From a prototype to a public company.
+
+
+162
+00:11:34,440 --> 00:11:40,640
+And that's all we know by just fetching data from his Ethereum address.
+
+
+163
+00:11:40,640 --> 00:11:44,280
+And I actually tried his specific address a few times.
+
+
+164
+00:11:44,280 --> 00:11:52,520
+And sometimes the AI would actually spit out that he went to a certain event and that he's
+
+
+165
+00:11:52,520 --> 00:11:55,240
+actually the CEO of Coinbase.
+
+
+166
+00:11:55,240 --> 00:12:03,680
+And I'd like to talk more about attendance at events through ProApps, for example.
+
+
+167
+00:12:03,680 --> 00:12:09,680
+Because let's head back into the keynote.
+
+
+168
+00:12:09,680 --> 00:12:12,680
+And that's because...
+
+
+169
+00:12:12,680 --> 00:12:15,440
+Actually let's take a step back.
+
+
+170
+00:12:15,440 --> 00:12:27,040
+So when we go back to Etherscan, is there something someone notices about his address?
+
+
+171
+00:12:27,040 --> 00:12:29,920
+There are quite some funds there, right?
+
+
+172
+00:12:29,920 --> 00:12:37,480
+And we now know that this is the address of Brian Armstrong.
+
+
+173
+00:12:37,480 --> 00:12:39,800
+Just putting that out there.
+
+
+174
+00:12:39,800 --> 00:12:46,400
+And Brian knows that he is a notable individual and Brian knows that he has to take security
+
+
+175
+00:12:46,400 --> 00:12:54,640
+measures because of that, he can actually be a bit more confident in publicly showing
+
+
+176
+00:12:54,640 --> 00:12:58,320
+his funds and his ETH balance.
+
+
+177
+00:12:58,320 --> 00:13:06,560
+But do you or does anyone else that has these funds and uses Farcaster and uses ProApp to
+
+
+178
+00:13:06,560 --> 00:13:15,000
+attend events, for example, does that individual take the right security measures?
+
+
+179
+00:13:15,000 --> 00:13:18,240
+We can kind of look at this from...
+
+
+180
+00:13:18,240 --> 00:13:23,360
+When you're at holiday, don't take photos and publish them on social media because burglars
+
+
+181
+00:13:23,360 --> 00:13:27,480
+can break into your house and kind of pee on your couch.
+
+
+182
+00:13:27,480 --> 00:13:29,120
+And that was something like...
+
+
+183
+00:13:29,120 --> 00:13:30,120
+We'd say...
+
+
+184
+00:13:30,120 --> 00:13:31,120
+Okay, boom.
+
+
+185
+00:13:31,120 --> 00:13:36,840
+We have that level of information, we know, and we're not doing that.
+
+
+186
+00:13:36,840 --> 00:13:45,000
+But we can actually, with Web3 and with AI and GPT, we can actually take that a bit,
+
+
+187
+00:13:45,000 --> 00:13:50,660
+a step further, where these photos, these holiday photos, are kind of in the moment
+
+
+188
+00:13:50,660 --> 00:13:57,080
+where a burglar or anyone, a malicious, a bad actor, a malicious person, actually should
+
+
+189
+00:13:57,080 --> 00:14:02,800
+find that photo in the first place and then know that, hey, that person is away and I
+
+
+190
+00:14:02,800 --> 00:14:05,640
+can kind of pee on his couch.
+
+
+191
+00:14:05,640 --> 00:14:17,200
+But with the data mapped to your Ethereum address or data like event attendances through
+
+
+192
+00:14:17,200 --> 00:14:21,920
+ProApps, for example, which is mapped to your Ethereum address, and GPT, can we actually
+
+
+193
+00:14:21,920 --> 00:14:26,520
+predict whether an individual will attend a certain event?
+
+
+194
+00:14:26,520 --> 00:14:32,160
+And that's a step further because that's something we can actually predict in the future.
+
+
+195
+00:14:32,160 --> 00:14:38,280
+So here's the food for thought and here's what I'd like to end my presentation with
+
+
+196
+00:14:38,280 --> 00:14:43,240
+is that on one side, we can build great products from the user experience and on the other
+
+
+197
+00:14:43,240 --> 00:14:49,160
+side, we can ask, is it in the best interest of the community that most personal data is
+
+
+198
+00:14:49,160 --> 00:14:55,520
+available at any given time to anyone, combined with the fact that you can run any type of
+
+
+199
+00:14:55,520 --> 00:15:01,840
+computation on top of the data, given that AI is becoming more accessible by the day?
+
+
+200
+00:15:01,840 --> 00:15:03,880
+Thank you very much.
+
+
+201
+00:15:03,880 --> 00:15:07,200
+So is it using like JGPT under the hood?
+
+
+202
+00:15:07,200 --> 00:15:11,920
+Yeah, a bit of GPT 3.5 and 4.
+
+
+203
+00:15:11,920 --> 00:15:12,920
+Okay.
+
+
+204
+00:15:12,920 --> 00:15:18,600
+Is there a way to maybe use something like Bloom, something open source instead?
+
+
+205
+00:15:18,600 --> 00:15:19,600
+Potentially.
+
+
+206
+00:15:19,600 --> 00:15:21,080
+Have you tried that?
+
+
+207
+00:15:21,080 --> 00:15:26,680
+So we kind of looked at what can we build in a very short timeframe.
+
+
+208
+00:15:26,680 --> 00:15:32,480
+It's actually, it's in beta also, and the open AI kind of API is kind of very accessible
+
+
+209
+00:15:32,480 --> 00:15:33,480
+today.
+
+
+210
+00:15:33,480 --> 00:15:39,280
+But I think that's a great question as well, from an ethical perspective.
+
+
+211
+00:15:39,280 --> 00:15:44,560
+Sam is also the founder of WorldCoin.
+
+
+212
+00:15:44,560 --> 00:15:46,120
+Enough said probably.
+
+
+213
+00:15:46,120 --> 00:15:52,280
+So we're also sharing all of this data with open AI itself as an organization, and we
+
+
+214
+00:15:52,280 --> 00:15:55,320
+should also look at the ethical implications of that.
+
+
+215
+00:15:55,320 --> 00:15:56,320
+Yep.
+
+
+216
+00:15:56,320 --> 00:15:57,320
+Yeah.
+
+
+217
+00:15:57,320 --> 00:15:58,320
+For sure.
+
+
+218
+00:15:58,320 --> 00:15:59,320
+Yeah.
+
+
+219
+00:15:59,320 --> 00:16:04,400
+So how do you see AI technologies evolving in the next few years?
+
+
+220
+00:16:04,400 --> 00:16:08,680
+And what are the new applications and use cases do you envision?
+
+
+221
+00:16:08,680 --> 00:16:14,640
+Oh, that's a very general question.
+
+
+222
+00:16:14,640 --> 00:16:21,840
+I don't think I can truly answer that because the developments we've seen over the last
+
+
+223
+00:16:21,840 --> 00:16:24,720
+year is something I wouldn't have expected myself.
+
+
+224
+00:16:24,720 --> 00:16:30,120
+I also have to add on top of that, that I'm not an expert in AI and I haven't followed
+
+
+225
+00:16:30,120 --> 00:16:32,960
+the space from the beginning.
+
+
+226
+00:16:32,960 --> 00:16:38,040
+So I'd like to see...
+
+
+227
+00:16:38,040 --> 00:16:45,160
+So personally, just last week, Elon registered x.ai, and I think that's a very interesting
+
+
+228
+00:16:45,160 --> 00:16:47,600
+emerging thing.
+
+
+229
+00:16:47,600 --> 00:16:53,400
+Everything surrounding Elon is interesting, to say the least, whether that's good or bad.
+
+
+230
+00:16:53,400 --> 00:16:58,560
+But it always has kind of a quick...
+
+
+231
+00:16:58,560 --> 00:17:02,360
+There's always like this attention.
+
+
+232
+00:17:02,360 --> 00:17:05,760
+There's always a lot of attention mapped to whatever he does.
+
+
+233
+00:17:05,760 --> 00:17:11,800
+So I think that's an interesting development.

@@ -1,0 +1,968 @@
+1
+00:00:00,000 --> 00:00:08,400
+All right, so, yes, my name is David Drogansky, I'm an engineering manager on the Bedrock
+
+
+2
+00:00:08,400 --> 00:00:13,700
+team at Protocol Labs, and today we're going to talk about retrieval compatibility in the
+
+
+3
+00:00:13,700 --> 00:00:18,820
+interplanetary network. Now, that's a bit of a mouthful, and so we're definitely going
+
+
+4
+00:00:18,820 --> 00:00:23,160
+to go through some terminology to find some of those terms, talk about why compatibility
+
+
+5
+00:00:23,160 --> 00:00:28,980
+is important, and also some of the work the Bedrock team has done to improve that compatibility,
+
+
+6
+00:00:28,980 --> 00:00:34,500
+and at the end we'll do a recap, look at where we're at and what's coming next. And if there's
+
+
+7
+00:00:34,500 --> 00:00:40,480
+one thing to take away from this talk, it's that to realize the benefits of compatibility,
+
+
+8
+00:00:40,480 --> 00:00:45,080
+and I'll be trying to put in highlights throughout the slides of where we get some of those benefits
+
+
+9
+00:00:45,080 --> 00:00:51,000
+that we've seen so far, even though it may be challenging. So, with that, let's dive
+
+
+10
+00:00:51,000 --> 00:00:57,840
+in. So what is the interplanetary network? Well, it's really comprised of IPFS and Filecoin.
+
+
+11
+00:00:57,840 --> 00:01:03,860
+Now, I think this was mentioned in one of the earlier talks, IPFS principles, that really
+
+
+12
+00:01:03,860 --> 00:01:11,880
+helps explain how Filecoin and IPFS are part of the same network. But they are still different.
+
+
+13
+00:01:11,880 --> 00:01:19,880
+And so, as most of you know, IPFS, pure peer-to-peer system, decentralized by nature, Filecoin,
+
+
+14
+00:01:19,880 --> 00:01:26,040
+built on top of blockchain technology, which gives it some of that persistence layer of
+
+
+15
+00:01:26,040 --> 00:01:31,000
+IPFS in terms of guaranteeing the data that you're storing on Filecoin is retrievable
+
+
+16
+00:01:31,000 --> 00:01:36,360
+and is actually being stored. And IPFS tends to focus more on what I would call hotter
+
+
+17
+00:01:36,360 --> 00:01:42,960
+storage, hotter data, where you're accessing it more for applications. All of these each
+
+
+18
+00:01:42,960 --> 00:01:47,600
+have their own implementations of clients and node software, Kubo being the most popular
+
+
+19
+00:01:47,600 --> 00:01:57,680
+one on IPFS, Lotus being the most popular node software on Filecoin. Now, Bedrock, as
+
+
+20
+00:01:57,680 --> 00:02:02,000
+a team, just to give you some context, we're kind of at this unique vantage point where
+
+
+21
+00:02:02,000 --> 00:02:09,680
+we sit at the intersection of Filecoin and IPFS. And we try to make data storage, data
+
+
+22
+00:02:09,680 --> 00:02:15,200
+discovery, and data retrieval as performant and reliable as possible. And, in other words,
+
+
+23
+00:02:15,200 --> 00:02:19,640
+making the network that much more interoperable. And we think this is important because it
+
+
+24
+00:02:19,640 --> 00:02:26,320
+makes it easier to build on the network as well as use the network.
+
+
+25
+00:02:26,320 --> 00:02:32,200
+So in that set of words that I mentioned, retrieval is the place we want to start. And
+
+
+26
+00:02:32,200 --> 00:02:36,560
+I'll get into the why in a second, but first let's define what I mean by retrieval compatibility.
+
+
+27
+00:02:36,560 --> 00:02:41,160
+And I'm just going to read it from the slide. It means data clients and providers are agnostic
+
+
+28
+00:02:41,160 --> 00:02:46,960
+to the underlying platforms and protocols so they can seamlessly send and receive data.
+
+
+29
+00:02:46,960 --> 00:02:52,240
+And this really boils down to two things. Data providers can send data to Filecoin or
+
+
+30
+00:02:52,240 --> 00:03:01,480
+IPFS nodes, and data clients can retrieve data from Filecoin or IPFS and the IPFS network.
+
+
+31
+00:03:01,480 --> 00:03:07,400
+Sounds simple, but it's a little challenging. Now, why is that important? We really believe
+
+
+32
+00:03:07,400 --> 00:03:15,760
+that retrievability closes the loop on the golden path of the Filecoin and IPFS user
+
+
+33
+00:03:15,760 --> 00:03:20,400
+experience where one half of the experience is storing data, the other half is getting
+
+
+34
+00:03:20,400 --> 00:03:26,200
+that data back. And by getting that data, that is the best proxy we have for people
+
+
+35
+00:03:26,200 --> 00:03:32,580
+using the network. So the easier we can make retrieval, the easier it will be for people
+
+
+36
+00:03:32,580 --> 00:03:38,120
+to use the network and in turn grow the network. And we think that will create a lot of value
+
+
+37
+00:03:38,120 --> 00:03:46,040
+in the network. And again, we'll see as we increase compatibility how that takes place.
+
+
+38
+00:03:46,040 --> 00:03:54,440
+All right. Make sense so far? So Bedrock, again, this unique vantage point where maybe
+
+
+39
+00:03:54,440 --> 00:04:00,840
+the IPFS team is focused on making Kubo that much better, the Lotus team is making Lotus
+
+
+40
+00:04:00,840 --> 00:04:05,580
+that much better, we take a look at how can we improve the interoperability, and you quickly
+
+
+41
+00:04:05,580 --> 00:04:10,560
+go down all the way to the stack, down to the data transfer protocol layer, which is,
+
+
+42
+00:04:10,560 --> 00:04:17,440
+hey, BidSwap, primarily only used in IPFS, GraphSync primarily only used in Filecoin,
+
+
+43
+00:04:17,440 --> 00:04:22,320
+they do not talk to each other, how do we make this work? Okay?
+
+
+44
+00:04:22,320 --> 00:04:27,560
+So I'm going to walk you down this journey that we've had on the Bedrock team to get
+
+
+45
+00:04:27,560 --> 00:04:32,200
+to some of this compatibility. And remember, we need to solve it for providers and we need
+
+
+46
+00:04:32,200 --> 00:04:38,120
+to solve it for clients. But before we do that, I want everyone to close their eyes
+
+
+47
+00:04:38,120 --> 00:04:50,120
+and I'm going to send you guys a CID. It's BAFY834267. Okay. Open your eyes. How are
+
+
+48
+00:04:50,120 --> 00:04:54,520
+you going to get that information? Show of hands. Or just throw out a bunch of answers
+
+
+49
+00:04:54,520 --> 00:05:02,320
+of like, what would you use to get that data? The gateway. Wonderful choice. Anything else?
+
+
+50
+00:05:02,320 --> 00:05:06,280
+Lassie. Lassie, okay. That is true. Yeah, Lassie's
+
+
+51
+00:05:06,280 --> 00:05:15,320
+good. But what I'm trying to get at is that for a long time, it's actually pretty challenging.
+
+
+52
+00:05:15,320 --> 00:05:23,360
+What if the gateway is down? What if the DHT doesn't have that provider record? What if
+
+
+53
+00:05:23,360 --> 00:05:28,080
+you are not the one who made the Filecoin storage deal and you're trying to get that
+
+
+54
+00:05:28,080 --> 00:05:32,400
+data back? Where do you even begin to look? Do you have to crawl the whole chain? That
+
+
+55
+00:05:32,400 --> 00:05:38,560
+seems pretty cumbersome and slow. And so what the Bedrock team has done, the
+
+
+56
+00:05:38,560 --> 00:05:43,240
+IPNI team specifically has built an index for all that information. And we call it the
+
+
+57
+00:05:43,240 --> 00:05:48,200
+Interplanetary Network Indexer. If you're interested in this topic, by the way, there's
+
+
+58
+00:05:48,200 --> 00:05:53,360
+going to be a whole content routing talk. I encourage you to attend tomorrow. But the
+
+
+59
+00:05:53,360 --> 00:05:59,480
+IPNI does one very simple thing, which is a publisher can post content and the metadata
+
+
+60
+00:05:59,480 --> 00:06:06,160
+around that content as to who is providing that data so that at the end, an end user
+
+
+61
+00:06:06,160 --> 00:06:11,720
+can look up that CID to know where it is. Or I should say, who has that data and how
+
+
+62
+00:06:11,720 --> 00:06:17,360
+to get it. What protocols are supported by that provider to get that data.
+
+
+63
+00:06:17,360 --> 00:06:21,960
+Now this is pretty cool because now I know who's actually storing my data and how to
+
+
+64
+00:06:21,960 --> 00:06:27,640
+get it. And in terms of the benefit to the network that we've seen so far, it's already
+
+
+65
+00:06:27,640 --> 00:06:32,960
+helped a bunch of aggregators on the network like Web3.storage as well as Estuary to be
+
+
+66
+00:06:32,960 --> 00:06:37,400
+able to scale and serve content to their end users because these aggregators tend to use
+
+
+67
+00:06:37,400 --> 00:06:42,600
+a combination of IPFS and Filecoin as backup. And to be able to track where that content
+
+
+68
+00:06:42,600 --> 00:06:49,080
+is, they use IPNI to do that. Okay. So, okay. Now we know how to find where
+
+
+69
+00:06:49,080 --> 00:06:54,240
+the data is. Now we can get onto the meat and potatoes. Let's build a provider that
+
+
+70
+00:06:54,240 --> 00:07:03,680
+supports multiple, that speaks BitSwap and speaks GraphSync. So the Boost team on Bedrock
+
+
+71
+00:07:03,680 --> 00:07:08,920
+has built Boost, which is a storage provider piece of software that Filecoin storage providers
+
+
+72
+00:07:08,920 --> 00:07:14,760
+run that takes care of the storage deal-making marketplace in Filecoin. And what that means
+
+
+73
+00:07:14,760 --> 00:07:20,880
+is it boils down to storage providers can, sorry, Boost can make storage deals and also
+
+
+74
+00:07:20,880 --> 00:07:25,480
+make retrieval deals of the same, of the data within those storage deals.
+
+
+75
+00:07:25,480 --> 00:07:31,800
+Now previously Lotus and Boost only supported GraphSync, but over the last few months the
+
+
+76
+00:07:31,800 --> 00:07:36,860
+Boost team has released Booster BitSwap, an extension that allows them to serve the same
+
+
+77
+00:07:36,860 --> 00:07:44,880
+content on Filecoin via BitSwap as a provider. Now this is really exciting. This is for the
+
+
+78
+00:07:44,880 --> 00:07:51,200
+first time ever an IPFS node can directly get Filecoin content from a storage provider
+
+
+79
+00:07:51,200 --> 00:07:57,000
+directly. And this is a big deal, not just because of that compatibility, but because
+
+
+80
+00:07:57,000 --> 00:08:01,560
+now all of the IPFS nodes in the world now have access to all of this amazing content
+
+
+81
+00:08:01,560 --> 00:08:07,500
+that's on Filecoin that is now readily available by looking it up through IPNI and then going
+
+
+82
+00:08:07,500 --> 00:08:11,600
+to that storage provider and getting that access. So it unlocks this new set of data
+
+
+83
+00:08:11,600 --> 00:08:16,360
+that's available for all the users of the IPFS network.
+
+
+84
+00:08:16,360 --> 00:08:22,360
+Pretty cool. All right, so then the final step is the multi-protocol client. Now we've
+
+
+85
+00:08:22,360 --> 00:08:28,160
+all heard a lot about LASI already. Hannah gave I think three talks on it already so
+
+
+86
+00:08:28,160 --> 00:08:33,520
+far today. It's really awesome. I'm not going to go into as much detail, but what does LASI
+
+
+87
+00:08:33,520 --> 00:08:38,760
+really do? It abstracts away what protocol you're using to get that data from Filecoin
+
+
+88
+00:08:38,760 --> 00:08:47,680
+or IPFS. And this is awesome because as we've also talked about, we've been using it in
+
+
+89
+00:08:47,680 --> 00:08:55,200
+this Project Raya, the IPFS gateway, excuse me, that is retrieving content from Filecoin
+
+
+90
+00:08:55,200 --> 00:09:01,920
+and IPFS when it has a cache miss. And it's all using LASI under the hood, which again
+
+
+91
+00:09:01,920 --> 00:09:09,600
+unlocks more value for maybe you don't run an IPFS node, but you are a web user that
+
+
+92
+00:09:09,600 --> 00:09:17,800
+uses IPFS.io. Now you also have access to all this content on Filecoin as well.
+
+
+93
+00:09:17,800 --> 00:09:24,120
+I do want to dive into just one thing about LASI that I think often gets overlooked beyond
+
+
+94
+00:09:24,120 --> 00:09:29,000
+all the coolness that we've already seen with the demos, is that, okay, even if you didn't
+
+
+95
+00:09:29,000 --> 00:09:35,560
+have LASI, but you had IPNI and Booster BitSwap, in order to actually get an arbitrary CID
+
+
+96
+00:09:35,560 --> 00:09:40,960
+and get the data back, you'd have to jump through some complex logic and probably use
+
+
+97
+00:09:40,960 --> 00:09:45,200
+three or four different pieces of software to actually retrieve any type of CID that
+
+
+98
+00:09:45,200 --> 00:09:50,720
+comes across your path. And what LASI does in a really great way is abstracts that all
+
+
+99
+00:09:50,720 --> 00:09:56,480
+away, compresses it to one simple command, fetch, and it'll just get you that CID. And
+
+
+100
+00:09:56,480 --> 00:10:02,560
+this is powerful because you as a developer on the network, you don't have to worry about
+
+
+101
+00:10:02,560 --> 00:10:07,240
+something that should be simple. How do I get my data? You can just tell LASI to go
+
+
+102
+00:10:07,240 --> 00:10:10,700
+do it. You don't have to worry about it. You can build your application and logic on top.
+
+
+103
+00:10:10,700 --> 00:10:17,040
+So it really takes away a lot of the developer pain and duplication of effort that used to
+
+
+104
+00:10:17,040 --> 00:10:23,680
+occur. And so that is the superpower of LASI, in my opinion.
+
+
+105
+00:10:23,680 --> 00:10:31,040
+All right. So where are we now? So I've taken you through this whole journey, and now let's
+
+
+106
+00:10:31,040 --> 00:10:38,080
+see how we did. So we're a little bit closer. We're not fully there yet, but now we have
+
+
+107
+00:10:38,080 --> 00:10:43,040
+some adapters, some different pieces of software that can talk to each other across both of
+
+
+108
+00:10:43,040 --> 00:10:50,480
+these protocols, which is pretty cool. And specifically, we've achieved what I've defined
+
+
+109
+00:10:50,480 --> 00:10:55,320
+as retrieval compatibility. You can see this awesome diagram that shows how this whole
+
+
+110
+00:10:55,320 --> 00:11:00,200
+network works well together, talking to the IP and I to find out what boost storage provider
+
+
+111
+00:11:00,200 --> 00:11:04,400
+to talk to. IPFS nodes can talk to each other and find content. LASI can get content from
+
+
+112
+00:11:04,400 --> 00:11:10,920
+everywhere. Really exciting. Everything is interconnected. This is amazing.
+
+
+113
+00:11:10,920 --> 00:11:18,840
+It's all... But it's still early, though. So even though these pieces of software exist,
+
+
+114
+00:11:18,840 --> 00:11:23,840
+they're not fully adopted yet. So to keep us honest, I wanted to share some of the numbers
+
+
+115
+00:11:23,840 --> 00:11:29,320
+that we've seen from traction, all the metrics that we've been collecting. So for example,
+
+
+116
+00:11:29,320 --> 00:11:33,360
+LASI is a critical piece of the Rayya project or the Saturn gateway that we've been talking
+
+
+117
+00:11:33,360 --> 00:11:39,720
+about. It's serving over 150 million retrievals per week, as mentioned previously. Again,
+
+
+118
+00:11:39,720 --> 00:11:44,720
+there's a whole HTTP gateway discussion or track on Monday, so I encourage you all to
+
+
+119
+00:11:44,720 --> 00:11:50,080
+attend that if you want to learn more. And about 40% of storage providers are running
+
+
+120
+00:11:50,080 --> 00:11:58,520
+boost. And 60% of IPFS nodes are using the IP and I content routing system as a default.
+
+
+121
+00:11:58,520 --> 00:12:04,480
+As of version 0.18 for Kubo, they run IP and I by default.
+
+
+122
+00:12:04,480 --> 00:12:12,060
+And in terms of content coverage, IP and I does a pretty good job. So with that level
+
+
+123
+00:12:12,060 --> 00:12:16,720
+of penetration on the storage provider market, we're seeing 45% of deal coverage, which is
+
+
+124
+00:12:16,720 --> 00:12:22,240
+pretty good. And from all of the query traffic that we see from Rayya, we usually can resolve
+
+
+125
+00:12:22,240 --> 00:12:30,680
+96% of the queries that are incoming. Now, we obviously want to get all these numbers
+
+
+126
+00:12:30,680 --> 00:12:42,600
+to 100%, but it's a pretty good start. Okay. So let's review what we set out to do
+
+
+127
+00:12:42,600 --> 00:12:48,080
+in the beginning, which is retrieval compatibility. So can data providers send data to Filecoin
+
+
+128
+00:12:48,080 --> 00:12:53,440
+or IPFS nodes? Yes. Boost gives us that capability. Do we have data clients that can retrieve
+
+
+129
+00:12:53,440 --> 00:13:02,480
+data from Filecoin and IPFS? Yes. LASI solves that problem for us.
+
+
+130
+00:13:02,480 --> 00:13:08,280
+But in terms of making the network more interoperable, has it been easier to build on the network?
+
+
+131
+00:13:08,280 --> 00:13:13,480
+Well, we think it has because we've used LASI to really accelerate the efforts of Project
+
+
+132
+00:13:13,480 --> 00:13:22,240
+Rayya, and that alone has helped make a lot of progress in that Saturn CDN network. And
+
+
+133
+00:13:22,240 --> 00:13:29,600
+is it easier to use the network? Well, I think there's two cases here. One, with LASI, you
+
+
+134
+00:13:29,600 --> 00:13:34,200
+can actually use the CLI command and just do LASI fetch, as people said, to look up
+
+
+135
+00:13:34,200 --> 00:13:39,160
+content. So that's really awesome. And then the second is IPFS nodes now have access to
+
+
+136
+00:13:39,160 --> 00:13:45,000
+a lot much more data, specifically the Filecoin content. And so that makes the network easier
+
+
+137
+00:13:45,000 --> 00:13:54,200
+to use for all your data needs in the long run. So checkmark there as well.
+
+
+138
+00:13:54,200 --> 00:14:01,480
+So are we done? No. So this is only scratching the surface. There's way more different areas
+
+
+139
+00:14:01,480 --> 00:14:07,360
+that we could be adding compatibility. But these are some of the things that we're looking
+
+
+140
+00:14:07,360 --> 00:14:12,120
+at in the next few months and quarters. So for one, we want to continue to push on the
+
+
+141
+00:14:12,120 --> 00:14:17,920
+adoption curve for Boost, LASI, and IPNI. Part of that starts with increasing awareness,
+
+
+142
+00:14:17,920 --> 00:14:23,080
+like talks at conferences like these, as well as blog posts. I believe the LASI blog post
+
+
+143
+00:14:23,080 --> 00:14:30,800
+went live yesterday. And we have plenty of blog posts across all those different teams
+
+
+144
+00:14:30,800 --> 00:14:34,880
+that I mentioned. So please check them out. And so that we can get feedback to to make
+
+
+145
+00:14:34,880 --> 00:14:38,920
+the product better. Now, another way to increase adoption is to
+
+
+146
+00:14:38,920 --> 00:14:46,160
+really focus on performance and reliability. We've seen that as these pieces of software
+
+
+147
+00:14:46,160 --> 00:14:51,720
+become critical parts of the network in terms of infrastructure, they have to perform at
+
+
+148
+00:14:51,720 --> 00:14:58,840
+a really high level in order for people to continue to use it. So the more we can make
+
+
+149
+00:14:58,840 --> 00:15:04,600
+LASI faster or make Boost faster, and the more reliable it is, the easier it is to attract
+
+
+150
+00:15:04,600 --> 00:15:11,040
+more people to use Filecoin and IPFS. But it doesn't stop on just performance. We
+
+
+151
+00:15:11,040 --> 00:15:16,720
+also want to extend the capabilities of Boost and LASI, make it more compatible with more
+
+
+152
+00:15:16,720 --> 00:15:20,960
+protocols. There's a lot of really awesome protocols that we talked about today, like
+
+
+153
+00:15:20,960 --> 00:15:28,240
+BAU and CarMirror and stuff like that. But our team is really focused on HTTP at the
+
+
+154
+00:15:28,240 --> 00:15:34,320
+moment because we think that unlocks a whole other set of developers, primarily like your
+
+
+155
+00:15:34,320 --> 00:15:41,320
+typical web developer, that can now use the tools that they know and love on HTTP and
+
+
+156
+00:15:41,320 --> 00:15:46,680
+the web and apply that to their IPFS or Filecoin projects. So we think this will really accelerate
+
+
+157
+00:15:46,680 --> 00:15:52,480
+user adoption as well as enable new use cases like enterprise retrieval that, let's face
+
+
+158
+00:15:52,480 --> 00:15:57,960
+it, they're not using Web3 right now. So if we can do an HTTP plugin within LASI and they
+
+
+159
+00:15:57,960 --> 00:16:01,200
+don't have to change anything underlying, it just works, we think that's going to be
+
+
+160
+00:16:01,200 --> 00:16:11,120
+super powerful. All right. So that's the end of my talk. I want to say that a lot of this
+
+
+161
+00:16:11,120 --> 00:16:14,200
+work, I want to give a round of applause to the Bedrock team because this is a lot of
+
+
+162
+00:16:14,200 --> 00:16:19,120
+work over the last couple of quarters. So great job on the team.
+
+
+163
+00:16:19,120 --> 00:16:25,160
+Thank you. And I've included the GitHub links to all those major projects and the Notion
+
+
+164
+00:16:25,160 --> 00:16:29,840
+page for the team. If you're curious about learning more or want to learn more, don't
+
+
+165
+00:16:29,840 --> 00:16:33,480
+hesitate to reach out to me or anyone else on the Bedrock team. We're going to be here
+
+
+166
+00:16:33,480 --> 00:16:39,800
+for the entire conference and then some. And yeah, open to any questions either on Slack
+
+
+167
+00:16:39,800 --> 00:16:45,480
+or in person or right now. So what work remains on the HTTP side that
+
+
+168
+00:16:45,480 --> 00:16:49,760
+is yet to be done or is it just about increasing the awareness of the work that has already
+
+
+169
+00:16:49,760 --> 00:16:55,000
+been done? Yeah. Great question. So Booster HTTP exists.
+
+
+170
+00:16:55,000 --> 00:17:01,200
+Basically what Booster HTTP, well, actually this is slightly outdated. So Booster HTTP
+
+
+171
+00:17:01,200 --> 00:17:06,760
+traditionally was just doing full piece CID lookups. So you get a full piece back. It
+
+
+172
+00:17:06,760 --> 00:17:13,040
+wasn't the full trustless gateway API spec that has been discussed previously. So I believe
+
+
+173
+00:17:13,040 --> 00:17:19,680
+Booster HTTP recently pushed that compatibility, but now we have to do the work of actually
+
+
+174
+00:17:19,680 --> 00:17:25,800
+integrating it with Lassie and through the IP and I as well. So it's a protocol that
+
+
+175
+00:17:25,800 --> 00:17:30,120
+is basically a first class citizen just like BitSwap and GraphSync. So there's some more
+
+
+176
+00:17:30,120 --> 00:17:34,240
+work there. Yeah. So that's one of our top projects that we really want to get out this
+
+
+177
+00:17:34,240 --> 00:17:40,760
+quarter. And then as a plug, I believe the Booster HTTP folks are going to show off that
+
+
+178
+00:17:40,760 --> 00:17:47,360
+demo at either the show Intel or unconference. Yes. So check that out too, because that will
+
+
+179
+00:17:47,360 --> 00:17:50,720
+be super cool. I think there's a really cool demo where you can see all the files you're
+
+
+180
+00:17:50,720 --> 00:17:56,000
+storing on Filecoin and it's like a website where you can like see the files in and of
+
+
+181
+00:17:56,000 --> 00:18:01,440
+themselves served by Boosters. Are there any plans to get some functionality
+
+
+182
+00:18:01,440 --> 00:18:06,880
+of Lassie as a library that you can use from, that we see bindings basically that you can
+
+
+183
+00:18:06,880 --> 00:18:13,000
+use from maybe from Rust or from Python or basically the lowest level that you can have
+
+
+184
+00:18:13,000 --> 00:18:18,960
+a Lassie.so that you can just use? Or is that not possible due to Golang?
+
+
+185
+00:18:18,960 --> 00:18:25,080
+I mean, everything's possible, but no Lassie right now is written primarily in Go. I think
+
+
+186
+00:18:25,080 --> 00:18:31,800
+we as Hannah described earlier, it is a library, a Go library that any Go application can use,
+
+
+187
+00:18:31,800 --> 00:18:35,320
+but we have limited resources. So we had to focus on Go primarily. I think if there's
+
+
+188
+00:18:35,320 --> 00:18:40,680
+a big use case for C, like maybe, but I don't know if Hannah, you have thoughts on that.
+
+
+189
+00:18:40,680 --> 00:18:46,400
+So the current recommendation is that if you want to use another language with Lassie,
+
+
+190
+00:18:46,400 --> 00:18:51,320
+use it through the HTTP server, which, and just run it as a process on your machine,
+
+
+191
+00:18:51,320 --> 00:18:56,840
+which is not the fastest by far. There's various other optimizations. Some people are like,
+
+
+192
+00:18:56,840 --> 00:19:02,480
+well, we'll ship gRPC. I mean, we could do an FFI thing. We could rewrite in Rust. I'm
+
+
+193
+00:19:02,480 --> 00:19:12,240
+sure somebody at Vision would give us a cookie if we did that. But that's the state of the
+
+
+194
+00:19:12,240 --> 00:19:32,560
+affairs. We'll see where things go. Yeah.

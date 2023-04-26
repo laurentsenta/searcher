@@ -1,0 +1,698 @@
+1
+00:00:00,000 --> 00:00:17,520
+Thank you. Hello, everyone. I came from China. And this week I know much of faircoin ecosystem
+
+
+2
+00:00:17,520 --> 00:00:28,600
+in China, lots of providers and IPFS funds in China. But there is there are not much
+
+
+3
+00:00:28,600 --> 00:00:37,160
+China engineers come here. It's a pleasure to come here to exchange the ideas about our
+
+
+4
+00:00:37,160 --> 00:00:48,120
+sound source on IPFS and faircoin and IPRD database related topics. I wanted to say,
+
+
+5
+00:00:48,120 --> 00:00:56,840
+have you been to China before? Here, no. I have to the organizer of IPFS things and
+
+
+6
+00:00:56,840 --> 00:01:07,240
+IPFS camp. Hopefully, next year or someday we can have IPFS camp and IPFS things in China.
+
+
+7
+00:01:07,240 --> 00:01:17,520
+Thank you. Today I will introduce the Pandwa project, the notarized IPRD data network.
+
+
+8
+00:01:17,520 --> 00:01:28,320
+It is a kind of layer two data network of faircoin. I'm Tao Shen. So maybe you have
+
+
+9
+00:01:28,320 --> 00:01:46,920
+known the Pandwa is a famous organic trace in the world. But in the context of data network,
+
+
+10
+00:01:46,920 --> 00:01:56,760
+Pandwa here is a one tree forest. That means Pandwa will aggregate the huge forest of IPRD
+
+
+11
+00:01:56,760 --> 00:02:08,960
+CAD data around the faircoin and over time. And why Pandwa? In context of the big data
+
+
+12
+00:02:08,960 --> 00:02:17,000
+systems, Pandwa is for the data that does not meet the consensus in the global team.
+
+
+13
+00:02:17,000 --> 00:02:28,320
+As you know, for the global blockchain such as faircoin, they have consensus for other
+
+
+14
+00:02:28,320 --> 00:02:35,720
+nodes to reach the agreement with the data. But for lots of streaming of the data, they
+
+
+15
+00:02:35,720 --> 00:02:42,400
+don't need to meet the consensus bar of this global team. So in the context of the big
+
+
+16
+00:02:42,400 --> 00:02:51,200
+data, we have a consensus bar. As you can see here, it is a big data iceberg. There
+
+
+17
+00:02:51,200 --> 00:03:00,200
+are many, many data under the consensus bar. So that is the scope of the Pandwa.
+
+
+18
+00:03:00,200 --> 00:03:09,960
+The Pandwa project is born from a reputation system of a faircoin network. There are several
+
+
+19
+00:03:09,960 --> 00:03:18,880
+mechanisms we can see for incentivization feedback loops for the open data network,
+
+
+20
+00:03:18,880 --> 00:03:27,080
+for example, faircoin. You need a reputation system to feedback the control system. You
+
+
+21
+00:03:27,080 --> 00:03:37,360
+can see here the input and output. If you take the faircoin network as a control system,
+
+
+22
+00:03:37,360 --> 00:03:45,960
+so Pandwa is a layer 2 data network for a faircoin reputation system. There are more
+
+
+23
+00:03:45,960 --> 00:03:55,440
+than 3,000 storage providers in the network country, but the storage clients don't know
+
+
+24
+00:03:55,440 --> 00:04:02,760
+which storage provider is better, how to choose the right storage providers to store their
+
+
+25
+00:04:02,760 --> 00:04:10,440
+data or retrieve their data. So that is why we built Pandwa for reputation system, to
+
+
+26
+00:04:10,440 --> 00:04:19,640
+build a feedback closed loop for this faircoin open network.
+
+
+27
+00:04:19,640 --> 00:04:26,640
+And from a high-level point of view, you can see Pandwa as a set of metadata service, a
+
+
+28
+00:04:26,640 --> 00:04:33,480
+layer 2 data network of faircoin. You can see in this web3 data network architecture,
+
+
+29
+00:04:33,480 --> 00:04:43,440
+Pandwa is here in the three layers of IPFS and faircoin. We have faircoin nodes as a
+
+
+30
+00:04:43,440 --> 00:04:50,400
+blockchain, and we have IPFS nodes as offchain nodes, and we can also have Pandwa for offchain
+
+
+31
+00:04:50,400 --> 00:04:57,520
+storage service. And based on this storage layer, we can have a storage helper and logic
+
+
+32
+00:04:57,520 --> 00:05:05,480
+layer, for example, computation over this data layer. So that is the big picture of
+
+
+33
+00:05:05,480 --> 00:05:16,120
+this web3 data network. There are nice properties of Pandwa to serve
+
+
+34
+00:05:16,120 --> 00:05:22,240
+as a layer 2 data network. The first one is to keep the included metadata consistently
+
+
+35
+00:05:22,240 --> 00:05:35,640
+available, because there is much discussion in the blockchain area about the data availability
+
+
+36
+00:05:35,640 --> 00:05:48,240
+layer in the ecosystem. So we need this kind of data availability layer for faircoin.
+
+
+37
+00:05:48,240 --> 00:05:56,840
+And the second is we need lightweight and unbiased access to the metadata. I will discuss
+
+
+38
+00:05:56,840 --> 00:06:06,120
+the details of how to provide unbiased access, and also with the third property, discouraging
+
+
+39
+00:06:06,120 --> 00:06:18,000
+historical revisionism. All the metadata history in Pandwa is immutable, and we can trace the
+
+
+40
+00:06:18,000 --> 00:06:30,480
+history of Pandwa's data recording. How does it work? The pipeline of Pandwa is
+
+
+41
+00:06:30,480 --> 00:06:39,200
+much simpler. You can see it as an input and output system. For example, the first step
+
+
+42
+00:06:39,200 --> 00:06:46,280
+is to take the stream of the data, and then we aggregate this data into the archives,
+
+
+43
+00:06:46,280 --> 00:06:54,720
+and also we store the data in the Pandwa storage. The Pandwa storage is much similar to IPFS,
+
+
+44
+00:06:54,720 --> 00:07:03,440
+but has an immutable data layer. Currently, we provide a lightweight query
+
+
+45
+00:07:03,440 --> 00:07:14,080
+interface, a GraphQL and HTTP access API, and then we can back up this data to the faircoin.
+
+
+46
+00:07:14,080 --> 00:07:20,640
+The latest discussion about the backup is we will leverage the data dosks, not only
+
+
+47
+00:07:20,640 --> 00:07:32,920
+use the X-Ray projects, maybe you know. And inside the Pandwa, we had a snapshot chain
+
+
+48
+00:07:32,920 --> 00:07:38,960
+to track the changes and the histories of the data. For example, you can see we have
+
+
+49
+00:07:38,960 --> 00:07:52,640
+a low-layer HMT data structure, and we have a kind of block cheese to persist the history.
+
+
+50
+00:07:52,640 --> 00:08:05,680
+Okay, let us see how Pandwa works, what is Pandwa in different scenarios. The first one
+
+
+51
+00:08:05,680 --> 00:08:13,200
+is in the storage hierarchy. As you know, faircoin is for slow, large capacity, and
+
+
+52
+00:08:13,200 --> 00:08:23,240
+very cheap for backup. IPFS is kind of warm storage for data retrieval and for data delivery
+
+
+53
+00:08:23,240 --> 00:08:37,680
+network. But Pandwa is an SQL-enabled data network, so it is optimized for faster access.
+
+
+54
+00:08:37,680 --> 00:08:51,040
+It is a new database kind of database. So we think that we could introduce the SQL capability
+
+
+55
+00:08:51,040 --> 00:09:00,640
+to unlock Web3 applications. The next scenario is the repetition system.
+
+
+56
+00:09:00,640 --> 00:09:07,800
+You may have seen this picture very often in different places for the whole picture
+
+
+57
+00:09:07,800 --> 00:09:16,360
+of faircoin and for storage and retrieve the pipeline of the data. But here we added the
+
+
+58
+00:09:16,360 --> 00:09:23,680
+Pandwa to the data pipeline. You can see in the left part of this diagram that is repetition
+
+
+59
+00:09:23,680 --> 00:09:30,800
+systems and the repetition service. Pandwa is a storage layer of the repetition system.
+
+
+60
+00:09:30,800 --> 00:09:40,280
+You can see from there, just like I have mentioned before, the storage clients and the retrieval
+
+
+61
+00:09:40,280 --> 00:09:48,360
+clients will get the metrics from the repetition system to decide to choose the best or better
+
+
+62
+00:09:48,360 --> 00:09:54,520
+storage providers. You know, faircoin network is different with
+
+
+63
+00:09:54,520 --> 00:09:59,920
+other blockchain networks. It is the storage service network and the retrieval service
+
+
+64
+00:09:59,920 --> 00:10:08,400
+network. It's different from Ethereum and Bitcoin. Different storage providers have
+
+
+65
+00:10:08,400 --> 00:10:21,400
+different requirements and different benefit requests. So they have different services.
+
+
+66
+00:10:21,400 --> 00:10:29,480
+So repetition systems could give a list of storage providers for the storage clients
+
+
+67
+00:10:29,480 --> 00:10:41,560
+and other stakeholders in this ecosystem. Okay, next one is currently much popular with
+
+
+68
+00:10:41,560 --> 00:10:49,960
+the FBM launch. How Pandwa is working with the data DOS stack.
+
+
+69
+00:10:49,960 --> 00:10:59,080
+As you can see, we will introduce data operating system between the layer 2 data DOS and the
+
+
+70
+00:10:59,080 --> 00:11:05,160
+layer storage. For example, you can see we put the Pandwa, Faircoin, and IPFS as the
+
+
+71
+00:11:05,160 --> 00:11:16,120
+same data storage layer. We can leverage the FBM to build a data operating system for a
+
+
+72
+00:11:16,120 --> 00:11:25,480
+lot of frameworks for smart contracts. And we can enable more data DOS in the up layer,
+
+
+73
+00:11:25,480 --> 00:11:41,960
+layer 2 data DOS. Pandwa could be a service as immutable data storage for the data DOS.
+
+
+74
+00:11:41,960 --> 00:11:53,400
+Okay, next one is Pandwa in the modern data stack. That is quite an open area I want to
+
+
+75
+00:11:53,400 --> 00:12:01,880
+discuss with all of you because how to build the Web3 big data systems or Web3 data analysis
+
+
+76
+00:12:01,880 --> 00:12:13,160
+pipelines is quite an open area to discuss. But in my view, as you can see here, basically
+
+
+77
+00:12:13,160 --> 00:12:19,360
+we have the raw data and the transformed data and we have the ETL process over this raw
+
+
+78
+00:12:19,360 --> 00:12:30,760
+data, that means over this Pandwa data layer. Currently, we are doing some prototype based
+
+
+79
+00:12:30,760 --> 00:12:41,960
+on Pandwa that is transform 2 based on HTAP database. HTAP is a hybrid OLAP and OLTP.
+
+
+80
+00:12:41,960 --> 00:12:50,440
+That is quite a new area and we have much issues and open areas needed to discuss and
+
+
+81
+00:12:50,440 --> 00:12:58,760
+needed to figure out. But I think that is quite available for Web3 big data ecosystems
+
+
+82
+00:12:58,760 --> 00:13:07,960
+if we can build a transformer 2 based on IPRD data layer. That could be very interesting.
+
+
+83
+00:13:07,960 --> 00:13:17,120
+But Pandwa here is as a data layer for this transformer 2. For example, Pandwa could create
+
+
+84
+00:13:17,120 --> 00:13:25,360
+a chain of evidence for the input and output and the computation and the process, for example,
+
+
+85
+00:13:25,360 --> 00:13:35,080
+and could transform the data in the pipeline but with very nice properties of transparent,
+
+
+86
+00:13:35,080 --> 00:13:46,920
+verifiable and reliable. Currently, we are doing the prototype. We call it PandwaPlus
+
+
+87
+00:13:46,920 --> 00:13:57,720
+over Pandwa. Okay, let me give a short introduction about the HTAP transformation, the principle
+
+
+88
+00:13:57,720 --> 00:14:10,640
+of the HTAP transformation. Basically, HTAP combines OLAP and OLTP together. As you can
+
+
+89
+00:14:10,640 --> 00:14:20,600
+see, the left side is for OLTP, the right side is for OLAP. There is a step 1, 2, 3,
+
+
+90
+00:14:20,600 --> 00:14:33,360
+4, but for the raw star layer, the data star will be synchronized with the column star.
+
+
+91
+00:14:33,360 --> 00:14:40,680
+That means the raw star will be real-time sync with the column star. That could make
+
+
+92
+00:14:40,680 --> 00:14:56,280
+the OLTP, OLAP very quickly. So there is much context for this HTAP transformation. That
+
+
+93
+00:14:56,280 --> 00:15:08,680
+is the latest progress in the database area. Okay, I want to summarize why Pandwa is useful.
+
+
+94
+00:15:08,680 --> 00:15:17,880
+The first is, as I mentioned, we introduced the computation layer over Pandwa for execution.
+
+
+95
+00:15:17,880 --> 00:15:26,520
+Pandwa could execute a distributed HTAP process, which could be distributed as a task on the
+
+
+96
+00:15:26,520 --> 00:15:33,840
+Web2 infrastructure or backlog infrastructure. And the second is data verification. That
+
+
+97
+00:15:33,840 --> 00:15:41,280
+is the benefit from the container addressable features. For data input transformation process
+
+
+98
+00:15:41,280 --> 00:15:53,160
+and output, all these pipelines are built on the container addressable data. And for
+
+
+99
+00:15:53,160 --> 00:16:04,920
+linearity and provenance, we could certify data processing and data products and pipelines
+
+
+100
+00:16:04,920 --> 00:16:13,440
+by enabling chains of evidence. And based on the Pandwa, this kind of Web3 data network,
+
+
+101
+00:16:13,440 --> 00:16:20,360
+we could build cross-function teams, organizations, for example, multi-dollars, and cross-domains
+
+
+102
+00:16:20,360 --> 00:16:29,400
+on this verifiable data. So that is our source and our progress. We have the open source
+
+
+103
+00:16:29,400 --> 00:16:37,320
+GitHub, but I didn't put it here. But you can find the GitHub open source projects on
+
+
+104
+00:16:37,320 --> 00:16:44,920
+our official website. That is all the key information I want to share to you. I am open
+
+
+105
+00:16:44,920 --> 00:16:49,320
+to discuss this open area. Thank you all. Thanks.
+
+
+106
+00:16:49,320 --> 00:16:54,000
+I think probably a lot of people in the room would be curious to hear about the places,
+
+
+107
+00:16:54,000 --> 00:16:59,760
+like the mechanics of how content addressing allows you to do some of the things you talked
+
+
+108
+00:16:59,760 --> 00:17:03,080
+about. And so there's a couple that I took notes on that would be fun to hear more about.
+
+
+109
+00:17:03,080 --> 00:17:09,280
+And maybe there's more other parts of the data motion that do similar stuff. And you
+
+
+110
+00:17:09,280 --> 00:17:18,560
+mentioned a little bit here, but in the execution pipelines, are you using determinism and memoization
+
+
+111
+00:17:18,560 --> 00:17:23,600
+and caching to accelerate the second run for repeatable compute?
+
+
+112
+00:17:23,600 --> 00:17:29,600
+Currently, for the computation to accelerate the repetition computation, you mean?
+
+
+113
+00:17:29,600 --> 00:17:35,320
+Yeah, I mean, just in general, for pipelines, for the data stuff.
+
+
+114
+00:17:35,320 --> 00:17:48,440
+Yes, for the computation part, we are leveraging the open source GitHub database to build the
+
+
+115
+00:17:48,440 --> 00:17:56,520
+over panel. We get the data from panel and calculate the aggregation data for the multi-dimension
+
+
+116
+00:17:56,520 --> 00:18:05,600
+data to understand back to panel. We can re-compute the process because we have the CIDs and the
+
+
+117
+00:18:05,600 --> 00:18:10,960
+output is also CIDs. We can verify the computation output.
+
+
+118
+00:18:10,960 --> 00:18:18,920
+Regarding to the cache? Are you able to cache the output based on the input?
+
+
+119
+00:18:18,920 --> 00:18:25,880
+Maybe. I think it could be a cache layer for the computation. Yeah. We can think of that
+
+
+120
+00:18:25,880 --> 00:18:30,320
+as a cache layer. Right. I think that that's a sales point for
+
+
+121
+00:18:30,320 --> 00:18:33,920
+all of our stuff is that we can make repeatable compute fast.
+
+
+122
+00:18:33,920 --> 00:18:41,000
+Yes, yes, yes. And then on the HTAP synchronization, I think
+
+
+123
+00:18:41,000 --> 00:18:48,760
+it was the next slide, moving from the row store to the column store, are you doing in
+
+
+124
+00:18:48,760 --> 00:18:57,040
+data in number three? Is that just CIDs? So if it's the same for the field, then it's
+
+
+125
+00:18:57,040 --> 00:19:03,880
+in zero copy or how does that work? Currently, we package all these processes
+
+
+126
+00:19:03,880 --> 00:19:08,800
+together. And the next step, we will slip this step.
+
+
+127
+00:19:08,800 --> 00:19:20,000
+Currently, step three is basically the Web2 technologies. Different introduces the CID
+
+
+128
+00:19:20,000 --> 00:19:28,240
+because for performance consideration. But in future, we will make it separate service
+
+
+129
+00:19:28,240 --> 00:19:36,280
+and separate node to separate synchronization. And the leverage is CID. You can verify the
+
+
+130
+00:19:36,280 --> 00:19:43,160
+input and output of step three. Yeah. I guess, yeah. And then it would be interesting
+
+
+131
+00:19:43,160 --> 00:19:49,040
+to hear just a little bit about the operational challenges for doing the Filecoin scale stuff
+
+
+132
+00:19:49,040 --> 00:19:57,360
+with reputation and all that. For reputation data, basically, the first
+
+
+133
+00:19:57,360 --> 00:19:59,720
+thing that you can think of is the unchecked data.
+
+
+134
+00:20:00,000 --> 00:20:05,500
+ELIPEELIPEELIPEELIPEELIPEELIPEELIPEELIPEELIPEELIPEELIPEELIPEELIPEELIPEELIPEELIPEELIPEELIPEELIPEELIPEELIPEELIPEELIPEELIPEELIPEELIPEELIPEELIPEELIPEELIPEELIPEELIPEELIPEELIPEEPEUEPEE
+
+
+135
+00:20:05,500 --> 00:20:17,000
+Basically, the unchecked data is big data. Currently, it's about over 70 tick-back. And there are lots of
+
+
+136
+00:20:17,000 --> 00:20:26,000
+often data we are cooperating with the proto labs, for example, retrieve metrics, lots of often metrics
+
+
+137
+00:20:26,000 --> 00:20:38,000
+we need to also integrate to produce the reputation metrics. I think that is, combine the unchecked data with the often data together,
+
+
+138
+00:20:38,000 --> 00:20:46,000
+I think that is a big data scenario for Web3. Thank you.
+
+
+139
+00:20:46,000 --> 00:20:47,000
+Thank you.
+
+
+140
+00:20:47,000 --> 00:20:57,000
+Thank you.

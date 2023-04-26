@@ -1,0 +1,1628 @@
+1
+00:00:00,000 --> 00:00:10,080
+Hello, my name is Boris Mann. I work for Fission. I have worked in open source for a really
+
+
+2
+00:00:10,080 --> 00:00:13,480
+long time. One of the things I like to say is that I worked in open source when that
+
+
+3
+00:00:13,480 --> 00:00:23,520
+was still a radical act. We fought a lot against Microsoft FUD and other things like that.
+
+
+4
+00:00:23,520 --> 00:00:30,320
+Along with that, we practiced open source governance funding and etc. a lot. We were in the thick
+
+
+5
+00:00:30,320 --> 00:00:35,760
+of it and it was something that was much discussed because it was newer and people were figuring
+
+
+6
+00:00:35,760 --> 00:00:42,520
+it out and it felt like there was lots of camaraderie and someone to fight against in
+
+
+7
+00:00:42,520 --> 00:00:54,280
+big proprietary software. Now we're on the other side of that. We won. Woo! Amazing.
+
+
+8
+00:00:54,280 --> 00:00:59,480
+Lots and lots of software is licensed under an open source license of some kind. That
+
+
+9
+00:00:59,480 --> 00:01:05,780
+means it can be highly reused. Great. Super fantastic. A whole generation of developers
+
+
+10
+00:01:05,780 --> 00:01:13,800
+have grown up essentially with being like, yeah, I guess I put this on a code sharing
+
+
+11
+00:01:13,800 --> 00:01:19,000
+site and I just use one of these open source licenses that I don't think very much about
+
+
+12
+00:01:19,000 --> 00:01:25,880
+and there you go. That's open source. My three definitions of open source are one,
+
+
+13
+00:01:25,880 --> 00:01:34,720
+it's a legal innovation. In fact, those licenses were created using the tools of copyright.
+
+
+14
+00:01:34,720 --> 00:01:39,960
+Also, sometimes known the open source stuff as copy left to lock open the codes that could
+
+
+15
+00:01:39,960 --> 00:01:47,760
+be reused and shared. That was an innovation at the legal layer. The next one really is
+
+
+16
+00:01:47,760 --> 00:01:56,640
+the practice of peer-based co-production of software. It's a long word, but that's the
+
+
+17
+00:01:56,640 --> 00:02:00,800
+part of like, oh yeah, multiple people work on stuff and have some systems and go back
+
+
+18
+00:02:00,800 --> 00:02:08,640
+and forth and have some sort of governance model, which often we mainly from open source
+
+
+19
+00:02:08,640 --> 00:02:15,160
+are familiar with classic ones like benevolent dictator for life or BDFL. Again, long time
+
+
+20
+00:02:15,160 --> 00:02:22,000
+open source will be like, ha ha, lol, right. If Joe who runs the project likes you, it's
+
+
+21
+00:02:22,000 --> 00:02:28,720
+always Joe and they're a middle-aged white guy, then your stuff gets in. This is no way
+
+
+22
+00:02:28,720 --> 00:02:34,680
+to form a system of government. We may as well use a system where ladies and lakes give
+
+
+23
+00:02:34,680 --> 00:02:42,680
+us swords to how decisions get made. The third one is ideology. I for one, believe that open
+
+
+24
+00:02:42,680 --> 00:02:50,560
+source software is very important. We have lots of big challenges and if we're constantly
+
+
+25
+00:02:50,560 --> 00:02:57,320
+having to license or rewrite software because it isn't open, it doesn't get us moving into
+
+
+26
+00:02:57,320 --> 00:03:06,720
+those big, bigger challenges. It offends me that basically there's a zero marginal cost
+
+
+27
+00:03:06,720 --> 00:03:10,560
+to copy source code. We can copy the bits. It doesn't cost anything. Go ahead, use the
+
+
+28
+00:03:10,560 --> 00:03:21,560
+source code, except for a bunch of other things. I talked about this a little bit. Governance
+
+
+29
+00:03:21,560 --> 00:03:29,400
+in part, especially in the context of something that's sort of internet first, is the classic
+
+
+30
+00:03:29,400 --> 00:03:36,160
+thing of why was I not consulted? Whether it's a commercial platform or a piece of open
+
+
+31
+00:03:36,160 --> 00:03:44,840
+source software or a neighborhood block party, people will feel bad and get grumpy if it
+
+
+32
+00:03:44,840 --> 00:03:51,480
+feels like they weren't consulted in something that was happening. In this, IPFS Filecoin
+
+
+33
+00:03:51,480 --> 00:03:58,880
+cinematic universe, we've got some major pieces of software and how are we connecting stakeholders
+
+
+34
+00:03:58,880 --> 00:04:06,400
+broadly? Is doing pull requests the only way to get priorities changed? This slide I decided
+
+
+35
+00:04:06,400 --> 00:04:11,520
+to put in as kind of a placeholder because I think that we haven't really grappled with
+
+
+36
+00:04:11,520 --> 00:04:19,960
+this. I think there's some tools like star maps that might start helping us ask these
+
+
+37
+00:04:19,960 --> 00:04:26,680
+questions of who stakeholders actually are and that double-sided link of what the responsibilities
+
+
+38
+00:04:26,680 --> 00:04:35,240
+are on each side of that link and what sort of commitments are being made.
+
+
+39
+00:04:35,240 --> 00:04:43,880
+Let's get back to funding. Funding has a lot of power because it enables people to work
+
+
+40
+00:04:43,880 --> 00:04:54,320
+on things or perhaps choose to work on things. I came up in open source when mostly North
+
+
+41
+00:04:54,320 --> 00:05:02,760
+America and Western Europe was online and mostly relatively well-off white males had
+
+
+42
+00:05:02,760 --> 00:05:12,960
+free time that contributed to open source. It's something that I'm aware of. I benefited
+
+
+43
+00:05:12,960 --> 00:05:23,480
+from and I'm also now looking where the internet covers the entire world, how we can grow the
+
+
+44
+00:05:23,480 --> 00:05:28,240
+pool of people who can produce software and get paid for it and ideally in such a way
+
+
+45
+00:05:28,240 --> 00:05:34,960
+that it remains open source in a path that doesn't require them to step one, work for
+
+
+46
+00:05:34,960 --> 00:05:38,720
+a company. What does it mean to work on open source?
+
+
+47
+00:05:38,720 --> 00:05:47,280
+The way that funding works, a lot of this stuff looks like grants or one-off projects.
+
+
+48
+00:05:47,280 --> 00:05:53,080
+I call those more like consulting. You put together some things that you need to deliver
+
+
+49
+00:05:53,080 --> 00:06:01,680
+and that doesn't typically get us original research and it doesn't get us long-term maintenance.
+
+
+50
+00:06:01,680 --> 00:06:08,160
+What do I mean by long-term maintenance? Really what happens if you say, oh yeah, we're going
+
+
+51
+00:06:08,160 --> 00:06:17,240
+to put out a grant to get X built. You will get a 0.8 version of X that's been paid for
+
+
+52
+00:06:17,240 --> 00:06:23,560
+and it's open source. What's next? It's open source. It's cool. We're done, right?
+
+
+53
+00:06:23,560 --> 00:06:30,080
+Just like with products, that's where the work begins. Do you pay for marketing and
+
+
+54
+00:06:30,080 --> 00:06:38,240
+community work to get it adopted? Do you pay for the next year of maintenance and adoption?
+
+
+55
+00:06:38,240 --> 00:06:44,360
+Where do new features come from? Or does it just get dropped off in some sort of shipyard
+
+
+56
+00:06:44,360 --> 00:06:52,560
+and left there? What parts of projects are experiments or
+
+
+57
+00:06:52,560 --> 00:06:59,440
+proof of concepts that might be appropriate for that kind of grant approach? What is research?
+
+
+58
+00:06:59,440 --> 00:07:09,680
+We've talked about in this ecosystem of blue-green teams or work. Blue work being more research-oriented
+
+
+59
+00:07:09,680 --> 00:07:18,440
+that unlocks new capabilities. As research is, it might not work and it might be an initial
+
+
+60
+00:07:18,440 --> 00:07:23,200
+piece of code that isn't operationalized to say run at scale or other things like that.
+
+
+61
+00:07:23,200 --> 00:07:28,520
+On the other end of things, how does important foundational libraries get built and maintained
+
+
+62
+00:07:28,520 --> 00:07:33,440
+so that many green products and companies can be built on top?
+
+
+63
+00:07:33,440 --> 00:07:37,440
+These are the two things that I think we constantly have to grapple with, especially in areas
+
+
+64
+00:07:37,440 --> 00:07:42,400
+where we're in these like web three distributed system spaces where it's like, yup, some of
+
+
+65
+00:07:42,400 --> 00:07:47,320
+this is like new original work that is going to, in many cases, hit boundaries where you're
+
+
+66
+00:07:47,320 --> 00:07:53,320
+like I need to go back to a blue team and get a solution because I'm stuck here.
+
+
+67
+00:07:53,320 --> 00:07:56,360
+I'm mostly going to have question marks throughout this thing. I don't actually have answers
+
+
+68
+00:07:56,360 --> 00:08:00,920
+in this, just pointing to directions of what we might work on.
+
+
+69
+00:08:00,920 --> 00:08:05,440
+This is one thing that's not just a question mark. I'm a huge fan of Open Collective. If
+
+
+70
+00:08:05,440 --> 00:08:13,760
+you're not familiar with it, it's a platform where basically you can create a collective
+
+
+71
+00:08:13,760 --> 00:08:18,680
+and get a fiscal host. What this means is this unlocks the sort of thing where you have
+
+
+72
+00:08:18,680 --> 00:08:23,760
+a single maintainer running funds through their bank account. It means that you can
+
+
+73
+00:08:23,760 --> 00:08:30,320
+immediately start at the repo project working group or event level, not need a full blown
+
+
+74
+00:08:30,320 --> 00:08:40,340
+organization and give out, take in funds and give out funds in a very, very flexible way.
+
+
+75
+00:08:40,340 --> 00:08:48,760
+It also has built in support for funding over time. People can subscribe to $5 a year, $5
+
+
+76
+00:08:48,760 --> 00:08:57,040
+a month or $500 a month if it's an organization. That's the kind of model that likely combines
+
+
+77
+00:08:57,040 --> 00:09:04,640
+with grants to actually fund that long term maintenance for more open source contributors.
+
+
+78
+00:09:04,640 --> 00:09:11,320
+The world I'd like to get to is that we might have a certain number of contributors around
+
+
+79
+00:09:11,320 --> 00:09:21,920
+the world, perhaps specifically not in North America or Western Europe, who make $500 or
+
+
+80
+00:09:21,920 --> 00:09:29,360
+$1,000 or $2,000 a month for which that would be very impactful. That would in fact be a
+
+
+81
+00:09:29,360 --> 00:09:43,120
+small business and it is maybe a fifth the cost of hiring a global North engineer at
+
+
+82
+00:09:43,120 --> 00:09:53,080
+a full time company. Very interesting. Et cetera. There's many, many other things that
+
+
+83
+00:09:53,080 --> 00:10:02,640
+go on from here. We are trying to do novel things in novel structures. I got involved
+
+
+84
+00:10:02,640 --> 00:10:11,120
+in part because I was very, very aligned with the ideas that Juan Benet has been thinking
+
+
+85
+00:10:11,120 --> 00:10:15,120
+about for a long time of how to build these networked organizations that work together
+
+
+86
+00:10:15,120 --> 00:10:21,360
+in a network. How do you think about network level impact? One of those things is really
+
+
+87
+00:10:21,360 --> 00:10:29,040
+encouraging everyone to not target the team or the company, but target the ecosystem.
+
+
+88
+00:10:29,040 --> 00:10:34,080
+A lot of that is like, hey, let everyone know that you're about to do X. Gather commitments.
+
+
+89
+00:10:34,080 --> 00:10:38,880
+How can we pool some needs and resources? Those resources, that's always a funny word
+
+
+90
+00:10:38,880 --> 00:10:46,600
+because in many cases it either boils down to cash or the typing fingers of N engineers.
+
+
+91
+00:10:46,600 --> 00:10:51,080
+I think there's a bunch more stuff in there around product design, adoption, promotion,
+
+
+92
+00:10:51,080 --> 00:10:57,760
+those classic things that also mostly get mixed when you hear open source project. Let's
+
+
+93
+00:10:57,760 --> 00:11:03,440
+get more open source computers paid around the world. Let's practice governance and coordination.
+
+
+94
+00:11:03,440 --> 00:11:09,640
+So I recently participated, did anyone else in the room participate in the IPFS impact
+
+
+95
+00:11:09,640 --> 00:11:17,840
+of evaluate around? A couple of you folks. So it has an interesting interface to do quadratic
+
+
+96
+00:11:17,840 --> 00:11:25,960
+voting. Might we actually practice using those interfaces rather than just every six months?
+
+
+97
+00:11:25,960 --> 00:11:35,720
+Maybe we do them to prioritize features. Might engineering teams give out points to certain
+
+
+98
+00:11:35,720 --> 00:11:39,520
+stakeholders that they want to have involved in decision making and use quadratic voting
+
+
+99
+00:11:39,520 --> 00:11:47,240
+to prioritize things? Might we use it in scheduling our unconference schedules so we can get a
+
+
+100
+00:11:47,240 --> 00:11:53,520
+sense of who's attending what or what might be popular ahead of time? And it goes on for
+
+
+101
+00:11:53,520 --> 00:12:00,040
+there, et cetera, et cetera, et cetera. So this is a big area. I think we're with things
+
+
+102
+00:12:00,040 --> 00:12:07,440
+like permanent full-time open source contributors who are paid by a non-organization that is
+
+
+103
+00:12:07,440 --> 00:12:13,240
+a website. These are some of the things, a lot of these things are also explored in more
+
+
+104
+00:12:13,240 --> 00:12:19,560
+web three contexts. And I'm saying we don't need to be blocked by waiting for cryptocurrency
+
+
+105
+00:12:19,560 --> 00:12:23,960
+or DAOs. We should experiment with those as well, but we should take these same patterns
+
+
+106
+00:12:23,960 --> 00:12:30,520
+and start using tools like open collective and start doing these things today. That's
+
+
+107
+00:12:30,520 --> 00:12:32,520
+all I got for you.
+
+
+108
+00:12:32,520 --> 00:12:43,480
+Questions, comments? Hi, thanks for having this talk. I think it
+
+
+109
+00:12:43,480 --> 00:12:49,720
+is super important, especially for the longterm health of something like an open standard
+
+
+110
+00:12:49,720 --> 00:12:58,240
+or open protocol. For open collective specifically, so one of the things that web three and DAOs
+
+
+111
+00:12:58,240 --> 00:13:05,920
+bring to this conversation is actually kind of similar to that impact evaluator workflow,
+
+
+112
+00:13:05,920 --> 00:13:13,280
+which is a voting mechanism. Does open collective have something like that, like a voting tool
+
+
+113
+00:13:13,280 --> 00:13:20,160
+for, or do you have to, is it just the kind of fiscal sponsorship aspect where somebody,
+
+
+114
+00:13:20,160 --> 00:13:24,720
+one email address somewhere has the key to unlocking the funds of the open collective?
+
+
+115
+00:13:24,720 --> 00:13:29,200
+So how does, in that world where you're using open collective instead of dogfooding the
+
+
+116
+00:13:29,200 --> 00:13:35,840
+web three DAO version, how do you connect that decision-making part from the community
+
+
+117
+00:13:35,840 --> 00:13:38,320
+to the budgetary part in open collective?
+
+
+118
+00:13:38,320 --> 00:13:42,840
+Yeah, it's a really good question. There's a whole bunch of other things in there where
+
+
+119
+00:13:42,840 --> 00:13:51,560
+I also think it's very important that we should be having conversations with users of software.
+
+
+120
+00:13:51,560 --> 00:13:58,200
+So like with a software library, this is usually organizations or other things like that. But
+
+
+121
+00:13:58,200 --> 00:14:03,880
+higher up that end users should also be like, oh man, I love this software and I want to
+
+
+122
+00:14:03,880 --> 00:14:11,960
+have it stick around and $5 a month is a vote. These other systems aren't built in yet. One
+
+
+123
+00:14:11,960 --> 00:14:20,200
+of the ways that I would build that is literally say, okay, great, guess what? You get to participate
+
+
+124
+00:14:20,200 --> 00:14:26,280
+in emoji voting on our next three features. Oh no, no, you don't get to make up new ones.
+
+
+125
+00:14:26,280 --> 00:14:29,960
+We're writing the software. We know what we're doing, but we're going to do a participatory
+
+
+126
+00:14:29,960 --> 00:14:35,920
+process of saying which of these are higher priority in different ways. That's in some
+
+
+127
+00:14:35,920 --> 00:14:42,800
+ways again, like, oh damn, that's the et cetera part. That's hard, right? And in fact, it's
+
+
+128
+00:14:42,800 --> 00:14:49,440
+not built into GitHub and whether or not continuing to consolidate on one single platform of GitHub
+
+
+129
+00:14:49,440 --> 00:14:58,280
+is even a good idea. So you usually have multiple admins and everything is done transparently
+
+
+130
+00:14:58,280 --> 00:15:03,440
+already. So budgeting, like if someone says like, I did this thing, I'd like to get paid
+
+
+131
+00:15:03,440 --> 00:15:09,680
+five hours for this thing that I did. That's relatively transparent, but a lot of those
+
+
+132
+00:15:09,680 --> 00:15:13,640
+other things you're right, like happened like outside of the bounds of that at the, at the
+
+
+133
+00:15:13,640 --> 00:15:18,660
+end of the day. So that's an area where, where we'd need to look at other things.
+
+
+134
+00:15:18,660 --> 00:15:24,000
+Does open collective happen in API? Yeah, the entire platform is open source. It's got
+
+
+135
+00:15:24,000 --> 00:15:33,200
+web hooks. Ian built, they have some event features that are like so-so, like they're
+
+
+136
+00:15:33,200 --> 00:15:38,680
+fine. And then you actually built a whole like event website that was driven off of
+
+
+137
+00:15:38,680 --> 00:15:50,780
+open collective, right? Yeah. So basically all of the data associated with any particular
+
+
+138
+00:15:50,780 --> 00:15:56,120
+open collective page, well, most of the important data is published as just JSON files that
+
+
+139
+00:15:56,120 --> 00:16:01,200
+you can pull. And so we built a whole front end on our website that like pulled the list
+
+
+140
+00:16:01,200 --> 00:16:05,920
+of registered attendees and like displayed them in the website from the people who had
+
+
+141
+00:16:05,920 --> 00:16:12,040
+actually registered in open collective. To actually take them through the payment flow,
+
+
+142
+00:16:12,040 --> 00:16:16,960
+we were able to generate a specific page for each subscription tier and then just send
+
+
+143
+00:16:16,960 --> 00:16:22,440
+people directly to that page from the button on our website. One of the ways I think it
+
+
+144
+00:16:22,440 --> 00:16:28,000
+could also work with a more sort of democratic or DAO based funding mechanism is if you had
+
+
+145
+00:16:28,000 --> 00:16:34,520
+it, like, I think that Boris is right that you want the orgs receiving the funding to,
+
+
+146
+00:16:34,520 --> 00:16:39,760
+you know, maybe not necessarily be run totally democratically as a DAO, but like have admins
+
+
+147
+00:16:39,760 --> 00:16:44,760
+who are responsible for the project actually administering things. But if protocol labs
+
+
+148
+00:16:44,760 --> 00:16:49,920
+are a larger organization that has access to a lot of funds is choosing which organizations
+
+
+149
+00:16:49,920 --> 00:16:56,000
+would get open collective donations that could be run as a more democratic participatory
+
+
+150
+00:16:56,000 --> 00:17:00,800
+web three process like get coin. And then those bounties could just be paid out to open
+
+
+151
+00:17:00,800 --> 00:17:05,000
+collective orgs. And then those orgs like the thing that's great about open collective
+
+
+152
+00:17:05,000 --> 00:17:11,200
+is it's open nature. You see exactly what the org is spending all of that money on.
+
+
+153
+00:17:11,200 --> 00:17:15,200
+And so, you know, we raised more money than we needed for our conference. And we just
+
+
+154
+00:17:15,200 --> 00:17:19,080
+have a bunch of money sitting there in our fund that we've promised to use for certain
+
+
+155
+00:17:19,080 --> 00:17:24,800
+things in the future. But like, you know, the actual accounting of hiring a different
+
+
+156
+00:17:24,800 --> 00:17:28,920
+organization to host our servers, we were able to pay them directly through open collective
+
+
+157
+00:17:28,920 --> 00:17:34,920
+because they also had an open collective. Yeah, so this is this is a very, so there's
+
+
+158
+00:17:34,920 --> 00:17:41,040
+another tool related to open collective called back your stack. And what it does, you can
+
+
+159
+00:17:41,040 --> 00:17:46,120
+go in and put your GitHub details in and it will scan all of your dependencies and will
+
+
+160
+00:17:46,120 --> 00:17:52,560
+show you which of those orgs have open collectives. And so this is sort of this other model, right?
+
+
+161
+00:17:52,560 --> 00:18:00,680
+So Fission has already started making sure that we're like paying our dependencies. We
+
+
+162
+00:18:00,680 --> 00:18:05,160
+want them to stick around. We want them to be stable libraries. And we should, you know,
+
+
+163
+00:18:05,160 --> 00:18:08,080
+put some money in the kitty to make that stuff happen. And of course, we can start thinking
+
+
+164
+00:18:08,080 --> 00:18:11,960
+about whether it's a star maps model or an open collective model where you actually have
+
+
+165
+00:18:11,960 --> 00:18:17,160
+very like local decision maker around like, oh, we should direct some funds over here.
+
+
+166
+00:18:17,160 --> 00:18:30,480
+And all of those flows end up being really interesting in a in a system.
+
+
+167
+00:18:30,480 --> 00:18:34,760
+Thanks Boris. Yes, just to help me get really concrete on this. We talked earlier about
+
+
+168
+00:18:34,760 --> 00:18:37,800
+maybe we should have an open collective for star map and vision would like to put money
+
+
+169
+00:18:37,800 --> 00:18:43,480
+towards that maybe PLN Drez wants to. So let's say people do who at the end of the day is
+
+
+170
+00:18:43,480 --> 00:18:49,760
+getting to decide, yes, we're going to reward this person in this part of the world $1,000
+
+
+171
+00:18:49,760 --> 00:18:55,560
+for that feature that they just produced. Yeah, yeah. So again, that that's that's the
+
+
+172
+00:18:55,560 --> 00:19:00,720
+like formation of like, like, what is the governance model of star maps is what you're
+
+
+173
+00:19:00,720 --> 00:19:07,240
+actually asking me. Okay. And so that's not built into to open collective, very roughly
+
+
+174
+00:19:07,240 --> 00:19:11,640
+the way that I've been thinking about it is we don't want to be in a situation that it
+
+
+175
+00:19:11,640 --> 00:19:16,000
+actually just becomes consulting. There's the part of like finding some qualified individuals
+
+
+176
+00:19:16,000 --> 00:19:20,280
+who are comfortable with the code base, right? So there should be a bunch of like starter
+
+
+177
+00:19:20,280 --> 00:19:27,080
+grants that are very well defined that are basically like, hey, do this thing, do a PR,
+
+
+178
+00:19:27,080 --> 00:19:32,480
+do this, get it merged in, we'll give you 50 bucks, right? Just to like get people over
+
+
+179
+00:19:32,480 --> 00:19:37,520
+the over the bar, right? And then we've got this other tier of like fairly well scoped
+
+
+180
+00:19:37,520 --> 00:19:42,920
+it. Who does the scoping? How does that get reviewed code basically, like, this is the
+
+
+181
+00:19:42,920 --> 00:19:48,800
+same practice of doing this inside the company, one way or another, right with with with some
+
+
+182
+00:19:48,800 --> 00:19:54,920
+processes that ideally like scale, basically, where ideally, what you'd want to do is you'd
+
+
+183
+00:19:54,920 --> 00:20:00,120
+want to find a situation where someone has the time available and the interest available
+
+
+184
+00:20:00,000 --> 00:20:00,080
+sesie»
+
+
+185
+00:20:30,000 --> 00:20:33,220
+outside of the bounds of our organization.
+
+
+186
+00:20:33,220 --> 00:20:36,740
+Right, so either we fully staff some of these projects
+
+
+187
+00:20:36,740 --> 00:20:39,580
+because we're doing them and they're crucial,
+
+
+188
+00:20:39,580 --> 00:20:42,420
+which will cost 20 grand a month,
+
+
+189
+00:20:44,040 --> 00:20:48,340
+or we see if we can actually turn them
+
+
+190
+00:20:48,340 --> 00:20:53,100
+into even more broadly supported open source projects
+
+
+191
+00:20:54,540 --> 00:20:58,460
+that get a much wider community outside the boundaries
+
+
+192
+00:20:58,460 --> 00:21:01,340
+of our current network, right?
+
+
+193
+00:21:01,340 --> 00:21:03,500
+So it's call for experimentation, is that fair?
+
+
+194
+00:21:03,500 --> 00:21:05,100
+Yeah, that's fair.
+
+
+195
+00:21:05,100 --> 00:21:06,680
+Cool, thank you.
+
+
+196
+00:21:12,860 --> 00:21:17,220
+One of the challenges that I think IPFS specifically has
+
+
+197
+00:21:17,220 --> 00:21:20,620
+in this area, and I know that this is really not specific
+
+
+198
+00:21:20,620 --> 00:21:22,500
+to IPFS, you can apply it to like two star maps
+
+
+199
+00:21:22,500 --> 00:21:24,540
+or something, but one of the challenges with IPFS
+
+
+200
+00:21:24,540 --> 00:21:26,260
+is that like at this conference,
+
+
+201
+00:21:26,260 --> 00:21:29,820
+there's not a lot of its biggest users represented.
+
+
+202
+00:21:29,820 --> 00:21:33,180
+And many of its largest users might actually,
+
+
+203
+00:21:33,180 --> 00:21:34,660
+we don't know who they are,
+
+
+204
+00:21:34,660 --> 00:21:37,500
+even because they're pulling data through the gateway
+
+
+205
+00:21:37,500 --> 00:21:40,340
+and publishing CIDs and then pulling data that way.
+
+
+206
+00:21:43,980 --> 00:21:45,140
+I'm not sure I have a question there,
+
+
+207
+00:21:45,140 --> 00:21:47,660
+other than I'm thinking about how to apply the system
+
+
+208
+00:21:47,660 --> 00:21:50,020
+to where you don't have that strong relationship
+
+
+209
+00:21:50,020 --> 00:21:53,820
+between that user base and the draw
+
+
+210
+00:21:53,820 --> 00:21:55,940
+and the people who are investing in that.
+
+
+211
+00:21:55,940 --> 00:21:58,940
+In our situation, clearly there's one major funder
+
+
+212
+00:21:58,940 --> 00:22:00,740
+organization for a lot of it.
+
+
+213
+00:22:00,740 --> 00:22:02,060
+But how do we get to that?
+
+
+214
+00:22:02,060 --> 00:22:03,940
+I'm thinking a lot about that transition to a world
+
+
+215
+00:22:03,940 --> 00:22:06,860
+where the funding of IPFS is more directly tied
+
+
+216
+00:22:06,860 --> 00:22:09,780
+to its biggest users and how that might use
+
+
+217
+00:22:09,780 --> 00:22:11,680
+some of these tools.
+
+
+218
+00:22:11,680 --> 00:22:14,380
+I think that grants are also relatively opaque
+
+
+219
+00:22:14,380 --> 00:22:17,660
+and are run by someone and it comes from the central,
+
+
+220
+00:22:17,660 --> 00:22:20,180
+it doesn't matter what it is or what other web for you
+
+
+221
+00:22:20,180 --> 00:22:21,140
+or whatever.
+
+
+222
+00:22:21,140 --> 00:22:26,140
+And with this, to me this is like it's all out in the open.
+
+
+223
+00:22:26,940 --> 00:22:28,340
+You can see what the dollars are.
+
+
+224
+00:22:28,340 --> 00:22:29,220
+It's all there.
+
+
+225
+00:22:29,220 --> 00:22:32,740
+And there's these two parts.
+
+
+226
+00:22:32,740 --> 00:22:35,900
+There's this invitation to have agency and be like,
+
+
+227
+00:22:35,900 --> 00:22:38,940
+I'm in for five bucks a month, right, as an individual.
+
+
+228
+00:22:38,940 --> 00:22:42,700
+As an organization, I would start looking around
+
+
+229
+00:22:42,700 --> 00:22:46,260
+at organizations, stakeholders who use some of these things
+
+
+230
+00:22:46,260 --> 00:22:51,260
+and be like, why is your logo not on this page
+
+
+231
+00:22:52,780 --> 00:22:54,020
+for $500 a month?
+
+
+232
+00:22:54,020 --> 00:22:56,220
+And the network goods team is looking at some of this stuff
+
+
+233
+00:22:56,220 --> 00:22:59,220
+with hyper certs and I'm like, cool, you can figure out
+
+
+234
+00:22:59,220 --> 00:23:00,060
+your magic open certs.
+
+
+235
+00:23:00,060 --> 00:23:02,540
+I think we can start prototyping this now.
+
+
+236
+00:23:03,500 --> 00:23:07,100
+And I think that in fact we can turn that classic loop
+
+
+237
+00:23:07,100 --> 00:23:10,540
+of almost like passing the hat, but passing the hat
+
+
+238
+00:23:10,540 --> 00:23:13,300
+at the corporate level where it's 100 bucks a month
+
+
+239
+00:23:13,300 --> 00:23:14,900
+or 500 bucks a month where you're like,
+
+
+240
+00:23:14,900 --> 00:23:17,940
+well, that actually adds up pretty quickly.
+
+
+241
+00:23:18,860 --> 00:23:21,780
+So I think that's some of the other dynamic of like,
+
+
+242
+00:23:21,780 --> 00:23:24,780
+of course, if you don't literally put it out there
+
+
+243
+00:23:24,780 --> 00:23:28,780
+and show like this is, there's not a tiny magic gnome
+
+
+244
+00:23:28,780 --> 00:23:31,500
+we've got trapped in GitHub doing your issues for you,
+
+
+245
+00:23:31,500 --> 00:23:33,140
+right, going like, oh, that's really great
+
+
+246
+00:23:33,140 --> 00:23:33,980
+that you've come up.
+
+
+247
+00:23:33,980 --> 00:23:35,300
+Are you a contributor?
+
+
+248
+00:23:36,500 --> 00:23:39,260
+And I think that's where some of my thinking is these days
+
+
+249
+00:23:39,260 --> 00:23:40,540
+in thinking about open source licensing.
+
+
+250
+00:23:40,540 --> 00:23:42,180
+This is a whole other thing.
+
+
+251
+00:23:42,180 --> 00:23:43,020
+I'm not sure.
+
+
+252
+00:23:44,780 --> 00:23:47,620
+Various people have thought that we should tinker
+
+
+253
+00:23:47,620 --> 00:23:49,020
+with open source licenses.
+
+
+254
+00:23:49,020 --> 00:23:51,620
+There's a whole class of thing called fair licenses
+
+
+255
+00:23:51,620 --> 00:23:53,780
+where like, oh, if you make money,
+
+
+256
+00:23:53,780 --> 00:23:55,460
+you have to buy a license.
+
+
+257
+00:23:55,460 --> 00:23:58,460
+What's being asked is to run that open source product,
+
+
+258
+00:23:58,460 --> 00:24:00,260
+but that's a business.
+
+
+259
+00:24:00,260 --> 00:24:02,740
+That may be a business model and that's totally great.
+
+
+260
+00:24:02,740 --> 00:24:05,780
+I'd like to explore the solution space that is like,
+
+
+261
+00:24:05,780 --> 00:24:08,020
+oh yeah, we actually won't look at your issue
+
+
+262
+00:24:08,020 --> 00:24:12,900
+or answer your support questions
+
+
+263
+00:24:12,900 --> 00:24:14,900
+other than in a broad community bucket
+
+
+264
+00:24:14,900 --> 00:24:19,140
+that kind of comes last, unless you're a contributor, right?
+
+
+265
+00:24:19,140 --> 00:24:20,820
+Everybody gets the code for free.
+
+
+266
+00:24:20,820 --> 00:24:25,820
+The scarce resources that is the humans is in fact gated
+
+
+267
+00:24:27,980 --> 00:24:30,220
+by like, yeah, you have to be a contributor,
+
+
+268
+00:24:30,220 --> 00:24:31,340
+not just cash.
+
+
+269
+00:24:31,340 --> 00:24:32,900
+Oh, you did some documentation.
+
+
+270
+00:24:32,900 --> 00:24:34,660
+Amazing, you're a contributor.
+
+
+271
+00:24:34,660 --> 00:24:40,660
+We're happy to help.
+
+
+272
+00:24:40,660 --> 00:24:42,780
+Plus a thousand to that.
+
+
+273
+00:24:42,780 --> 00:24:44,740
+One of the biggest challenges that I think,
+
+
+274
+00:24:44,740 --> 00:24:46,780
+and I think one of the ways that we've been thinking
+
+
+275
+00:24:46,780 --> 00:24:50,180
+about closing the gap in this specific challenge
+
+
+276
+00:24:50,180 --> 00:24:54,540
+in IPFS implementations over time is something that,
+
+
+277
+00:24:54,540 --> 00:24:56,180
+you know, we've talked about a bunch of times
+
+
+278
+00:24:56,180 --> 00:25:01,180
+in this specific event and how the barrier to entry
+
+
+279
+00:25:01,660 --> 00:25:04,260
+and being a part of the decision-making entity
+
+
+280
+00:25:04,260 --> 00:25:06,540
+around how the protocol actually functions
+
+
+281
+00:25:06,540 --> 00:25:11,540
+and is implemented and run at scale is so high
+
+
+282
+00:25:11,540 --> 00:25:14,780
+that the users with the most needs
+
+
+283
+00:25:14,780 --> 00:25:16,500
+are locked out of that process.
+
+
+284
+00:25:16,500 --> 00:25:19,500
+And even the ones that are sufficiently technical
+
+
+285
+00:25:19,500 --> 00:25:20,940
+and can at least be like,
+
+
+286
+00:25:20,940 --> 00:25:22,900
+I think that needs to change over there.
+
+
+287
+00:25:22,900 --> 00:25:26,500
+Like Fishit, for example, is very difficult to cross,
+
+
+288
+00:25:26,500 --> 00:25:28,540
+to transition from that to actually being able
+
+
+289
+00:25:28,540 --> 00:25:30,220
+to participate in making the change.
+
+
+290
+00:25:30,220 --> 00:25:33,780
+And if you can run your open source community
+
+
+291
+00:25:33,780 --> 00:25:35,500
+in the way that you just described,
+
+
+292
+00:25:35,500 --> 00:25:38,900
+where people that need changes
+
+
+293
+00:25:38,900 --> 00:25:41,460
+must participate in the making of them,
+
+
+294
+00:25:42,340 --> 00:25:44,220
+you might end up in that world,
+
+
+295
+00:25:44,220 --> 00:25:46,820
+but you also face that barrier to entry challenge
+
+
+296
+00:25:46,820 --> 00:25:49,420
+if the project isn't starting from scratch.
+
+
+297
+00:25:49,420 --> 00:25:50,780
+For projects in motion,
+
+
+298
+00:25:50,780 --> 00:25:52,620
+and they've been around for already,
+
+
+299
+00:25:52,620 --> 00:25:54,340
+almost a decade at this point,
+
+
+300
+00:25:55,940 --> 00:25:57,860
+it's a little harder and you do have to invest
+
+
+301
+00:25:57,860 --> 00:25:59,300
+in reducing those barriers.
+
+
+302
+00:25:59,300 --> 00:26:00,740
+And I think that actually says something
+
+
+303
+00:26:00,740 --> 00:26:05,700
+about your open source projects, culture and values as well,
+
+
+304
+00:26:05,700 --> 00:26:07,580
+is the investment and how high or low
+
+
+305
+00:26:07,580 --> 00:26:10,100
+those barriers to entry are for your users
+
+
+306
+00:26:10,100 --> 00:26:13,700
+to be part of that maker community, I guess.
+
+
+307
+00:26:13,700 --> 00:26:15,180
+Yeah, exactly.
+
+
+308
+00:26:16,900 --> 00:26:20,100
+Continued topic, I'd love to do more about this.
+
+
+309
+00:26:20,100 --> 00:26:22,700
+This is like intent to ship experiment
+
+
+310
+00:26:23,740 --> 00:26:25,460
+and sounds like Molly was a plus one
+
+
+311
+00:26:25,460 --> 00:26:27,100
+on let's try it with star maps.
+
+
+312
+00:26:28,020 --> 00:26:29,580
+And it would be amazing to find
+
+
+313
+00:26:29,580 --> 00:26:32,580
+two or three other projects that might be a good fit
+
+
+314
+00:26:33,420 --> 00:26:36,020
+for this and really just like run some experiments.
+
+
+315
+00:26:36,940 --> 00:26:39,940
+Maybe we can get some of them prepped and up and running
+
+
+316
+00:26:39,940 --> 00:26:43,700
+and ahead of IPFS camp
+
+
+317
+00:26:43,700 --> 00:26:45,660
+and use that as an in-person thing
+
+
+318
+00:26:45,660 --> 00:26:47,260
+to onboard a bunch of people.
+
+
+319
+00:26:47,260 --> 00:26:49,900
+Have a bunch of those like $50 tier ones
+
+
+320
+00:26:49,900 --> 00:26:52,540
+to get everyone used to using that kind of thing in person.
+
+
+321
+00:26:52,540 --> 00:26:53,380
+You in?
+
+
+322
+00:26:54,500 --> 00:26:57,900
+I have like 10 more questions to ask you.
+
+
+323
+00:26:57,900 --> 00:27:00,060
+Yeah, let's catch up later.
+
+
+324
+00:27:00,060 --> 00:27:00,900
+I wanna make time for that.
+
+
+325
+00:27:00,900 --> 00:27:01,900
+Thank you very much.
+
+
+326
+00:27:01,900 --> 00:27:26,900
+Thank you.

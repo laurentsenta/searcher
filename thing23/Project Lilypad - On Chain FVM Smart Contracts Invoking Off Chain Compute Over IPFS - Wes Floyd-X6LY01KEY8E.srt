@@ -1,0 +1,1023 @@
+1
+00:00:00,000 --> 00:00:07,720
+Thank you all for joining our session. As Irina mentioned, we're very passionate about
+
+
+2
+00:00:07,720 --> 00:00:13,520
+off-chain compute. Off-chain compute is really only interesting when you can tie the trustlessness
+
+
+3
+00:00:13,520 --> 00:00:21,040
+guarantees of a distributed consensus technology like FEVM. So my brief session is going to
+
+
+4
+00:00:21,040 --> 00:00:27,040
+talk about the power of on-chain state, bridging it to invoke off-chain compute. We really
+
+
+5
+00:00:27,040 --> 00:00:30,600
+want to have the best of both worlds. We want to have our cake and eat it too. And of course,
+
+
+6
+00:00:30,600 --> 00:00:35,680
+please go to our GitHub page, check us out, smash the like button, and all that good stuff.
+
+
+7
+00:00:35,680 --> 00:00:43,600
+So this session is really about making your hearts, making your dreams come true, effectively.
+
+
+8
+00:00:43,600 --> 00:00:48,840
+So from a demo perspective, these are some things that I love. I love the movie Back
+
+
+9
+00:00:48,840 --> 00:00:53,640
+to the Future. Does anybody else like Back to the Future? Yeah, yeah, thank you, thank
+
+
+10
+00:00:53,640 --> 00:00:59,360
+you. I also like 19th century French modernist painters. I don't know if you guys knew that
+
+
+11
+00:00:59,360 --> 00:01:04,680
+about me. That's the thing about me. I also really love off-roading. So these are the
+
+
+12
+00:01:04,680 --> 00:01:08,840
+three things that I love the most. And this is what we're going to use Waterlily to bring
+
+
+13
+00:01:08,840 --> 00:01:13,800
+to bear. So before we get that, let's kind of walk our way up the stack. So Irina gave
+
+
+14
+00:01:13,800 --> 00:01:18,480
+you some perspective on Bacoyal, which is compute over data. You can think of it as
+
+
+15
+00:01:18,480 --> 00:01:27,440
+sort of an L2. It has a lot of ties to EVM. If L1 is the sort of the Filecoin chain or
+
+
+16
+00:01:27,440 --> 00:01:32,040
+the virtual machine there, Bacoyal would exist as a layer on top of it. And there's definitely
+
+
+17
+00:01:32,040 --> 00:01:36,200
+some debate about how those fit together, but effectively, this is how I want you to
+
+
+18
+00:01:36,200 --> 00:01:43,200
+have sort of a mental model of compute. Project Lilypad is the first component to invoke Bacoyal
+
+
+19
+00:01:43,200 --> 00:01:48,000
+from any smart contract. Hopefully, you will be building FVM smart contracts soon, if you're
+
+
+20
+00:01:48,000 --> 00:01:51,680
+not already. And when you're building those smart contracts, you might think, wow, I want
+
+
+21
+00:01:51,680 --> 00:01:57,400
+to be able to invoke some communication with the outside world, or I want to do some complex
+
+
+22
+00:01:57,400 --> 00:02:02,040
+math. It's too heavy to fit into my smart contract. In fact, this is actually a really
+
+
+23
+00:02:02,040 --> 00:02:08,600
+important turning point for Web3 in general. There are a few off-chain solutions, off-chain
+
+
+24
+00:02:08,600 --> 00:02:13,720
+decentralized compute platforms today, but being able to invoke them from a trustless
+
+
+25
+00:02:13,720 --> 00:02:18,720
+chain is a very unique thing. So this is one of the first projects to ever let you do this.
+
+
+26
+00:02:18,720 --> 00:02:22,720
+And hopefully, this will inspire you to come up with your own interesting project ideas.
+
+
+27
+00:02:22,720 --> 00:02:26,480
+And so yes, this project itself, the source code is available. Please check it out at
+
+
+28
+00:02:26,480 --> 00:02:31,280
+Lilypad on the GitHub URL there. And just to give you a brief walkthrough of how this
+
+
+29
+00:02:31,280 --> 00:02:36,720
+is going to work, from the contract that you write, you're going to invoke a Bacoyal job.
+
+
+30
+00:02:36,720 --> 00:02:41,520
+You're going to call this Lilypad contract through an interface that's easily available.
+
+
+31
+00:02:41,520 --> 00:02:45,400
+Lilypad contract is then going to broadcast an event to the FVM chain. It's going to actually
+
+
+32
+00:02:45,400 --> 00:02:50,680
+do, I forget the specific function, I think it's.send. Anyways, it's going to put that
+
+
+33
+00:02:50,680 --> 00:02:56,200
+function on chain so that it's written, it's broadcasted on chain. There's a daemon right
+
+
+34
+00:02:56,200 --> 00:03:01,480
+now, which is the bridge between Lilypad and the compute nodes, which is going to be listening
+
+
+35
+00:03:01,480 --> 00:03:05,400
+for that event. It's going to say, oh, okay, someone created a request to run an off-chain
+
+
+36
+00:03:05,400 --> 00:03:09,760
+compute job. Then it's going to actually run this job here, number three, and number four
+
+
+37
+00:03:09,760 --> 00:03:14,080
+is going to be something like maybe a standard CLI invocation. It's very close in native
+
+
+38
+00:03:14,080 --> 00:03:18,920
+to the Bacoyal network. Over time, you'll probably see these consolidate a bit more.
+
+
+39
+00:03:18,920 --> 00:03:23,640
+There's opportunity to further decentralize and such, but this is just a good initial
+
+
+40
+00:03:23,640 --> 00:03:29,640
+implementation for reference. Then the Bacoyal network will actually run the job. Most importantly,
+
+
+41
+00:03:29,640 --> 00:03:36,760
+it will return the results to its preferred medium of storage, which is IPFS in this case.
+
+
+42
+00:03:36,760 --> 00:03:41,640
+The data's going to live on IPFS. It's going to post that back to the Lilypad contract.
+
+
+43
+00:03:41,640 --> 00:03:47,880
+Then the user results will be returned to the user contract. That contract has then
+
+
+44
+00:03:47,880 --> 00:03:51,920
+requested some off-chain compute. It's happened. Now the results come back. You can do some
+
+
+45
+00:03:51,920 --> 00:03:55,800
+very interesting things with it. We'll show you guys some examples here in a minute. Then
+
+
+46
+00:03:55,800 --> 00:04:01,600
+you celebrate. You have your results ready to go.
+
+
+47
+00:04:01,600 --> 00:04:06,520
+Project Waterlily. In order to showcase the power of this end-to-end capability, we thought,
+
+
+48
+00:04:06,520 --> 00:04:10,760
+let's do a couple things. Let's do something that benefits humanity. Let's do something
+
+
+49
+00:04:10,760 --> 00:04:15,960
+that shows off some of the latest AI capability, in particular, stable diffusion and neural
+
+
+50
+00:04:15,960 --> 00:04:22,920
+style transfer. Let's also showcase FVM payments as a part of this capability.
+
+
+51
+00:04:22,920 --> 00:04:28,440
+If you've never heard of stable diffusion, the terminology comes from when you take dye,
+
+
+52
+00:04:28,440 --> 00:04:35,560
+drop it into water, and then the dye slowly stabilizes effectively, kind of an interesting,
+
+
+53
+00:04:35,560 --> 00:04:40,680
+clunky-looking color mesh. This is a very similar technique that they use for stable
+
+
+54
+00:04:40,680 --> 00:04:44,760
+diffusion and image generation, where you start with a lot of noise. Over time, you
+
+
+55
+00:04:44,760 --> 00:04:50,520
+refine that randomly generated noise to an image that matches a text prompt that you
+
+
+56
+00:04:50,520 --> 00:04:52,600
+get. In this case, this is a person that's half
+
+
+57
+00:04:52,600 --> 00:04:57,280
+Yoda, half Gandalf. Over a series of iterations through the machine learning model, it actually
+
+
+58
+00:04:57,280 --> 00:05:01,200
+gets to something that looks like Yoda and Gandalf.
+
+
+59
+00:05:01,200 --> 00:05:04,760
+That computation is important because this is an example of a computation that's way
+
+
+60
+00:05:04,760 --> 00:05:09,880
+too large to happen on a smart contract. FVM smart contracts are very powerful because
+
+
+61
+00:05:09,880 --> 00:05:14,400
+they're trustless and they're verifiable, but they're not as open-ended. You can't
+
+
+62
+00:05:14,400 --> 00:05:19,200
+do arbitrary compute like this. This isn't a good example of what you want to do.
+
+
+63
+00:05:19,200 --> 00:05:26,120
+Here's an example of what these might look like, where you say, for adding to stable
+
+
+64
+00:05:26,120 --> 00:05:30,040
+diffusion, a thing called neural style transfer, where you say, okay, I have a picture here
+
+
+65
+00:05:30,040 --> 00:05:36,160
+of a nice car out in the distance. Then I want to apply a classical painter style to
+
+
+66
+00:05:36,160 --> 00:05:39,480
+it. Now, it will refashion that neural style transfer accordingly.
+
+
+67
+00:05:39,480 --> 00:05:43,840
+We're going to do two things. One, we're going to generate stable diffusion. Secondly,
+
+
+68
+00:05:43,840 --> 00:05:47,840
+we're going to apply neural style transfer, but we're going to do it for those artists
+
+
+69
+00:05:47,840 --> 00:05:51,720
+that might be underrepresented or artists that haven't had an opportunity to commercialize
+
+
+70
+00:05:51,720 --> 00:05:55,720
+their work, hopefully provide a little bit of benefit to humanity.
+
+
+71
+00:05:55,720 --> 00:06:02,320
+If you're interested in the technology behind that technique, this is a nice diagram towards
+
+
+72
+00:06:02,320 --> 00:06:06,320
+machine learning or towards data science, rather, which goes into more depth on how
+
+
+73
+00:06:06,320 --> 00:06:12,800
+that works. If you will open up your browser to waterlily.ai, we're going to pull up a
+
+
+74
+00:06:12,800 --> 00:06:20,000
+quick demo of the Waterlily capability here. This is publicly available right now. You
+
+
+75
+00:06:20,000 --> 00:06:24,560
+can use the main net version, which is just waterlily.ai. You can also go to Waterlily
+
+
+76
+00:06:24,560 --> 00:06:28,720
+and add in the network Filecoin hyperspace. You can start working with it. You can type
+
+
+77
+00:06:28,720 --> 00:06:36,440
+in some text here. In this case, I want a rainbow unicorn. Then what you'll do is you'll
+
+
+78
+00:06:36,440 --> 00:06:44,000
+choose an artist whose work you want to, or style, rather, you want to apply to your generated
+
+
+79
+00:06:44,000 --> 00:06:46,480
+image. We've prebuilt these models with artists in
+
+
+80
+00:06:46,480 --> 00:06:50,800
+the past. When I choose, let's say, Tanya here, in this case, there's some examples
+
+
+81
+00:06:50,800 --> 00:06:55,560
+of the different types of artists. We've taken backlog of, let's say, 40 images from those
+
+
+82
+00:06:55,560 --> 00:06:59,000
+artists and we've trained their style. What we're doing here in this case, when I say
+
+
+83
+00:06:59,000 --> 00:07:06,600
+generate image, this is invoking the contract on FVM first. That contract, let me go back
+
+
+84
+00:07:06,600 --> 00:07:10,760
+to the visual here so I don't have to use my hands too much. We're calling that contract
+
+
+85
+00:07:10,760 --> 00:07:16,160
+on the FVM network. FVM is then going to build the style transfer and the stable diffusion
+
+
+86
+00:07:16,160 --> 00:07:20,240
+on the back end. It's going to return our results to Lilypad contract. We're going to
+
+
+87
+00:07:20,240 --> 00:07:29,240
+see our output here in user experience. Let's say rainbow unicorn with lasers. It's going
+
+
+88
+00:07:29,240 --> 00:07:34,280
+to be a very powerful rainbow unicorn. It's going to submit the job to the FVM network.
+
+
+89
+00:07:34,280 --> 00:07:41,960
+It's going to prompt me to pay in T-fill here. It's not too expensive, a fraction of T-fill,
+
+
+90
+00:07:41,960 --> 00:07:46,720
+so I'm going to confirm that. Now it's going to create the transaction on FVM. FVM is going
+
+
+91
+00:07:46,720 --> 00:07:51,200
+to go through its process and it's going to invoke BapiYau on the back end. But like any
+
+
+92
+00:07:51,200 --> 00:07:55,280
+good demo, this is going to be a bit of a baking show, so I want to show you guys some
+
+
+93
+00:07:55,280 --> 00:08:01,240
+results, some examples of what it looks like. Coming back to our slides here, this is an
+
+
+94
+00:08:01,240 --> 00:08:06,440
+example of saying, let's take the style of some public domain artists, in this case some
+
+
+95
+00:08:06,440 --> 00:08:12,800
+18th century hand-drawn art, and generate some fun images like this is what Barack Obama
+
+
+96
+00:08:12,800 --> 00:08:20,440
+would look like if that artist had drawn it, or Mickey Mouse in this case. For me, my favorites,
+
+
+97
+00:08:20,440 --> 00:08:26,760
+DeLorean 4x4 and Offroad, this is my dream. This is what I'm going to hopefully be able
+
+
+98
+00:08:26,760 --> 00:08:32,440
+to buy one day when someone decides to make it. But until then, this is the next best
+
+
+99
+00:08:32,440 --> 00:08:39,040
+thing. Hopefully this gives you a good sense of invocating these arbitrary large compute
+
+
+100
+00:08:39,040 --> 00:08:44,520
+jobs off-chain, but still with the trustlessness and the verifiability of FVM. There's a lot
+
+
+101
+00:08:44,520 --> 00:08:49,520
+more that we're going to start building with this. There's a lot of projects in the greater
+
+
+102
+00:08:49,520 --> 00:08:54,680
+Web3 ecosystem that could benefit from this capability. There are a number of DAOs that
+
+
+103
+00:08:54,680 --> 00:09:02,480
+we work with where they want to enhance or augment their existing membership capability.
+
+
+104
+00:09:02,480 --> 00:09:08,880
+We have a group that we work with in the science space that says, if we could do some off-chain
+
+
+105
+00:09:08,880 --> 00:09:14,840
+bioinformatics workloads to simulate protein folding, and then maybe capture that as an
+
+
+106
+00:09:14,840 --> 00:09:18,880
+NFT, and then our members will have this NFT of this unique science work that they generated
+
+
+107
+00:09:18,880 --> 00:09:23,560
+off-chain, that would be a fun validation of their membership. We have some folks that
+
+
+108
+00:09:23,560 --> 00:09:28,480
+work in the DeFi space that generate very high-quality data sets. One of the things
+
+
+109
+00:09:28,480 --> 00:09:32,880
+that the DeFi space is always chasing is better yield, better returns. Where should I put
+
+
+110
+00:09:32,880 --> 00:09:38,680
+my money in different DeFi projects? In today's world, most of these smart contracts, even
+
+
+111
+00:09:38,680 --> 00:09:43,600
+the best order routers, rely on computations that have to happen on-chain using current
+
+
+112
+00:09:43,600 --> 00:09:50,200
+state data. The big next threshold for DeFi is to say, if I can take into account all
+
+
+113
+00:09:50,200 --> 00:09:55,180
+the history of the Ethereum chain, and I can make more complex calculations, like you would
+
+
+114
+00:09:55,180 --> 00:09:59,520
+do in high-frequency trading, for example, you can make more sophisticated decisions,
+
+
+115
+00:09:59,520 --> 00:10:05,040
+you can increase your yield, etc., etc., etc. Lastly, one interesting one is decentralized
+
+
+116
+00:10:05,040 --> 00:10:10,480
+social media. Has anyone heard of Blue Sky or Lens Protocol in the audience? Okay, that's
+
+
+117
+00:10:10,480 --> 00:10:15,840
+about at least half, maybe more. This is a tremendous burgeoning space. In the sense
+
+
+118
+00:10:15,840 --> 00:10:23,640
+of social media, you may want to be able to not have to rely on the tech companies' determination
+
+
+119
+00:10:23,640 --> 00:10:27,160
+of what content you should see being fed by their algorithm. You may want to have your
+
+
+120
+00:10:27,160 --> 00:10:30,480
+own algorithm. If that's the case, you're going to need a more complicated off-chain
+
+
+121
+00:10:30,480 --> 00:10:34,640
+compute system to help build your algorithm of feeding the type of content that you'd
+
+
+122
+00:10:34,640 --> 00:10:38,160
+like to have. So these are just some examples of the types of things that we're hoping to
+
+
+123
+00:10:38,160 --> 00:10:43,200
+provide in the future with the bridge. Thank you guys so much for your time. Please follow
+
+
+124
+00:10:43,200 --> 00:10:48,680
+us, like us, and all the details there. And then, thank you so much. That's all I have.
+
+
+125
+00:10:48,680 --> 00:10:54,920
+I assume the stable diffusion example is like, we can run some compute and it's tied to an
+
+
+126
+00:10:54,920 --> 00:10:59,320
+FVM job, but there's nothing really about the FVM that you need in order to run stable
+
+
+127
+00:10:59,320 --> 00:11:03,840
+diffusion, or unless I'm missing something, where there's a specific advantage of bolting
+
+
+128
+00:11:03,840 --> 00:11:09,080
+the FVM onto the front of it? No, you make a good point. For stable diffusion, these
+
+
+129
+00:11:09,080 --> 00:11:15,040
+sorts of AI, even if it was chat-GBT or LLM and things like that, you do not necessarily
+
+
+130
+00:11:15,040 --> 00:11:21,400
+have to have FVM in general sense. And if you go to the docs.bakayau.org page, you'll
+
+
+131
+00:11:21,400 --> 00:11:25,920
+see a bunch of machine learning inference examples, like OCR and fun stuff like that,
+
+
+132
+00:11:25,920 --> 00:11:33,680
+so you can invoke it directly as well. So I guess what I'm asking is, what are you
+
+
+133
+00:11:33,680 --> 00:11:43,760
+hearing from customers where there are specific FVM-related off-chain compute that is driving
+
+
+134
+00:11:43,760 --> 00:11:47,920
+this? Where does customer demand come from here?
+
+
+135
+00:11:47,920 --> 00:11:52,720
+Yeah. Yeah. That's it. So just to replay your question, where is demand coming from for
+
+
+136
+00:11:52,720 --> 00:11:58,000
+the combination of FVM and off-chain compute? There's a few, in addition to the sort of
+
+
+137
+00:11:58,000 --> 00:12:03,640
+the DeFi and the science example before, there's a couple others where I think Matt had a little
+
+
+138
+00:12:03,640 --> 00:12:08,960
+bit alluded to these data DAOs in the past, is an important use case. And so these data
+
+
+139
+00:12:08,960 --> 00:12:14,480
+DAOs, like one in particular that I try to follow is one called Lagrange DAO, with a
+
+
+140
+00:12:14,480 --> 00:12:21,080
+person named Charles Kao, a Phil Swan team, and they're building a data DAO very similar
+
+
+141
+00:12:21,080 --> 00:12:25,400
+to the work that Ocean Protocol has done. Ocean Protocol has been a leader in the sense
+
+
+142
+00:12:25,400 --> 00:12:29,840
+of having private compute for a very long time. And the premise is essentially, I want
+
+
+143
+00:12:29,840 --> 00:12:35,760
+to retain ownership of some private data set, but I also want to be able to sell it in certain
+
+
+144
+00:12:35,760 --> 00:12:40,920
+circumstances and ensure a certain amount of privacy to compute over those data sets.
+
+
+145
+00:12:40,920 --> 00:12:46,080
+And so in those cases, when you need a transaction, Bacco Yau itself does not have an economic,
+
+
+146
+00:12:46,080 --> 00:12:51,280
+a native economic component yet. So FVM provides that. And then it also provides the sort of
+
+
+147
+00:12:51,280 --> 00:12:55,200
+the public marketplace built in for those data sets. So I think like with the data DAOs
+
+
+148
+00:12:55,200 --> 00:12:59,320
+and some of the other things that are being built on FVM, the off-chain compute will be
+
+
+149
+00:12:59,320 --> 00:13:04,800
+a nice complement just to expand FVM's capabilities generally. I think that's probably where demand
+
+
+150
+00:13:04,800 --> 00:13:05,800
+is going to come from.
+
+
+151
+00:13:05,800 --> 00:13:10,840
+I just have a clarifying question. So where does the, I think the previous talk talked
+
+
+152
+00:13:10,840 --> 00:13:16,440
+about Bacco Yau brings compute to the data. Where does the data that, where does the model
+
+
+153
+00:13:16,440 --> 00:13:19,080
+that encompasses the data actually live in this example?
+
+
+154
+00:13:19,080 --> 00:13:23,320
+Yeah, and just to clarify your question, you mean when you say where does the model for
+
+
+155
+00:13:23,320 --> 00:13:24,760
+the data live or?
+
+
+156
+00:13:24,760 --> 00:13:31,400
+Or like you're submitting a job to AI stable diffusion model, model a set of weights that
+
+
+157
+00:13:31,400 --> 00:13:34,800
+have to exist somewhere and like where, where is it, I guess, where is it running? Like
+
+
+158
+00:13:34,800 --> 00:13:37,640
+where, where is that diffusion model stored?
+
+
+159
+00:13:37,640 --> 00:13:43,200
+Very good question. Yeah. And so to Irina's point previously, like you know, Bacco Yau
+
+
+160
+00:13:43,200 --> 00:13:48,960
+has done a couple of things. One, it's implemented compute along with data that lives in IPFS,
+
+
+161
+00:13:48,960 --> 00:13:53,240
+which may or may not always be native to where the data lives, but there's larger data sets
+
+
+162
+00:13:53,240 --> 00:13:57,560
+that live in Filecoin, larger data sets that are too expensive to move. And so in those
+
+
+163
+00:13:57,560 --> 00:14:01,720
+situations, we'd like to send the Docker container workload or the ML training workload to where
+
+
+164
+00:14:01,720 --> 00:14:04,720
+the data lives at the Filecoin storage provider.
+
+
+165
+00:14:04,720 --> 00:14:09,320
+How does that work with sealing unsealing? Do you have to have some sort of relationship
+
+
+166
+00:14:09,320 --> 00:14:12,320
+with the storage provider as a compute node in order to make that work?
+
+
+167
+00:14:12,320 --> 00:14:15,640
+That's exactly the right question. The way it's going to work is that initially the focus
+
+
+168
+00:14:15,640 --> 00:14:21,720
+will be on unsealed data sets effectively because there are some depending on who you
+
+
+169
+00:14:21,720 --> 00:14:25,720
+ask, maybe 50% of the data in Filecoin might be retained as an unsealed data set. So we'd
+
+
+170
+00:14:25,720 --> 00:14:30,320
+like to give them better utility, better economic opportunity to earn and profit from, from
+
+
+171
+00:14:30,320 --> 00:14:34,440
+those data sets. But longer term, I think there's an opportunity for more of like a
+
+
+172
+00:14:34,440 --> 00:14:40,720
+medium layer, like a hot layer. That's like sort of like more than IPFS pinned, more guarantees,
+
+
+173
+00:14:40,720 --> 00:14:46,040
+but maybe not as hard to get to is sealed Filecoin data. So there's a lot of work going
+
+
+174
+00:14:46,040 --> 00:14:47,040
+on in that space.
+
+
+175
+00:14:47,040 --> 00:14:54,720
+So like doing like, yes, this section, this sector is like actively data that needs to
+
+
+176
+00:14:54,720 --> 00:14:58,840
+be actually worked on all on seal it and make it available to people I'm working with and
+
+
+177
+00:14:58,840 --> 00:15:00,960
+then I'll put it back in the cold storage at some point.
+
+
+178
+00:15:00,960 --> 00:15:01,960
+Yes, completely.
+
+
+179
+00:15:01,960 --> 00:15:10,280
+And then a completely unrelated set of questions. So I, we were, my team was working on Ethereum
+
+
+180
+00:15:10,280 --> 00:15:14,760
+back in November and we were working with Chainlink in order to do our Oracle queries
+
+
+181
+00:15:14,760 --> 00:15:26,840
+for part of our proof process. This seems like this is like a comparable solution built
+
+
+182
+00:15:26,840 --> 00:15:32,400
+on IPFS. How do you kind of see this, like this project as it relates to something like
+
+
+183
+00:15:32,400 --> 00:15:37,040
+Chainlink and bringing that functionality to FBM because we need Oracles.
+
+
+184
+00:15:37,040 --> 00:15:41,560
+Yeah, no, thank you for bringing that up. So I, I'm a huge fan of the work that Chainlink
+
+
+185
+00:15:41,560 --> 00:15:46,440
+has done in the Oracle space. I mean, they've really like, Oracles have existed alongside
+
+
+186
+00:15:46,440 --> 00:15:50,120
+Chainlink, but they've really led the forefront. So it's extremely important. And we were talking
+
+
+187
+00:15:50,120 --> 00:15:53,520
+about this on our team, you know, what do we call this? Do we call it a bridge? Maybe
+
+
+188
+00:15:53,520 --> 00:15:57,840
+it's kind of a bridge, maybe kind of not because bridge involves financial, you know,
+
+
+189
+00:15:57,840 --> 00:16:02,000
+you know, lending or financial bridging. But it's kind of an Oracle too, because it's listening
+
+
+190
+00:16:02,000 --> 00:16:06,760
+on chain and it's providing trusted, you know, results on chain. So, so, so maybe we need
+
+
+191
+00:16:06,760 --> 00:16:11,360
+smart people to come up with a better name for this type of integration, this type of
+
+
+192
+00:16:11,360 --> 00:16:17,240
+bridging off chain. But yes, I think using Bacl.io as a type of an Oracle is a use case
+
+
+193
+00:16:17,240 --> 00:16:23,320
+in itself. And I think all these sort of these, these middle layers between on-chain trustlessness
+
+
+194
+00:16:23,320 --> 00:16:27,160
+and off-chain trustlessness and increasing the trust and the closeness between those,
+
+
+195
+00:16:27,160 --> 00:16:30,960
+you alleviate hacking issues and things like that are extremely important. Chainlink's
+
+
+196
+00:16:30,960 --> 00:16:35,360
+doing a really good job of leading with their new decentralized functions to service capability,
+
+
+197
+00:16:35,360 --> 00:16:38,680
+which, which I love. So I think we'll just see a lot more overlap in this space. And
+
+
+198
+00:16:38,680 --> 00:16:41,960
+I think it's going to have to like, there's so much opportunity for it to grow, that it'll
+
+
+199
+00:16:41,960 --> 00:16:47,440
+be more sophisticated and more like refined this time next year.
+
+
+200
+00:16:47,440 --> 00:16:51,960
+So the last question, can you please tell where developers should go if they want to
+
+
+201
+00:16:51,960 --> 00:16:55,880
+build applications on Lilypad? Ian, they have a questions.
+
+
+202
+00:16:55,880 --> 00:17:02,120
+Thank you for asking. Yes. A couple options. Please go to our Slack channel, Bacl.io Slack
+
+
+203
+00:17:02,120 --> 00:17:08,800
+channel. We also we also have the Lilypad GitHub repo, the Bacl.io GitHub repo. We have
+
+
+204
+00:17:08,800 --> 00:17:12,760
+issues they can raise there as well. We'd love to hear feedback, questions, ideas along
+
+
+205
+00:17:12,760 --> 00:17:32,920
+the way. It's very much a community effort.

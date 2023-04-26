@@ -1,0 +1,1518 @@
+1
+00:00:00,000 --> 00:00:09,760
+Hello everyone, I'm Bastien, I'm working as a Program Manager at Fission and today I'm
+
+
+2
+00:00:09,760 --> 00:00:12,320
+going to talk to you about StarMaps.
+
+
+3
+00:00:12,320 --> 00:00:16,980
+So it's a roadmapping tool developed by our protocol labs.
+
+
+4
+00:00:16,980 --> 00:00:22,240
+So first I'd like to talk about the benefits of having a roadmap for your project.
+
+
+5
+00:00:22,240 --> 00:00:27,380
+So of course it's going to help you clarify your goals and objectives for your project
+
+
+6
+00:00:27,380 --> 00:00:33,040
+and it's kind of important because most of the time the people in production really don't
+
+
+7
+00:00:33,040 --> 00:00:41,520
+like the high-level vision of the project because they're so focused on their work.
+
+
+8
+00:00:41,520 --> 00:00:47,980
+And so it's going to help you communicate your objectives and collaborate inside the
+
+
+9
+00:00:47,980 --> 00:00:54,040
+team because you're going to engage your developers more and obviously you're going to increase
+
+
+10
+00:00:54,040 --> 00:00:58,360
+your visibility towards external audience.
+
+
+11
+00:00:58,360 --> 00:01:02,520
+And since we are in a network we have a lot of interdependency with each other so it's
+
+
+12
+00:01:02,520 --> 00:01:07,400
+very important in my opinion to have a roadmap to communicate where you are currently in
+
+
+13
+00:01:07,400 --> 00:01:09,560
+your project.
+
+
+14
+00:01:09,560 --> 00:01:17,420
+And so doing this work of roadmapping your project is going to force you to set timelines
+
+
+15
+00:01:17,420 --> 00:01:21,300
+by estimating your work from low level to high level.
+
+
+16
+00:01:21,300 --> 00:01:27,640
+You're going to define your milestones more precisely because you're going to decide how
+
+
+17
+00:01:27,640 --> 00:01:32,920
+the quantity of work that you're going to put in there, the features and your objectives
+
+
+18
+00:01:32,920 --> 00:01:35,120
+for each of these.
+
+
+19
+00:01:35,120 --> 00:01:39,460
+And we also have to look at the dependencies that you have with other projects.
+
+
+20
+00:01:39,460 --> 00:01:47,440
+So again doing so will allow you to have much more information when you're looking at your
+
+
+21
+00:01:47,440 --> 00:01:48,780
+project.
+
+
+22
+00:01:48,780 --> 00:01:54,520
+So that's going to help you to make better decisions when you will need to change the
+
+
+23
+00:01:54,520 --> 00:01:59,240
+way you're, like the direction you're going if you have to at some point.
+
+
+24
+00:01:59,240 --> 00:02:06,080
+And you're going to be able to identify roadblocks much earlier into the process of working on
+
+
+25
+00:02:06,080 --> 00:02:07,720
+your projects.
+
+
+26
+00:02:07,720 --> 00:02:12,200
+So that's going to save you time and resources for sure.
+
+
+27
+00:02:12,200 --> 00:02:14,940
+So yeah, so now you must really want to have a roadmap.
+
+
+28
+00:02:14,940 --> 00:02:17,640
+Let's look at StarMap.
+
+
+29
+00:02:17,640 --> 00:02:24,920
+So it was developed and still being developed by Protocol Labs with the specific needs of
+
+
+30
+00:02:24,920 --> 00:02:26,320
+the network in mind.
+
+
+31
+00:02:26,320 --> 00:02:34,480
+It's a very flexible tool that can be used to render all kinds of roadmap because we
+
+
+32
+00:02:34,480 --> 00:02:39,760
+in the network we have so many different team sizes and the kind of projects we have people
+
+
+33
+00:02:39,760 --> 00:02:41,100
+that are still doing research.
+
+
+34
+00:02:41,100 --> 00:02:45,600
+We have people that are in very different production cycles.
+
+
+35
+00:02:45,600 --> 00:02:48,260
+And it all renders from GitHub issues.
+
+
+36
+00:02:48,260 --> 00:02:53,080
+So that's very handy because you don't have to duplicate your tasks to just put them in
+
+
+37
+00:02:53,080 --> 00:02:56,900
+a roadmap outside of the GitHub cycle.
+
+
+38
+00:02:56,900 --> 00:03:03,880
+So with that said, I'm just going to show what we have currently at Fission in terms
+
+
+39
+00:03:03,880 --> 00:03:04,880
+of roadmap.
+
+
+40
+00:03:04,880 --> 00:03:09,360
+So this is the roadmap for the project at Fission.
+
+
+41
+00:03:09,360 --> 00:03:16,080
+So for now we have three, but we are currently working to adding more of these.
+
+
+42
+00:03:16,080 --> 00:03:19,440
+So this is the standard view for StarMaps.
+
+
+43
+00:03:19,440 --> 00:03:21,160
+You have a timeline.
+
+
+44
+00:03:21,160 --> 00:03:26,880
+You can see all of the project issues are displayed on the timeline based on their ETA,
+
+
+45
+00:03:26,880 --> 00:03:33,200
+which you can see at the bottom left of each card.
+
+
+46
+00:03:33,200 --> 00:03:37,480
+I'm going to just click on the IPVM project issue to show you what's inside.
+
+
+47
+00:03:37,480 --> 00:03:44,920
+So we have all of the milestones for IPVM here for Q1 2033 to future developments.
+
+
+48
+00:03:44,920 --> 00:03:49,160
+If I click on the right here on the date, you can see where we are currently.
+
+
+49
+00:03:49,160 --> 00:03:55,640
+So that gives you a nice view of where we are currently on the project.
+
+
+50
+00:03:55,640 --> 00:04:00,680
+We have three view modes in StarMaps.
+
+
+51
+00:04:00,680 --> 00:04:04,680
+Currently we are using the overview one, but if we go in the detailed view, it's going
+
+
+52
+00:04:04,680 --> 00:04:11,440
+to display all of the child issues for each of these milestones in the StarMap.
+
+
+53
+00:04:11,440 --> 00:04:12,800
+So there you are.
+
+
+54
+00:04:12,800 --> 00:04:17,480
+So here you have the first milestone and all of the low-level issues that are inside.
+
+
+55
+00:04:17,480 --> 00:04:21,760
+If I scroll down, you can see the same for all of the other ones.
+
+
+56
+00:04:21,760 --> 00:04:28,720
+You can note that some tasks have a progress bar, but when they are completed, they are
+
+
+57
+00:04:28,720 --> 00:04:29,920
+filled in green.
+
+
+58
+00:04:29,920 --> 00:04:37,320
+And that's reflected as well in the milestones.
+
+
+59
+00:04:37,320 --> 00:04:40,480
+You can see here this one is partially filled.
+
+
+60
+00:04:40,480 --> 00:04:47,640
+Well, we are not quite there yet, but it's because we closed the first one in advance.
+
+
+61
+00:04:47,640 --> 00:04:53,840
+But yeah, so if I click into this milestone, you can see basically what we just saw in
+
+
+62
+00:04:53,840 --> 00:04:55,720
+the detailed view.
+
+
+63
+00:04:55,720 --> 00:05:00,800
+And these issues are all stacked on top of each other because they all share the same
+
+
+64
+00:05:00,800 --> 00:05:05,480
+ETA, which is the same as the milestone they are in, but you can customize it if you want,
+
+
+65
+00:05:05,480 --> 00:05:12,120
+if you'd like to order your task in a specific way you want to work on them.
+
+
+66
+00:05:12,120 --> 00:05:16,200
+And yeah, so that's for the basic view of StarMaps.
+
+
+67
+00:05:16,200 --> 00:05:22,960
+If I go back to my Fission project node, so here I can view the issue in GitHub.
+
+
+68
+00:05:22,960 --> 00:05:28,560
+So I'm going to show you how it is formatted inside GitHub.
+
+
+69
+00:05:28,560 --> 00:05:34,240
+Right, so for the Fission project GitHub issue, so this is a container.
+
+
+70
+00:05:34,240 --> 00:05:39,120
+It doesn't have any work to be done.
+
+
+71
+00:05:39,120 --> 00:05:43,960
+This is really made to contain all of the projects that we have at Fission, and the
+
+
+72
+00:05:43,960 --> 00:05:45,800
+same goes for the milestone issues.
+
+
+73
+00:05:45,800 --> 00:05:54,440
+So all you need to do to have your issues rendered in StarMap is to add a children list.
+
+
+74
+00:05:54,440 --> 00:06:01,320
+So basically a blood point list with the URLs of your issues to be done, and an ETA, and
+
+
+75
+00:06:01,320 --> 00:06:02,320
+that's it.
+
+
+76
+00:06:02,320 --> 00:06:11,320
+So if I click here on the IPVM project issue, we're going to see the milestones, right?
+
+
+77
+00:06:11,320 --> 00:06:15,920
+So the children of the project are the milestones.
+
+
+78
+00:06:15,920 --> 00:06:16,920
+Again we have an ETA here.
+
+
+79
+00:06:16,920 --> 00:06:22,040
+I've added some resources for people who are consulting the project to find.
+
+
+80
+00:06:22,040 --> 00:06:26,920
+And if I go again lower one level, right, so we have the objectives, the features that
+
+
+81
+00:06:26,920 --> 00:06:32,840
+we want to bring with this milestone, so that, you know, an effort of communication towards
+
+
+82
+00:06:32,840 --> 00:06:37,040
+the people who are interested in the project and want to learn more about it.
+
+
+83
+00:06:37,040 --> 00:06:41,160
+Again we have the ETA, and here we have all of the children that need to be done to complete
+
+
+84
+00:06:41,160 --> 00:06:42,720
+the milestone.
+
+
+85
+00:06:42,720 --> 00:06:47,380
+So StarMap supports a GitHub task list, so that's actually pretty handy because when
+
+
+86
+00:06:47,380 --> 00:06:55,240
+all of your GitHub issues share the same ETA, we can just reorder them with a drag and drop,
+
+
+87
+00:06:55,240 --> 00:06:57,320
+and it's going to be reflected in StarMap as well.
+
+
+88
+00:06:57,320 --> 00:06:59,420
+So I just lowered the metering.
+
+
+89
+00:06:59,420 --> 00:07:02,360
+If I refresh StarMap, it's going to be lowered as well in the list.
+
+
+90
+00:07:02,360 --> 00:07:06,840
+So you can prioritize your tasks this way pretty easily.
+
+
+91
+00:07:06,840 --> 00:07:13,720
+And yeah, it's very easy to add dependencies because, again, you just have to grab the
+
+
+92
+00:07:13,720 --> 00:07:20,160
+URL of a GitHub issue and add it in the description, like here in this list, to show the dependency.
+
+
+93
+00:07:20,160 --> 00:07:26,280
+So if I'm waiting for a tech to be released from another team, you know, complete other
+
+
+94
+00:07:26,280 --> 00:07:33,080
+projects, I can just grab the URL of their tasks on myself, and I can just put it in
+
+
+95
+00:07:33,080 --> 00:07:39,000
+here, and I can create as many levels of deepness as I want.
+
+
+96
+00:07:39,000 --> 00:07:44,240
+Like currently at Vision, we are only using project, milestone, and GitHub issues for
+
+
+97
+00:07:44,240 --> 00:07:45,280
+lower level.
+
+
+98
+00:07:45,280 --> 00:07:50,840
+But if I want to use epics, user stories, any kind of container, I can.
+
+
+99
+00:07:50,840 --> 00:07:56,640
+I can just create a new GitHub issue, label it the way I want, and I just throw URLs in
+
+
+100
+00:07:56,640 --> 00:07:59,520
+there, and I'm good.
+
+
+101
+00:07:59,520 --> 00:08:05,920
+So just to show you a bit what you can do with that, so let's say we have the Protocol
+
+
+102
+00:08:05,920 --> 00:08:10,920
+Labs network as a root node that's going to encapsulate all of the Protocol Labs network
+
+
+103
+00:08:10,920 --> 00:08:12,560
+projects.
+
+
+104
+00:08:12,560 --> 00:08:15,240
+So we have company one that has two projects.
+
+
+105
+00:08:15,240 --> 00:08:17,720
+Project A is working with epics and user stories.
+
+
+106
+00:08:17,720 --> 00:08:23,200
+Each user story has several issues, and project B is only using milestones and GitHub issues.
+
+
+107
+00:08:23,200 --> 00:08:25,600
+It really depends on the way you want to organize yourself.
+
+
+108
+00:08:25,600 --> 00:08:31,200
+But you can create dependencies any way you want to, from milestone to epic, from epics
+
+
+109
+00:08:31,200 --> 00:08:34,200
+to milestone, issue to issue.
+
+
+110
+00:08:34,200 --> 00:08:40,520
+And you can do the same with completely other projects from other repos.
+
+
+111
+00:08:40,520 --> 00:08:48,960
+Just to separate and avoid to put noise in repos, I've created a specific repo for the
+
+
+112
+00:08:48,960 --> 00:08:53,200
+Vision star map for all tasks that are used as containers.
+
+
+113
+00:08:53,200 --> 00:08:57,480
+So here we have the project issues and milestone issues.
+
+
+114
+00:08:57,480 --> 00:09:04,760
+Right now we have 26 issues open, so we put them in there to avoid polluting the other
+
+
+115
+00:09:04,760 --> 00:09:05,760
+repos.
+
+
+116
+00:09:05,760 --> 00:09:10,920
+And yeah, that's pretty much it for the star map tour.
+
+
+117
+00:09:10,920 --> 00:09:17,160
+Now if you're interested in building your own star map, you can go to starmap.site.
+
+
+118
+00:09:17,160 --> 00:09:22,600
+They have a guide over there and templates for you to use for your star map.
+
+
+119
+00:09:22,600 --> 00:09:31,680
+There's also repos for the star map software, and we have our own repo for star map at Vision.
+
+
+120
+00:09:31,680 --> 00:09:34,200
+So feel free to look at these for reference.
+
+
+121
+00:09:34,200 --> 00:09:39,600
+If you need any help, don't hesitate to poke the team working on this on the file on Slack.
+
+
+122
+00:09:39,600 --> 00:09:41,080
+They have a channel for this.
+
+
+123
+00:09:41,080 --> 00:09:42,080
+They are very helpful.
+
+
+124
+00:09:42,080 --> 00:09:45,760
+They'll be happy to help you with any issue you may have.
+
+
+125
+00:09:45,760 --> 00:09:51,720
+And I will as well, so you can find me on Slack or the Vision Discord if you need any
+
+
+126
+00:09:51,720 --> 00:09:52,720
+help.
+
+
+127
+00:09:52,720 --> 00:09:58,160
+And so the QR code is for the Protocol Labs Network star map that I created, hoping that
+
+
+128
+00:09:58,160 --> 00:10:02,000
+someday we'll have many, many projects from the network in there.
+
+
+129
+00:10:02,000 --> 00:10:08,600
+Just to show you how it's looking right now, we have two companies' projects in there,
+
+
+130
+00:10:08,600 --> 00:10:12,160
+so maybe someday dozens of these.
+
+
+131
+00:10:12,160 --> 00:10:13,800
+I hope you'll as well.
+
+
+132
+00:10:13,800 --> 00:10:16,880
+Okay, that's it for star maps.
+
+
+133
+00:10:16,880 --> 00:10:17,880
+Thank you.
+
+
+134
+00:10:17,880 --> 00:10:22,040
+Any questions?
+
+
+135
+00:10:22,040 --> 00:10:25,480
+Hi.
+
+
+136
+00:10:25,480 --> 00:10:33,400
+Thanks for showing star map.
+
+
+137
+00:10:33,400 --> 00:10:36,680
+That's something I help maintain.
+
+
+138
+00:10:36,680 --> 00:10:45,760
+I'm really interested what features you are looking in, what features you would like to
+
+
+139
+00:10:45,760 --> 00:10:50,200
+see added the most first, like additional features or support.
+
+
+140
+00:10:50,200 --> 00:10:52,840
+I know there's some issues we need to address.
+
+
+141
+00:10:52,840 --> 00:11:00,080
+I've been struggling with ETAs because I figured that we don't necessarily need an ETA for
+
+
+142
+00:11:00,080 --> 00:11:06,800
+every issue because sometimes you have containers that don't need an ETA and you will still
+
+
+143
+00:11:06,800 --> 00:11:08,120
+have to put one in there.
+
+
+144
+00:11:08,120 --> 00:11:16,000
+So the issue is how you will render it in the timeline if it doesn't have an ETA.
+
+
+145
+00:11:16,000 --> 00:11:20,840
+But yes, sometimes you just want to put placeholders somewhere, but it's going to give you an error
+
+
+146
+00:11:20,840 --> 00:11:22,920
+instead.
+
+
+147
+00:11:22,920 --> 00:11:25,880
+So yeah, there's that.
+
+
+148
+00:11:25,880 --> 00:11:37,400
+But I had a whole bunch of features that I wanted to request regarding star map, but
+
+
+149
+00:11:37,400 --> 00:11:40,880
+I can definitely talk to you about it.
+
+
+150
+00:11:40,880 --> 00:11:54,040
+But we can chat about it right after.
+
+
+151
+00:11:54,040 --> 00:11:57,360
+I'm curious what you're finding this the most useful for.
+
+
+152
+00:11:57,360 --> 00:12:04,080
+What are maybe the three things that you do with your star maps on a weekly or monthly
+
+
+153
+00:12:04,080 --> 00:12:10,200
+basis, and whether it's mostly within team or with stakeholders or with other groups
+
+
+154
+00:12:10,200 --> 00:12:12,840
+that you're using it?
+
+
+155
+00:12:12,840 --> 00:12:16,200
+Because I feel like it's a new useful tool.
+
+
+156
+00:12:16,200 --> 00:12:20,560
+It was created because we couldn't find anything else open source that did the things that
+
+
+157
+00:12:20,560 --> 00:12:22,280
+we felt like we needed.
+
+
+158
+00:12:22,280 --> 00:12:30,080
+But I think we'd love to see it have a wider community of maintainers and filling that
+
+
+159
+00:12:30,080 --> 00:12:35,120
+niche for other groups that want an open source planning tool, not having to put everything
+
+
+160
+00:12:35,120 --> 00:12:39,200
+inside of some silo that only works within their organization.
+
+
+161
+00:12:39,200 --> 00:12:44,800
+I'm curious, what are the common use cases that we can then maybe share with others and
+
+
+162
+00:12:44,800 --> 00:12:48,040
+build up more of an open source community around maintaining this?
+
+
+163
+00:12:48,040 --> 00:12:54,880
+Right now we've been mostly using it internally to communicate how we are doing on our projects,
+
+
+164
+00:12:54,880 --> 00:13:01,640
+especially IPVM, but also new ones like GoCamera that we've been recently planning.
+
+
+165
+00:13:01,640 --> 00:13:04,000
+So it's been very useful in that regard.
+
+
+166
+00:13:04,000 --> 00:13:08,760
+But also when you have dependencies with other teams, it's very easy to send them just the
+
+
+167
+00:13:08,760 --> 00:13:14,560
+link of your star map and then they can see, okay, so you need this from me.
+
+
+168
+00:13:14,560 --> 00:13:15,560
+That's cool.
+
+
+169
+00:13:15,560 --> 00:13:18,960
+I'm going to focus on that and help you there.
+
+
+170
+00:13:18,960 --> 00:13:23,840
+So that's most of our uses with that at the moment.
+
+
+171
+00:13:23,840 --> 00:13:24,840
+Makes total sense.
+
+
+172
+00:13:24,840 --> 00:13:25,920
+I will also answer it.
+
+
+173
+00:13:25,920 --> 00:13:29,440
+So Bastien is our first technical program manager at Vision.
+
+
+174
+00:13:29,440 --> 00:13:34,240
+And I said, you need to be an ecosystem level TPM.
+
+
+175
+00:13:34,240 --> 00:13:35,720
+Star Maps is brand new.
+
+
+176
+00:13:35,720 --> 00:13:39,120
+We're going to help evangelize it because we think it's going to help us long term.
+
+
+177
+00:13:39,120 --> 00:13:42,320
+We need to do roadmaps in some format.
+
+
+178
+00:13:42,320 --> 00:13:43,640
+Let's do it this way.
+
+
+179
+00:13:43,640 --> 00:13:50,280
+We've noticed that there are some teams who are putting protocols that we work on in their
+
+
+180
+00:13:50,280 --> 00:13:53,240
+backlogs, not yet star map enabled.
+
+
+181
+00:13:53,240 --> 00:13:57,640
+And so the next thing we'd like is generally more community evangelism and bootstrapping
+
+
+182
+00:13:57,640 --> 00:13:59,840
+of using it by default.
+
+
+183
+00:13:59,840 --> 00:14:03,280
+And then we're trying to leave, we're like, what is the right method of like, I'm like,
+
+
+184
+00:14:03,280 --> 00:14:09,720
+okay, Bastien, I saw WinFS mentioned on this slide, go track down the team and figure out
+
+
+185
+00:14:09,720 --> 00:14:14,880
+if they've committed engineering resources to doing it so that we can put it on the overall
+
+
+186
+00:14:14,880 --> 00:14:15,880
+map.
+
+
+187
+00:14:15,880 --> 00:14:20,880
+So I think we're in this boot up phase where I'd really like us all to just do that.
+
+
+188
+00:14:20,880 --> 00:14:25,440
+And then ideally it's a very useful tool where we can then work back and be like, oh, there's
+
+
+189
+00:14:25,440 --> 00:14:28,920
+three teams pointing at needing to do X.
+
+
+190
+00:14:28,920 --> 00:14:34,760
+Oh, that could be a small library or something else that like all three teams work on together.
+
+
+191
+00:14:34,760 --> 00:14:37,720
+So that's our like, hopes start network wide.
+
+
+192
+00:14:37,720 --> 00:14:39,120
+Like, and it's a super useful tool.
+
+
+193
+00:14:39,120 --> 00:14:40,120
+Right.
+
+
+194
+00:14:40,120 --> 00:14:43,420
+I think like we've, we've found more like there isn't anything else like this.
+
+
+195
+00:14:43,420 --> 00:14:44,560
+We run a bunch of orgs.
+
+
+196
+00:14:44,560 --> 00:14:46,200
+We're not in just one GitHub org.
+
+
+197
+00:14:46,200 --> 00:14:50,840
+So it solves problems for us already, which is a really great starting point.
+
+
+198
+00:14:50,840 --> 00:14:53,520
+So thank you for, thank you for building it.
+
+
+199
+00:14:53,520 --> 00:14:54,520
+Yeah.
+
+
+200
+00:14:54,520 --> 00:14:56,880
+I have my own whole list of feature requests.
+
+
+201
+00:14:56,880 --> 00:15:01,520
+I feel like we should start tracking them somewhere so that whoever feels strongly about
+
+
+202
+00:15:01,520 --> 00:15:05,320
+them can a help prioritize, be help solve.
+
+
+203
+00:15:05,320 --> 00:15:10,540
+But as someone who uses it across many different teams in many different orgs and you want
+
+
+204
+00:15:10,540 --> 00:15:15,480
+every group to be responsible for their own milestones, but then you want them all to
+
+
+205
+00:15:15,480 --> 00:15:19,800
+roll up into one view where you can then take a screenshot of it and like present it of
+
+
+206
+00:15:19,800 --> 00:15:22,240
+like, Hey, this is what everyone is doing.
+
+
+207
+00:15:22,240 --> 00:15:24,080
+That's what I found it most useful for personally.
+
+
+208
+00:15:24,080 --> 00:15:28,040
+It might be a really interesting starting point for even like turning the crank even
+
+
+209
+00:15:28,040 --> 00:15:29,440
+more of about a few other things.
+
+
+210
+00:15:29,440 --> 00:15:34,360
+Like, you know, do we create an open collective for star maps?
+
+
+211
+00:15:34,360 --> 00:15:35,600
+I'm like, great.
+
+
+212
+00:15:35,600 --> 00:15:38,140
+I'll throw 500 bucks a month into it.
+
+
+213
+00:15:38,140 --> 00:15:45,680
+And then we can fund independence doing a backlog of tasks along it or something like
+
+
+214
+00:15:45,680 --> 00:15:46,680
+that.
+
+
+215
+00:15:46,680 --> 00:15:47,680
+Right.
+
+
+216
+00:15:47,680 --> 00:15:48,680
+I love that.
+
+
+217
+00:15:48,680 --> 00:15:52,720
+I think that would take part of those 500 bucks and are random humans who would just
+
+
+218
+00:15:52,720 --> 00:16:00,080
+start building stuff.
+
+
+219
+00:16:00,080 --> 00:16:03,760
+I'm curious because I would assume some people might ask this question.
+
+
+220
+00:16:03,760 --> 00:16:07,960
+Like how did you find using star maps compared to some of GitHub's more recent roadmapping
+
+
+221
+00:16:07,960 --> 00:16:11,960
+projects, roadmapping tools?
+
+
+222
+00:16:11,960 --> 00:16:14,120
+I think they don't have the same use case.
+
+
+223
+00:16:14,120 --> 00:16:19,200
+Like it, and projects is really more to track your issues on a daily basis.
+
+
+224
+00:16:19,200 --> 00:16:23,760
+You, the milestones don't work the same way as well.
+
+
+225
+00:16:23,760 --> 00:16:28,880
+It's also, it's not made to reflect several projects at a time.
+
+
+226
+00:16:28,880 --> 00:16:36,200
+I mean, you can do that, but it's not optimal, at least not from a roadmap perspective.
+
+
+227
+00:16:36,200 --> 00:16:42,960
+I feel like it's much easier to flag dependencies using, using star maps in general.
+
+
+228
+00:16:42,960 --> 00:16:49,840
+And it also makes more sense in the, in the, in the, like the general layout of the tool.
+
+
+229
+00:16:49,840 --> 00:16:51,880
+So yeah.
+
+
+230
+00:16:51,880 --> 00:17:00,360
+And in a way you can also create so many different layers for your roadmap.
+
+
+231
+00:17:00,360 --> 00:17:04,880
+Like I mentioned, you can create any kind of container and you can't really do that
+
+
+232
+00:17:04,880 --> 00:17:07,320
+in, in the GitHub projects.
+
+
+233
+00:17:07,320 --> 00:17:09,920
+Like you really have to walk in a waterfall.
+
+
+234
+00:17:09,920 --> 00:17:10,920
+It's like a Kanban.
+
+
+235
+00:17:10,920 --> 00:17:16,160
+It's a, it's like a Trello, but in, but in GitHub, whereas here you are really creating,
+
+
+236
+00:17:16,160 --> 00:17:21,640
+you can create a peaks and user stories and really child issues if you, as much as you
+
+
+237
+00:17:21,640 --> 00:17:22,640
+want.
+
+
+238
+00:17:22,640 --> 00:17:26,520
+So it's not really the same use case in my opinion.
+
+
+239
+00:17:26,520 --> 00:17:31,440
+So I think it makes more sense to use a star map for, for roadmaps.
+
+
+240
+00:17:31,440 --> 00:17:32,440
+Yeah.
+
+
+241
+00:17:32,440 --> 00:17:33,440
+Cool.
+
+
+242
+00:17:33,440 --> 00:17:34,440
+Thanks.
+
+
+243
+00:17:34,440 --> 00:17:35,440
+Maybe just one quick follow up.
+
+
+244
+00:17:35,440 --> 00:17:36,880
+Maybe this is Molly and Boris.
+
+
+245
+00:17:36,880 --> 00:17:40,840
+Like what is the, how do we get going on something like an open collective to drive some more
+
+
+246
+00:17:40,840 --> 00:17:43,200
+I'm not familiar with how we, how we do that.
+
+
+247
+00:17:43,200 --> 00:17:48,200
+We haven't done it before, but you're in literally the right track for it.
+
+
+248
+00:17:48,200 --> 00:17:51,680
+Join the working group, working group.
+
+
+249
+00:17:51,680 --> 00:17:55,160
+I'll put it in the hack MD.
+
+
+250
+00:17:55,160 --> 00:18:00,840
+And I think even star mats itself being a tool that working groups are familiar with,
+
+
+251
+00:18:00,840 --> 00:18:01,840
+right?
+
+
+252
+00:18:01,840 --> 00:18:04,400
+Like it's another, a kit of tools, right?
+
+
+253
+00:18:04,400 --> 00:18:05,560
+Yeah.
+
+
+254
+00:18:05,560 --> 00:18:09,360
+I mean, we should have stomped for specs.
+
+
+255
+00:18:09,360 --> 00:18:10,360
+Right.
+
+
+256
+00:18:10,360 --> 00:18:13,840
+You want to say, Oh, I think Steve just asked it.
+
+
+257
+00:18:13,840 --> 00:18:18,360
+It was like, yeah, for a team that's coming at it from a cold start, what resources do
+
+
+258
+00:18:18,360 --> 00:18:19,360
+we have?
+
+
+259
+00:18:19,360 --> 00:18:24,920
+And do you need a Guinea pig to help document the process?
+
+
+260
+00:18:24,920 --> 00:18:25,920
+Yeah.
+
+
+261
+00:18:25,920 --> 00:18:30,760
+Well, you have the whole guide on star map that site that explains everything, like how
+
+
+262
+00:18:30,760 --> 00:18:32,640
+to read your star map from, from scratch.
+
+
+263
+00:18:32,640 --> 00:18:37,880
+All you need to do is do the road mapping process for yourself.
+
+
+264
+00:18:37,880 --> 00:18:43,040
+So you, you look at, you look at your spec, you look at the features you want to produce
+
+
+265
+00:18:43,040 --> 00:18:47,120
+in which order you, how you, you set your timelines and you, you create your GitHub
+
+
+266
+00:18:47,120 --> 00:18:48,360
+issues based on, based on that.
+
+
+267
+00:18:48,360 --> 00:18:51,520
+And you just have to format them to be rendered in there.
+
+
+268
+00:18:51,520 --> 00:18:59,040
+And after that, once you have your root node for your star map, which is basically like
+
+
+269
+00:18:59,040 --> 00:19:04,600
+the content container for all of your projects in your team, you just copy and paste the
+
+
+270
+00:19:04,600 --> 00:19:12,360
+URL, sorry, the URL in star maps, and it's going to be rendered automatically from there.
+
+
+271
+00:19:12,360 --> 00:19:13,840
+The site is like no BS.
+
+
+272
+00:19:13,840 --> 00:19:16,480
+It starts straight into like the docs of how to get started.
+
+
+273
+00:19:16,480 --> 00:19:18,560
+So that's like.
+
+
+274
+00:19:18,560 --> 00:19:26,560
+I have a, just given that we are in the community governance track, I'm curious what we think
+
+
+275
+00:19:26,560 --> 00:19:35,160
+about creating like project level star maps or things that aggregate over top of various
+
+
+276
+00:19:35,160 --> 00:19:42,880
+different working groups or highlight major like milestones for the IPFS project as a
+
+
+277
+00:19:42,880 --> 00:19:48,080
+whole, which then, you know, should be looking across the fission star maps and the IP steward
+
+
+278
+00:19:48,080 --> 00:19:54,440
+star maps and the IRO star maps if they have one and the content routing privacy working
+
+
+279
+00:19:54,440 --> 00:19:59,840
+group star maps and, you know, each one of those has their own star map, ideally, which,
+
+
+280
+00:19:59,840 --> 00:20:24,840
+you know.
+
+
+281
+00:20:00,000 --> 00:20:30,000
+focus is on the contributions that are being made by that group, but then having something at a broader level that's able to surface the top level, most important milestones that everyone can celebrate. I remember from my days doing project leadership stuff in IPFS that there's always that yearly request of like, what are the like 10 most important things that are happening this year that I should really be excited about and maybe help work on? And so I'm curious if there's interest, challenges,
+
+
+282
+00:20:30,000 --> 00:20:34,200
+like, you know, what would need to be true in order to make that possible?
+
+
+283
+00:20:34,200 --> 00:20:43,280
+I think one huge part of it ends up being how much of is a roadmap that has committed
+
+
+284
+00:20:43,280 --> 00:20:49,260
+engineering resources? How do we surface? We would, how do we surface a signal that
+
+
+285
+00:20:49,260 --> 00:20:56,700
+says we would really like X, we absolutely can't build it. And that might be technical
+
+
+286
+00:20:56,700 --> 00:21:03,540
+skill, engineering bandwidth, or funding. So there's a couple of other things that currently
+
+
+287
+00:21:03,540 --> 00:21:09,640
+isn't really mapped in here, but somewhere along the way we could use similar techniques,
+
+
+288
+00:21:09,640 --> 00:21:20,020
+right? So as an example, GitHub repos have a funding.yaml. And so that would actually
+
+
+289
+00:21:20,020 --> 00:21:27,340
+surface if a particular code repo had an attached way to pay it already. And that could be everything
+
+
+290
+00:21:27,340 --> 00:21:34,300
+from an open collective to a Patreon to a Filecoin address. So those might be some other
+
+
+291
+00:21:34,300 --> 00:21:40,420
+things. I think I'd love to see, like, I think the missing thing here actually is the hopes,
+
+
+292
+00:21:40,420 --> 00:21:46,140
+wishes, and dreams that are like a superset of engineering resources, right? Like what
+
+
+293
+00:21:46,140 --> 00:21:53,140
+happens before you write the roadmap almost? Maybe?
+
+
+294
+00:21:53,140 --> 00:21:59,060
+Yeah I think also surfacing visibility to people who don't have IPFS as their day job
+
+
+295
+00:21:59,060 --> 00:22:04,940
+but are interested. I know, like, I remember being on the other side of that was like,
+
+
+296
+00:22:04,940 --> 00:22:08,860
+hey, this is super interesting what's going on and feels like you're opening a cupboard
+
+
+297
+00:22:08,860 --> 00:22:14,740
+and like the entire universe is falling on you. And so having a way of summarizing things
+
+
+298
+00:22:14,740 --> 00:22:19,940
+at a high level for a broader community of interested people I think is something that
+
+
+299
+00:22:19,940 --> 00:22:26,380
+would be extremely valuable.
+
+
+300
+00:22:26,380 --> 00:22:32,620
+I think all of that feeds really neatly into the opening conversation that you two kicked
+
+
+301
+00:22:32,620 --> 00:22:38,220
+off this morning. And a lot of those questions would be answered really neatly by a meta
+
+
+302
+00:22:38,220 --> 00:22:44,500
+working group for the IPFS project.
+
+
+303
+00:22:44,500 --> 00:22:46,500
+We should have done that on the slide.
+
+
+304
+00:22:46,500 --> 00:23:15,500
+All right. Thank you.

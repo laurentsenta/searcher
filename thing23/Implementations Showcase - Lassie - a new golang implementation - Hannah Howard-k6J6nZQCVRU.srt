@@ -1,0 +1,718 @@
+1
+00:00:00,000 --> 00:00:10,040
+Hey y'all, my name's Hannah, I'm a software engineer at Protocol Labs and I'm here to
+
+
+2
+00:00:10,040 --> 00:00:16,880
+tell you today about a new IPFS implementation called LASI.
+
+
+3
+00:00:16,880 --> 00:00:21,880
+So LASI is an IPFS implementation in Go, just like Kubo.
+
+
+4
+00:00:21,880 --> 00:00:32,000
+A couple years ago we renamed Go IPFS to Kubo and like magic, and Juan's intention, about
+
+
+5
+00:00:32,000 --> 00:00:35,480
+a year later we have a new implementation in Go.
+
+
+6
+00:00:35,480 --> 00:00:43,080
+But where, so Kubo, as Steve said, is like the super versatile Swiss army knife of implementations.
+
+
+7
+00:00:43,080 --> 00:00:49,280
+LASI is designed to be like a scalpel and by that I mean we started with a single goal
+
+
+8
+00:00:49,280 --> 00:00:50,800
+and built it from the ground up.
+
+
+9
+00:00:50,800 --> 00:00:54,480
+We want to help you get your data.
+
+
+10
+00:00:54,480 --> 00:01:00,120
+We're building LASI because we believe that downloading your data from IPFS should just
+
+
+11
+00:01:00,120 --> 00:01:01,120
+work.
+
+
+12
+00:01:01,120 --> 00:01:07,520
+Basically, we have a guiding saying, which is like, if you want your data, just tell
+
+
+13
+00:01:07,520 --> 00:01:09,640
+LASI to fetch it.
+
+
+14
+00:01:09,640 --> 00:01:11,080
+What does this actually mean?
+
+
+15
+00:01:11,080 --> 00:01:19,820
+So as IPFS networks have grown, we started to see like a proliferation of transfer protocols,
+
+
+16
+00:01:19,820 --> 00:01:24,240
+but for your average person, your average user, like what is a transfer protocol?
+
+
+17
+00:01:24,240 --> 00:01:25,240
+Do they care?
+
+
+18
+00:01:25,240 --> 00:01:30,640
+Does anyone who goes to a website today think, well, I guess some people might still use
+
+
+19
+00:01:30,640 --> 00:01:35,240
+FTP as opposed to HTTP, but like for the vast majority of people, they don't care.
+
+
+20
+00:01:35,240 --> 00:01:37,440
+They're just thinking, get my stuff.
+
+
+21
+00:01:37,440 --> 00:01:43,320
+And so we in LASI attempt to speak multiple protocols.
+
+
+22
+00:01:43,320 --> 00:01:48,520
+Today, LASI already supports both BitSwap and GraphSync and within the next month or
+
+
+23
+00:01:48,520 --> 00:01:56,280
+two, we're going to be adding a trustless HTTP protocol transport.
+
+
+24
+00:01:56,280 --> 00:01:59,280
+It'll be sort of modeled after the gateway.
+
+
+25
+00:01:59,280 --> 00:02:03,200
+Maybe in the future, we might want to add some additional cutting edge protocols, such
+
+
+26
+00:02:03,200 --> 00:02:09,160
+as the ones you may hear about from IRO or maybe Fission's Carpool.
+
+
+27
+00:02:09,160 --> 00:02:14,880
+We're going to be, as new protocols appear, LASI is going to keep up with them.
+
+
+28
+00:02:14,880 --> 00:02:24,720
+So of course I forgot that I have bullet points on my slides.
+
+
+29
+00:02:24,720 --> 00:02:25,720
+Cool.
+
+
+30
+00:02:25,720 --> 00:02:27,320
+Yeah.
+
+
+31
+00:02:27,320 --> 00:02:33,060
+So another thing about LASI is we sort of have identified that when people go looking
+
+
+32
+00:02:33,060 --> 00:02:38,080
+for their data, they don't want to worry about how to find it.
+
+
+33
+00:02:38,080 --> 00:02:40,000
+They just want the data back.
+
+
+34
+00:02:40,000 --> 00:02:45,440
+So in LASI, we find your data for you.
+
+
+35
+00:02:45,440 --> 00:02:53,240
+And that means we speak to both the IPFS DHT, but we also speak to the Filecoin network.
+
+
+36
+00:02:53,240 --> 00:02:55,600
+So we can retrieve content from Filecoin.
+
+
+37
+00:02:55,600 --> 00:02:58,280
+And this is all done through IPNI, the network indexer.
+
+
+38
+00:02:58,280 --> 00:03:01,240
+It actually handles most of this for us.
+
+
+39
+00:03:01,240 --> 00:03:04,800
+We can speak to the DHT, the storage provider network.
+
+
+40
+00:03:04,800 --> 00:03:12,160
+We can even track down some providers that don't put their content in the DHT, but tsk,
+
+
+41
+00:03:12,160 --> 00:03:17,480
+tsk, you should put your content either in the DHT or even better, put it in the network
+
+
+42
+00:03:17,480 --> 00:03:19,120
+indexer.
+
+
+43
+00:03:19,120 --> 00:03:23,360
+And we'll keep adding new and better ways to find data as time goes on.
+
+
+44
+00:03:23,360 --> 00:03:25,560
+So how do you use LASI?
+
+
+45
+00:03:25,560 --> 00:03:32,280
+From the start, we've designed LASI with three core use cases that we are attempting to enable.
+
+
+46
+00:03:32,280 --> 00:03:36,880
+The first way to use LASI is simply as a command line executable.
+
+
+47
+00:03:36,880 --> 00:03:41,640
+You can download it as already compiled and ready to go and run it immediately to fetch
+
+
+48
+00:03:41,640 --> 00:03:43,920
+data.
+
+
+49
+00:03:43,920 --> 00:03:49,120
+We've sort of designed it like most Unix commands to be pipeable and composable, and I'll demo
+
+
+50
+00:03:49,120 --> 00:03:50,920
+that in a moment.
+
+
+51
+00:03:50,920 --> 00:03:57,560
+The second way to use LASI is as a lightweight HTTP gateway to IPFS and Filecoin.
+
+
+52
+00:03:57,560 --> 00:04:06,840
+The LASI server exposes a trustless HTTP gateway interface, and that serves car files to you.
+
+
+53
+00:04:06,840 --> 00:04:14,280
+LASI does go beyond the trustless HTTP gateway spec to support full querying via pathing
+
+
+54
+00:04:14,280 --> 00:04:19,440
+and depth parameters, and we are in the process of writing a proposal back to the spec through
+
+
+55
+00:04:19,440 --> 00:04:26,560
+the IP process so that other implementations can implement some of the querying tools that
+
+
+56
+00:04:26,560 --> 00:04:27,560
+we've put in.
+
+
+57
+00:04:27,560 --> 00:04:35,000
+Finally, we've designed LASI from the start to work as a library that you can easily incorporate
+
+
+58
+00:04:35,000 --> 00:04:36,800
+into your Go application.
+
+
+59
+00:04:36,800 --> 00:04:43,240
+We want developers to use LASI seamlessly to add retrieval from IPFS and Filecoin to
+
+
+60
+00:04:43,240 --> 00:04:44,240
+your projects.
+
+
+61
+00:04:44,240 --> 00:04:47,640
+Essentially, we see this as the superpower of LASI.
+
+
+62
+00:04:47,640 --> 00:04:53,160
+If you have a Go application and you want to be able to get content from IPFS and Filecoin,
+
+
+63
+00:04:53,160 --> 00:04:56,920
+you can just plug in LASI and get that content.
+
+
+64
+00:04:56,920 --> 00:05:00,880
+We would love to partner with other teams in helping you to integrate LASI into your
+
+
+65
+00:05:00,880 --> 00:05:01,880
+systems.
+
+
+66
+00:05:01,880 --> 00:05:08,480
+There are a couple of things that LASI does not do, and this is somewhat intentional.
+
+
+67
+00:05:08,480 --> 00:05:13,080
+LASI is lightweight, and being lightweight means you have to make some cuts.
+
+
+68
+00:05:13,080 --> 00:05:17,280
+Our sole goal is to retrieve data, so there's some stuff that gets left out.
+
+
+69
+00:05:17,280 --> 00:05:19,160
+Specifically, we don't store blocks.
+
+
+70
+00:05:19,160 --> 00:05:20,920
+We have no block store in LASI.
+
+
+71
+00:05:20,920 --> 00:05:25,360
+We just return CARV files to you and let you manage your data and decide what you want
+
+
+72
+00:05:25,360 --> 00:05:27,080
+to do with them.
+
+
+73
+00:05:27,080 --> 00:05:30,720
+Because we don't store data, that means we also don't announce to DHC.
+
+
+74
+00:05:30,720 --> 00:05:32,560
+This is a retrieval client.
+
+
+75
+00:05:32,560 --> 00:05:38,720
+It is not designed to be a server node you run on the IPFS network to provide data to
+
+
+76
+00:05:38,720 --> 00:05:39,720
+the network.
+
+
+77
+00:05:39,720 --> 00:05:48,520
+LASI is, through and through, a client, and so we do our best to stay almost completely
+
+
+78
+00:05:48,520 --> 00:05:49,560
+stateless.
+
+
+79
+00:05:49,560 --> 00:05:54,400
+We hold a little bit of information that helps us retrieve data a little faster when we're
+
+
+80
+00:05:54,400 --> 00:06:02,000
+running as an HTTP server, but beyond that, there's no config file on your hard drive.
+
+
+81
+00:06:02,000 --> 00:06:05,400
+Any knobs you want to turn are done through environment variables, and there aren't as
+
+
+82
+00:06:05,400 --> 00:06:09,160
+many of them as in KUBO.
+
+
+83
+00:06:09,160 --> 00:06:13,080
+We've done all this for us to keep us focused.
+
+
+84
+00:06:13,080 --> 00:06:18,640
+We want to work on getting retrieval of data right, and so we're trying to keep our features
+
+
+85
+00:06:18,640 --> 00:06:20,960
+set intentionally limited.
+
+
+86
+00:06:20,960 --> 00:06:23,000
+So let's take a quick look.
+
+
+87
+00:06:23,000 --> 00:06:28,440
+We're going to look at a quick demo of LASI in action, and as I said before, we have a
+
+
+88
+00:06:28,440 --> 00:06:33,200
+command line, and that command line can pipe its output to other commands, so here we're
+
+
+89
+00:06:33,200 --> 00:06:41,200
+going to fetch a SID, pipe the output of fetching that SID to the CAR tool, and we're going
+
+
+90
+00:06:41,200 --> 00:06:45,000
+to use the CAR tool to convert it from a CAR file to a FLAT file, and then we're going
+
+
+91
+00:06:45,000 --> 00:06:51,560
+to pipe that output again into FFmpeg and see if it will play it as a movie.
+
+
+92
+00:06:51,560 --> 00:06:52,560
+Let's see if this works.
+
+
+93
+00:06:52,560 --> 00:06:53,560
+There we go.
+
+
+94
+00:06:53,560 --> 00:07:00,320
+There's a couple extra things in here, but you can see we're piping to CAR, we're piping
+
+
+95
+00:07:00,320 --> 00:07:06,880
+to FFmpeg, and immediately you automatically get a video playing on your screen.
+
+
+96
+00:07:06,880 --> 00:07:10,040
+So yeah, exciting.
+
+
+97
+00:07:10,040 --> 00:07:13,760
+Let's yeah, and now it's a party.
+
+
+98
+00:07:13,760 --> 00:07:18,400
+Let's see if we can get to the next slide before everyone starts to dance.
+
+
+99
+00:07:18,400 --> 00:07:19,400
+All right.
+
+
+100
+00:07:19,400 --> 00:07:20,400
+So yay.
+
+
+101
+00:07:20,400 --> 00:07:21,400
+Cool.
+
+
+102
+00:07:21,400 --> 00:07:28,800
+So LASI is a new tool, and it's in development, but it's not a prototype.
+
+
+103
+00:07:28,800 --> 00:07:35,000
+We've already built it out a fair amount, and it is already the primary tool that powers
+
+
+104
+00:07:35,000 --> 00:07:41,880
+cache misses in the Saturn network, and so through the RAM project that Will spoke about
+
+
+105
+00:07:41,880 --> 00:07:46,920
+earlier where all of your gateway requests are ultimately going to be filtered through
+
+
+106
+00:07:46,920 --> 00:07:50,200
+the Saturn network, they're ultimately going to be fetched with LASI.
+
+
+107
+00:07:50,200 --> 00:07:56,240
+We are already in testing downloading about 140 million SIDs through LASI each week, so
+
+
+108
+00:07:56,240 --> 00:07:59,000
+it's definitely getting used.
+
+
+109
+00:07:59,000 --> 00:08:04,400
+We're increasingly recommending LASI as the easiest way to download your data from Filecoin.
+
+
+110
+00:08:04,400 --> 00:08:08,600
+A funny thing about LASI is that we originally started as simply a tool to retrieve from
+
+
+111
+00:08:08,600 --> 00:08:12,800
+Filecoin, but we realized along the way that these networks aren't that different, and
+
+
+112
+00:08:12,800 --> 00:08:17,000
+you should just be able to get data from everywhere.
+
+
+113
+00:08:17,000 --> 00:08:22,160
+And we have a full team focused on ironing out the remaining bugs and trying to improve
+
+
+114
+00:08:22,160 --> 00:08:23,160
+performance.
+
+
+115
+00:08:23,160 --> 00:08:27,520
+We're invested for the long term, so if you want to integrate LASI into your project,
+
+
+116
+00:08:27,520 --> 00:08:30,280
+I would say maybe go for it.
+
+
+117
+00:08:30,280 --> 00:08:34,120
+The only area we have a little bit of work to do is in our documentation, and that is
+
+
+118
+00:08:34,120 --> 00:08:36,880
+going to also be improving soon.
+
+
+119
+00:08:36,880 --> 00:08:38,480
+Cool.
+
+
+120
+00:08:38,480 --> 00:08:42,160
+If you want to hear more about LASI, come to the data transfer track.
+
+
+121
+00:08:42,160 --> 00:08:43,560
+We're going to be doing...
+
+
+122
+00:08:43,560 --> 00:08:45,520
+It starts right after this morning's keynote.
+
+
+123
+00:08:45,520 --> 00:08:48,920
+We're going to be doing a deep dive into the software architecture and how we want it to
+
+
+124
+00:08:48,920 --> 00:08:50,280
+evolve over time.
+
+
+125
+00:08:50,280 --> 00:08:54,240
+Alternatively, you can come find me at the conference.
+
+
+126
+00:08:54,240 --> 00:08:58,400
+I'd love to chat with you and how LASI can benefit your IPFS project.
+
+
+127
+00:08:58,400 --> 00:09:00,000
+Also, I think...
+
+
+128
+00:09:00,000 --> 00:09:01,480
+Is Kyle here?
+
+
+129
+00:09:01,480 --> 00:09:02,560
+Not yet.
+
+
+130
+00:09:02,560 --> 00:09:05,320
+One of the other team members, Kyle, will be here.
+
+
+131
+00:09:05,320 --> 00:09:06,960
+You can also talk to him.
+
+
+132
+00:09:06,960 --> 00:09:12,880
+And a special thank you to Kyle Huntsman and Rod Vag, who have put in so much work over
+
+
+133
+00:09:12,880 --> 00:09:16,280
+the last few months in getting LASI's first iteration out the gate.
+
+
+134
+00:09:16,280 --> 00:09:18,920
+They're awesome team members.
+
+
+135
+00:09:18,920 --> 00:09:20,360
+Finally, use it.
+
+
+136
+00:09:20,360 --> 00:09:21,720
+Give us feedback.
+
+
+137
+00:09:21,720 --> 00:09:23,880
+You can file a GitHub issue.
+
+
+138
+00:09:23,880 --> 00:09:25,040
+You can hit us up on Slack.
+
+
+139
+00:09:25,040 --> 00:09:26,840
+You can complain about us on Twitter.
+
+
+140
+00:09:26,840 --> 00:09:29,040
+You know the whole drill.
+
+
+141
+00:09:29,040 --> 00:09:30,040
+And that's it.
+
+
+142
+00:09:30,040 --> 00:09:31,040
+Thank you so much.
+
+
+143
+00:09:31,040 --> 00:09:32,040
+Cool.
+
+
+144
+00:09:32,040 --> 00:09:37,040
+Thank you.

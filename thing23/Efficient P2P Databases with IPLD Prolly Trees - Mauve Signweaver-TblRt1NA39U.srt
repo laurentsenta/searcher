@@ -1,0 +1,1853 @@
+1
+00:00:00,000 --> 00:00:10,000
+Hi folks, thanks for coming out. My name is Mauve, my pronouns are they it, and today
+
+
+2
+00:00:10,000 --> 00:00:13,880
+I'm going to be talking about peer-to-peer databases and how you can build them on top
+
+
+3
+00:00:13,880 --> 00:00:20,720
+of IPLD Prolly trees. Now, before we get into peer-to-peer databases, let's talk about how
+
+
+4
+00:00:20,720 --> 00:00:27,040
+regular databases work and how they can serve data so fast. At the core, most database engines
+
+
+5
+00:00:27,040 --> 00:00:34,000
+consist of a query layer that sits on top of collections of data, and indexes over that
+
+
+6
+00:00:34,000 --> 00:00:41,080
+data which speed up searches. So, let's talk about the indexing bit. What does it mean
+
+
+7
+00:00:41,080 --> 00:00:46,400
+to search through data without an index? To start, if you want to search for data related
+
+
+8
+00:00:46,400 --> 00:00:52,320
+to a given query, you'd need to search through all of your data in order to know if you satisfied
+
+
+9
+00:00:52,320 --> 00:00:57,680
+that query. What's more, if you want to perform a sort on your data at the same time, you'll
+
+
+10
+00:00:57,680 --> 00:01:02,640
+need to do that in tandem with filtering and buffer the order of the results, either to
+
+
+11
+00:01:02,640 --> 00:01:08,320
+disk or in memory as you go. This is fine for small datasets if your CPU and disk are
+
+
+12
+00:01:08,320 --> 00:01:15,540
+fast enough, but as your data grows, so would the latencies for searches. Database indexes
+
+
+13
+00:01:15,540 --> 00:01:20,400
+are separate collections that sit alongside your main data, but instead of having the
+
+
+14
+00:01:20,400 --> 00:01:26,960
+full data that's sorted by VID, it's just one or two properties that are sorted by value.
+
+
+15
+00:01:26,960 --> 00:01:31,280
+What's convenient is that you can have all the data sorted ahead of time and can quickly
+
+
+16
+00:01:31,280 --> 00:01:36,960
+seek to what you need and skip anything you don't when you perform a query. This is also
+
+
+17
+00:01:36,960 --> 00:01:43,040
+very useful for streaming results in. Instead of waiting for a full query to finish, you
+
+
+18
+00:01:43,040 --> 00:01:50,600
+can start processing data as your application gets it and as soon as it's available. So
+
+
+19
+00:01:50,600 --> 00:01:56,360
+databases typically use B plus trees for storing indexes. You can think of them as key value
+
+
+20
+00:01:56,360 --> 00:02:02,240
+stores where the keys are bytes and are sorted from lowest to highest. B plus trees also
+
+
+21
+00:02:02,240 --> 00:02:09,760
+have the property of being efficient for seeking into a sorted list and to then sequentially
+
+
+22
+00:02:09,760 --> 00:02:15,720
+read ranges of key value pairs from that. Here's a rough picture of what the structure
+
+
+23
+00:02:15,720 --> 00:02:23,400
+of a B plus tree looks like. Data is sorted and stored sequentially in leaf nodes and
+
+
+24
+00:02:23,400 --> 00:02:28,360
+there's intermediate nodes that are created that point to the leaf nodes along with the
+
+
+25
+00:02:28,360 --> 00:02:34,080
+starting key within that leaf. You can then replace individual leaves or intermediate
+
+
+26
+00:02:34,080 --> 00:02:39,280
+nodes up until the root without needing to update the rest of the tree. You can also
+
+
+27
+00:02:39,280 --> 00:02:44,080
+quickly search through the tree to find the leaf node that contains the start of whatever
+
+
+28
+00:02:44,080 --> 00:02:49,960
+range you're seeking. The way it works is you start at the root, you find the closest
+
+
+29
+00:02:49,960 --> 00:02:57,520
+leaf to the key you're searching for, then you traverse down and repeat until you reach
+
+
+30
+00:02:57,520 --> 00:03:02,080
+an actual leaf and from there you can start doing a sequential read and follow the pointers
+
+
+31
+00:03:02,080 --> 00:03:10,920
+to the next leaf with the rest of the range you're seeking. One of the downsides of B
+
+
+32
+00:03:10,920 --> 00:03:16,040
+trees is that the order that you insert or delete keys can change the shape of the leaf
+
+
+33
+00:03:16,040 --> 00:03:20,760
+nodes and how everything links together. For example, if you insert into a tree that had
+
+
+34
+00:03:20,760 --> 00:03:26,720
+a key deleted before or if you insert in a key that got deleted after, you can have different
+
+
+35
+00:03:26,720 --> 00:03:31,480
+boundaries between leaf nodes. This makes them less suitable for distributed systems
+
+
+36
+00:03:31,480 --> 00:03:38,200
+where peers are authoring and replicating changes in different orders. An alternative
+
+
+37
+00:03:38,200 --> 00:03:43,360
+is to make use of another data structure, Proli trees. They're like B plus trees in
+
+
+38
+00:03:43,360 --> 00:03:49,720
+that you have ordered key value pairs within leaves stitched by intermediate nodes. However,
+
+
+39
+00:03:49,720 --> 00:03:55,560
+instead of using pointers in memory and chunking keys as they're written, each leaf and each
+
+
+40
+00:03:55,560 --> 00:04:03,000
+intermediate node is content addressed, in this case using IPLD. As well, when keys are
+
+
+41
+00:04:03,000 --> 00:04:08,000
+being inserted into the structure, boundaries between leaf nodes are calculated based on
+
+
+42
+00:04:08,000 --> 00:04:14,060
+the content address of keys rather than on insertion order. This means that regardless
+
+
+43
+00:04:14,060 --> 00:04:18,360
+of the order that keys are inserted, each peer would come to the exact same structure
+
+
+44
+00:04:18,360 --> 00:04:24,800
+for their tree at the byte level. Here's what it looks like at the schema level. The root
+
+
+45
+00:04:24,800 --> 00:04:31,160
+of a Proli tree has information about how the tree was chunked so that that tree can
+
+
+46
+00:04:31,160 --> 00:04:36,960
+be easily updated or merged with other trees without having to hard code those chunking
+
+
+47
+00:04:36,960 --> 00:04:43,360
+settings for the entire application. Each tree node then has a list of keys and a list
+
+
+48
+00:04:43,360 --> 00:04:49,200
+of values that go with those keys. It also has an is leaf Boolean that lets the application
+
+
+49
+00:04:49,200 --> 00:04:54,280
+know whether this is a leaf node, which contains actual values, or if the values are links
+
+
+50
+00:04:54,280 --> 00:05:02,680
+to further tree nodes. So, here's a gist of how you construct a Proli tree or how you
+
+
+51
+00:05:02,680 --> 00:05:07,920
+can go about updating a portion of it. What's useful is that it's a bottom-up approach and
+
+
+52
+00:05:07,920 --> 00:05:14,900
+you can build the tree as you ingest data. So, first, you start by beginning to add keys
+
+
+53
+00:05:14,900 --> 00:05:20,320
+to a leaf node. So, as you're doing this, you're going to be checking for chunk boundaries
+
+
+54
+00:05:20,320 --> 00:05:27,840
+for each key value pair. And once you've discovered a boundary, you create a parent node if one
+
+
+55
+00:05:27,840 --> 00:05:34,000
+doesn't exist and a sibling node. You add all remaining keys to the sibling and you
+
+
+56
+00:05:34,000 --> 00:05:40,220
+add the current node and the sibling node to the parent. Then you repeat this process
+
+
+57
+00:05:40,220 --> 00:05:47,840
+for the sibling and after you've processed all the keys, you go to the parent nodes and
+
+
+58
+00:05:47,840 --> 00:05:52,440
+process them and keep going up until you have a new root node for all of your data. So,
+
+
+59
+00:05:52,440 --> 00:05:58,720
+with this, you'll have a balanced tree where you'll have chunk indexes where you expect
+
+
+60
+00:05:58,720 --> 00:06:04,360
+them sorry, chunk boundaries where you expect them and you'll have sequential keys to read
+
+
+61
+00:06:04,360 --> 00:06:11,640
+in your application. So, the boundaries between leaves can be calculated based on a chunking
+
+
+62
+00:06:11,640 --> 00:06:16,720
+threshold. This is an integer that's used to determine the probability that a new chunk
+
+
+63
+00:06:16,720 --> 00:06:21,560
+should be started. You take the hash of the given key value pair and if it's less than
+
+
+64
+00:06:21,560 --> 00:06:27,680
+the threshold, then you know you need to put all subsequent keys into a new chunk. This
+
+
+65
+00:06:27,680 --> 00:06:33,200
+is reminiscent of the hash-cache algorithm used in things like Bitcoin. The lower your
+
+
+66
+00:06:33,200 --> 00:06:38,760
+threshold value is, the less likely a boundary will occur and the larger your tree nodes
+
+
+67
+00:06:38,760 --> 00:06:47,000
+will get. So, from here you can start worrying about the details of trees and focus more
+
+
+68
+00:06:47,000 --> 00:06:51,960
+on the keyspace. Here's an example of how you can segregate the keyspace for a collection
+
+
+69
+00:06:51,960 --> 00:06:57,640
+of posts. You can have a top-level prefix for everything related to posts. Then you
+
+
+70
+00:06:57,640 --> 00:07:04,440
+can have a longer prefix for all the individual documents in your database that are posts.
+
+
+71
+00:07:04,440 --> 00:07:09,680
+And finally, you can have separate prefixes for each index over those posts. With this,
+
+
+72
+00:07:09,680 --> 00:07:15,320
+you can do sequential reads on documents and different indexes and avoid overlap between
+
+
+73
+00:07:15,320 --> 00:07:21,760
+different collections within a single dataset. For example, here's what an index with a few
+
+
+74
+00:07:21,760 --> 00:07:28,480
+posts could look like. We take the created at and tags property out of each post and
+
+
+75
+00:07:28,480 --> 00:07:33,960
+we make a new index key which points to the post's ID. Notice how everything is sorted
+
+
+76
+00:07:33,960 --> 00:07:39,680
+by the timestamp. So you can seek to a start time and filter out irrelevant tags without
+
+
+77
+00:07:39,680 --> 00:07:45,260
+fetching the full post. In this example, we have three posts, but what if you have a million
+
+
+78
+00:07:45,260 --> 00:07:51,480
+and only want the most recent 50? Well, you can seek to today, get the first 50 posts
+
+
+79
+00:07:51,480 --> 00:07:56,000
+that match your query and ignore the rest of the dag entirely, skipping all of that
+
+
+80
+00:07:56,000 --> 00:08:02,040
+extra loading. That's because with Prolly trees, the network is your database. As you
+
+
+81
+00:08:02,040 --> 00:08:07,120
+query the key space, you'll be loading parts of the dag using either block exchange or
+
+
+82
+00:08:07,120 --> 00:08:13,480
+graph sync or whatever other replication protocol you want. And instead of replicating everything
+
+
+83
+00:08:13,480 --> 00:08:20,360
+and then making it usable, you can start loading data and just the data that needs to be on
+
+
+84
+00:08:20,360 --> 00:08:26,080
+the page now. You can also load more data in the background to speed up subsequent searches
+
+
+85
+00:08:26,080 --> 00:08:32,040
+and to be available while offline. When merging datasets, you can skip any equivalent branches
+
+
+86
+00:08:32,040 --> 00:08:37,680
+and stitch in new branches without having to fully traverse the values. Combined, this
+
+
+87
+00:08:37,680 --> 00:08:43,240
+lets application authors focus more on their data and making efficient queries, not worry
+
+
+88
+00:08:43,240 --> 00:08:50,320
+as much about initial load times. There's some tradeoffs to consider. However, if you
+
+
+89
+00:08:50,320 --> 00:08:55,900
+choose to have larger chunks on average, you'll end up having them updated more often as keys
+
+
+90
+00:08:55,900 --> 00:09:01,040
+are added and changed. At the same time, if you have smaller chunks, your tree will be
+
+
+91
+00:09:01,040 --> 00:09:07,080
+deeper and you'll potentially need to do more round trips to load it. On the indexing side,
+
+
+92
+00:09:07,080 --> 00:09:12,400
+the more indexes you have, the more duplicate data you have. But these indexes are important
+
+
+93
+00:09:12,400 --> 00:09:17,040
+for making your queries efficient. Sometimes it could be the difference between scanning
+
+
+94
+00:09:17,040 --> 00:09:22,160
+across all your data and having poor UX while you wait for that to happen, or having a bunch
+
+
+95
+00:09:22,160 --> 00:09:27,560
+of duplicate data and using up extra storage on your device. Generally speaking, you'd
+
+
+96
+00:09:27,560 --> 00:09:32,080
+be making indexes for data locally if it's not on the network, so it's usually worth
+
+
+97
+00:09:32,080 --> 00:09:38,640
+it. Lastly, the question of how to merge data from multiple sources is nuanced, and there's
+
+
+98
+00:09:38,640 --> 00:09:44,280
+a lot of ways to do that depends on your application. You might be using CRDTs, you might have a
+
+
+99
+00:09:44,280 --> 00:09:53,280
+last-write-win strategy, you might have some other thing I'm not going to bring up now.
+
+
+100
+00:09:53,280 --> 00:09:56,960
+Even though we have these useful structures for indexing, there's still a lot to be done
+
+
+101
+00:09:56,960 --> 00:10:02,880
+at the application layer to make these databases useful. So, hopefully that's given you some
+
+
+102
+00:10:02,880 --> 00:10:07,240
+more insight into how this stuff works, and maybe it sparks some ideas on how you can
+
+
+103
+00:10:07,240 --> 00:10:12,880
+build your own databases too. If you're interested, we've got a spec for how this can be implemented
+
+
+104
+00:10:12,880 --> 00:10:17,760
+using IPLD, and we've got a matrix channel where we've been chatting about peer-to-peer
+
+
+105
+00:10:17,760 --> 00:10:23,440
+databases in general. So, come check out our source, and join us in building efficient
+
+
+106
+00:10:23,440 --> 00:10:26,880
+and usable peer-to-peer apps. Thank you so much.
+
+
+107
+00:10:26,880 --> 00:10:34,860
+With the Parali treaties, every time you're ingesting new data, you're mutating the state
+
+
+108
+00:10:34,860 --> 00:10:40,440
+and potentially creating a lot of new objects. Have you thought about when it makes sense
+
+
+109
+00:10:40,440 --> 00:10:44,860
+to do that directly versus when it makes sense to have some kind of novelty cache that builds
+
+
+110
+00:10:44,860 --> 00:10:51,200
+up a bunch of novelty, and then when you reach some size, then do the merge of that novelty
+
+
+111
+00:10:51,200 --> 00:10:56,640
+into the deeper trees and indexing and all of that work that is going to happen every
+
+
+112
+00:10:56,640 --> 00:10:59,720
+time you have to merge in novelty?
+
+
+113
+00:10:59,720 --> 00:11:06,220
+Yeah. So, generally what you want to do if you are going to be ingesting a lot of data
+
+
+114
+00:11:06,220 --> 00:11:15,080
+is do batch operations. So, if you look at the Go implementation that's linked to in
+
+
+115
+00:11:15,080 --> 00:11:24,000
+the spec that you can see on the screen, we actually use batching where before committing
+
+
+116
+00:11:24,000 --> 00:11:29,460
+anything to disk and doing any sort of balancing or content addressing, we just start kind
+
+
+117
+00:11:29,460 --> 00:11:36,260
+of like sorting all of the keys that will be inserted before we build the tree. And
+
+
+118
+00:11:36,260 --> 00:11:43,240
+then we modify whatever nodes need to be modified. And after everything is ready, then we commit
+
+
+119
+00:11:43,240 --> 00:11:49,640
+to actually hashing everything, checking the chunk boundaries and rebalancing and all of
+
+
+120
+00:11:49,640 --> 00:11:54,520
+that. So, generally if you're dealing with a bunch of data or even if you're inserting
+
+
+121
+00:11:54,520 --> 00:11:59,520
+a single object which will touch multiple indexes, you're going to want to batch it
+
+
+122
+00:11:59,520 --> 00:12:04,960
+before doing it all on the fly. Because, yeah, as you mentioned, if you do everything all
+
+
+123
+00:12:04,960 --> 00:12:10,380
+at once, it's going to be major overhead.
+
+
+124
+00:12:10,380 --> 00:12:17,100
+One other thing, I mentioned kind of IPLD and how you can do this high-level algorithm
+
+
+125
+00:12:17,100 --> 00:12:22,220
+of how it works, but you can actually do a lot more optimization because you don't have
+
+
+126
+00:12:22,220 --> 00:12:28,740
+to have objects. If your keys and your values are fixed width in terms of how many bytes
+
+
+127
+00:12:28,740 --> 00:12:34,220
+there are, you can have a continuous block of memory and just have some other data structure
+
+
+128
+00:12:34,220 --> 00:12:39,100
+being like, oh, hey, here's the boundaries between the chunks, and we're just going to
+
+
+129
+00:12:39,100 --> 00:12:42,700
+calculate them on the fly without any extra allocation.
+
+
+130
+00:12:42,700 --> 00:12:48,920
+So all that to say there's a whole bunch of optimization you can do on reads with batching
+
+
+131
+00:12:48,920 --> 00:12:58,420
+and memory allocation that can really be used mostly when you're writing custom code for
+
+
+132
+00:12:58,420 --> 00:13:05,060
+the specific data you're uploading. And by default, we have batching already, but the
+
+
+133
+00:13:05,060 --> 00:13:14,260
+fixed memory address stuff is kind of like a to-do after we do more performance optimization
+
+
+134
+00:13:14,260 --> 00:13:20,900
+for larger scale data sets. Was that kind of the gist of what you were getting at?
+
+
+135
+00:13:20,900 --> 00:13:29,200
+Thanks. Yeah, I've got a question. I guess, currently in Fireproof, I'm trying to decide
+
+
+136
+00:13:29,200 --> 00:13:34,680
+should I make my leaf nodes all be CIDs instead of embedded JSON? I mean, it sounds like what
+
+
+137
+00:13:34,680 --> 00:13:45,360
+you just mentioned about the fixed width optimizations may lean me toward CIDs. The thing that leans
+
+
+138
+00:13:45,360 --> 00:13:53,360
+me toward JSON is that most of my JSON documents are smaller than a CID. So it's sort of a
+
+
+139
+00:13:53,360 --> 00:13:58,760
+not sure kind of situation. Yeah, absolutely.
+
+
+140
+00:13:58,760 --> 00:14:02,000
+So I'm not quite sure what your question is, but I want to say thanks for pointing out
+
+
+141
+00:14:02,000 --> 00:14:06,400
+that there's more to the trade-off than I had realized.
+
+
+142
+00:14:06,400 --> 00:14:12,480
+Yeah, I think in general, even if you're looking at JSON-ish documents, it might be worth it
+
+
+143
+00:14:12,480 --> 00:14:18,240
+to see if you can use C-BOR or something instead, because then you could potentially still get
+
+
+144
+00:14:18,240 --> 00:14:27,000
+that fixed byte width for your data without having to go the CID routes. For example,
+
+
+145
+00:14:27,000 --> 00:14:33,760
+if you're dealing with numbers, especially, it's just so much easier to encode them as
+
+
+146
+00:14:33,760 --> 00:14:40,640
+unsigned bytes, or sorry, unsigned U32s or whatever, instead of going the JSON route,
+
+
+147
+00:14:40,640 --> 00:14:46,480
+where now you also lose the lexicographic sort.
+
+
+148
+00:14:46,480 --> 00:14:50,120
+To get that optimization you're talking about, you'd want to have a table model maybe then
+
+
+149
+00:14:50,120 --> 00:14:53,760
+so you know what your columns are?
+
+
+150
+00:14:53,760 --> 00:15:04,080
+Maybe. It depends. Personally, before I did this IPLD work, I made a database using similar
+
+
+151
+00:15:04,080 --> 00:15:10,240
+indexing principles using HyperCore Protocol's Hyper-B library, which is a B plus tree that's
+
+
+152
+00:15:10,240 --> 00:15:18,820
+peer-to-peer. And in there, I actually used BSON from the MongoDB ecosystem. And so that's
+
+
+153
+00:15:18,820 --> 00:15:26,000
+also schema-less. And you just kind of have to be careful where you're like, yeah, make
+
+
+154
+00:15:26,000 --> 00:15:34,160
+sure you use this schema. Maybe do it at the application level. But since the data is encoded
+
+
+155
+00:15:34,160 --> 00:15:41,440
+into binary bytes, you kind of get that whole fixed width stuff for free. And especially
+
+
+156
+00:15:41,440 --> 00:15:49,000
+with BSON, I find that having dates be a first-class citizen is super useful.
+
+
+157
+00:15:49,000 --> 00:15:54,200
+Interesting. Yeah, that makes sense. I mean, it's almost if you're giving knobs to application
+
+
+158
+00:15:54,200 --> 00:15:59,000
+developers, you can say, hey, one of the benefits you get from working with a schema is a little
+
+
+159
+00:15:59,000 --> 00:16:01,480
+bit of performance enhancement.
+
+
+160
+00:16:01,480 --> 00:16:07,320
+Yeah. That's also why longer term, I was really hoping we could do a more holistic approach
+
+
+161
+00:16:07,320 --> 00:16:14,360
+with IPLD, where we could take the IPLD schema for Prolly trees themselves, and then we can
+
+
+162
+00:16:14,360 --> 00:16:20,040
+layer it with the specification of here's how you have indexed collections of IPLD documents,
+
+
+163
+00:16:20,040 --> 00:16:25,160
+where here's the schema we're applying to the documents, and then here's the indexes
+
+
+164
+00:16:25,160 --> 00:16:29,440
+that we're applying over that schema, and then just have kind of like a spec that we
+
+
+165
+00:16:29,440 --> 00:16:32,280
+can reuse between database implementations.
+
+
+166
+00:16:32,280 --> 00:16:39,160
+Because on one hand, IPLD is nice for having standardization on how you encode and decode
+
+
+167
+00:16:39,160 --> 00:16:46,880
+data and what the fields look like. But the actual guts of a database, I think, aren't
+
+
+168
+00:16:46,880 --> 00:16:53,080
+even just the data, but are more like how you find the data, how you authenticate it,
+
+
+169
+00:16:53,080 --> 00:16:57,800
+and stuff like that. So I was really hoping we can make a spec at some point, but so far,
+
+
+170
+00:16:57,800 --> 00:17:00,720
+it's very up in the air.
+
+
+171
+00:17:00,720 --> 00:17:02,720
+But yeah, schemas or tables.
+
+
+172
+00:17:02,720 --> 00:17:07,720
+Right. The decode block function gets a lot of churn in my implementation.
+
+
+173
+00:17:07,720 --> 00:17:15,640
+Yeah. Well, yeah, like ideally, if we were all using IPLD, then that could do like a
+
+
+174
+00:17:15,640 --> 00:17:21,440
+huge amount of the work for us, where it's like, you might be using C-Boar, you might
+
+
+175
+00:17:21,440 --> 00:17:30,280
+be using JSON, whatever else. And if you're using IPLD and CIDs, that can just be kind
+
+
+176
+00:17:30,280 --> 00:17:34,960
+of done automatically. As well with Prolly trees, since they're using CIDs to link to
+
+
+177
+00:17:34,960 --> 00:17:40,720
+stuff, you can have kind of an easy way of building a car file of an entire database
+
+
+178
+00:17:40,720 --> 00:17:46,440
+and just kind of dumping it and sending it wherever, like on Filecoin.
+
+
+179
+00:17:46,440 --> 00:17:55,040
+Right. Yeah. I've got plans to put car files into the static Gatsby site build.
+
+
+180
+00:17:55,040 --> 00:17:56,040
+Whoa.
+
+
+181
+00:17:56,040 --> 00:18:01,320
+Right. So that the database is ready when you load the page. Maybe you have deeper thoughts
+
+
+182
+00:18:01,320 --> 00:18:10,720
+on, like I know that just block by block network sync can be excruciatingly slow. And so GraphSync
+
+
+183
+00:18:10,720 --> 00:18:17,960
+is a step up from that. Having a closed world where you ship all the car files is a different
+
+
+184
+00:18:17,960 --> 00:18:22,160
+way to do it, but then you have to send the whole database. You don't get that kind of
+
+
+185
+00:18:22,160 --> 00:18:29,320
+partial data paging that you were talking about. What should we be thinking about if
+
+
+186
+00:18:29,320 --> 00:18:35,480
+we want to, you know, if that's the cake we want to eat, like what do we got to do?
+
+
+187
+00:18:35,480 --> 00:18:42,720
+Yeah, I think one of the things is that it depends on your load a lot. So if you have,
+
+
+188
+00:18:42,720 --> 00:18:48,320
+for example, like Prolly tree nodes, which are very fast, then that means you can reduce
+
+
+189
+00:18:48,320 --> 00:18:53,720
+the number of network requests you do. And one strategy that I don't have numbers for
+
+
+190
+00:18:53,720 --> 00:18:59,240
+this yet, but I think is going to be viable is when you do the initial load of the database,
+
+
+191
+00:18:59,240 --> 00:19:06,040
+we fetch maybe the first few layers of the Merkle tree via GraphSync. And then from there,
+
+
+192
+00:19:06,040 --> 00:19:11,640
+we can do a block exchange to download the specific leaves we think we need, or maybe
+
+
+193
+00:19:11,640 --> 00:19:17,120
+do subsequent GraphSync requests or yeah, GraphSync requests to get multiple nodes from
+
+
+194
+00:19:17,120 --> 00:19:25,400
+there. Because like, you don't really need to download that much, like compared to say,
+
+
+195
+00:19:25,400 --> 00:19:34,240
+like an IPFS UnixFS DAG, there's a whole bunch of traversal that's done to fetch chunks.
+
+
+196
+00:19:34,240 --> 00:19:40,240
+And especially if you're fetching a directory, there's like so many blocks you want to download
+
+
+197
+00:19:40,240 --> 00:19:46,080
+compared to the Prolly trees. If they're fat enough, you might just be getting like maybe
+
+
+198
+00:19:46,080 --> 00:19:58,560
+one or two levels at the top before you hit leaves. And just like due to the Olog N-ish
+
+
+199
+00:19:58,560 --> 00:20:18,560
+complexity of the data.
+
+
+200
+00:20:00,000 --> 00:20:16,000
+pf data set, you can have really huge amounts of data without that much block exchange because like again, the big difference here from other peer to peer database approaches is, we're sparse and indexed.
+
+
+201
+00:20:16,000 --> 00:20:19,840
+like, whereas OrbitDB, it's an append-only log
+
+
+202
+00:20:19,840 --> 00:20:22,720
+where you're gonna be processing a whole bunch of data
+
+
+203
+00:20:22,720 --> 00:20:24,280
+before it's usable.
+
+
+204
+00:20:24,280 --> 00:20:27,000
+Or like a lot of other things you have to do
+
+
+205
+00:20:27,000 --> 00:20:29,520
+like a bunch of work up front.
+
+
+206
+00:20:29,520 --> 00:20:32,160
+That kind of like makes the network a lot more noisy.
+
+
+207
+00:20:32,160 --> 00:20:35,000
+Whereas here it's like, we do maybe two requests
+
+
+208
+00:20:35,000 --> 00:20:38,160
+and we're at data and we're already iterating through it.
+
+
+209
+00:20:39,860 --> 00:20:42,360
+Yeah, I think as well, there is probably gonna be room
+
+
+210
+00:20:42,360 --> 00:20:47,360
+for custom replication protocols on top of it.
+
+
+211
+00:20:47,640 --> 00:20:51,360
+For example, the Hyper-B library I mentioned earlier
+
+
+212
+00:20:51,360 --> 00:20:53,560
+in the Hyper-Core ecosystem,
+
+
+213
+00:20:53,560 --> 00:20:57,560
+their data model is also an append-only log.
+
+
+214
+00:20:57,560 --> 00:21:02,420
+And so they send bit fields to get like chunks of the log.
+
+
+215
+00:21:02,420 --> 00:21:05,500
+But what they do is they actually have a little side channel
+
+
+216
+00:21:05,500 --> 00:21:08,220
+where they talk about like,
+
+
+217
+00:21:08,220 --> 00:21:12,380
+hey, I wanna do a query for this range in the B-tree.
+
+
+218
+00:21:12,380 --> 00:21:15,580
+And then over that side channel, the peer can tell them,
+
+
+219
+00:21:15,580 --> 00:21:19,460
+oh, well, if you want that, here's kind of like the ranges.
+
+
+220
+00:21:19,460 --> 00:21:22,100
+And then instead of requesting all the blocks individually,
+
+
+221
+00:21:22,100 --> 00:21:24,300
+they can now send a bit field
+
+
+222
+00:21:25,780 --> 00:21:29,240
+without actually having to traverse the B-tree.
+
+
+223
+00:21:29,240 --> 00:21:32,380
+So we might have optimizations like that where we're like,
+
+
+224
+00:21:32,380 --> 00:21:36,020
+oh, we wanna just get this range from you peer.
+
+
+225
+00:21:36,020 --> 00:21:38,540
+Either send me the Merkle proof right away
+
+
+226
+00:21:38,540 --> 00:21:40,840
+or tell me what blocks I should request
+
+
+227
+00:21:40,840 --> 00:21:42,280
+for me to get that.
+
+
+228
+00:21:42,280 --> 00:21:44,980
+So there's a bunch of things there,
+
+
+229
+00:21:44,980 --> 00:21:48,420
+but I think it's really exciting.
+
+
+230
+00:21:48,420 --> 00:21:52,700
+And I think there's a lot of potential for improving UX.
+
+
+231
+00:21:52,700 --> 00:21:57,700
+Because right now, peer-to-peer apps, their UX is okay.
+
+
+232
+00:21:58,300 --> 00:22:00,980
+But especially if you get a lot of data,
+
+
+233
+00:22:00,980 --> 00:22:04,080
+it just drops so drastically where you're sitting there
+
+
+234
+00:22:04,080 --> 00:22:06,900
+just waiting for a spinner or waiting for,
+
+
+235
+00:22:06,900 --> 00:22:09,100
+like after you wait for the initial connection,
+
+
+236
+00:22:09,100 --> 00:22:12,300
+waiting for the initial sync, it's just not great.
+
+
+237
+00:22:12,300 --> 00:22:16,300
+Whereas when we have indexing at our core,
+
+
+238
+00:22:16,300 --> 00:22:20,660
+we have the potential for just like really speedy databases
+
+
+239
+00:22:20,660 --> 00:22:22,480
+and like really snappy apps.
+
+
+240
+00:22:23,780 --> 00:22:26,560
+Yeah, so I think that's like my deep thoughts.
+
+
+241
+00:22:27,700 --> 00:22:30,720
+Yeah, so I think I heard about the plans
+
+
+242
+00:22:30,720 --> 00:22:32,340
+to also have a Rust implementation.
+
+
+243
+00:22:32,340 --> 00:22:34,860
+So I'm from the Arrow team and I would like to love
+
+
+244
+00:22:34,860 --> 00:22:39,060
+to figure out if I can make ProdigyTrees work with Arrow,
+
+
+245
+00:22:39,060 --> 00:22:41,740
+with the new Arrow, but it would be quite helpful
+
+
+246
+00:22:41,740 --> 00:22:42,940
+to have Rust implementation
+
+
+247
+00:22:42,940 --> 00:22:45,380
+so I can just play around with it.
+
+
+248
+00:22:45,380 --> 00:22:46,820
+So what's the status on that?
+
+
+249
+00:22:47,900 --> 00:22:50,740
+Yeah, so there is a little bit of a pause.
+
+
+250
+00:22:50,740 --> 00:22:54,500
+As you all know, Protocol Labs had like a little bit
+
+
+251
+00:22:54,500 --> 00:22:58,780
+of like restructuring towards the beginning of the year.
+
+
+252
+00:22:58,780 --> 00:23:01,660
+And so a bunch of the dev grants that were going out
+
+
+253
+00:23:01,660 --> 00:23:03,180
+were kind of like put on hold
+
+
+254
+00:23:03,180 --> 00:23:04,980
+while that was being figured out.
+
+
+255
+00:23:04,980 --> 00:23:07,420
+But actually I think last week,
+
+
+256
+00:23:07,420 --> 00:23:10,980
+the Rust implementation has kept going.
+
+
+257
+00:23:10,980 --> 00:23:15,980
+So Simon or Siano is, I don't know how to pronounce
+
+
+258
+00:23:16,020 --> 00:23:20,340
+his handle, has actually been resuming on that.
+
+
+259
+00:23:20,340 --> 00:23:22,020
+And so he's progressing on that
+
+
+260
+00:23:22,020 --> 00:23:24,700
+and following the spec that we wrote.
+
+
+261
+00:23:25,660 --> 00:23:28,060
+If you're curious and like figuring out more,
+
+
+262
+00:23:28,060 --> 00:23:33,060
+there's the Matrix channel, hashtag p2p-dbs at move.moe.
+
+
+263
+00:23:36,940 --> 00:23:40,580
+And so we're chatting in there, it's progressing.
+
+
+264
+00:23:40,580 --> 00:23:43,580
+So far, I think there's the implementation
+
+
+265
+00:23:43,580 --> 00:23:45,380
+of a Merkle search tree,
+
+
+266
+00:23:45,380 --> 00:23:48,860
+which has very different performance trade-offs,
+
+
+267
+00:23:48,860 --> 00:23:52,540
+but ProdigyTrees are like actively being worked on.
+
+
+268
+00:23:52,540 --> 00:23:56,340
+So definitely we can get that in Iroh
+
+
+269
+00:23:56,340 --> 00:24:01,300
+if that's something that is exciting for y'all.
+
+
+270
+00:24:01,300 --> 00:24:03,700
+I'm personally really excited by that prospect.
+
+
+271
+00:24:05,100 --> 00:24:07,980
+How do you usually think about caching these things?
+
+
+272
+00:24:07,980 --> 00:24:09,860
+Because there's gonna be a lot more heat
+
+
+273
+00:24:09,860 --> 00:24:11,180
+toward the top of the tree
+
+
+274
+00:24:12,540 --> 00:24:14,300
+and you can save a few round trips
+
+
+275
+00:24:14,300 --> 00:24:17,020
+if you take just a small amount of storage
+
+
+276
+00:24:17,020 --> 00:24:18,460
+to cache the top of the tree.
+
+
+277
+00:24:20,460 --> 00:24:21,700
+Yeah, absolutely.
+
+
+278
+00:24:21,700 --> 00:24:23,780
+So again, I think we could learn
+
+
+279
+00:24:23,780 --> 00:24:25,540
+from the HyperCore ecosystem here
+
+
+280
+00:24:25,540 --> 00:24:27,620
+because they've been doing a lot of this stuff
+
+
+281
+00:24:27,620 --> 00:24:29,100
+with their Hyper-B module.
+
+
+282
+00:24:29,100 --> 00:24:31,980
+So what they have is an LRU,
+
+
+283
+00:24:31,980 --> 00:24:34,620
+so like a least recently used cache,
+
+
+284
+00:24:34,620 --> 00:24:37,180
+where they just have a bunch of the blocks in memory
+
+
+285
+00:24:37,180 --> 00:24:39,900
+and they can preemptively search a bunch of stuff.
+
+
+286
+00:24:39,900 --> 00:24:43,060
+So I'm imagining we might have some sort of PubSub
+
+
+287
+00:24:43,060 --> 00:24:47,380
+if you have a swarm of peers making updates to databases.
+
+
+288
+00:24:47,380 --> 00:24:48,580
+And then from that PubSub,
+
+
+289
+00:24:48,580 --> 00:24:51,820
+you might either gossip like several nodes,
+
+
+290
+00:24:51,820 --> 00:24:53,180
+depending on how big they are,
+
+
+291
+00:24:53,180 --> 00:24:55,260
+or you might use that as a trigger
+
+
+292
+00:24:55,260 --> 00:24:57,740
+to start requesting blocks
+
+
+293
+00:24:57,740 --> 00:24:59,340
+and maybe caching them in memory.
+
+
+294
+00:24:59,340 --> 00:25:03,100
+So I think that there's a lot of room for optimizations,
+
+
+295
+00:25:03,100 --> 00:25:06,780
+but honestly, it might depend on the numbers
+
+
+296
+00:25:06,780 --> 00:25:09,580
+because my gut feeling,
+
+
+297
+00:25:09,580 --> 00:25:13,780
+and this is again, not qualified with numbers yet,
+
+
+298
+00:25:13,780 --> 00:25:16,620
+is that even before we get all the fancy caching,
+
+
+299
+00:25:16,620 --> 00:25:20,060
+we can still get like really good performance out of it.
+
+
+300
+00:25:20,060 --> 00:25:25,060
+But yeah, definitely in memory LRU
+
+
+301
+00:25:25,460 --> 00:25:27,300
+with preemptively fetching,
+
+
+302
+00:25:27,300 --> 00:25:30,180
+maybe the first couple layers is gonna do a lot
+
+
+303
+00:25:30,180 --> 00:25:31,900
+without having to cost too much.
+
+
+304
+00:25:33,380 --> 00:25:34,220
+Thank you.
+
+
+305
+00:25:34,220 --> 00:25:35,580
+In fact, like, yeah,
+
+
+306
+00:25:35,580 --> 00:25:37,620
+in fact, like maybe the first two layers,
+
+
+307
+00:25:37,620 --> 00:25:38,820
+you only store in memory,
+
+
+308
+00:25:38,820 --> 00:25:43,300
+because those are the ones that are gonna change the most.
+
+
+309
+00:25:44,260 --> 00:25:45,460
+If there's no other questions,
+
+
+310
+00:25:45,460 --> 00:25:47,340
+I actually have another thing I wanna plug,
+
+
+311
+00:25:47,340 --> 00:25:49,860
+which I didn't get into the slides.
+
+
+312
+00:25:49,860 --> 00:25:53,220
+Yeah, so I'm kind of into this whole
+
+
+313
+00:25:53,220 --> 00:25:56,540
+virtual augmented reality stuff.
+
+
+314
+00:25:56,540 --> 00:25:59,780
+And one of the big motivators for me from ProliTrees
+
+
+315
+00:25:59,780 --> 00:26:02,700
+is to build spatial indexes.
+
+
+316
+00:26:02,700 --> 00:26:06,860
+So what's cool is indexing spatial data
+
+
+317
+00:26:06,860 --> 00:26:10,180
+has been something that databases have been doing for ages
+
+
+318
+00:26:10,180 --> 00:26:13,660
+and referencing to data that's in a spatial index.
+
+
+319
+00:26:13,660 --> 00:26:16,020
+There's been just a lot of useful work
+
+
+320
+00:26:16,020 --> 00:26:20,940
+from say Google and Uber and stuff.
+
+
+321
+00:26:20,940 --> 00:26:22,900
+And one of the things I really wanna do
+
+
+322
+00:26:22,900 --> 00:26:25,380
+is to have a collaborative spatial index
+
+
+323
+00:26:25,380 --> 00:26:28,580
+for like metaverse type use cases
+
+
+324
+00:26:28,580 --> 00:26:31,020
+where we could use something like quad keys
+
+
+325
+00:26:31,020 --> 00:26:33,220
+to just have a flat map
+
+
+326
+00:26:33,220 --> 00:26:35,620
+and have some sort of like very loose layer
+
+
+327
+00:26:35,620 --> 00:26:39,180
+where a community can just place virtual objects on it.
+
+
+328
+00:26:40,100 --> 00:26:43,100
+Longer term, I also think this could be a useful structure
+
+
+329
+00:26:43,100 --> 00:26:46,700
+for community mesh networks that use augmented reality
+
+
+330
+00:26:46,700 --> 00:26:49,780
+where you can onboard onto the mesh
+
+
+331
+00:26:49,780 --> 00:26:52,660
+and start placing things in physical reality
+
+
+332
+00:26:52,660 --> 00:26:54,540
+and kind of like spreading them
+
+
+333
+00:26:54,540 --> 00:26:58,900
+over the physical connections in your reality.
+
+
+334
+00:26:58,900 --> 00:27:02,300
+So I think this could be like a useful structure
+
+
+335
+00:27:02,300 --> 00:27:04,260
+for taking a lot of the stuff we have
+
+
+336
+00:27:04,260 --> 00:27:07,380
+in like centralized databases,
+
+
+337
+00:27:07,380 --> 00:27:11,340
+but now making it more peer to peer and local first
+
+
+338
+00:27:11,340 --> 00:27:16,340
+and kind of like more available.
+
+
+339
+00:27:16,580 --> 00:27:19,540
+So that's one thing I'm excited about.
+
+
+340
+00:27:19,540 --> 00:27:22,540
+If that's something others are excited about as well,
+
+
+341
+00:27:22,540 --> 00:27:23,380
+hit me up.
+
+
+342
+00:27:24,900 --> 00:27:25,740
+Yeah.
+
+
+343
+00:27:26,700 --> 00:27:28,820
+Well, upon that, so I guess that means
+
+
+344
+00:27:28,820 --> 00:27:31,300
+you'd also be able to use it as a vector index
+
+
+345
+00:27:31,300 --> 00:27:33,500
+and then you could get that sweet AI money.
+
+
+346
+00:27:35,220 --> 00:27:37,020
+Yeah, probably.
+
+
+347
+00:27:37,020 --> 00:27:40,420
+I mean, literally anything you can put in a B-tree,
+
+
+348
+00:27:40,420 --> 00:27:42,500
+you could put in a Polly tree.
+
+
+349
+00:27:42,500 --> 00:27:46,620
+And the other kind of like key thing here
+
+
+350
+00:27:46,620 --> 00:27:50,820
+is that Polly trees aren't just for storage and querying,
+
+
+351
+00:27:50,820 --> 00:27:52,460
+they're for merging as well.
+
+
+352
+00:27:52,460 --> 00:27:56,900
+So if you have a bunch of these large indexes or data sets
+
+
+353
+00:27:56,900 --> 00:27:59,140
+like AI or otherwise,
+
+
+354
+00:27:59,140 --> 00:28:02,580
+you can now seamlessly kind of intertwine them
+
+
+355
+00:28:02,580 --> 00:28:04,700
+where anywhere where there's similarities,
+
+
+356
+00:28:04,700 --> 00:28:06,620
+they just kind of slot together
+
+
+357
+00:28:06,620 --> 00:28:09,780
+and you can skip a bunch of extra processing
+
+
+358
+00:28:09,780 --> 00:28:13,340
+for sections that don't have overlap in the tree.
+
+
+359
+00:28:13,340 --> 00:28:15,260
+So I think there's a lot of potential
+
+
+360
+00:28:15,260 --> 00:28:17,220
+for combining larger data sets
+
+
+361
+00:28:17,220 --> 00:28:19,580
+and for stuff like data DAOs
+
+
+362
+00:28:19,580 --> 00:28:24,580
+to deal with like more interesting big data use cases.
+
+
+363
+00:28:26,460 --> 00:28:30,860
+But again, learning what we can do in centralized,
+
+
+364
+00:28:30,860 --> 00:28:33,780
+but now it's also decentralized.
+
+
+365
+00:28:36,020 --> 00:28:39,340
+Awesome, thanks so much for all the QA stuff.
+
+
+366
+00:28:39,340 --> 00:28:40,700
+And it was a super informative.
+
+
+367
+00:28:40,700 --> 00:28:44,020
+I have code to, I'm gonna go increase my branch factor
+
+
+368
+00:28:44,020 --> 00:28:47,060
+and take advantage of those fat upper nodes,
+
+
+369
+00:28:47,060 --> 00:28:48,380
+like next thing.
+
+
+370
+00:28:49,380 --> 00:28:53,220
+So yeah, I guess round of applause for Mo.
+
+
+371
+00:28:53,220 --> 00:29:11,020
+Thank you.

@@ -1,0 +1,1468 @@
+1
+00:00:00,000 --> 00:00:07,000
+Oh, hi Marco, what are you doing here?
+
+
+2
+00:00:07,000 --> 00:00:10,360
+Oh hey Max, there's just this thing going on.
+
+
+3
+00:00:10,360 --> 00:00:12,680
+Ah, this thing, I see.
+
+
+4
+00:00:12,680 --> 00:00:15,000
+Ok cool, you know a little bit about libp2p, right?
+
+
+5
+00:00:15,000 --> 00:00:16,880
+Yeah, I know a little bit about it.
+
+
+6
+00:00:16,880 --> 00:00:19,680
+Oh what a coincidence, I'm actually using libp2p right now.
+
+
+7
+00:00:19,680 --> 00:00:20,680
+Oh, very cool.
+
+
+8
+00:00:20,680 --> 00:00:24,240
+I wonder, is anyone else using libp2p?
+
+
+9
+00:00:24,240 --> 00:00:26,840
+Maybe a show of hands?
+
+
+10
+00:00:26,840 --> 00:00:29,360
+Ok who has worked on libp2p?
+
+
+11
+00:00:29,360 --> 00:00:31,920
+Any contributors here?
+
+
+12
+00:00:31,920 --> 00:00:32,920
+Ok wonderful.
+
+
+13
+00:00:32,920 --> 00:00:36,920
+He just said he's using it.
+
+
+14
+00:00:36,920 --> 00:00:37,920
+He just said he's using it.
+
+
+15
+00:00:37,920 --> 00:00:41,440
+Alright, so libp2p, good to have you here.
+
+
+16
+00:00:41,440 --> 00:00:42,440
+I have questions.
+
+
+17
+00:00:42,440 --> 00:00:44,880
+I have questions on performance.
+
+
+18
+00:00:44,880 --> 00:00:47,200
+I gotta go fast.
+
+
+19
+00:00:47,200 --> 00:00:50,920
+So what are you trying to do?
+
+
+20
+00:00:50,920 --> 00:00:54,240
+Well I have many things I want to do.
+
+
+21
+00:00:54,240 --> 00:00:57,040
+One is I have bit swap requests, right?
+
+
+22
+00:00:57,040 --> 00:01:01,400
+And I want to send those bit swap requests to many nodes out there, to a subset of the
+
+
+23
+00:01:01,400 --> 00:01:03,480
+nodes that I'm connected to.
+
+
+24
+00:01:03,480 --> 00:01:06,000
+And I need to request data from them.
+
+
+25
+00:01:06,000 --> 00:01:10,920
+And I want to request this data in a way that it has very, in aggregate, very high throughput.
+
+
+26
+00:01:10,920 --> 00:01:13,880
+I want to retrieve data very quickly.
+
+
+27
+00:01:13,880 --> 00:01:20,440
+But then, a completely different use case, I also have Cademlia, which is a DHT implementation,
+
+
+28
+00:01:20,440 --> 00:01:25,120
+and what I want to do is, I have a bunch of connections open to the network, but I don't
+
+
+29
+00:01:25,120 --> 00:01:27,360
+want these to be very costly, right?
+
+
+30
+00:01:27,360 --> 00:01:29,440
+I keep them open constantly.
+
+
+31
+00:01:29,440 --> 00:01:34,120
+And then also, whenever the user does a request, I have like a burst of requests to send to
+
+
+32
+00:01:34,120 --> 00:01:37,920
+a subset of those connections, and the requests are tiny, right?
+
+
+33
+00:01:37,920 --> 00:01:39,440
+Not like bit swap, those are huge.
+
+
+34
+00:01:39,440 --> 00:01:41,480
+But Cademlia is tiny.
+
+
+35
+00:01:41,480 --> 00:01:44,720
+And I want them to come back with a response really quickly, right?
+
+
+36
+00:01:44,720 --> 00:01:48,840
+So latency is super important for me.
+
+
+37
+00:01:48,840 --> 00:01:49,840
+That's interesting.
+
+
+38
+00:01:49,840 --> 00:01:56,080
+So with latency, I think there's a couple things we can do here.
+
+
+39
+00:01:56,080 --> 00:02:01,440
+Kind of to back up a bit, can you remind me what the TCP stack looks like in libp2p?
+
+
+40
+00:02:01,440 --> 00:02:03,400
+Oh, yeah, right.
+
+
+41
+00:02:03,400 --> 00:02:06,320
+I remember that from the good old days, right?
+
+
+42
+00:02:06,320 --> 00:02:10,840
+Me back in kindergarten, I was playing with the libp2p building blocks, right?
+
+
+43
+00:02:10,840 --> 00:02:13,000
+We had lots of fun back then.
+
+
+44
+00:02:13,000 --> 00:02:18,680
+And our teacher actually told us how the TCP connection is established, right?
+
+
+45
+00:02:18,680 --> 00:02:22,040
+So I'll walk you all through it, right?
+
+
+46
+00:02:22,040 --> 00:02:23,040
+Yeah, yeah, please.
+
+
+47
+00:02:23,040 --> 00:02:24,040
+Cool, okay.
+
+
+48
+00:02:24,040 --> 00:02:26,560
+So we establish a TCP connection, right?
+
+
+49
+00:02:26,560 --> 00:02:30,000
+So that's one round trip between the two of us.
+
+
+50
+00:02:30,000 --> 00:02:35,260
+Then what we do is we do negotiate our security protocol.
+
+
+51
+00:02:35,260 --> 00:02:37,160
+So we negotiate, that's another round trip.
+
+
+52
+00:02:37,160 --> 00:02:40,540
+Then we actually do the security protocol handshake, right?
+
+
+53
+00:02:40,540 --> 00:02:42,680
+That's another round trip.
+
+
+54
+00:02:42,680 --> 00:02:46,100
+Then we negotiate the multiplexer that we're going to use.
+
+
+55
+00:02:46,100 --> 00:02:47,840
+That's another round trip.
+
+
+56
+00:02:47,840 --> 00:02:52,120
+And then I'm negotiating the application protocol that I want to speak.
+
+
+57
+00:02:52,120 --> 00:02:53,360
+Like for example, Kademda.
+
+
+58
+00:02:53,360 --> 00:02:54,920
+That's another round trip.
+
+
+59
+00:02:54,920 --> 00:02:57,320
+And then I can send application data to you.
+
+
+60
+00:02:57,320 --> 00:02:58,560
+Wow, that's a lot of stuff.
+
+
+61
+00:02:58,560 --> 00:03:03,760
+I've already stopped paying attention.
+
+
+62
+00:03:03,760 --> 00:03:05,640
+I think we can optimize some of this.
+
+
+63
+00:03:05,640 --> 00:03:07,520
+Oh, no way, wonderful.
+
+
+64
+00:03:07,520 --> 00:03:09,240
+Because I have to go fast, right?
+
+
+65
+00:03:09,240 --> 00:03:11,000
+Yeah, you've got to go fast.
+
+
+66
+00:03:11,000 --> 00:03:16,400
+So what if instead of we wait to negotiate, we're just optimistic about this?
+
+
+67
+00:03:16,400 --> 00:03:17,400
+Wow.
+
+
+68
+00:03:17,400 --> 00:03:19,160
+I just assume you'll speak the thing.
+
+
+69
+00:03:19,160 --> 00:03:22,160
+This is an entire round trip just gone for every single stream.
+
+
+70
+00:03:22,160 --> 00:03:28,080
+Hang on, does that mean I can use streams super cheaply?
+
+
+71
+00:03:28,080 --> 00:03:29,080
+Yeah.
+
+
+72
+00:03:29,080 --> 00:03:30,080
+Oh, cool.
+
+
+73
+00:03:30,080 --> 00:03:33,680
+So I no longer need to pipeline requests on a single stream, right?
+
+
+74
+00:03:33,680 --> 00:03:36,440
+I can just use one stream per request?
+
+
+75
+00:03:36,440 --> 00:03:37,440
+Yes.
+
+
+76
+00:03:37,440 --> 00:03:38,440
+Oh, wow, cool.
+
+
+77
+00:03:38,440 --> 00:03:39,440
+I think this is super important.
+
+
+78
+00:03:39,440 --> 00:03:43,440
+And in case we're ever at a conference, I think we should put this on the slide, right?
+
+
+79
+00:03:43,440 --> 00:03:44,440
+I think you're right.
+
+
+80
+00:03:44,440 --> 00:03:49,240
+OK.
+
+
+81
+00:03:49,240 --> 00:03:50,920
+So I think we can also do one more thing here.
+
+
+82
+00:03:50,920 --> 00:03:54,800
+So we are doing a round trip to select a muxer.
+
+
+83
+00:03:54,800 --> 00:03:56,120
+Can we move this up a layer?
+
+
+84
+00:03:56,120 --> 00:03:58,240
+Can we include this in some early data?
+
+
+85
+00:03:58,240 --> 00:04:00,040
+Whoa, another round trip.
+
+
+86
+00:04:00,040 --> 00:04:01,040
+Cool.
+
+
+87
+00:04:01,040 --> 00:04:05,360
+OK, so does that mean we save an entire round trip for every connection?
+
+
+88
+00:04:05,360 --> 00:04:06,360
+Yeah.
+
+
+89
+00:04:06,360 --> 00:04:07,360
+Whoa, cool.
+
+
+90
+00:04:07,360 --> 00:04:10,440
+Back then in kindergarten, that would have been cool.
+
+
+91
+00:04:10,440 --> 00:04:14,200
+Right, I'm kind of hooked.
+
+
+92
+00:04:14,200 --> 00:04:17,800
+I wonder whether we can do even better.
+
+
+93
+00:04:17,800 --> 00:04:25,280
+I wonder whether we can go quicker.
+
+
+94
+00:04:25,280 --> 00:04:30,000
+So Max, there's this protocol called QUIC.
+
+
+95
+00:04:30,000 --> 00:04:32,840
+Oh, no way.
+
+
+96
+00:04:32,840 --> 00:04:39,440
+So just like how we put the muxer earlier in the layering, we can do the same thing
+
+
+97
+00:04:39,440 --> 00:04:44,240
+with the security layer, and we could put it all into that first handshake.
+
+
+98
+00:04:44,240 --> 00:04:48,040
+So with QUIC, we can actually do that whole thing in one round trip.
+
+
+99
+00:04:48,040 --> 00:04:49,040
+Whoa.
+
+
+100
+00:04:49,040 --> 00:04:51,040
+Super cool.
+
+
+101
+00:04:51,040 --> 00:04:52,800
+All right.
+
+
+102
+00:04:52,800 --> 00:04:55,560
+So back to perf and metrics.
+
+
+103
+00:04:55,560 --> 00:04:56,560
+What do we want to measure?
+
+
+104
+00:04:56,560 --> 00:04:57,560
+Yeah, OK.
+
+
+105
+00:04:57,560 --> 00:05:02,720
+So, well, in general, I think it kind of makes sense to just test latency, right, and then
+
+
+106
+00:05:02,720 --> 00:05:03,720
+throughput.
+
+
+107
+00:05:03,720 --> 00:05:04,720
+Those are the obvious ones.
+
+
+108
+00:05:04,720 --> 00:05:07,120
+But then I would like to do a little bit more advanced things, right?
+
+
+109
+00:05:07,120 --> 00:05:10,920
+Cademlia is kind of hard, like I want to do my requests.
+
+
+110
+00:05:10,920 --> 00:05:12,520
+And BitSwap is a different use case.
+
+
+111
+00:05:12,520 --> 00:05:14,480
+So I think we should test all of this.
+
+
+112
+00:05:14,480 --> 00:05:16,360
+But I wonder how.
+
+
+113
+00:05:16,360 --> 00:05:20,680
+This sounds super complex to have these advanced use cases tested.
+
+
+114
+00:05:20,680 --> 00:05:23,640
+Well, Max, let me tell you.
+
+
+115
+00:05:23,640 --> 00:05:27,500
+It's actually pretty simple.
+
+
+116
+00:05:27,500 --> 00:05:31,200
+So there's this perf protocol, and it's client-driven.
+
+
+117
+00:05:31,200 --> 00:05:32,760
+And here I'm going to explain the whole protocol.
+
+
+118
+00:05:32,760 --> 00:05:33,760
+Cool.
+
+
+119
+00:05:33,760 --> 00:05:34,760
+OK, let's do this.
+
+
+120
+00:05:34,760 --> 00:05:35,760
+Maybe I understand this.
+
+
+121
+00:05:35,760 --> 00:05:41,360
+So the client sends the server, you, a U64 that tells you how many bytes to send me back.
+
+
+122
+00:05:41,360 --> 00:05:42,360
+Cool, got it.
+
+
+123
+00:05:42,360 --> 00:05:44,360
+And then I just start sending you a bunch of data.
+
+
+124
+00:05:44,360 --> 00:05:45,360
+Oh, wonderful.
+
+
+125
+00:05:45,360 --> 00:05:46,360
+OK.
+
+
+126
+00:05:46,360 --> 00:05:52,520
+And OK, then I send the amount of data back to you that you initially requested for me.
+
+
+127
+00:05:52,520 --> 00:05:53,520
+Yep.
+
+
+128
+00:05:53,520 --> 00:05:54,640
+And then I measure it, and that's it.
+
+
+129
+00:05:54,640 --> 00:05:56,360
+Wow, this is super simple.
+
+
+130
+00:05:56,360 --> 00:06:02,240
+But, well, I wonder whether we can really do all our use cases with this simple protocol.
+
+
+131
+00:06:02,240 --> 00:06:03,240
+We can.
+
+
+132
+00:06:03,240 --> 00:06:07,360
+Just a quick note, do not run this in production.
+
+
+133
+00:06:07,360 --> 00:06:09,800
+Never.
+
+
+134
+00:06:09,800 --> 00:06:11,360
+This is purely for testing.
+
+
+135
+00:06:11,360 --> 00:06:12,360
+Cool.
+
+
+136
+00:06:12,360 --> 00:06:16,280
+So, yeah, I mean, one of your use cases was latency.
+
+
+137
+00:06:16,280 --> 00:06:19,040
+So let's talk about how we would do latency.
+
+
+138
+00:06:19,040 --> 00:06:25,360
+So I would open a libp2p stream, and then I would tell you to send me back one byte,
+
+
+139
+00:06:25,360 --> 00:06:28,240
+and then I send you one byte, like ping.
+
+
+140
+00:06:28,240 --> 00:06:29,600
+Bong.
+
+
+141
+00:06:29,600 --> 00:06:31,960
+Yeah, exactly.
+
+
+142
+00:06:31,960 --> 00:06:39,160
+And sorry, Max, I don't think you'd be a very good libp2p implementation.
+
+
+143
+00:06:39,160 --> 00:06:42,080
+And so for throughput, it's very similar.
+
+
+144
+00:06:42,080 --> 00:06:46,520
+For upload, for example, we open the stream, and I just start sending you a bunch of data.
+
+
+145
+00:06:46,520 --> 00:06:48,800
+I tell you don't send me anything back.
+
+
+146
+00:06:48,800 --> 00:06:51,960
+Once I finish sending you data, you close the stream.
+
+
+147
+00:06:51,960 --> 00:06:53,440
+I measure that.
+
+
+148
+00:06:53,440 --> 00:06:56,640
+Same thing, but opposite for download.
+
+
+149
+00:06:56,640 --> 00:07:00,480
+And then we can do even fancier things, like, OK, how many connections per second can I
+
+
+150
+00:07:00,480 --> 00:07:01,560
+handle?
+
+
+151
+00:07:01,560 --> 00:07:05,600
+And so it's that same exact thing, except now we do this over k connections.
+
+
+152
+00:07:05,600 --> 00:07:06,600
+Very cool.
+
+
+153
+00:07:06,600 --> 00:07:08,920
+All right.
+
+
+154
+00:07:08,920 --> 00:07:11,160
+So how do you set all of this up?
+
+
+155
+00:07:11,160 --> 00:07:12,160
+Yeah.
+
+
+156
+00:07:12,160 --> 00:07:15,800
+So this is definitely...
+
+
+157
+00:07:15,800 --> 00:07:23,240
+What we do here is we have two AWS nodes across the US continent on some pretty big machines.
+
+
+158
+00:07:23,240 --> 00:07:24,480
+Why these big machines?
+
+
+159
+00:07:24,480 --> 00:07:26,640
+We don't want the machines to be the constraint here.
+
+
+160
+00:07:26,640 --> 00:07:32,480
+We want libp2p to be the constraint.
+
+
+161
+00:07:32,480 --> 00:07:33,480
+And...
+
+
+162
+00:07:33,480 --> 00:07:35,040
+You're running different implementations?
+
+
+163
+00:07:35,040 --> 00:07:36,520
+Which implementations are those?
+
+
+164
+00:07:36,520 --> 00:07:37,520
+Yeah.
+
+
+165
+00:07:37,520 --> 00:07:44,080
+So we're running Go, Rust, Zig, and the HTTPS server to compare.
+
+
+166
+00:07:44,080 --> 00:07:45,080
+Very cool.
+
+
+167
+00:07:45,080 --> 00:07:46,080
+Isn't there one missing?
+
+
+168
+00:07:46,080 --> 00:07:47,080
+Yes.
+
+
+169
+00:07:47,080 --> 00:07:48,080
+JS coming soon.
+
+
+170
+00:07:48,080 --> 00:07:49,080
+Cool.
+
+
+171
+00:07:49,080 --> 00:07:51,080
+All right.
+
+
+172
+00:07:51,080 --> 00:07:52,680
+So you have built all of this.
+
+
+173
+00:07:52,680 --> 00:07:54,080
+What are the challenges?
+
+
+174
+00:07:54,080 --> 00:07:55,080
+Yeah.
+
+
+175
+00:07:55,080 --> 00:07:59,120
+So there's this open question of using jumbo frames.
+
+
+176
+00:07:59,120 --> 00:08:00,120
+And what are jumbo frames?
+
+
+177
+00:08:00,120 --> 00:08:03,920
+Well, they're any packet that's larger than 1500 bytes.
+
+
+178
+00:08:03,920 --> 00:08:09,280
+And when you try to send these over the internet, they'll get dropped or fragmented.
+
+
+179
+00:08:09,280 --> 00:08:12,520
+But if you're in a data center or in a private network you own, you might be able to use
+
+
+180
+00:08:12,520 --> 00:08:13,520
+these.
+
+
+181
+00:08:13,520 --> 00:08:17,440
+We chose not to use them, because we want to try to shoot for something that's a bit
+
+
+182
+00:08:17,440 --> 00:08:20,720
+more realistic to what most users will see.
+
+
+183
+00:08:20,720 --> 00:08:22,200
+Okay.
+
+
+184
+00:08:22,200 --> 00:08:24,040
+Cool.
+
+
+185
+00:08:24,040 --> 00:08:28,280
+And while you're running the internet, right, and I heard there's this thing called packet
+
+
+186
+00:08:28,280 --> 00:08:29,280
+drop.
+
+
+187
+00:08:29,280 --> 00:08:30,280
+What do we do?
+
+
+188
+00:08:30,280 --> 00:08:31,280
+Yeah.
+
+
+189
+00:08:31,280 --> 00:08:34,440
+So one thing we have to keep in mind is that packet drops are not uniformly distributed
+
+
+190
+00:08:34,440 --> 00:08:35,520
+across time.
+
+
+191
+00:08:35,520 --> 00:08:41,000
+So if I give you these two diagrams, where green is successful packet and red is a packet
+
+
+192
+00:08:41,000 --> 00:08:44,840
+loss, which one do you think is more realistic to real networks?
+
+
+193
+00:08:44,840 --> 00:08:47,000
+Well, the internet is a very chaotic place.
+
+
+194
+00:08:47,000 --> 00:08:48,160
+I would say the second.
+
+
+195
+00:08:48,160 --> 00:08:49,160
+Yeah, exactly.
+
+
+196
+00:08:49,160 --> 00:08:54,080
+And we have to make sure that the test environment we have does not look like the first.
+
+
+197
+00:08:54,080 --> 00:08:55,080
+Cool.
+
+
+198
+00:08:55,080 --> 00:08:56,760
+All right.
+
+
+199
+00:08:56,760 --> 00:08:58,840
+So that seems a little bit bare-bone.
+
+
+200
+00:08:58,840 --> 00:09:03,640
+What would be, in case you could ever dream, what would be your ideal setup?
+
+
+201
+00:09:03,640 --> 00:09:07,520
+In case I could dream.
+
+
+202
+00:09:07,520 --> 00:09:10,200
+What we really care about is realistic environments.
+
+
+203
+00:09:10,200 --> 00:09:14,560
+And an easy way to do that is just get real network traffic.
+
+
+204
+00:09:14,560 --> 00:09:17,280
+There's some ideas here.
+
+
+205
+00:09:17,280 --> 00:09:21,920
+We could collect a bunch of real network traffic and then replay it against a system and then
+
+
+206
+00:09:21,920 --> 00:09:23,800
+see how that system performs.
+
+
+207
+00:09:23,800 --> 00:09:25,960
+This isn't just my idea.
+
+
+208
+00:09:25,960 --> 00:09:28,160
+People do this in practice.
+
+
+209
+00:09:28,160 --> 00:09:34,400
+Folks who want to benchmark low-latency systems basically replay packets.
+
+
+210
+00:09:34,400 --> 00:09:37,240
+But we're not here yet, and we're not close.
+
+
+211
+00:09:37,240 --> 00:09:39,320
+OK, cool.
+
+
+212
+00:09:39,320 --> 00:09:43,840
+Well, do you have a demo handy now that we meet here?
+
+
+213
+00:09:43,840 --> 00:09:44,840
+Yeah, that's right.
+
+
+214
+00:09:44,840 --> 00:09:45,840
+By coincidence.
+
+
+215
+00:09:45,840 --> 00:09:48,840
+There's a question mark there, that's why.
+
+
+216
+00:09:48,840 --> 00:09:52,880
+So here's a larger font.
+
+
+217
+00:09:52,880 --> 00:09:55,840
+Make it a billion times bigger.
+
+
+218
+00:09:55,840 --> 00:10:01,600
+So this is just the high-level definition of what we're going to run, which implementations
+
+
+219
+00:10:01,600 --> 00:10:03,560
+we're running.
+
+
+220
+00:10:03,560 --> 00:10:12,600
+And then this is somewhere in here is the benchmarks that we're running.
+
+
+221
+00:10:12,600 --> 00:10:14,760
+This part's not important.
+
+
+222
+00:10:14,760 --> 00:10:17,320
+So here's the benchmarks we're running.
+
+
+223
+00:10:17,320 --> 00:10:20,120
+And then let's run it.
+
+
+224
+00:10:20,120 --> 00:10:26,600
+So this connects to each node, starts up the server, goes to the client, has the client
+
+
+225
+00:10:26,600 --> 00:10:31,400
+do its thing, and then records the measurements.
+
+
+226
+00:10:31,400 --> 00:10:34,400
+Very cool.
+
+
+227
+00:10:34,400 --> 00:10:42,520
+Yeah, maybe we should have done this with a smaller size, because 100 megabytes might
+
+
+228
+00:10:42,520 --> 00:10:45,760
+take a bit.
+
+
+229
+00:10:45,760 --> 00:10:48,120
+But yeah.
+
+
+230
+00:10:48,120 --> 00:10:50,320
+So let's do...
+
+
+231
+00:10:50,320 --> 00:10:51,680
+Cool.
+
+
+232
+00:10:51,680 --> 00:10:52,680
+And then close it.
+
+
+233
+00:10:52,680 --> 00:10:53,680
+OK, wonderful.
+
+
+234
+00:10:53,680 --> 00:10:54,680
+So I wonder...
+
+
+235
+00:10:54,680 --> 00:10:55,680
+Well, this is really interesting.
+
+
+236
+00:10:55,680 --> 00:10:58,560
+I want to subscribe somehow and get updates on all this.
+
+
+237
+00:10:58,560 --> 00:11:02,240
+Yeah, so to follow along, go to libpdp.com.
+
+
+238
+00:11:02,240 --> 00:11:04,960
+That's the main repo where we do all our testing of stuff.
+
+
+239
+00:11:04,960 --> 00:11:10,360
+And specifically for this work, look at PR163 and just follow along there.
+
+
+240
+00:11:10,360 --> 00:11:11,360
+Cool.
+
+
+241
+00:11:11,360 --> 00:11:12,360
+Thank you very much, Marco.
+
+
+242
+00:11:12,360 --> 00:11:14,040
+I'll let you do your thing.
+
+
+243
+00:11:14,040 --> 00:11:15,040
+And yeah, thanks.
+
+
+244
+00:11:15,040 --> 00:11:16,040
+Thanks.
+
+
+245
+00:11:16,040 --> 00:11:17,040
+All right.
+
+
+246
+00:11:17,040 --> 00:11:18,040
+Any questions?
+
+
+247
+00:11:18,040 --> 00:11:19,040
+What's left for the JS implementation?
+
+
+248
+00:11:19,040 --> 00:11:20,040
+Oh, yeah.
+
+
+249
+00:11:20,040 --> 00:11:21,040
+What is left for the JS implementation to be included in the list?
+
+
+250
+00:11:21,040 --> 00:11:22,040
+Probably like, the one that's in the middle.
+
+
+251
+00:11:22,040 --> 00:11:23,040
+Yeah.
+
+
+252
+00:11:23,040 --> 00:11:24,040
+Yeah.
+
+
+253
+00:11:24,040 --> 00:11:25,040
+Yeah.
+
+
+254
+00:11:25,040 --> 00:11:26,040
+Yeah.
+
+
+255
+00:11:26,040 --> 00:11:27,040
+Yeah.
+
+
+256
+00:11:27,040 --> 00:11:28,040
+Yeah.
+
+
+257
+00:11:28,040 --> 00:11:29,040
+Yeah.
+
+
+258
+00:11:29,040 --> 00:11:30,040
+Yeah.
+
+
+259
+00:11:30,040 --> 00:11:31,040
+Yeah.
+
+
+260
+00:11:31,040 --> 00:11:32,040
+Yeah.
+
+
+261
+00:11:32,040 --> 00:11:33,040
+Yeah.
+
+
+262
+00:11:33,040 --> 00:11:34,040
+Yeah.
+
+
+263
+00:11:34,040 --> 00:11:35,040
+Yeah.
+
+
+264
+00:11:35,040 --> 00:11:36,040
+Yeah.
+
+
+265
+00:11:36,040 --> 00:11:37,040
+Yeah.
+
+
+266
+00:11:37,040 --> 00:11:38,040
+Yeah.
+
+
+267
+00:11:38,040 --> 00:11:39,040
+Yeah.
+
+
+268
+00:11:39,040 --> 00:11:40,040
+Yeah.
+
+
+269
+00:11:40,040 --> 00:11:41,040
+Yeah.
+
+
+270
+00:11:41,040 --> 00:11:42,040
+Yeah.
+
+
+271
+00:11:42,040 --> 00:11:43,040
+Yeah.
+
+
+272
+00:11:43,040 --> 00:11:44,040
+Yeah.
+
+
+273
+00:11:44,040 --> 00:11:45,040
+Okay.
+
+
+274
+00:11:45,040 --> 00:11:46,040
+Think that's it.
+
+
+275
+00:11:46,040 --> 00:11:47,040
+That's probably what she said.
+
+
+276
+00:11:47,040 --> 00:11:48,040
+She was думаю over action.
+
+
+277
+00:11:48,040 --> 00:11:49,040
+So I guessed it then.
+
+
+278
+00:11:49,040 --> 00:11:50,040
+Our sixth.
+
+
+279
+00:11:50,040 --> 00:11:51,040
+Sixth feature.
+
+
+280
+00:11:52,040 --> 00:11:58,840
+If you're in a lot of stream drivers and want to continue Yankees, here's something
+
+
+281
+00:11:58,840 --> 00:12:00,060
+that you can do.
+
+
+282
+00:12:00,060 --> 00:11:54,780
+If we want to continue a few
+
+
+283
+00:11:54,780 --> 00:12:01,360
+of our Yankees
+
+
+284
+00:12:01,360 --> 00:12:06,720
+here, I'm going to show you a way to manage Yandere JavaScript.
+
+
+285
+00:12:06,720 --> 00:12:09,460
+So go to were.
+
+
+286
+00:12:09,460 --> 00:12:12,180
+If you're doing Chrome, you can use Quake, right?
+
+
+287
+00:12:12,180 --> 00:12:14,540
+Yeah, you can use Web Transport in Chrome,
+
+
+288
+00:12:14,540 --> 00:12:18,260
+which does add one round trip, but hopefully will not
+
+
+289
+00:12:18,260 --> 00:12:18,820
+in the future.
+
+
+290
+00:12:22,460 --> 00:12:22,980
+Cool.
+
+
+291
+00:12:22,980 --> 00:12:23,500
+Thank you.
+
+
+292
+00:12:23,500 --> 00:12:23,780
+Cool.
+
+
+293
+00:12:23,780 --> 00:12:24,300
+Thanks.
+
+
+294
+00:12:24,300 --> 00:12:25,860
+Thank you.

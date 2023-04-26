@@ -1,0 +1,908 @@
+1
+00:00:00,000 --> 00:00:09,200
+So, welcome to the Data Transfer Track. My name is Hannah. I'm going to be sort of coordinating
+
+
+2
+00:00:09,200 --> 00:00:14,040
+this track. We have some amazing talks today. I'm going to start off just sort of like trying
+
+
+3
+00:00:14,040 --> 00:00:20,400
+to lay some groundwork for the stuff that's about to come. Just give us some opening thoughts
+
+
+4
+00:00:20,400 --> 00:00:27,720
+as we enter the day. I kind of have three core goals with this track. I hope that you
+
+
+5
+00:00:27,720 --> 00:00:32,800
+will get out of the day. The first is that I want everyone to learn, level up our collective
+
+
+6
+00:00:32,800 --> 00:00:38,440
+understanding of the key concepts in data transfer. The second is I want to give some
+
+
+7
+00:00:38,440 --> 00:00:44,400
+folks who've done some amazing work a chance to showcase and demonstrate the state of the
+
+
+8
+00:00:44,400 --> 00:00:52,600
+art and get you excited about the world of data transfer on IPFS. And finally, I want
+
+
+9
+00:00:52,600 --> 00:00:58,920
+us all to do a little bit of reflection, trying to identify common goals, pain points, and
+
+
+10
+00:00:58,920 --> 00:01:04,560
+just improve our process as a development community working to make IPFS awesome, and
+
+
+11
+00:01:04,560 --> 00:01:10,640
+particularly in the area of data transfer. So those are our three core goals. But I want
+
+
+12
+00:01:10,640 --> 00:01:17,800
+to hear your goals. So, I would love it if you... I think for this size room we better
+
+
+13
+00:01:17,800 --> 00:01:25,160
+do volunteers instead of go around in a circle type thing. So I'm going to ask for five people.
+
+
+14
+00:01:25,160 --> 00:01:28,960
+And I'm going to need the coordinating folks to walk around with the microphone for this
+
+
+15
+00:01:28,960 --> 00:01:37,160
+part. Yes. So five people who want to tell us all your name, what city you are coming
+
+
+16
+00:01:37,160 --> 00:01:44,640
+from, how you currently do data transfer on IPFS in your company, organization, or other
+
+
+17
+00:01:44,640 --> 00:01:51,560
+entity, how you would like to be moving data transfer, moving data across the wire, what
+
+
+18
+00:01:51,560 --> 00:01:59,400
+would make it easier, better, faster for you, and finally, what you want to get out of today.
+
+
+19
+00:01:59,400 --> 00:02:03,000
+What are the goals that brought you here to this data transfer track? And you're going
+
+
+20
+00:02:03,000 --> 00:02:10,400
+to have a full minute for this, so organize your thoughts first. Cool. Can I get anybody?
+
+
+21
+00:02:10,400 --> 00:02:16,280
+Who wants to be the first volunteer? Thank you very much. I'm Tao Shen. I'm from
+
+
+22
+00:02:16,280 --> 00:02:25,760
+China, Chengdu. I came here yesterday. And we are building a Pandwa projects. It's an
+
+
+23
+00:02:25,760 --> 00:02:37,480
+authorized data layer based on IPRD and IPFS related technologies. And you know, these
+
+
+24
+00:02:37,480 --> 00:02:45,840
+days there is a Web3 festival in Hong Kong. And I mean, with the new year, the China government
+
+
+25
+00:02:45,840 --> 00:02:53,880
+gave many, many support for Web3 and data economy. And the China government has set
+
+
+26
+00:02:53,880 --> 00:03:05,720
+up a dedicated separate entity in the government to support the data economy for Web3 for future.
+
+
+27
+00:03:05,720 --> 00:03:14,040
+We want to leverage the data transfer and IPFS related technologies to transfer the
+
+
+28
+00:03:14,040 --> 00:03:22,720
+data, for example, in the Web3 data economy scenario. For example, IPFS and the Pandwa
+
+
+29
+00:03:22,720 --> 00:03:28,520
+and the Web3 CDN, something like that. Is that okay?
+
+
+30
+00:03:28,520 --> 00:03:38,080
+That's perfect. Yes. Thank you. Cool. Who else wants to tell us why you are here?
+
+
+31
+00:03:38,080 --> 00:03:44,920
+Hello, my name is Matt Hamilton. I come from Barbados. The way in which I mainly transfer
+
+
+32
+00:03:44,920 --> 00:03:50,640
+stuff on IPFS at the moment is sticking it on Web3 storage, generally via their Web API
+
+
+33
+00:03:50,640 --> 00:03:55,360
+or their little CLI tool. I'm getting stuff back that way. I'm involved in the Filecoin
+
+
+34
+00:03:55,360 --> 00:04:00,280
+virtual machine. And the first thing when we talk to people about FEM and smart contracts
+
+
+35
+00:04:00,280 --> 00:04:06,120
+and that is, oh, great, so I can access all my IPFS data from Filecoin, from the blockchain
+
+
+36
+00:04:06,120 --> 00:04:11,040
+now. And it's like, no, actually you can't. And they're like, okay, so how do we get it?
+
+
+37
+00:04:11,040 --> 00:04:14,840
+It's like, well, first you've got to get it somewhere and then get it onto a storage deal
+
+
+38
+00:04:14,840 --> 00:04:18,000
+and then it ends up on Filecoin. Well, where do we put it first? Well, probably the best
+
+
+39
+00:04:18,000 --> 00:04:22,920
+thing is IPFS. So really I'm here to kind of find out about all of the other different
+
+
+40
+00:04:22,920 --> 00:04:27,960
+ways in which people are getting data onto IPFS first, almost as like a staging area
+
+
+41
+00:04:27,960 --> 00:04:34,260
+and then archiving it, so to speak, onto Filecoin. So I'm interested in the myriad of different
+
+
+42
+00:04:34,260 --> 00:04:36,040
+ways in which people are doing that.
+
+
+43
+00:04:36,040 --> 00:04:37,800
+Cool. Love it.
+
+
+44
+00:04:37,800 --> 00:04:43,320
+My name is Walker. I work for Protocol Labs on the Launchpad team. We're the training
+
+
+45
+00:04:43,320 --> 00:04:51,360
+and networking program. So I'm here to better understand data transfer so we can help teach
+
+
+46
+00:04:51,360 --> 00:04:52,360
+it to everyone else.
+
+
+47
+00:04:52,360 --> 00:04:54,680
+I love it. A little bit of learning.
+
+
+48
+00:04:54,680 --> 00:05:01,240
+I'm Alex. I came from New York. I work with the Banyan team. We're figuring out, we're
+
+
+49
+00:05:01,240 --> 00:05:05,960
+scoping out a product for enterprise scale onboarding onto Filecoin. So it comes with
+
+
+50
+00:05:05,960 --> 00:05:10,480
+a couple of challenges of like, what's the most performant protocol for me to get like
+
+
+51
+00:05:10,480 --> 00:05:14,480
+a 32 gigabyte car file into some sort of staging area? How should I think about that staging
+
+
+52
+00:05:14,480 --> 00:05:19,120
+area? Like, what types of protocol should I participate or like how should I index these
+
+
+53
+00:05:19,120 --> 00:05:24,600
+car files? So I'm just trying to think, what are good tools to help me solve for this use
+
+
+54
+00:05:24,600 --> 00:05:28,880
+case and what are good protocols for me to make something that's performant and very
+
+
+55
+00:05:28,880 --> 00:05:31,880
+robust? So looking forward to learning about that.
+
+
+56
+00:05:31,880 --> 00:05:32,880
+Love it.
+
+
+57
+00:05:32,880 --> 00:05:40,720
+Hi, I'm Ash from Mumbai, India. And I am super excited to hear about how Ido is so fast.
+
+
+58
+00:05:40,720 --> 00:05:46,520
+So that's one of the motivations is the protocol to understand what they have built.
+
+
+59
+00:05:46,520 --> 00:05:53,880
+Cool. Okay. Thank you to our volunteers. Excited to hear that we have folks coming from lots
+
+
+60
+00:05:53,880 --> 00:05:58,560
+of different places and with lots of different goals. I really like that a lot of folks are
+
+
+61
+00:05:58,560 --> 00:06:05,200
+here to learn not just about the latest greatest, but also like how to actually use this. That
+
+
+62
+00:06:05,200 --> 00:06:10,360
+seems exciting and hopefully we'll be able to answer your questions during the day.
+
+
+63
+00:06:10,360 --> 00:06:15,080
+I'm going to give you a very brief sort of overview of the stuff we're going to be talking
+
+
+64
+00:06:15,080 --> 00:06:21,560
+about today. And the sort of sections of the day. They're vaguely organized conceptually.
+
+
+65
+00:06:21,560 --> 00:06:24,720
+In the morning we're going to be kind of looking at some state of the art stuff. We've got
+
+
+66
+00:06:24,720 --> 00:06:30,800
+to talk about the awesome Iroh BOW protocol. I don't know if BOW is the name of the protocol.
+
+
+67
+00:06:30,800 --> 00:06:32,200
+But I'm calling it that.
+
+
+68
+00:06:32,200 --> 00:06:39,320
+Yes. Okay. Cool. And then we have another talk about Carpool. Then we'll have lunch.
+
+
+69
+00:06:39,320 --> 00:06:44,840
+And then in the first half of the afternoon we have a couple more like exciting new projects.
+
+
+70
+00:06:44,840 --> 00:06:50,920
+I'm going to talk to you all a little bit about LASSI. And then Jeropo is going to be
+
+
+71
+00:06:50,920 --> 00:06:58,120
+talking to us about the RAPID program. These are both clients that work on retrieving your
+
+
+72
+00:06:58,120 --> 00:07:03,480
+data quickly. And then we're going to have a panel to talk about a project that's been
+
+
+73
+00:07:03,480 --> 00:07:06,400
+going on for the last few months called the Move the Bytes Working Group. It's been a
+
+
+74
+00:07:06,400 --> 00:07:11,160
+group of folks who've been trying to move the state of data transfer in IPFS forward.
+
+
+75
+00:07:11,160 --> 00:07:15,160
+And we're going to be doing a little bit of a retrospective on that. So a bit of reflecting.
+
+
+76
+00:07:15,160 --> 00:07:21,740
+And then in the afternoon we're going to look at actual applications. How are people building
+
+
+77
+00:07:21,740 --> 00:07:26,500
+on top of the data transfer protocols available in our networks? And how are they putting
+
+
+78
+00:07:26,500 --> 00:07:28,240
+it all together?
+
+
+79
+00:07:28,240 --> 00:07:33,960
+So that's the basic overview of the day. I do want to do just before we start a little
+
+
+80
+00:07:33,960 --> 00:07:39,920
+bit of table setting. Basically I kind of do this at the beginning of a couple data
+
+
+81
+00:07:39,920 --> 00:07:46,080
+tracks for IPFS events. And I find that the best way for us all to look at different protocols
+
+
+82
+00:07:46,080 --> 00:07:51,960
+and things that are available is to kind of have a bit of a shared vocabulary of terms
+
+
+83
+00:07:51,960 --> 00:07:58,400
+that we all recognize as important to data transfer no matter how we're doing it.
+
+
+84
+00:07:58,400 --> 00:08:01,720
+First thing I just want to tell you about, make sure everyone knows, is just a couple
+
+
+85
+00:08:01,720 --> 00:08:08,120
+of existing protocols. Bitswap is sort of the original IPFS data transfer protocol.
+
+
+86
+00:08:08,120 --> 00:08:12,160
+It's now I think almost 10 years old. I don't know if it's quite that old. But it's approaching
+
+
+87
+00:08:12,160 --> 00:08:23,920
+a decade old. It moves blocks over libp2p and almost everyone hates it. So that's exciting
+
+
+88
+00:08:23,920 --> 00:08:24,920
+things about bitswap.
+
+
+89
+00:08:24,920 --> 00:08:32,440
+I also want to tell you about another protocol. Sort of the second protocol in IPFS. It is
+
+
+90
+00:08:32,440 --> 00:08:40,760
+called graphsync. It was written after bitswap. Unlike bitswap, graphsync moves entire DAGs
+
+
+91
+00:08:40,760 --> 00:08:47,280
+at once. You express your request in terms of whole essentially DAG. DAG means directed
+
+
+92
+00:08:47,280 --> 00:08:52,560
+async graph. Whole groups of blocks that you want to move over the wire. And you send it
+
+
+93
+00:08:52,560 --> 00:09:00,160
+to servers and they send it back to you. It is pretty widely used in Filecoin retrieval.
+
+
+94
+00:09:00,160 --> 00:09:05,920
+And everyone hates it. So that's our second protocol. They're actually both really awesome
+
+
+95
+00:09:05,920 --> 00:09:11,320
+protocols but they get a lot of, not a lot of love, a lot of other feelings.
+
+
+96
+00:09:11,320 --> 00:09:17,040
+So a concept that I want everyone to have in their heads is the concept of multi-party
+
+
+97
+00:09:17,040 --> 00:09:25,760
+data transfer. So most, in most of the world of the web, you download data from one source.
+
+
+98
+00:09:25,760 --> 00:09:30,400
+Probably the place you are most likely to have downloaded data from multiple sources
+
+
+99
+00:09:30,400 --> 00:09:38,800
+outside of IPFS is BitTorrent. And our content addressing sort of like core of IPFS enables
+
+
+100
+00:09:38,800 --> 00:09:44,280
+us to download content from many sources at once. We should always, we always have the
+
+
+101
+00:09:44,280 --> 00:09:50,480
+ability, the potential of doing that. And how data transfer protocols do or don't tackle
+
+
+102
+00:09:50,480 --> 00:09:56,280
+the question of multi-party is an interesting one to have in mind.
+
+
+103
+00:09:56,280 --> 00:10:01,880
+Another concept, next concept is a thing called incremental verifiability. I just think of
+
+
+104
+00:10:01,880 --> 00:10:07,240
+this as as you download things, you should figure out if you're getting what you expected.
+
+
+105
+00:10:07,240 --> 00:10:13,040
+Again, content addressing allows us to verify the data we get regardless of the source we
+
+
+106
+00:10:13,040 --> 00:10:18,960
+get it from. And we should be doing it ideally as we transfer incrementally. So we're not
+
+
+107
+00:10:18,960 --> 00:10:23,360
+putting, I don't know, 10 gigs on a user's hard drive before we ask if it's the right
+
+
+108
+00:10:23,360 --> 00:10:30,640
+data. So that's incremental verifiability. A concept that's going to come up a lot, especially
+
+
+109
+00:10:30,640 --> 00:10:36,080
+on the client side, is how you plan your queries. How do you decide, how do you plan how to
+
+
+110
+00:10:36,080 --> 00:10:42,480
+request data? Because often you are moving a lot of data. You may be moving a 32 gigabyte
+
+
+111
+00:10:42,480 --> 00:10:48,040
+Filecoin car file, or you may be moving a DAG that's much bigger than 32 gigabytes.
+
+
+112
+00:10:48,040 --> 00:10:52,800
+And how are you going to plan how to get that in one or multiple requests? How are you going
+
+
+113
+00:10:52,800 --> 00:10:57,080
+to find it? How are you going to potentially split it up among multiple parties? How do
+
+
+114
+00:10:57,080 --> 00:11:00,960
+you avoid duplicate data if you're using multiple parties? And how do you effectively utilize
+
+
+115
+00:11:00,960 --> 00:11:07,560
+local caches? So this is the sort of query, how do you plan a query for data?
+
+
+116
+00:11:07,560 --> 00:11:11,600
+Another concept that is important when you start to think about moving data at the level
+
+
+117
+00:11:11,600 --> 00:11:17,560
+above the block is the shared data model. This essentially means what is your protocol
+
+
+118
+00:11:17,560 --> 00:11:24,400
+assume about what both sides know about the data being transferred? So essentially, especially
+
+
+119
+00:11:24,400 --> 00:11:29,560
+like, so as an example, with like GraphSync, you're moving DAGs of data. That means that
+
+
+120
+00:11:29,560 --> 00:11:35,440
+both sides of the data transfer have to be able to understand and interpret the data
+
+
+121
+00:11:35,440 --> 00:11:40,840
+at the DAG level. And so that actually can introduce a lot of complexity, especially
+
+
+122
+00:11:40,840 --> 00:11:45,760
+as you have protocols that move data with a higher level of conceptual understanding
+
+
+123
+00:11:45,760 --> 00:11:52,080
+about that data. One other thing to just think about as you
+
+
+124
+00:11:52,080 --> 00:11:58,120
+hear about protocols is how are they handling all the standard concerns for the server side?
+
+
+125
+00:11:58,120 --> 00:12:02,680
+Server side data transfer protocols tend to have some common tasks. One, how do you keep
+
+
+126
+00:12:02,680 --> 00:12:07,160
+data moving across the wire when you're serving lots of requests? How do you minimize resource
+
+
+127
+00:12:07,160 --> 00:12:14,080
+consumption? And how do you respond to malicious clients? So that's going to kind of matter
+
+
+128
+00:12:14,080 --> 00:12:19,560
+on the side of the person sending data, no matter what the protocol is.
+
+
+129
+00:12:19,560 --> 00:12:25,560
+Finally, almost every one of these protocols should have a plan for error recovery. We
+
+
+130
+00:12:25,560 --> 00:12:33,200
+found in networks, you drop connections, servers have missing or partial data, there can be
+
+
+131
+00:12:33,200 --> 00:12:40,040
+race conditions, consistency problems, and it's interesting to think about how are these
+
+
+132
+00:12:40,040 --> 00:12:46,480
+protocols dealing with that. So I just throw out all these terms as a way to think as you
+
+
+133
+00:12:46,480 --> 00:12:53,220
+hear about protocols. Think about how is it addressing this particular concern.
+
+
+134
+00:12:53,220 --> 00:12:58,960
+And then lastly, before we get into the talk talks, I want to just talk briefly about some
+
+
+135
+00:12:58,960 --> 00:13:07,800
+trends that I think I'm seeing common to multiple protocols in 2023. I spent a decent amount
+
+
+136
+00:13:07,800 --> 00:13:13,240
+of time thinking about data transfer and hearing about what folks are working on in the Move
+
+
+137
+00:13:13,240 --> 00:13:21,000
+the Bytes working group, so I've noticed some things that are cropping up more than once.
+
+
+138
+00:13:21,000 --> 00:13:29,440
+The first thing is that I'm seeing a lot more folks really interested in HTTP. When we started
+
+
+139
+00:13:29,440 --> 00:13:34,480
+building IPFS, there was an assumption that we had to build from the ground up with a
+
+
+140
+00:13:34,480 --> 00:13:40,920
+new networking stack. And as time goes on, you're starting to see more folks think maybe
+
+
+141
+00:13:40,920 --> 00:13:47,000
+we don't need to deal with data transfer at the network protocol level, and more we need
+
+
+142
+00:13:47,000 --> 00:13:55,040
+to think about at the API design level, essentially how do you work with existing protocols like
+
+
+143
+00:13:55,040 --> 00:14:02,480
+HTTP to move data quickly over the wire in a content address context.
+
+
+144
+00:14:02,480 --> 00:14:05,840
+Another thing that I've seen from a couple folks, this isn't a universal trend, but it
+
+
+145
+00:14:05,840 --> 00:14:13,880
+is something that I've seen from a lot of folks, is a desire to just deal with the lowest
+
+
+146
+00:14:13,880 --> 00:14:18,760
+level concepts in our ecosystem, blocks and SIDs. I've noticed that a lot of folks who
+
+
+147
+00:14:18,760 --> 00:14:25,480
+are thinking about moving large amounts of data fast want to sort of do away with needing
+
+
+148
+00:14:25,480 --> 00:14:32,480
+to understand at the protocol level about anything other than the block and blobs of
+
+
+149
+00:14:32,480 --> 00:14:37,520
+bytes. Essentially, it's like we're all going back to BitSwap, as maybe it wasn't the wrong
+
+
+150
+00:14:37,520 --> 00:14:44,880
+idea to begin with. I want to be clear that this is not universal,
+
+
+151
+00:14:44,880 --> 00:14:51,640
+and I see other folks who are actually getting greater value out of higher level protocols,
+
+
+152
+00:14:51,640 --> 00:14:54,680
+but this is something I've seen from a few different places, where people just want to
+
+
+153
+00:14:54,680 --> 00:15:01,600
+deal with blocks, because blocks are simple. Cool. One final thing, because you're going
+
+
+154
+00:15:01,600 --> 00:15:10,600
+to hear a couple talks about this today, is the concept of multi-protocol clients. At
+
+
+155
+00:15:10,600 --> 00:15:17,480
+various points in the development of our ecosystem, we've had this idea of, well, if we just build
+
+
+156
+00:15:17,480 --> 00:15:24,440
+the one ERR protocol that was super awesome and handled every case in just the perfect
+
+
+157
+00:15:24,440 --> 00:15:29,520
+way and we got every single person in the ecosystem to adopt it, then we could have
+
+
+158
+00:15:29,520 --> 00:15:37,600
+fast data transfer. You can see that actually, when you look at that IPFS principles, they're
+
+
+159
+00:15:37,600 --> 00:15:43,880
+actually pretty clear that the transport shouldn't matter that much. That opens up the question
+
+
+160
+00:15:43,880 --> 00:15:48,600
+of how do you build smart clients, clients that can speak more than one data transfer
+
+
+161
+00:15:48,600 --> 00:15:54,080
+protocol to get data. That's something that I'm seeing more people start to think about,
+
+
+162
+00:15:54,080 --> 00:15:58,840
+where maybe we need to not look for the perfect protocol and we need to start thinking about
+
+
+163
+00:15:58,840 --> 00:16:04,240
+how do we work with the many protocols with different strengths that we have to get our
+
+
+164
+00:16:04,240 --> 00:16:12,320
+data quickly. Those are some stuff I've seen, I think. This is the last slide that I have
+
+
+165
+00:16:12,320 --> 00:16:16,080
+and then I'm going to hand it over to our first speaker. Just to cover some things that
+
+
+166
+00:16:16,080 --> 00:16:23,080
+have happened in the last year. If you haven't been involved in the IPFS ecosystem for a
+
+
+167
+00:16:23,080 --> 00:16:30,920
+long time, the last year has been a really interesting period for data transfer and for
+
+
+168
+00:16:30,920 --> 00:16:37,160
+a lot of things in IPFS, starting with IPFS Thing. It was a moment a year ago when we
+
+
+169
+00:16:37,160 --> 00:16:45,800
+met where a lot of folks were acknowledging as a group for the first time that the things
+
+
+170
+00:16:45,800 --> 00:16:51,480
+we had built so far needed some work and we needed to think about how we can do things
+
+
+171
+00:16:51,480 --> 00:16:58,360
+better. We met about a year ago in Iceland and we talked about all the protocols and
+
+
+172
+00:16:58,360 --> 00:17:05,240
+why people hate them and how we could do a better job. In November, there was IPFS Camp
+
+
+173
+00:17:05,240 --> 00:17:10,760
+and that was another larger group discussion about data transfer and out of that came the
+
+
+174
+00:17:10,760 --> 00:17:15,920
+Move the Bytes working group. Move the Bytes began with the goal of replacing BitSwap in
+
+
+175
+00:17:15,920 --> 00:17:23,240
+four months and we started meeting biweekly in November of 2022. We shared a bunch of
+
+
+176
+00:17:23,240 --> 00:17:29,800
+knowledge, we saw some awesome protocols develop. Many of these you'll see today. We have not
+
+
+177
+00:17:29,800 --> 00:17:34,200
+replaced BitSwap in four months. I always thought that was a little ambitious, but we
+
+
+178
+00:17:34,200 --> 00:17:41,000
+are making some awesome headway. I thought it was another pretty interesting event for
+
+
+179
+00:17:41,000 --> 00:17:49,440
+data transfer and IPFS was Number Zero starting over and attempting a complete rewrite of
+
+
+180
+00:17:49,440 --> 00:17:57,920
+IPFS to try to attack data transfer at a more fundamental level with a ground up rewrite.
+
+
+181
+00:17:57,920 --> 00:18:02,480
+That actually is a great segue to our first speaker, Rudiger, who is going to talk to
+
+
+182
+00:18:02,480 --> 00:18:12,880
+you about the awesome data transfer that they have built in IRO.

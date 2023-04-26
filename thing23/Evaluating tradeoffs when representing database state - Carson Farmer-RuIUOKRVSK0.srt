@@ -1,0 +1,1983 @@
+1
+00:00:00,000 --> 00:00:08,960
+Hi everybody, thanks for coming to my talk today about evaluating tradeoffs when representing
+
+
+2
+00:00:08,960 --> 00:00:11,000
+database state.
+
+
+3
+00:00:11,000 --> 00:00:14,400
+So just a quick heads up, this is probably going to end up being one of those talks where
+
+
+4
+00:00:14,400 --> 00:00:18,840
+I say there's no one-size-fits-all solution for databases.
+
+
+5
+00:00:18,840 --> 00:00:23,200
+Every implementation needs to consider its use cases and access patterns and data storage
+
+
+6
+00:00:23,200 --> 00:00:26,880
+requirements and in the end it is really all about tradeoffs.
+
+
+7
+00:00:26,880 --> 00:00:30,280
+And that is pretty much what this talk is going to be about, but having said that, I
+
+
+8
+00:00:30,280 --> 00:00:35,680
+do have some hopefully unique things to say about this based on my experience designing
+
+
+9
+00:00:35,680 --> 00:00:41,320
+and building things in the IPFS space with a bunch of passionate nerds at Textile for
+
+
+10
+00:00:41,320 --> 00:00:43,120
+a while now.
+
+
+11
+00:00:43,120 --> 00:00:49,000
+So this talk is kind of going to be structured as a narrative or a historical narrative that
+
+
+12
+00:00:49,000 --> 00:00:55,280
+steps through things that me and my team learned along the way as we were building interplanetary
+
+
+13
+00:00:55,280 --> 00:00:58,000
+databases.
+
+
+14
+00:00:58,000 --> 00:01:00,520
+But before I jump into that stuff, who am I?
+
+
+15
+00:01:00,520 --> 00:01:06,560
+I'm Carson, as I mentioned I'm from the Textile and TableN teams and Textile has been building
+
+
+16
+00:01:06,560 --> 00:01:10,120
+in this space since about, somewhere around 2016.
+
+
+17
+00:01:10,120 --> 00:01:15,000
+We started with mobile IPFS stuff and then we pretty quickly moved to building peer-to-peer
+
+
+18
+00:01:15,000 --> 00:01:19,520
+databases when we realized that we needed to actually build that first.
+
+
+19
+00:01:19,520 --> 00:01:23,280
+So we built something we called Threads or ThreadDB and some of you might have read the
+
+
+20
+00:01:23,280 --> 00:01:28,000
+white paper or even played with it and it does drive some of the apps and tools that
+
+
+21
+00:01:28,000 --> 00:01:32,560
+you see in and around the IPFS ecosystem.
+
+
+22
+00:01:32,560 --> 00:01:37,160
+And so ThreadDB was this sort of peer-to-peer document style database that baked in a bunch
+
+
+23
+00:01:37,160 --> 00:01:43,600
+of cool things like encryption, CRDTs, hash-linked data structures with IPLD and a bunch of other
+
+
+24
+00:01:43,600 --> 00:01:44,600
+stuff.
+
+
+25
+00:01:44,600 --> 00:01:48,680
+A bunch of other stuff that we're talking about here today in this session.
+
+
+26
+00:01:48,680 --> 00:01:54,280
+And so it was complicated but it wasn't all that complex, at least not at a high level.
+
+
+27
+00:01:54,280 --> 00:01:59,280
+But the things that made ThreadDB quite powerful also kind of made it hard to use.
+
+
+28
+00:01:59,280 --> 00:02:03,480
+So we use Merkle clocks to partially order events, we use CRDTs to manage conflicts,
+
+
+29
+00:02:03,480 --> 00:02:06,360
+we use private keys to handle encryption.
+
+
+30
+00:02:06,360 --> 00:02:13,200
+And all of these features ended up kind of requiring our users to learn new concepts,
+
+
+31
+00:02:13,200 --> 00:02:17,240
+rethink how they design apps and ultimately didn't really solve the core problems that
+
+
+32
+00:02:17,240 --> 00:02:18,720
+they had.
+
+
+33
+00:02:18,720 --> 00:02:22,640
+And by they, I'm talking about Web3 developers.
+
+
+34
+00:02:22,640 --> 00:02:27,000
+So the problem they really had was they wanted to just store data using access patterns that
+
+
+35
+00:02:27,000 --> 00:02:29,080
+they were familiar with.
+
+
+36
+00:02:29,080 --> 00:02:33,000
+And so with ThreadDB, we ended up with this really slick solution to a problem that our
+
+
+37
+00:02:33,000 --> 00:02:39,240
+users didn't quite have, which leads me to our first finding or our first trade-off,
+
+
+38
+00:02:39,240 --> 00:02:44,240
+which is database users want capabilities, not necessarily features.
+
+
+39
+00:02:44,240 --> 00:02:50,920
+So you can build the most powerful cutting-edge encryption or you can handle insane conflict
+
+
+40
+00:02:50,920 --> 00:02:52,480
+resolutions no matter what.
+
+
+41
+00:02:52,480 --> 00:02:59,280
+But if it doesn't actually address the use cases that your users need, it's just a pretty
+
+
+42
+00:02:59,280 --> 00:03:04,120
+powerful database without a real clear use case.
+
+
+43
+00:03:04,120 --> 00:03:08,560
+But we did get some pretty good traction with ThreadDB and lots of people were using it.
+
+
+44
+00:03:08,560 --> 00:03:14,360
+And it was an event sourcing database that stored deltas on IPFS.
+
+
+45
+00:03:14,360 --> 00:03:18,600
+So that's how we dealt with changes over time and syncing and things like that.
+
+
+46
+00:03:18,600 --> 00:03:22,120
+And honestly, it was a really nice design.
+
+
+47
+00:03:22,120 --> 00:03:25,720
+And so when users asked us, cool, so my data is on IPFS, right?
+
+
+48
+00:03:25,720 --> 00:03:30,560
+The answer from us was this super enthusiastic, like, yes, totally.
+
+
+49
+00:03:30,560 --> 00:03:35,200
+And then they would say something like, awesome, can I see the data for like a key A in my
+
+
+50
+00:03:35,200 --> 00:03:36,680
+database?
+
+
+51
+00:03:36,680 --> 00:03:39,680
+And then our response would be like, oh, no, I'm sorry, no.
+
+
+52
+00:03:39,680 --> 00:03:41,480
+You want to see the actual data?
+
+
+53
+00:03:41,480 --> 00:03:42,920
+No, no, no.
+
+
+54
+00:03:42,920 --> 00:03:44,480
+We just store deltas on IPFS.
+
+
+55
+00:03:44,480 --> 00:03:48,840
+You need to run a node and materialize the view or state locally or have someone else
+
+
+56
+00:03:48,840 --> 00:03:49,840
+do that for you.
+
+
+57
+00:03:49,840 --> 00:03:52,080
+That's what you wanted, right?
+
+
+58
+00:03:52,080 --> 00:03:57,320
+And that sort of leads me to our next finding, which is like, turns out, not really, no.
+
+
+59
+00:03:57,320 --> 00:04:01,800
+What they wanted was just a more traditional database with a database interface that was
+
+
+60
+00:04:01,800 --> 00:04:06,800
+decentralized, mutable, and ideally, queryable from anywhere.
+
+
+61
+00:04:06,800 --> 00:04:10,440
+So database users, they did not want data structures.
+
+
+62
+00:04:10,440 --> 00:04:12,240
+They just wanted their data.
+
+
+63
+00:04:12,240 --> 00:04:15,760
+And so that's why we started building Tableland.
+
+
+64
+00:04:15,760 --> 00:04:19,240
+And I'm not going to go into the specifics of Tableland here per se, because that's not
+
+
+65
+00:04:19,240 --> 00:04:21,080
+really what this talk is about.
+
+
+66
+00:04:21,080 --> 00:04:22,080
+This talk is about trade-offs.
+
+
+67
+00:04:22,080 --> 00:04:26,680
+But I am going to say a little blurb about it to give you some context for the next couple
+
+
+68
+00:04:26,680 --> 00:04:27,680
+of slides.
+
+
+69
+00:04:27,680 --> 00:04:33,200
+Tableland is a Web3-native distributed database that combines things like on-chain access
+
+
+70
+00:04:33,200 --> 00:04:38,520
+control and sort of like procedural access control with off-chain data storage using
+
+
+71
+00:04:38,520 --> 00:04:40,400
+a network of database nodes.
+
+
+72
+00:04:40,400 --> 00:04:47,400
+It uses SQLite as the query engine under the hood with a SQL language spec designed specifically
+
+
+73
+00:04:47,400 --> 00:04:50,520
+or tweaked specifically for Web3 use cases.
+
+
+74
+00:04:50,520 --> 00:04:53,520
+OK, so back to some trade-offs here.
+
+
+75
+00:04:53,520 --> 00:04:58,520
+As builders, we end up making trade-offs pretty much every time we design or implement anything
+
+
+76
+00:04:58,520 --> 00:05:00,960
+with any degree of complexity.
+
+
+77
+00:05:00,960 --> 00:05:07,080
+So for example, when developing the SQL spec for Tableland, we wanted to support most standard
+
+
+78
+00:05:07,080 --> 00:05:13,320
+SQL functionality, right, as you would imagine, plus a bunch of extra Web3-native functions
+
+
+79
+00:05:13,320 --> 00:05:18,200
+like if this is a transaction, I want to be able to query the block number from within
+
+
+80
+00:05:18,200 --> 00:05:23,800
+my SQL statement or I want to be able to do things with addresses that are relevant for
+
+
+81
+00:05:23,800 --> 00:05:26,200
+checking balances, et cetera.
+
+
+82
+00:05:26,200 --> 00:05:27,200
+So OK, that's cool.
+
+
+83
+00:05:27,200 --> 00:05:28,200
+It's pretty easy.
+
+
+84
+00:05:28,200 --> 00:05:33,600
+We'll basically just adopt the SQLite spec and then we'll move on.
+
+
+85
+00:05:33,600 --> 00:05:39,800
+But you know, this is a talk about trade-offs, so it's obviously not that simple.
+
+
+86
+00:05:39,800 --> 00:05:40,800
+And why is that?
+
+
+87
+00:05:40,800 --> 00:05:44,400
+Well, take a look at your favorite blockchain project and you'll notice right away that
+
+
+88
+00:05:44,400 --> 00:05:48,280
+the types of data supported are pretty limited.
+
+
+89
+00:05:48,280 --> 00:05:53,280
+So for instance, Solidity supports things like signed and unsigned integers, booleans,
+
+
+90
+00:05:53,280 --> 00:05:56,480
+bytes, and some things like addresses and that.
+
+
+91
+00:05:56,480 --> 00:06:00,000
+But what it doesn't support is floating point values.
+
+
+92
+00:06:00,000 --> 00:06:01,000
+Why is this?
+
+
+93
+00:06:01,000 --> 00:06:05,400
+Well, because floating point values are literally by definition approximate.
+
+
+94
+00:06:05,400 --> 00:06:08,040
+So I'm going to say that again.
+
+
+95
+00:06:08,040 --> 00:06:11,240
+Floating point values are approximate.
+
+
+96
+00:06:11,240 --> 00:06:18,440
+And we were actually reminded of this cold hard truth the hard way because we had implemented
+
+
+97
+00:06:18,440 --> 00:06:25,360
+the Tableland SQL spec based on SQLite and we had a bunch of node operators running Tableland
+
+
+98
+00:06:25,360 --> 00:06:27,120
+on different architectures.
+
+
+99
+00:06:27,120 --> 00:06:32,560
+And these different architectures implemented floating point math differently.
+
+
+100
+00:06:32,560 --> 00:06:37,480
+This didn't really happen as much until we started having node operators run things on
+
+
+101
+00:06:37,480 --> 00:06:41,560
+M1 chips and then we noticed.
+
+
+102
+00:06:41,560 --> 00:06:42,560
+So what does this mean?
+
+
+103
+00:06:42,560 --> 00:06:47,760
+I mean, honestly, the short answer meant that we had to make a trade-off between consistency
+
+
+104
+00:06:47,760 --> 00:06:52,880
+or determinism of our network and expressiveness or functionality.
+
+
+105
+00:06:52,880 --> 00:06:58,400
+So we literally had to drop support for floating point values in our SQL spec.
+
+
+106
+00:06:58,400 --> 00:07:03,320
+This was a bit of a bummer for SQL enthusiasts, but it isn't really entirely surprising because
+
+
+107
+00:07:03,320 --> 00:07:06,600
+it turns out floating point math is hard.
+
+
+108
+00:07:06,600 --> 00:07:11,360
+Lots of people know this and that's probably why you'll notice they aren't used for storing
+
+
+109
+00:07:11,360 --> 00:07:14,440
+currencies or blockchains very often.
+
+
+110
+00:07:14,440 --> 00:07:21,120
+So we've got this SQL spec with no floating point math support whatsoever.
+
+
+111
+00:07:21,120 --> 00:07:26,200
+So the finding there is maybe the cheeky one is floating point math is hard and so are
+
+
+112
+00:07:26,200 --> 00:07:28,440
+distributed systems.
+
+
+113
+00:07:28,440 --> 00:07:32,040
+But the real take-home point here is like this actually has implications for pretty
+
+
+114
+00:07:32,040 --> 00:07:36,760
+much all distributed systems where one might want to use floating point data.
+
+
+115
+00:07:36,760 --> 00:07:44,240
+You basically just can't guarantee it's going to behave the way you expect it.
+
+
+116
+00:07:44,240 --> 00:07:49,800
+So this idea of non-determinism sort of brings me to my next trade-off, which is a more recent
+
+
+117
+00:07:49,800 --> 00:07:54,560
+one that we encountered when exploring designs for the underlying data representation for
+
+
+118
+00:07:54,560 --> 00:07:56,440
+Tableland.
+
+
+119
+00:07:56,440 --> 00:08:00,560
+So as a quick reminder, Tableland is designed to be a trustless and distributed network
+
+
+120
+00:08:00,560 --> 00:08:03,920
+of nodes that support SQL tables.
+
+
+121
+00:08:03,920 --> 00:08:09,560
+And for that to work, we need some way for our nodes to come to consensus on table state.
+
+
+122
+00:08:09,560 --> 00:08:15,200
+Now, again, I'm not going to go into the specifics here on how we do this because it's not totally
+
+
+123
+00:08:15,200 --> 00:08:19,600
+relevant to the topic here, but also because this is pretty active research, so we don't
+
+
+124
+00:08:19,600 --> 00:08:21,760
+have all the answers.
+
+
+125
+00:08:21,760 --> 00:08:26,680
+But we have a database and we want to have some way for the nodes of the network to agree
+
+
+126
+00:08:26,680 --> 00:08:28,400
+on the state of the database.
+
+
+127
+00:08:28,400 --> 00:08:30,640
+Pretty straightforward.
+
+
+128
+00:08:30,640 --> 00:08:35,200
+That means that given the same set of updates, they all need to arrive at the same materialized
+
+
+129
+00:08:35,200 --> 00:08:38,160
+state of the database.
+
+
+130
+00:08:38,160 --> 00:08:43,240
+Now this actually isn't that hard on Tableland because these updates are all mediated by
+
+
+131
+00:08:43,240 --> 00:08:46,880
+a blockchain, so we actually do have global ordering.
+
+
+132
+00:08:46,880 --> 00:08:48,280
+And that's really nice.
+
+
+133
+00:08:48,280 --> 00:08:50,560
+It solves a ton of problems.
+
+
+134
+00:08:50,560 --> 00:08:54,040
+It does have an impact on throughput, but actually with layer 2s, it's not as much as
+
+
+135
+00:08:54,040 --> 00:08:56,960
+one might think.
+
+
+136
+00:08:56,960 --> 00:09:02,080
+But now we need some way for our users themselves to actually interrogate this state to ensure
+
+
+137
+00:09:02,080 --> 00:09:03,480
+that it looks correct.
+
+
+138
+00:09:03,480 --> 00:09:08,920
+They need to be able to convince themselves that the validators or the nodes running on
+
+
+139
+00:09:08,920 --> 00:09:12,840
+the network have actually materialized the state correctly.
+
+
+140
+00:09:12,840 --> 00:09:15,760
+This is often done by proofs.
+
+
+141
+00:09:15,760 --> 00:09:19,240
+To keep things simple, we'll say Merkle proofs are kind of nice to work with, so let's start
+
+
+142
+00:09:19,240 --> 00:09:20,240
+there.
+
+
+143
+00:09:20,240 --> 00:09:25,440
+Now, again, since my talk is at the end of the session about a bunch of interplanetary
+
+
+144
+00:09:25,440 --> 00:09:30,440
+databases and topics around that, I know that you all already know about things like Prolly
+
+
+145
+00:09:30,440 --> 00:09:35,640
+trees, and thanks, Mo for talking about that earlier, and maybe even Merkle search trees
+
+
+146
+00:09:35,640 --> 00:09:41,000
+if you're at all familiar with the cool stuff that they're doing over at BlueSky.
+
+
+147
+00:09:41,000 --> 00:09:45,000
+So these are Merkle data structures that have pretty nice database-like properties because
+
+
+148
+00:09:45,000 --> 00:09:47,280
+they behave kind of like B trees.
+
+
+149
+00:09:47,280 --> 00:09:52,840
+So cool, we're talking about databases and Merkle trees and proofs, and this is all kind
+
+
+150
+00:09:52,840 --> 00:09:54,080
+of nice.
+
+
+151
+00:09:54,080 --> 00:09:58,280
+And so as any decent database person knows, B trees are generally the right tool for the
+
+
+152
+00:09:58,280 --> 00:10:00,720
+job when it comes to indexing data.
+
+
+153
+00:10:00,720 --> 00:10:01,720
+Great.
+
+
+154
+00:10:01,720 --> 00:10:07,880
+And in fact, our underlying database engine that Tableland is built on, SQLite, also uses
+
+
+155
+00:10:07,880 --> 00:10:11,040
+B trees itself to index and organize data.
+
+
+156
+00:10:11,040 --> 00:10:12,400
+So okay, that's great.
+
+
+157
+00:10:12,400 --> 00:10:16,640
+We're just going to build Merkle trees over our B tree pages and be done with it.
+
+
+158
+00:10:16,640 --> 00:10:23,880
+And that actually isn't totally crazy because, as I said, we've got a total ordering of events,
+
+
+159
+00:10:23,880 --> 00:10:26,880
+all the databases should kind of end up with the same set of pages.
+
+
+160
+00:10:26,880 --> 00:10:32,680
+We could just block those up with IPFS and kind of be done with it.
+
+
+161
+00:10:32,680 --> 00:10:37,520
+Maybe a better way to do that would be let's relax the assumption that we have total ordering
+
+
+162
+00:10:37,520 --> 00:10:43,280
+in case things do get out of order or we've got some sort of offline first type of scenario.
+
+
+163
+00:10:43,280 --> 00:10:48,200
+We could relax that, and then we use something like Prolly trees or Merkle search trees that
+
+
+164
+00:10:48,200 --> 00:10:54,000
+end up with a deterministic layout no matter what order things come through.
+
+
+165
+00:10:54,000 --> 00:10:58,600
+And then we could use those when building our underlying state to drive our proofs.
+
+
+166
+00:10:58,600 --> 00:11:00,240
+So that sounds pretty nice too, right?
+
+
+167
+00:11:00,240 --> 00:11:06,760
+We're using the features of our database to sort of help us answer secondary questions.
+
+
+168
+00:11:06,760 --> 00:11:11,480
+So now all we need to do is create some inclusion proofs for rows or groups of rows, and we're
+
+
+169
+00:11:11,480 --> 00:11:12,480
+all good.
+
+
+170
+00:11:12,480 --> 00:11:16,800
+And if this wasn't to talk about tradeoffs, we might be done there, but it is a talk about
+
+
+171
+00:11:16,800 --> 00:11:18,280
+tradeoffs.
+
+
+172
+00:11:18,280 --> 00:11:25,480
+And so the thing that makes B-trees kind of great for indexing data and storage and all
+
+
+173
+00:11:25,480 --> 00:11:30,360
+of those things that we kind of do care about in the database world makes proofs harder.
+
+
+174
+00:11:30,360 --> 00:11:35,440
+Because paging things into B-tree pages or Prolly tree blocks or whatever, it doesn't
+
+
+175
+00:11:35,440 --> 00:11:41,560
+actually reflect the access patterns of our modern Web3 database in this particular case.
+
+
+176
+00:11:41,560 --> 00:11:49,280
+So in fact, storing the underlying data representation in a structure designed to make access and
+
+
+177
+00:11:49,280 --> 00:11:57,320
+I-O more efficient actually ends up making our proofs and arbitrary data synchronization,
+
+
+178
+00:11:57,320 --> 00:12:01,720
+believe it or not, less efficient.
+
+
+179
+00:12:01,720 --> 00:12:06,440
+And so to get some intuition for this, we can consider this kind of idea, right?
+
+
+180
+00:12:06,440 --> 00:12:16,280
+A standard binary Merkle tree with n leafs as like a log sub 2 n sized groups.
+
+
+181
+00:12:16,280 --> 00:12:21,320
+And it can be even less if you stick actual data in the intermediary nodes of the tree
+
+
+182
+00:12:21,320 --> 00:12:26,000
+instead of doing them all in the leafs at the bottom, but it's somewhere around there.
+
+
+183
+00:12:26,000 --> 00:12:31,720
+To try to reduce the size of the proofs, you know, a natural instinct is kind of like,
+
+
+184
+00:12:31,720 --> 00:12:36,120
+well, we'll just reduce the depth of the tree by giving it some branching factor bigger
+
+
+185
+00:12:36,120 --> 00:12:38,280
+than two.
+
+
+186
+00:12:38,280 --> 00:12:41,560
+And that will reduce the depth of the tree, which means there's fewer things to have to,
+
+
+187
+00:12:41,560 --> 00:12:43,960
+you know, send through to prove.
+
+
+188
+00:12:43,960 --> 00:12:50,600
+And so given our Merkle tree, you know, branching factor of K reduces the height of the tree
+
+
+189
+00:12:50,600 --> 00:12:59,940
+from like log base 2 n to log K n, that actually gives us like a log base 2 K factor decrease
+
+
+190
+00:12:59,940 --> 00:13:01,120
+in height.
+
+
+191
+00:13:01,120 --> 00:13:02,840
+And so queries are faster, right?
+
+
+192
+00:13:02,840 --> 00:13:06,120
+Because we can get to the data we need faster.
+
+
+193
+00:13:06,120 --> 00:13:12,680
+But the proofs themselves are actually bigger because we end up having to include all of
+
+
+194
+00:13:12,680 --> 00:13:20,440
+the siblings within each group, within each K area section of the tree.
+
+
+195
+00:13:20,440 --> 00:13:29,840
+So we actually move from like, you know, a log sub log 2 n to K times log K n.
+
+
+196
+00:13:29,840 --> 00:13:35,600
+And this is just because in this K-ary Merkle tree, maybe it's like a Merkle search tree
+
+
+197
+00:13:35,600 --> 00:13:41,080
+or a Parley tree, whatever, the Merkle proof consists of like K minus one nodes at each
+
+
+198
+00:13:41,080 --> 00:13:42,960
+level.
+
+
+199
+00:13:42,960 --> 00:13:46,120
+So now we have to send way more data to our users in order to be able to prove something
+
+
+200
+00:13:46,120 --> 00:13:47,120
+about that.
+
+
+201
+00:13:47,120 --> 00:13:49,880
+So, oops, that's, you know, like a bit of a mistake.
+
+
+202
+00:13:49,880 --> 00:13:55,360
+So this is a perfect example of like a trade-off that we have to make.
+
+
+203
+00:13:55,360 --> 00:14:00,800
+And web, so a finding here maybe is web3 presents these unique access patterns, provable things
+
+
+204
+00:14:00,800 --> 00:14:08,160
+that don't always jive with traditional database knowledge, which is stick things in pages.
+
+
+205
+00:14:08,160 --> 00:14:11,600
+Now you might, you know, you could argue in this scenario, this is a sort of contrived
+
+
+206
+00:14:11,600 --> 00:14:17,120
+one because like, you know, we're designing the structure based on storage, but then using
+
+
+207
+00:14:17,120 --> 00:14:19,880
+it for something else.
+
+
+208
+00:14:19,880 --> 00:14:24,260
+But there are lots of examples where these types of trade-offs become relevant.
+
+
+209
+00:14:24,260 --> 00:14:28,680
+And so for us, this was kind of a no-op, like we can't use trees like this if we want to
+
+
+210
+00:14:28,680 --> 00:14:34,240
+be able to, you know, create proofs until we can do things like, you know, more efficient
+
+
+211
+00:14:34,240 --> 00:14:38,720
+snarks over Merkle trees, or we could use like Merkle trees or, or these other technologies,
+
+
+212
+00:14:38,720 --> 00:14:40,680
+which do help to address this.
+
+
+213
+00:14:40,680 --> 00:14:43,760
+But then someone is going to have to explain all that stuff to me and that's no fun for
+
+
+214
+00:14:43,760 --> 00:14:44,760
+anybody.
+
+
+215
+00:14:44,760 --> 00:14:50,360
+So ideally we just, you know, come up with a different way to handle this.
+
+
+216
+00:14:50,360 --> 00:14:55,240
+So now our team is working on some different solutions to sort of trade off storage efficiency
+
+
+217
+00:14:55,240 --> 00:15:00,160
+with proof efficiency, or potentially just creating on-demand proofs that leverage a
+
+
+218
+00:15:00,160 --> 00:15:04,440
+bunch of the new research that is coming out around data structures and proofs and things
+
+
+219
+00:15:04,440 --> 00:15:06,680
+like that.
+
+
+220
+00:15:06,680 --> 00:15:09,000
+Because the truth is, it doesn't even really stop there.
+
+
+221
+00:15:09,000 --> 00:15:15,400
+Cause now when we're dealing with like IPLD and another sort of purely functional data
+
+
+222
+00:15:15,400 --> 00:15:21,840
+structures, we have to think about things like write amplification, you know, data cleaning
+
+
+223
+00:15:21,840 --> 00:15:28,320
+and all the intermediate data representations that we ended up creating and all the garbage
+
+
+224
+00:15:28,320 --> 00:15:32,920
+collection that we've got to do, because it's like inevitable to avoid sort of like write
+
+
+225
+00:15:32,920 --> 00:15:38,120
+amplification when we're working with purely functional data structures like IPLD.
+
+
+226
+00:15:38,120 --> 00:15:43,240
+And you know, depending on the structure of the DAG that we're working on or the composition
+
+
+227
+00:15:43,240 --> 00:15:48,000
+of the nodes, we can end up like creating way more data than a traditional database
+
+
+228
+00:15:48,000 --> 00:15:49,680
+might.
+
+
+229
+00:15:49,680 --> 00:15:52,040
+So here's another quick example.
+
+
+230
+00:15:52,040 --> 00:15:56,320
+In a content addressable world where we're using kind of like a block storage for fetching
+
+
+231
+00:15:56,320 --> 00:16:01,640
+and retrieving parts of our indexing structure, standard tools like B-trees and cache-aware
+
+
+232
+00:16:01,640 --> 00:16:07,480
+data structures can in the worst case sometimes lead to higher write amplification than simpler
+
+
+233
+00:16:07,480 --> 00:16:10,340
+data structures like binary trees.
+
+
+234
+00:16:10,340 --> 00:16:17,040
+So we've got another trade-off here where we have to decide if data and IO efficiency
+
+
+235
+00:16:17,040 --> 00:16:22,560
+is worth the trouble of all of the extra potentially garbage collectible data that we're going
+
+
+236
+00:16:22,560 --> 00:16:25,720
+to have to deal with later.
+
+
+237
+00:16:25,720 --> 00:16:30,440
+And we can start to play around with, you know, the complexity of these and the size
+
+
+238
+00:16:30,440 --> 00:16:36,000
+of the write amplification, and we can get a bunch of numbers to back this all up, which
+
+
+239
+00:16:36,000 --> 00:16:37,640
+we should do.
+
+
+240
+00:16:37,640 --> 00:16:42,040
+But the point here is kind of like these trade-offs don't immediately become obvious until we
+
+
+241
+00:16:42,040 --> 00:16:45,840
+actually have to start building things and realize like, oh, shoot, our database, you
+
+
+242
+00:16:45,840 --> 00:16:52,080
+know, our underlying database storage is just blasted through the roof.
+
+
+243
+00:16:52,080 --> 00:16:55,160
+And maybe that's not so bad when we live in a world of, you know, Filecoin where we can
+
+
+244
+00:16:55,160 --> 00:16:58,200
+just store things for cheap forever.
+
+
+245
+00:16:58,200 --> 00:17:00,120
+That's one approach.
+
+
+246
+00:17:00,120 --> 00:17:03,960
+Or maybe it's not so bad when, you know, users are primarily storing their own data.
+
+
+247
+00:17:03,960 --> 00:17:07,520
+And so there isn't one giant source of all of the data.
+
+
+248
+00:17:07,520 --> 00:17:11,120
+There are lots of these trade-offs, but that's kind of the point.
+
+
+249
+00:17:11,120 --> 00:17:16,640
+So, you know, the example I gave is probably a pathological case where like B-trees lead
+
+
+250
+00:17:16,640 --> 00:17:19,480
+to way more write amplification.
+
+
+251
+00:17:19,480 --> 00:17:20,680
+Maybe maybe not.
+
+
+252
+00:17:20,680 --> 00:17:24,560
+The average case is probably fine, but it is a nice example of trade-offs that aren't
+
+
+253
+00:17:24,560 --> 00:17:30,060
+obvious until you start thinking seriously about this kind of brave new world of interplanetary
+
+
+254
+00:17:30,060 --> 00:17:35,960
+databases and all of the things that this comes with.
+
+
+255
+00:17:35,960 --> 00:17:42,440
+And I think, you know, we're just kind of just starting to uncover all of these interesting,
+
+
+256
+00:17:42,440 --> 00:17:49,320
+you know, trade-offs that we need to evaluate now as we sort of implement more of these
+
+
+257
+00:17:49,320 --> 00:17:51,040
+different interplanetary databases.
+
+
+258
+00:17:51,040 --> 00:17:56,040
+I mean, there's like, I don't know, five different approaches in this session alone.
+
+
+259
+00:17:56,040 --> 00:18:01,040
+So I think this is a really exciting time for the database community in general.
+
+
+260
+00:18:01,040 --> 00:18:07,320
+I hope that, you know, we in the IPFS and like, you know, peer-to-peer and distributed
+
+
+261
+00:18:07,320 --> 00:18:14,960
+database world are prepared to bring what we learn back to the broader database ecosystem
+
+
+262
+00:18:14,960 --> 00:18:19,880
+so that we can all share a lot of these new trade-offs that we're having to evaluate.
+
+
+263
+00:18:19,880 --> 00:18:22,360
+And so that's pretty much it for me.
+
+
+264
+00:18:22,360 --> 00:18:23,360
+Thanks a lot.
+
+
+265
+00:18:23,360 --> 00:18:26,040
+I'm sorry that I couldn't be there in person.
+
+
+266
+00:18:26,040 --> 00:18:27,040
+Thanks for listening.
+
+
+267
+00:18:27,040 --> 00:18:32,320
+If you have questions, please hit me up, you know, at Carson Farber on pretty much all
+
+
+268
+00:18:32,320 --> 00:18:33,320
+the places.
+
+
+269
+00:18:33,320 --> 00:18:42,320
+Carson at textile.io for email, usually in the discords and slacks of the world.
+
+
+270
+00:18:42,320 --> 00:18:47,040
+So hit me up and I hope you enjoy the rest of the sessions.
+
+
+271
+00:18:47,040 --> 00:18:48,040
+Thanks.
+
+
+272
+00:18:48,040 --> 00:18:52,120
+Great way to think about the trade-offs.
+
+
+273
+00:18:52,120 --> 00:18:58,480
+I'm just sitting here considering what to do with my branch factor on my Prawley trees.
+
+
+274
+00:18:58,480 --> 00:19:03,720
+And you've motivated me to have a deeper understanding of one of the optimizations I've been considering
+
+
+275
+00:19:03,720 --> 00:19:11,000
+after talking with Michael Rogers is, say we deterministically decrease the branch factor
+
+
+276
+00:19:11,000 --> 00:19:12,400
+as we go down the tree.
+
+
+277
+00:19:12,400 --> 00:19:16,200
+So your top nodes are cacheable and your bottom nodes are narrow.
+
+
+278
+00:19:16,200 --> 00:19:17,600
+Totally, yeah.
+
+
+279
+00:19:17,600 --> 00:19:19,200
+Just another trade-off.
+
+
+280
+00:19:19,200 --> 00:19:22,080
+Yeah, exactly.
+
+
+281
+00:19:22,080 --> 00:19:28,160
+And that's one where like that comes from knowing how your data structure in this case
+
+
+282
+00:19:28,160 --> 00:19:32,280
+is going to be used in a sort of like web three world where like you've got this like
+
+
+283
+00:19:32,280 --> 00:19:37,720
+high contention at the top and you don't want to blast out a ton of like now you've only
+
+
+284
+00:19:37,720 --> 00:19:39,080
+got maybe binary at the top.
+
+
+285
+00:19:39,080 --> 00:19:41,440
+So now you've only got two hashes.
+
+
+286
+00:19:41,440 --> 00:19:45,080
+It's a tiny update every time that particular node gets updated.
+
+
+287
+00:19:45,080 --> 00:19:46,080
+So that's cool, right?
+
+
+288
+00:19:46,080 --> 00:19:51,480
+That's yeah, I think that's really nice example of a type of trade-off that you can deal with.
+
+
+289
+00:19:51,480 --> 00:19:59,640
+A real quick question on I haven't used or seen Tableland, but like what's the what's
+
+
+290
+00:19:59,640 --> 00:20:23,020
+the state?
+
+
+291
+00:20:00,000 --> 00:20:07,440
+Is it in a state where we can like we can play around with it or like is it out now or what's what's going on?
+
+
+292
+00:20:08,880 --> 00:20:16,160
+Yeah, yeah. Yeah. So Tableland is out now. It's running some. It's we're in testnet phase still.
+
+
+293
+00:20:16,160 --> 00:20:20,960
+So it's supporting several testnet apps that people are playing around with.
+
+
+294
+00:20:22,400 --> 00:20:26,080
+So the way that it kind of works right now is
+
+
+295
+00:20:26,080 --> 00:20:30,880
+Basically you pick a parent. Excuse me. Sorry.
+
+
+296
+00:20:32,560 --> 00:20:36,480
+Basically, you pick a parent chain EVM chain at the moment that you want to interact with.
+
+
+297
+00:20:37,360 --> 00:20:42,320
+And you pick that based on where you want your access control rules to flow from.
+
+
+298
+00:20:42,320 --> 00:20:45,520
+So you can say like, okay, look, I only want
+
+
+299
+00:20:46,800 --> 00:20:50,560
+people who own born apes to be able to insert rows into my table.
+
+
+300
+00:20:50,560 --> 00:20:54,240
+Okay, so that means you have to deploy your access control on
+
+
+301
+00:20:54,240 --> 00:20:59,680
+like mainnet Ethereum. So maybe this is a bad example because nobody wants to do that, but
+
+
+302
+00:21:00,800 --> 00:21:06,320
+you could do that. And then what you do is you send transactions to the
+
+
+303
+00:21:06,320 --> 00:21:10,080
+basically to the access control smart contract that you have on that chain.
+
+
+304
+00:21:10,080 --> 00:21:14,640
+And these get routed to the Tableland network and the nodes on the Tableland network are sitting there
+
+
+305
+00:21:14,640 --> 00:21:19,920
+listening to events from like mainnet, a bunch of testnets,
+
+
+306
+00:21:19,920 --> 00:21:24,240
+Polygon, a bunch of the rollups. So you can kind of pick and choose
+
+
+307
+00:21:25,040 --> 00:21:30,880
+which sort of like throughput you want and trade that off with
+
+
+308
+00:21:31,920 --> 00:21:34,160
+like the access control features that you need.
+
+
+309
+00:21:34,160 --> 00:21:38,720
+So maybe it's just like address based, in which case you might as well pick a cheap chain,
+
+
+310
+00:21:38,720 --> 00:21:43,440
+like a ZK rollup or even Polygon or something like that.
+
+
+311
+00:21:44,240 --> 00:21:47,840
+You submit transactions through there. They get materialized into the database by
+
+
+312
+00:21:47,840 --> 00:21:52,400
+the nodes in the Tableland network. And then you can do cool things like you can query across
+
+
+313
+00:21:52,400 --> 00:22:03,440
+tables across chains. So you can do things like host your NFT data via Polygon or Optimism,
+
+
+314
+00:22:04,160 --> 00:22:11,600
+but then use it to drive like state and the visual aspect of your NFT on like more expensive chain,
+
+
+315
+00:22:11,600 --> 00:22:14,640
+like Ethereum. So you can kind of like pick and choose and
+
+
+316
+00:22:14,640 --> 00:22:18,560
+do things like that. But anyway, long story short, yes, it's available now.
+
+
+317
+00:22:19,120 --> 00:22:24,880
+You can just use our SDK, which models the D3
+
+
+318
+00:22:26,960 --> 00:22:30,320
+like database API. If you're familiar with Cloudflare's D3,
+
+
+319
+00:22:31,680 --> 00:22:38,480
+it's like basically a SQLite thing. And for the people, the Node.js folks in the room,
+
+
+320
+00:22:38,480 --> 00:22:43,120
+this is very similar to the like better, like the more advanced,
+
+
+321
+00:22:43,120 --> 00:22:49,920
+similar to the like better SQLite 3 API. I think that's where Cloudflare kind of borrowed ideas from.
+
+
+322
+00:22:51,360 --> 00:22:59,360
+So this is kind of cool because you can use like your favorite ORM on top of Tableland.
+
+
+323
+00:22:59,360 --> 00:23:03,680
+And then you kind of even forget that you're using a Web3 database, which is quite nice.
+
+
+324
+00:23:04,960 --> 00:23:08,240
+Anyway, so that's kind of the gist of it. That's how you would interact with it.
+
+
+325
+00:23:08,240 --> 00:23:13,040
+And yeah, it's on testnet. It works right now. And we're in the process of
+
+
+326
+00:23:16,480 --> 00:23:22,240
+sort of designing the final stages for our main net, which we're hopefully launching in the new
+
+
+327
+00:23:22,240 --> 00:23:29,280
+year. And so actually, if you get in there and start playing around and hate it or love it or
+
+
+328
+00:23:29,280 --> 00:23:37,840
+have some ideas, we'd love to hear from you. What was the motivation for SQLite specifically
+
+
+329
+00:23:37,840 --> 00:23:43,520
+in relation to like the grand scheme of, you know, underlying data stores and databases and
+
+
+330
+00:23:44,240 --> 00:23:49,200
+SQL or non-SQL or whatever? Yeah, yeah. That's a very good question. So
+
+
+331
+00:23:50,480 --> 00:23:56,000
+when we first started building Table... Well, first of all, like SQL, the motivation there
+
+
+332
+00:23:56,000 --> 00:24:04,640
+was basically just let's find a database, like query interface that people are already familiar
+
+
+333
+00:24:04,640 --> 00:24:09,600
+with. That was a big one. But another, you know, some of it was also like a bunch of our team was
+
+
+334
+00:24:09,600 --> 00:24:17,200
+already very intimately familiar with SQL. I mean, Andrew, our CEO, had already like gone through a
+
+
+335
+00:24:17,200 --> 00:24:21,440
+successful startup that was basically built entirely on top of Postgres. So we had a lot
+
+
+336
+00:24:21,440 --> 00:24:27,040
+of experience there. We had a lot of users asking for that type of like interface. So that sort of
+
+
+337
+00:24:27,040 --> 00:24:31,680
+thing was just it's pure and simple. Let's just keep it to something people are familiar with.
+
+
+338
+00:24:31,680 --> 00:24:35,440
+And then when we first started building Table, and we did actually start building it on top of
+
+
+339
+00:24:35,440 --> 00:24:40,640
+Postgres, because like that's the world's most powerful SQL database. So obviously, we should go
+
+
+340
+00:24:40,640 --> 00:24:49,120
+there. And that worked great. It's a lovely database. But it made our node deployments a lot
+
+
+341
+00:24:49,120 --> 00:24:56,800
+more complicated. And it made it harder to kind of convince other teams to run a node deployment.
+
+
+342
+00:24:56,800 --> 00:25:02,560
+When we decided to switch to SQLite, there was also some talk about like, well, maybe SQLite's
+
+
+343
+00:25:03,520 --> 00:25:09,520
+like very standardized, simple data structure, the format, maybe we could actually leverage that,
+
+
+344
+00:25:10,480 --> 00:25:15,200
+like as part of our protocol more deeply. But also, it's just this super lightweight,
+
+
+345
+00:25:15,200 --> 00:25:20,320
+but extremely powerful embedded database that like, if one of our node operators is having an
+
+
+346
+00:25:20,320 --> 00:25:25,440
+issue, we can slack them and be like, can you just send us the SQLite code? And we can just
+
+
+347
+00:25:25,440 --> 00:25:30,560
+like, can you just send us the SQLite file? We'll take a look. So it was like that simplicity
+
+
+348
+00:25:33,200 --> 00:25:37,840
+was a big bonus. And it's like the database structure, everything is just baked into this
+
+
+349
+00:25:37,840 --> 00:25:45,360
+like really simple data structure. And so that was another big motivation. It's just like,
+
+
+350
+00:25:45,360 --> 00:25:49,120
+well, let's just keep it super simple. And it turns out it scales to like terabytes of data
+
+
+351
+00:25:49,120 --> 00:25:55,520
+in one SQLite file. So, you know, we're not going to deal with, it's like, well, we'll deal with
+
+
+352
+00:25:55,520 --> 00:26:00,320
+that when that's a problem. And it'll be a nice problem to solve because we will have lots of
+
+
+353
+00:26:00,320 --> 00:26:08,240
+people using Tableland. So, you know, that was a trade off we made there too. But I think so far,
+
+
+354
+00:26:08,240 --> 00:26:09,200
+we're pretty happy with it.
+
+
+355
+00:26:11,200 --> 00:26:18,160
+Tangentially, is there a future in mind specifically for like threads and,
+
+
+356
+00:26:18,160 --> 00:26:24,800
+or threads DB or like not necessarily in lieu of SQLite, but in general?
+
+
+357
+00:26:26,400 --> 00:26:33,440
+Yeah. So we moved away from threads and like, I love the white paper. Every now and then I go
+
+
+358
+00:26:33,440 --> 00:26:38,400
+back to it. I'm like, man, you know what, there's some pretty good ideas in here. So I think there'll
+
+
+359
+00:26:38,400 --> 00:26:45,760
+be an evolution of it maybe at some point. But also like there are other teams in the space that
+
+
+360
+00:26:45,760 --> 00:26:53,280
+are doing very similar things. But like with the hindsight of threads and like other things that
+
+
+361
+00:26:53,280 --> 00:26:58,000
+have happened since then. So maybe like there's just going to be better versions of what threads
+
+
+362
+00:26:58,000 --> 00:27:04,960
+kind of could have been. And that's good too. But we do have some like, I know, and then I'll get
+
+
+363
+00:27:04,960 --> 00:27:08,640
+an email from some academic team saying like, why didn't you keep doing this? Because we were going
+
+
+364
+00:27:08,640 --> 00:27:14,560
+to do something with it. And I think, oh, we could, but there's probably better. There's probably
+
+
+365
+00:27:14,560 --> 00:27:20,960
+better offerings now. Another one for you going back to the floating point thing. Did you spend
+
+
+366
+00:27:20,960 --> 00:27:25,120
+like serious cycles trying to be like, no, we're not getting rid of it. We're quantizing them. We're
+
+
+367
+00:27:25,120 --> 00:27:31,280
+string encoding them. We're putting them behind a fence. Was any of that compelling? Yeah, we spent
+
+
+368
+00:27:31,280 --> 00:27:36,880
+so much time thinking like, cause you know, we're like, no, we can't take away like database people
+
+
+369
+00:27:36,880 --> 00:27:44,080
+expect this. And even if, even like if you go onto the SQLite website, there's like a giant bright
+
+
+370
+00:27:44,080 --> 00:27:48,880
+red disclaimer that says like, honestly, don't use floating point numbers, but here's how you use
+
+
+371
+00:27:48,880 --> 00:27:55,520
+floating point numbers. And, you know, and so we were like, well, it's part of the SQL spec. Like
+
+
+372
+00:27:55,520 --> 00:28:02,800
+it'd be really nice to support it. And yeah, we thought about, you know, like, hiding floating
+
+
+373
+00:28:02,800 --> 00:28:08,800
+points in like its own like data structure under the hood. But like at the end of the day,
+
+
+374
+00:28:08,800 --> 00:28:13,280
+we just thought, look, this is a blockchain driven database and the blockchain doesn't
+
+
+375
+00:28:13,280 --> 00:28:21,440
+have floating point. We can provide some utilities to let the users, you know, do the conversions in
+
+
+376
+00:28:21,440 --> 00:28:27,760
+user land, but it just gets so complicated. It's very hard to solve because even if you
+
+
+377
+00:28:27,760 --> 00:28:33,440
+change the data representation in your storage end, which in theory is fine, then you kind of
+
+
+378
+00:28:33,440 --> 00:28:39,920
+want to support at least like floating point math in queries. And then you have to be like,
+
+
+379
+00:28:39,920 --> 00:28:46,480
+now you're writing like an arbitrary precision math library to handle all that because you can't
+
+
+380
+00:28:46,480 --> 00:28:50,640
+interpret, like, let it, let them convert it to floating point values in the intermediate and do
+
+
+381
+00:28:50,640 --> 00:28:56,720
+the calculation and convert back because their math is going to be different. So it's like,
+
+
+382
+00:28:56,720 --> 00:29:04,640
+it just is this cascading, you know, complexity when we can just be like, don't do it. And so
+
+
+383
+00:29:04,640 --> 00:29:11,680
+far, no one has been particularly upset. Funny thing with that is it was our tables that were
+
+
+384
+00:29:11,680 --> 00:29:18,000
+the biggest violators of the floating point, don't use floating points rule than any other teams,
+
+
+385
+00:29:18,640 --> 00:29:26,080
+because we were using doing some percentages for one of our NFT things. So, you know, it was sort
+
+
+386
+00:29:26,080 --> 00:29:31,120
+of like shame on us in the first place, I think, not thinking of that. But yeah, we thought about
+
+
+387
+00:29:31,120 --> 00:29:37,040
+it. We tried real hard. We might revisit it. But for now, I think it was the right move.
+
+
+388
+00:29:38,720 --> 00:29:44,480
+Yeah, the approach I'm taking in Fireproof is care wise string encoding, which means that
+
+
+389
+00:29:44,480 --> 00:29:47,920
+your conversion or your comparison is all going to be easy, but I'm not going to try and do the
+
+
+390
+00:29:47,920 --> 00:29:54,480
+math part, right? Like JavaScript is ugly for a reason. Yeah, yeah, exactly. Right. And yeah,
+
+
+391
+00:29:54,480 --> 00:29:59,360
+exactly. There's a good, a good example of a trade off there. It's like, yeah, no, I'm not
+
+
+392
+00:29:59,360 --> 00:30:04,240
+going to try and figure out what you Erlang loves, loves you some arbitrary precision.
+
+
+393
+00:30:06,640 --> 00:30:10,000
+Well, that would be lovely, right? That would be lovely if we just had
+
+
+394
+00:30:10,000 --> 00:30:16,560
+arbitrary precision math in in our database, but it's pretty complicated. Right? Well,
+
+
+395
+00:30:16,560 --> 00:30:20,800
+thanks, Carson, for giving us the inside view on all this and good look at the trade offs.
+
+
+396
+00:30:20,800 --> 00:30:24,160
+Yeah, thanks. Thanks for having me and enjoy everybody. Sorry,
+
+
+397
+00:30:24,160 --> 00:30:52,000
+everybody. Sorry, I can't be there in the hallway sections. But yeah, have fun.

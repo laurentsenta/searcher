@@ -1,0 +1,2493 @@
+1
+00:00:00,000 --> 00:00:03,400
+CIDV2
+
+
+2
+00:00:03,400 --> 00:00:07,400
+So this is actually three presentations, two of which I already gave
+
+
+3
+00:00:07,400 --> 00:00:09,600
+that I've just kind of smooshed together
+
+
+4
+00:00:09,600 --> 00:00:12,400
+and it's like a history of how this thing came into being.
+
+
+5
+00:00:12,400 --> 00:00:15,900
+So let's get straight into it.
+
+
+6
+00:00:15,900 --> 00:00:20,200
+Payal, like I said, well, like Chris said, is a DAG-based key-value store.
+
+
+7
+00:00:20,200 --> 00:00:22,400
+It uses Merkle Clocks and CRDTs.
+
+
+8
+00:00:22,400 --> 00:00:24,100
+So let's learn a little bit about it.
+
+
+9
+00:00:24,100 --> 00:00:29,800
+First of all, let's be super clear about what the scope of this is.
+
+
+10
+00:00:29,800 --> 00:00:32,600
+Payal actually manages the part of the DAG that's responsible
+
+
+11
+00:00:32,600 --> 00:00:35,300
+for tracking user keys and their values.
+
+
+12
+00:00:35,300 --> 00:00:38,100
+And values in Payal are always just CIDs
+
+
+13
+00:00:38,100 --> 00:00:40,600
+and CIDs obviously link off to other data
+
+
+14
+00:00:40,600 --> 00:00:43,000
+which may be stored somewhere.
+
+
+15
+00:00:43,000 --> 00:00:44,200
+Payal doesn't care.
+
+
+16
+00:00:44,200 --> 00:00:50,200
+It's only managing the bits that make up the structure of the bucket.
+
+
+17
+00:00:50,200 --> 00:00:51,300
+Cool.
+
+
+18
+00:00:51,300 --> 00:00:53,200
+And so, yeah, you can mutate the Payal.
+
+
+19
+00:00:53,200 --> 00:00:55,800
+You can add stuff to it and delete stuff from it.
+
+
+20
+00:00:55,800 --> 00:00:58,000
+You put things in.
+
+
+21
+00:00:58,000 --> 00:01:00,200
+You give it a root, the root CID of the Payal.
+
+
+22
+00:01:00,200 --> 00:01:04,600
+If you ever used MFS before, you'll know that when you add something to MFS,
+
+
+23
+00:01:04,600 --> 00:01:08,800
+the root of the whole MFS tree changes every time you add something in.
+
+
+24
+00:01:08,800 --> 00:01:10,700
+It's a similar sort of idea here.
+
+
+25
+00:01:10,700 --> 00:01:13,600
+But you give it the root, the current root of the Payal.
+
+
+26
+00:01:13,600 --> 00:01:15,600
+You give it a new key and a new value to put in
+
+
+27
+00:01:15,600 --> 00:01:19,400
+and put that in the bucket.
+
+
+28
+00:01:19,400 --> 00:01:21,900
+And delete, obviously, similar sort of idea.
+
+
+29
+00:01:21,900 --> 00:01:24,800
+We give it the root and the key you want to delete.
+
+
+30
+00:01:24,800 --> 00:01:30,000
+And so that generates a diff and the diff is just the blocks that were added
+
+
+31
+00:01:30,000 --> 00:01:33,900
+and removed as part of that mutation,
+
+
+32
+00:01:33,900 --> 00:01:40,500
+along with the new root CID which you need for doing additional operations.
+
+
+33
+00:01:40,500 --> 00:01:43,800
+And then what you can do is you can kind of take those blocks in that diff
+
+
+34
+00:01:43,800 --> 00:01:46,800
+and do stuff like upload it to web3.storage
+
+
+35
+00:01:46,800 --> 00:01:51,800
+so that they are available over like bitswap via like Elastic IPFS.
+
+
+36
+00:01:51,800 --> 00:01:52,400
+You can do that if you want.
+
+
+37
+00:01:52,400 --> 00:01:54,500
+You can put them in your own block store,
+
+
+38
+00:01:54,500 --> 00:01:55,800
+whatever you want to do.
+
+
+39
+00:01:55,800 --> 00:01:58,300
+But that's basically what happens.
+
+
+40
+00:01:58,300 --> 00:02:00,700
+But yeah, anyway, Payal is a library.
+
+
+41
+00:02:00,700 --> 00:02:06,300
+It's also a little CLI tool that I built just so I could like see it in action.
+
+
+42
+00:02:06,300 --> 00:02:13,100
+So let's try and do a demo of that now.
+
+
+43
+00:02:13,100 --> 00:02:15,100
+It's so close.
+
+
+44
+00:02:15,100 --> 00:02:16,800
+Cool.
+
+
+45
+00:02:16,800 --> 00:02:17,100
+Here we go.
+
+
+46
+00:02:17,100 --> 00:02:22,200
+I'm just going to try and do that.
+
+
+47
+00:02:22,200 --> 00:02:25,600
+There we go.
+
+
+48
+00:02:25,600 --> 00:02:27,500
+I'm going to leave that open actually.
+
+
+49
+00:02:27,500 --> 00:02:28,300
+Okay.
+
+
+50
+00:02:28,300 --> 00:02:32,300
+Here we go.
+
+
+51
+00:02:32,300 --> 00:02:36,900
+Is that big enough for people?
+
+
+52
+00:02:36,900 --> 00:02:38,000
+Giving away stuff.
+
+
+53
+00:02:38,000 --> 00:02:38,400
+Cool.
+
+
+54
+00:02:38,400 --> 00:02:42,800
+So on this side I've got my like a Payal which I can just list out the contents of.
+
+
+55
+00:02:42,800 --> 00:02:45,900
+There's nothing in this Payal at the moment.
+
+
+56
+00:02:45,900 --> 00:02:47,500
+But we're going to add some things.
+
+
+57
+00:02:47,500 --> 00:02:49,600
+And so what we can do, I've got this.
+
+
+58
+00:02:49,600 --> 00:02:52,300
+Doesn't matter what the values are for the purposes of this demo.
+
+
+59
+00:02:52,300 --> 00:02:56,800
+So I've just got a little script that will generate me a random CID for everything I want to add to a Payal.
+
+
+60
+00:02:56,800 --> 00:02:58,600
+So I'm just going to grab that.
+
+
+61
+00:02:58,600 --> 00:03:03,100
+And what I can do is do like Payal put and then give it a key name.
+
+
+62
+00:03:03,100 --> 00:03:04,200
+I'm going to call it one.
+
+
+63
+00:03:04,200 --> 00:03:06,300
+And the value is just a CID.
+
+
+64
+00:03:06,300 --> 00:03:08,200
+Like I said, keys are just arbitrary strings.
+
+
+65
+00:03:08,200 --> 00:03:11,100
+Values are CIDs to existing data.
+
+
+66
+00:03:11,100 --> 00:03:11,800
+Put that in.
+
+
+67
+00:03:11,800 --> 00:03:13,600
+And Payal generates a little diff.
+
+
+68
+00:03:13,600 --> 00:03:15,800
+So this is kind of what happens.
+
+
+69
+00:03:15,800 --> 00:03:19,600
+This is the CID of the Payal root before this thing was put in.
+
+
+70
+00:03:19,600 --> 00:03:21,800
+And so this block has been removed.
+
+
+71
+00:03:21,800 --> 00:03:23,700
+This block has been added.
+
+
+72
+00:03:23,700 --> 00:03:26,700
+And that's the new root of the Payal.
+
+
+73
+00:03:26,700 --> 00:03:32,400
+Below here, these are the blocks, other blocks that were changed in the process of updating the Payal.
+
+
+74
+00:03:32,400 --> 00:03:38,300
+So in this case, because there's only one thing, we've only got the root node that got altered and changed.
+
+
+75
+00:03:38,300 --> 00:03:39,100
+So it gets a new CID.
+
+
+76
+00:03:39,100 --> 00:03:42,800
+But when Payals get too big, they start to shard.
+
+
+77
+00:03:42,800 --> 00:03:47,200
+And so you might, if you change a value in a big Payal with lots of things in it,
+
+
+78
+00:03:47,200 --> 00:03:52,200
+then you might see more things appear here in this diff,
+
+
+79
+00:03:52,200 --> 00:03:55,900
+which is all the blocks that changed, which kind of propagate up to the root.
+
+
+80
+00:03:55,900 --> 00:03:58,100
+So that's kind of how it works.
+
+
+81
+00:03:58,100 --> 00:03:59,400
+Let's put some more things in.
+
+
+82
+00:03:59,400 --> 00:04:01,200
+Payal put.
+
+
+83
+00:04:01,200 --> 00:04:05,300
+Add another CID for me.
+
+
+84
+00:04:05,300 --> 00:04:06,800
+Here we go.
+
+
+85
+00:04:06,800 --> 00:04:09,800
+Cool.
+
+
+86
+00:04:09,800 --> 00:04:12,800
+And then I can do list out.
+
+
+87
+00:04:12,800 --> 00:04:15,800
+And we can see that we've got three items in there.
+
+
+88
+00:04:15,800 --> 00:04:18,800
+They're lexicographically ordered.
+
+
+89
+00:04:18,800 --> 00:04:22,800
+So that's why they're not in there in the order that I put them in.
+
+
+90
+00:04:22,800 --> 00:04:27,800
+But it does mean that I can do kind of fun stuff like list out with a particular value.
+
+
+91
+00:04:27,800 --> 00:04:30,800
+So I can do list out.
+
+
+92
+00:04:30,800 --> 00:04:33,800
+And then I can do list out.
+
+
+93
+00:04:33,800 --> 00:04:37,800
+And then I can do kind of fun stuff like list out with a particular prefix
+
+
+94
+00:04:37,800 --> 00:04:41,800
+to just list the things that begin with T, for instance.
+
+
+95
+00:04:41,800 --> 00:04:43,800
+And it can do that.
+
+
+96
+00:04:43,800 --> 00:04:46,800
+One of the big things about Payal is it can do that sort of thing really fast.
+
+
+97
+00:04:46,800 --> 00:04:52,800
+So it allows you to construct your data in a way that you can list out things really quickly.
+
+
+98
+00:04:52,800 --> 00:04:55,800
+Cool.
+
+
+99
+00:04:55,800 --> 00:04:58,800
+So then what is that?
+
+
+100
+00:04:58,800 --> 00:05:00,800
+I talked about the DAG structure of the Payal.
+
+
+101
+00:05:00,800 --> 00:05:02,800
+What does it actually look like?
+
+
+102
+00:05:02,800 --> 00:05:09,800
+So I use this fun command called tree, which shows me that I have a shard here, which is just a block.
+
+
+103
+00:05:09,800 --> 00:05:11,800
+Every time you see shard, you think that's a block.
+
+
+104
+00:05:11,800 --> 00:05:14,800
+And then it's got the keys and values in that block.
+
+
+105
+00:05:14,800 --> 00:05:17,800
+So this is kind of not super interesting.
+
+
+106
+00:05:17,800 --> 00:05:21,800
+But it gets more interesting when it does actually do some sharding.
+
+
+107
+00:05:21,800 --> 00:05:31,800
+And I can actually force Payal to do some sharding to make this a bit more interesting by tuning down the maximum shard size.
+
+
+108
+00:05:31,800 --> 00:05:35,800
+What it does typically is that you keep adding stuff to it, and it puts things in the block.
+
+
+109
+00:05:35,800 --> 00:05:42,800
+And when it gets to a certain size, the next thing you put in it, it will shard based on the key that you're putting in.
+
+
+110
+00:05:42,800 --> 00:05:45,800
+So let's just demo that. It makes it more obvious.
+
+
+111
+00:05:45,800 --> 00:05:54,800
+So Payal put, and if I put like 3, 2, get another CID.
+
+
+112
+00:05:54,800 --> 00:06:01,800
+And then I can use this handy command line option.
+
+
+113
+00:06:01,800 --> 00:06:04,800
+Max shard size.
+
+
+114
+00:06:04,800 --> 00:06:08,800
+And I'm going to set it to be 142, the current size of the shard.
+
+
+115
+00:06:08,800 --> 00:06:15,800
+So basically when it tries to put something in, it will have to do some sharding to accommodate the new value that I'm putting in.
+
+
+116
+00:06:15,800 --> 00:06:21,800
+Cool. And then this now gets more interesting because we've got three CIDs listed here now.
+
+
+117
+00:06:21,800 --> 00:06:26,800
+Because we're going to have two shards. We've got the root shard as well as another shard that we've just created.
+
+
+118
+00:06:26,800 --> 00:06:31,800
+So we've got two blocks that have been created and one block removed.
+
+
+119
+00:06:31,800 --> 00:06:36,800
+And then so Payal LS will do what it normally does.
+
+
+120
+00:06:36,800 --> 00:06:41,800
+But if we do Payal tree now.
+
+
+121
+00:06:41,800 --> 00:06:43,800
+It's more interesting.
+
+
+122
+00:06:43,800 --> 00:06:50,800
+So we've got the root shard. We've got a key called re, which actually doesn't exist in the Payal.
+
+
+123
+00:06:50,800 --> 00:06:54,800
+There's like pre, to and a typo there.
+
+
+124
+00:06:54,800 --> 00:07:02,800
+But you can see that what it's done is it's kind of found this common prefix to these two keys and sharded based on that prefix.
+
+
+125
+00:07:02,800 --> 00:07:12,800
+And if you concatenate the keys in this shard with the parent, then you get the keys that are in the bucket.
+
+
+126
+00:07:12,800 --> 00:07:16,800
+Cool. So that's how it works.
+
+
+127
+00:07:16,800 --> 00:07:27,800
+I've got this in here. I made a Payal.
+
+
+128
+00:07:27,800 --> 00:07:33,800
+And I can list out these words in a dictionary. 235,000 of them.
+
+
+129
+00:07:33,800 --> 00:07:40,800
+It's the words from if you have a computer and it's like Linux based or Unix based in some way.
+
+
+130
+00:07:40,800 --> 00:07:46,800
+You've probably got user share dict in there. And it's basically an English dictionary from the 90s or something.
+
+
+131
+00:07:46,800 --> 00:07:53,800
+And what I've done is I've created a Payal where the keys are just the words and the values are just random CIDs like I thought.
+
+
+132
+00:07:53,800 --> 00:08:05,800
+So that's that. And you can do you can kind of do fun stuff like Payal LS dash p, the prefix, and then list out all the words that begin with bat, of which there are 179 of them.
+
+
+133
+00:08:05,800 --> 00:08:10,800
+And it does that really, really quickly because it's designed to do that.
+
+
+134
+00:08:10,800 --> 00:08:16,800
+Anyway, so b, b, b, b, b, b, b, b, b, including battyphone, which is not a superhero's phone.
+
+
+135
+00:08:16,800 --> 00:08:23,800
+It's actually like a musical instrument or something. Anyway, who knew?
+
+
+136
+00:08:23,800 --> 00:08:37,800
+That's the words. And then also in that same directory, there's this thing called proper names, which is just names of people, human names, people names, names of people.
+
+
+137
+00:08:37,800 --> 00:08:46,800
+Just names. So there's 1,308. At some point in history, there was only 1,308 names.
+
+
+138
+00:08:46,800 --> 00:08:53,800
+Whatever. Anyway, so the cool thing about this is a bit less data in this Payal.
+
+
+139
+00:08:53,800 --> 00:09:03,800
+So when I do a tree, it's nice and quick, but you can see how a Payal looks when it's got a bit more data in it, how it's done.
+
+
+140
+00:09:03,800 --> 00:09:11,800
+It's done a whole bunch of sharding here. And you can sort of see how it shards up stuff.
+
+
+141
+00:09:11,800 --> 00:09:21,800
+So we got Sabrina as a name, and like Rudolph and Rupert.
+
+
+142
+00:09:21,800 --> 00:09:30,800
+So anyway, shards and stuff. And that's Payal.
+
+
+143
+00:09:30,800 --> 00:09:37,800
+Let's head on back to just prefix queries at the moment.
+
+
+144
+00:09:37,800 --> 00:09:44,800
+At the moment, it's like someone needs to write some code.
+
+
+145
+00:09:44,800 --> 00:09:49,800
+It's ordered, so you decide what happens.
+
+
+146
+00:09:49,800 --> 00:09:55,800
+Yeah, yeah, yeah, yeah, exactly.
+
+
+147
+00:09:55,800 --> 00:10:01,800
+So hang on, let's just turn off...
+
+
+148
+00:10:01,800 --> 00:10:06,800
+Stop mirroring. Okay, got it. There we go. Okay, back. We're back.
+
+
+149
+00:10:06,800 --> 00:10:13,800
+Cool, okay, so that's Payal. So at the time that I did this presentation and stuff, these are the questions I had.
+
+
+150
+00:10:13,800 --> 00:10:20,800
+Why do we even need a bucket abstraction? Well, CIDs, turns out, not super recognizable to humans.
+
+
+151
+00:10:20,800 --> 00:10:25,800
+You can't instantly see a CID unless it's the empty directory CID, which is easy.
+
+
+152
+00:10:25,800 --> 00:10:30,800
+But other CIDs, you can't necessarily know what data is behind them by just looking at them.
+
+
+153
+00:10:30,800 --> 00:10:36,800
+So that kind of sucks. And ironically, humans are the people who actually need to look at these CIDs and identify the data.
+
+
+154
+00:10:36,800 --> 00:10:41,800
+So it's weird that we don't have this kind of way of naming data according to what it is.
+
+
+155
+00:10:41,800 --> 00:10:48,800
+And annoyingly, all data storage services basically allow you to give names to data that you upload.
+
+
+156
+00:10:48,800 --> 00:10:54,800
+So why have we just got CIDs? So we want parity with this.
+
+
+157
+00:10:54,800 --> 00:11:01,800
+So in the context of creating a DAG and uploading it to something like Web3.storage,
+
+
+158
+00:11:01,800 --> 00:11:09,800
+why don't we just store a name with the upload? Well, actually, with Web3.storage right now, you can do that.
+
+
+159
+00:11:09,800 --> 00:11:18,800
+You can give something a name. But that name is actually just stored in our Postgres database next to the CID of the thing that you uploaded.
+
+
+160
+00:11:18,800 --> 00:11:27,800
+And that kind of sucks because that name is separate from that data. And it's also centralized in our Postgres database, which sucks.
+
+
+161
+00:11:27,800 --> 00:11:34,800
+And it's also not scalable because as soon as you want to list stuff out, we get a lot of uploads.
+
+
+162
+00:11:34,800 --> 00:11:42,800
+That table is a big table and we can't list out stuff like that, especially not with a prefix query like that.
+
+
+163
+00:11:42,800 --> 00:11:48,800
+So, yeah, we kind of want that name to be stored with the data as part of the data.
+
+
+164
+00:11:48,800 --> 00:11:52,800
+So that's one thing that would be cool.
+
+
+165
+00:11:52,800 --> 00:12:02,800
+So the other thing you're probably thinking about right now is like, why don't we just use UNIXFS sharded directories for something like this?
+
+
+166
+00:12:02,800 --> 00:12:06,800
+Good question. It's kind of complicated.
+
+
+167
+00:12:06,800 --> 00:12:17,800
+It does involve you bringing in like DAGPB, protobufs, protobuf encoding stuff, UNIXFS, understanding how UNIXFS works and encoding and decoding that data.
+
+
+168
+00:12:17,800 --> 00:12:23,800
+And also, it means that you're storing stuff as UNIXFS. You might have application data that's not necessarily files.
+
+
+169
+00:12:23,800 --> 00:12:34,800
+So anyway, the primary reason, though, is that I wanted this prefix matching ability to be able to really quickly list out things without actually reading the whole shard.
+
+
+170
+00:12:34,800 --> 00:12:42,800
+And with Hampt in UNIXFS sharded directories, you can't really do that without reading the whole thing.
+
+
+171
+00:12:42,800 --> 00:12:52,800
+So that kind of sucks. I'd also like to be able to use forward slash in keys because that just wouldn't be possible with UNIXFS directories.
+
+
+172
+00:12:52,800 --> 00:13:00,800
+And then I wanted to minimize block traversals and dynamically shard when it's absolutely necessary.
+
+
+173
+00:13:00,800 --> 00:13:07,800
+We're kind of optimizing for reading, even though writing is still pretty quick anyway.
+
+
+174
+00:13:07,800 --> 00:13:15,800
+So that's why that. My other question I had was like, man, every time I update the PAIL, the root CID changes.
+
+
+175
+00:13:15,800 --> 00:13:23,800
+How do I even keep track of that and share that? And at the time I was like, well, I guess we could have like an IPNS thing.
+
+
+176
+00:13:23,800 --> 00:13:30,800
+Like maybe there's some central service. Maybe we don't need to keep track of that root CID.
+
+
+177
+00:13:30,800 --> 00:13:38,800
+Maybe like the peers who are operating on the bucket just sort of day track it and like send it to other people when they need to know.
+
+
+178
+00:13:38,800 --> 00:13:46,800
+Anyway, need to know, want to know that. Like how are we going to do that?
+
+
+179
+00:13:46,800 --> 00:13:55,800
+And so, yeah, these are the questions I had at the time. But the biggest kind of question I had was like, how do we resolve conflicts?
+
+
+180
+00:13:55,800 --> 00:14:03,800
+Because it's nice that I can play with my bucket on my own. But what if I wanted multiplayer buckets where lots of people can be adding,
+
+
+181
+00:14:03,800 --> 00:14:10,800
+contributing to the same bucket, deleting things? How does it work when two people are updating the same key?
+
+
+182
+00:14:10,800 --> 00:14:16,800
+Or how does it work when like they're across the Internet and like the order of events is different?
+
+
+183
+00:14:16,800 --> 00:14:22,800
+Like someone deletes something and then someone adds it when actually the order should have been the other way around.
+
+
+184
+00:14:22,800 --> 00:14:27,800
+Yeah, so yeah, that was the end of the first presentation.
+
+
+185
+00:14:27,800 --> 00:14:35,800
+But luckily, when I was kind of looking into this, I found that there's like one way is to like just don't have conflicts.
+
+
+186
+00:14:35,800 --> 00:14:45,800
+It sounds pretty wild, but like there's a thing called CRDTs, as I found out, called conflict-free replicated data types, which can kind of help with that.
+
+
+187
+00:14:45,800 --> 00:14:54,800
+So next presentation is like a few weeks later. Let's talk about Merkle clocks and CRDTs.
+
+
+188
+00:14:54,800 --> 00:15:02,800
+One of the outcomes of that, those previous slides was like this realization that like in a distributed multiplayer environment,
+
+
+189
+00:15:02,800 --> 00:15:08,800
+like the order of operations really, really matters. And as well as the conflicts.
+
+
+190
+00:15:08,800 --> 00:15:15,800
+I'm going to talk a little bit about why that is and then show you how Merkle clocks and CRDTs can address the issues.
+
+
+191
+00:15:15,800 --> 00:15:23,800
+So let's consider a fruit basket. It's just a pail with three players.
+
+
+192
+00:15:23,800 --> 00:15:30,800
+We've got Alice, Bob and Carol. And what they're going to do is they're all going to add fruits at approximately the same time.
+
+
+193
+00:15:30,800 --> 00:15:37,800
+And we're going to look at this from Alice's point of view first. So Alice will put an apple in the fruit basket, then a banana.
+
+
+194
+00:15:37,800 --> 00:15:42,800
+Then she'll see that Bob puts a kiwi in and then she sees that Carol put a mango in.
+
+
+195
+00:15:42,800 --> 00:15:48,800
+Then she sees Bob put an orange in and then finally Alice puts a pear in the fruit basket.
+
+
+196
+00:15:48,800 --> 00:15:57,800
+So there's lots of fruit in there. That's great. But Bob, maybe due to network latencies, sees a slightly different order of events.
+
+
+197
+00:15:57,800 --> 00:16:03,800
+So Bob sees Alice put the apple in first, but then he puts his kiwi in, then he puts his orange in,
+
+
+198
+00:16:03,800 --> 00:16:11,800
+then he sees Carol put a mango in, then he sees Alice put a banana in, and then finally he sees Alice put a pear in.
+
+
+199
+00:16:11,800 --> 00:16:16,800
+So we actually ended up with the same operations, but they arrived in different orders.
+
+
+200
+00:16:16,800 --> 00:16:24,800
+And so you can imagine how that might be problematic if Alice or Bob or Carol were to put or delete items with conflicting keys.
+
+
+201
+00:16:24,800 --> 00:16:29,800
+And these are not conflicting, but you get the idea.
+
+
+202
+00:16:29,800 --> 00:16:41,800
+But why is this a problem? Why don't we just have timestamps and just timestamp these events and then sort them when we receive them according to the timestamp?
+
+
+203
+00:16:41,800 --> 00:16:47,800
+Well, not every player can be perfectly synchronized to a global time.
+
+
+204
+00:16:47,800 --> 00:16:53,800
+It's also really easy to spoof. You could set a far future time and then always get your thing applied to the bucket regardless.
+
+
+205
+00:16:53,800 --> 00:16:58,800
+And that sort of thing can be problematic in a trustless distributed system.
+
+
+206
+00:16:58,800 --> 00:17:01,800
+So we don't really want to do that.
+
+
+207
+00:17:01,800 --> 00:17:12,800
+There's also the problem of in PAIL, aside from the problem of key conflicts, we actually can't receive events in a random order for this other reason,
+
+
+208
+00:17:12,800 --> 00:17:19,800
+which is the order of applied mutations to a PAIL determines the structure of the DAG that is generated.
+
+
+209
+00:17:19,800 --> 00:17:29,800
+So we can't really have events going in any order, even if they don't conflict, because we might end up with a different root CID,
+
+
+210
+00:17:29,800 --> 00:17:33,800
+even though the PAIL contains the same keys and values.
+
+
+211
+00:17:33,800 --> 00:17:42,800
+So you could get, because it shards as it gets bigger, if you get a new key, it will use that key as the sharding key that it shards off.
+
+
+212
+00:17:42,800 --> 00:17:52,800
+If a different key comes in in a different order and it reaches that same threshold, then it will create a different shard and you will end up with two different roots CIDs.
+
+
+213
+00:17:52,800 --> 00:17:57,800
+And that's bad. So we don't want that. Anyway, cool.
+
+
+214
+00:17:57,800 --> 00:18:06,800
+So there's a thing called Merkle clocks and they make use of the inherent properties of Merkle DAGs to encode event ordering information.
+
+
+215
+00:18:06,800 --> 00:18:09,800
+So let's have a look at how that works.
+
+
+216
+00:18:09,800 --> 00:18:17,800
+So this is the same same thing that happened earlier, but what we're going to do is create our own Merkle clock from these events.
+
+
+217
+00:18:17,800 --> 00:18:26,800
+And so what happens is that each player creates a graph of the events that happen and they can create events themselves or they can receive events from others.
+
+
+218
+00:18:26,800 --> 00:18:30,800
+And so, again, this is Alice's view of events again.
+
+
+219
+00:18:30,800 --> 00:18:36,800
+All right. So she's just created an event which is a DAG node.
+
+
+220
+00:18:36,800 --> 00:18:41,800
+And you can see it's saying that she added an apple to the empty pair.
+
+
+221
+00:18:41,800 --> 00:18:47,800
+That's good. And what happens is that each player in the system keeps track of the latest event.
+
+
+222
+00:18:47,800 --> 00:18:55,800
+So it might be more than one if two or more players performed an operation at almost the same time.
+
+
+223
+00:18:55,800 --> 00:19:00,800
+So just you'll see in a sec. So Alice is tracking this as the latest event.
+
+
+224
+00:19:00,800 --> 00:19:10,800
+So next up, Alice puts in her banana into the pair and she tracks this as her latest event and the banana actually links back to the previous latest event, which is the apple.
+
+
+225
+00:19:10,800 --> 00:19:17,800
+So then soon after, she receives an event from Bob and Bob puts in the kiwi.
+
+
+226
+00:19:17,800 --> 00:19:22,800
+He hadn't received that banana event from Alice at the time he added the kiwi.
+
+
+227
+00:19:22,800 --> 00:19:30,800
+So this kiwi points back to the apple and that's okay because that's okay.
+
+
+228
+00:19:30,800 --> 00:19:35,800
+Alice just keeps track of these two events now. That's fine.
+
+
+229
+00:19:35,800 --> 00:19:46,800
+Then Alice receives an event saying that Carol put a mango in the bucket and Carol's mango does not point to Alice's banana.
+
+
+230
+00:19:46,800 --> 00:19:57,800
+So what we know about that is that when Carol created her mango event, she hadn't received Alice's banana event because it's not pointing back to it.
+
+
+231
+00:19:57,800 --> 00:20:17,800
+And now Alice's two latest events are the apple and the kiwi.
+
+
+232
+00:20:00,260 --> 00:20:09,760
+ąćAnd Alice receives another event from Bob. He's put in an orange. קümüć
+
+
+233
+00:20:09,780 --> 00:20:00,000
+�커�moil� GORD�
+
+
+234
+00:20:00,000 --> 00:20:02,000
+y banana a'r mango.
+
+
+235
+00:20:02,000 --> 00:20:03,000
+Iawn.
+
+
+236
+00:20:03,000 --> 00:20:06,000
+Ac yna, Alice ymgeisydd arall o Bob.
+
+
+237
+00:20:06,000 --> 00:20:08,000
+Mae'n rhoi oran.
+
+
+238
+00:20:08,000 --> 00:20:09,000
+Nid wyf yn credu,
+
+
+239
+00:20:09,000 --> 00:20:11,000
+mae'n ddod yn ddiddorol o ddiddorau.
+
+
+240
+00:20:12,000 --> 00:20:14,000
+Roedd yn digwydd cyn i Bob
+
+
+241
+00:20:14,000 --> 00:20:16,000
+gwybod am y banana neu y mango.
+
+
+242
+00:20:16,000 --> 00:20:17,000
+Pa sylwadau?
+
+
+243
+00:20:17,000 --> 00:20:19,000
+Ond, iawn, nawr Alice
+
+
+244
+00:20:19,000 --> 00:20:21,000
+mae'n rhoi cyfrifau ar gyfer y cyfan nesaf,
+
+
+245
+00:20:21,000 --> 00:20:23,000
+y banana, y oran a'r mango.
+
+
+246
+00:20:23,000 --> 00:20:24,000
+Ac yna,
+
+
+247
+00:20:24,000 --> 00:20:26,000
+a'r ddechrau Alice addas y trwyddiant,
+
+
+248
+00:20:26,000 --> 00:20:27,000
+ei trwyddiant trwyddiant,
+
+
+249
+00:20:27,000 --> 00:20:28,000
+y pêr,
+
+
+250
+00:20:28,000 --> 00:20:31,000
+ac mae'r pêr yn ysgol i'r cyfan nesaf
+
+
+251
+00:20:31,000 --> 00:20:33,000
+y gwnaethon nhw ei trafod.
+
+
+252
+00:20:34,000 --> 00:20:35,000
+Ac felly nawr,
+
+
+253
+00:20:35,000 --> 00:20:37,000
+mae'n dechrau trafod ei gyfan newydd
+
+
+254
+00:20:37,000 --> 00:20:39,000
+fel cyfan nesaf.
+
+
+255
+00:20:40,000 --> 00:20:41,000
+Felly,
+
+
+256
+00:20:41,000 --> 00:20:42,000
+gallwch weld
+
+
+257
+00:20:42,000 --> 00:20:44,000
+y grâff y gwnaethon ni ei greu
+
+
+258
+00:20:44,000 --> 00:20:45,000
+bydd yn y sefyllfa,
+
+
+259
+00:20:45,000 --> 00:20:47,000
+dydyn ni ddim yn bwysig
+
+
+260
+00:20:47,000 --> 00:20:49,000
+y rhan fwyaf y gynnal ni'r cyfan hwn,
+
+
+261
+00:20:49,000 --> 00:20:51,000
+byddwn yn dod â'r grâff hon.
+
+
+262
+00:20:52,000 --> 00:20:54,000
+Gallwch hefyd ddod â'r cyfan nesaf,
+
+
+263
+00:20:54,000 --> 00:20:56,000
+fel y gallwn
+
+
+264
+00:20:56,000 --> 00:20:58,000
+hillion na ddŵr
+
+
+265
+00:20:58,000 --> 00:21:08,000
+i bob un
+
+
+266
+00:21:16,000 --> 00:21:18,000
+sy'n gynnol.
+
+
+267
+00:21:18,000 --> 00:21:19,000
+Felly,
+
+
+268
+00:21:19,000 --> 00:21:20,000
+be allwn ni ddweud Am mewn gwirionedd
+
+
+269
+00:21:20,000 --> 00:21:23,000
+y cynlluniateirion hon.
+
+
+270
+00:21:23,000 --> 00:21:24,000
+Unig fel heddiw
+
+
+271
+00:21:24,000 --> 00:21:29,520
+y peir a'r mango, ond dydyn ni ddim yn gwybod a oedd o'n i, neu o'n i, neu o'n i'n y cyfraith,
+
+
+272
+00:21:30,960 --> 00:21:37,680
+ond roedd yn dod yn ddiweddar o'r mânt, ond cyn y peir.
+
+
+273
+00:21:38,960 --> 00:21:43,040
+Y peir a'r mango oedd o'n i ar ôl y kiwi, ond dydyn ni ddim yn gwybod pa o'r rhain oedd o'n i'n arfer.
+
+
+274
+00:21:43,680 --> 00:21:49,280
+Ac yna, yn ddiweddar, rydyn ni'n gwybod bod y kiwi ar ôl y mânt a'r peir
+
+
+275
+00:21:49,280 --> 00:21:56,880
+oedd ar ôl yr oran a'r mango ar y rhan honno, ac hefyd ar ôl y banana. Iawn, felly, y gafon ni gynllun o ddiddordeb?
+
+
+276
+00:22:00,560 --> 00:22:07,120
+Iawn, dwi'n meddwl, iawn, dim yn wir, ond mae gennym rhai rhwng ddiddordeb, mae gennym rhai
+
+
+277
+00:22:07,120 --> 00:22:11,680
+gynllun o ddiddordeb, felly mae hynny'n fwy o ddiddordeb. Sut y gallwn ni gynllunio'r ddiddordeb
+
+
+278
+00:22:11,680 --> 00:22:17,520
+y dyddordeb hyn yn amlwg? Wel, un peth y gallwn ei wneud yw gallwn gynllunio trwy gael
+
+
+279
+00:22:17,520 --> 00:22:24,480
+y nodau, gallwn ddod o'r dda i weithio i'r anhester cyffredinol
+
+
+280
+00:22:24,480 --> 00:22:31,200
+o'r holl ddiddordebau hyn, a'u cymryd yn eich gydol, gallwn gael 0, 1, 2 a 3
+
+
+281
+00:22:31,200 --> 00:22:34,800
+wrth i chi ffwrddio ar y trwy. Yna, rydych chi'n digwydd â rhywbeth sy'n edrych fel hyn,
+
+
+282
+00:22:34,800 --> 00:22:40,160
+mae gennym Apple sy'n digwydd yn gyntaf, Cywi sy'n digwydd yn cyntaf, Banana, Orange a Mango sy'n digwydd yn gyntaf,
+
+
+283
+00:22:40,160 --> 00:22:44,880
+ond nid, ond yna, a yna peir. Felly mae gennym ni'r rhai sydd i'w ddod o'r gwaith i'w gwybod,
+
+
+284
+00:22:44,880 --> 00:22:51,600
+felly mae hynny'n sgwrs. Beth ydyn ni'n ei wneud yma? Rydyn ni wedi gweld rhai pethau, ond nid pob un.
+
+
+285
+00:22:51,600 --> 00:23:00,720
+Un peth y gallwn ei wneud i'w gynllunio yw, fel, rydyn ni'n cymryd, fel, gan y CID o'r nodau
+
+
+286
+00:23:00,720 --> 00:23:06,960
+o'r pêl cyflawni ar ôl ymddangos ymddangos ymddygiad hwn, ac yna gynnal ni gymryd
+
+
+287
+00:23:06,960 --> 00:23:15,680
+ymddangos sy'n byw yn yr un peth ar gyfer pob chwaraewr sy'n cael y cyfnodau hyn. Felly gallwn wneud hynny.
+
+
+288
+00:23:15,680 --> 00:23:21,600
+Iawn. Iawn, felly ar y cyfnod rydw i wedi ei ysgrifennu, roedd fy nghaith nesaf yn rhywbeth fel hyn.
+
+
+289
+00:23:21,600 --> 00:23:27,040
+Roedd y syniad o ddefnyddio'r clociau Merkle a'r CRDTs i gynnal pêl cyflawni ar ôl ymddangos.
+
+
+290
+00:23:27,040 --> 00:23:37,200
+Fe wnaethon ni greu cloc Merkle fel gwasanaeth, mech-a-as, fel y dywedais yn ddiddorol.
+
+
+291
+00:23:37,200 --> 00:23:46,080
+Ac hefyd, roedd gennym gysylltiadau i ddysgu am ymddangos, oherwydd dydyn ni ddim eisiau pêl cyflawni ar ôl ymddangos,
+
+
+292
+00:23:46,080 --> 00:23:54,640
+rydyn ni eisiau gallu cyflawni cymryd ymddangos i bobl i wneud ymddangos ar gyfer ysgrifennu, neu ysgrifennu'n iawn, neu'n iawn, etc.
+
+
+293
+00:23:54,640 --> 00:24:03,600
+Ac rydyn ni hefyd yn adeiladu, yn gyfartal, rydyn ni'n adeiladu'r API Web3.storage ar gyfer UCAN,
+
+
+294
+00:24:03,600 --> 00:24:08,800
+sy'n mynd i ddod allan, neu sydd wedi dod allan yn beta, ond rydyn ni'n dod â'r cyflawni'n ddiweddar.
+
+
+295
+00:24:08,800 --> 00:24:12,640
+Felly mae'r holl hyn yn cyfathrebu'n iawn gyda hynny.
+
+
+296
+00:24:12,640 --> 00:24:20,560
+Ac yna, os oes gennym ymddangos Merkle fel gwasanaeth, gallwch, yn ystod y ffordd, adeiladu unrhyw ddysgu CRDT ar ôl ei gilydd.
+
+
+297
+00:24:20,560 --> 00:24:25,520
+Iawn. Felly, yn ffwrdd gyfartal, rydym yn dod â'r diwrnod ar gyfer y bryd.
+
+
+298
+00:24:25,520 --> 00:24:30,400
+Rydyn ni wedi'i adeiladu'r peth y dwi'n ei ddweud yn w3-bucket.
+
+
+299
+00:24:30,400 --> 00:24:38,160
+Mae'n ddiddorol iawn, ond mae'n cael ei adeiladu ar y MacOS, y gwasanaeth Merkle, y llyfrgell pêl,
+
+
+300
+00:24:38,160 --> 00:24:44,400
+sydd yn yr hyn rydyn ni wedi gweithio gyda nhw, a'r newid ymddangos Web3.storage ar gyfer UCAN, sy'n ein ddweud yn w3-up.
+
+
+301
+00:24:44,400 --> 00:24:52,480
+Y bryd w3-bucket yw'r dylunio i'r w3-cli.
+
+
+302
+00:24:52,480 --> 00:24:56,480
+W3-cli yw'r dylunio i w3-up o'ch cymorth.
+
+
+303
+00:24:56,480 --> 00:24:58,960
+Felly dyma sut mae'n gweithio.
+
+
+304
+00:24:58,960 --> 00:25:07,520
+Yn gyntaf, fel y gwelwch chi'n ei weld yn y pêl, mae rhoi newid gwerthoedd newydd yn eich pêl leol.
+
+
+305
+00:25:07,520 --> 00:25:17,440
+Mae'r newid yn cynnig ddiff, sy'n set o blociau a'r rwydwyr a'r rwydwyr newydd.
+
+
+306
+00:25:17,440 --> 00:25:24,480
+Mae'r blociau a'r rwydwyr newydd yn cael eu gofalu gan w3-up,
+
+
+307
+00:25:24,480 --> 00:25:30,400
+fel y gwelwch chi'n ei weld, yw'r newid ymddangos Web3.storage ar gyfer ddatganu data yn defnyddio UCAN.
+
+
+308
+00:25:30,400 --> 00:25:38,720
+Mae w3-up yn gwneud y swydd o gael y blociau hwn yn ymgyrch i'r IPFS elastig a'r Filecoin.
+
+
+309
+00:25:38,720 --> 00:25:41,680
+Roedd ymgyrch ar y camp IPFS y gafodd i mi.
+
+
+310
+00:25:41,680 --> 00:25:44,720
+Gallwch chi edrych ar y swydd, oherwydd roedd yn dda, yn fy nghyfri.
+
+
+311
+00:25:44,720 --> 00:25:54,880
+Yn ymgyrch i'r IPFS elastig, gall unrhyw un ddod o'r blociau sy'n cynnig y bucet ar gyfer bitswap neu'r gateways os ydynt eisiau.
+
+
+312
+00:25:54,880 --> 00:26:04,320
+Yn ymgyrch i'r W3-up, bydd y gwneud y peth yn mynd i'r bucet yn gwneud cyfnod o ddarlith Merkle Clock,
+
+
+313
+00:26:04,320 --> 00:26:07,760
+fel y gwelwch ni gyda Alice, Bob a Carol.
+
+
+314
+00:26:07,760 --> 00:26:13,520
+Felly, rydyn ni wedi creu'r ddarlith Merkle Clock, ac gallwn ei ddangos i'r gwasanaeth Merkle Clock,
+
+
+315
+00:26:13,520 --> 00:26:15,200
+sy'n dda.
+
+
+316
+00:26:15,200 --> 00:26:19,920
+Rydyn ni'n cynyddu'r ddarlith Merkle Clock.
+
+
+317
+00:26:19,920 --> 00:26:26,000
+Yn ymgyrch i'r W3-up, gall y ddarlith Merkle Clock, pan fydd yn cael y gwybodaeth honno,
+
+
+318
+00:26:26,000 --> 00:26:29,440
+gael ei ddod o'r blociau sydd angen ar gyfer bitswap.
+
+
+319
+00:26:29,440 --> 00:26:36,000
+Felly, os ydym ni wedi'i ddod o'r ffordd, gall unrhyw ddarlith Merkle Clock yn dod i'r ffocws
+
+
+320
+00:26:36,000 --> 00:26:39,120
+a ddefnyddio'r ddarlith Merkle Clock fel ysgolion ar gyfer ysgolion,
+
+
+321
+00:26:39,120 --> 00:26:42,000
+ac gall ei ddysgu'r cyfarfod cyffredinol o'r ddarlith.
+
+
+322
+00:26:42,000 --> 00:26:50,080
+Felly mae'r cyfarfod yn y set o ddarlithau sy'r cyfarfodau cyfanol yn y ddarlith Merkle.
+
+
+323
+00:26:50,080 --> 00:26:53,200
+Felly gallwch ddysgu'r ddarlithau hynny.
+
+
+324
+00:26:53,200 --> 00:26:56,240
+Ac yna gall un arall ddod i'r ffocws a wneud yr un peth.
+
+
+325
+00:26:56,240 --> 00:27:02,560
+Ond y bwysigrwydd yw bod y ddarlithau hynny hefyd yn ddarlith Merkle.
+
+
+326
+00:27:02,560 --> 00:27:08,640
+Ac pan fyddwch chi'n rhoi gwerth, mae'r holl ddarlith W3 yn cynyddu'r ddarlithau lleol ei hun.
+
+
+327
+00:27:08,640 --> 00:27:13,920
+Felly gallwch chi ddysgu'r cyfarfodau cyfanol eich hun yn ystod arall.
+
+
+328
+00:27:13,920 --> 00:27:18,480
+Ac mae hynny'n iawn oherwydd Merkle Clocks a CRDTs,
+
+
+329
+00:27:18,480 --> 00:27:23,920
+mae'n gweithio iawn, oherwydd, yn rhan o beth, mae'r cyfarfodydd yn dod i mewn.
+
+
+330
+00:27:23,920 --> 00:27:27,600
+Felly gallwch ddysgu'n ystod arall i'r bwysau eraill.
+
+
+331
+00:27:27,600 --> 00:27:30,720
+Ac yna dydynt ddim angen y pwynt rondebwyd yn unig,
+
+
+332
+00:27:30,720 --> 00:27:33,920
+yn ysbytai eich bod chi'n gallu sôn yn ystod arall i'r bwysau eraill.
+
+
+333
+00:27:33,920 --> 00:27:35,920
+Mae'n dda iawn, ond dwi'n meddwl.
+
+
+334
+00:27:35,920 --> 00:27:41,440
+Yn ystod y byd, wrth fy mod i'n adeiladu hyn, roeddwn i'n meddwl am y gweithgareddau hyn.
+
+
+335
+00:27:41,440 --> 00:27:46,160
+Sut allaf i wneud hyn fel CLI ddefnyddiol sy'n deimlo i bobl?
+
+
+336
+00:27:46,160 --> 00:27:48,960
+Roeddwn i'n meddwl amdano mewn cyfnod o weithgareddau git.
+
+
+337
+00:27:48,960 --> 00:27:52,560
+Mae'r cyrff git yn ymwneud â chlock advance,
+
+
+338
+00:27:52,560 --> 00:27:55,760
+ac mae'r cyrff git pull yn ymwneud â chlock head,
+
+
+339
+00:27:55,760 --> 00:27:59,680
+cael y cyfan cyfnodol, y cyfan sydd ar y tip o'r chlock.
+
+
+340
+00:27:59,680 --> 00:28:07,760
+Pan rydych chi'n pull, rydych chi'n cael y cyfan a'i wneud yn ymwneud â'r cyfan rydych chi wedi'i gael.
+
+
+341
+00:28:07,760 --> 00:28:13,680
+Ac yna'r cyfanau eraill yw'r cyfan remote y gallwch chi ei gyrru.
+
+
+342
+00:28:13,680 --> 00:28:18,000
+A efallai y cyfan o'r cyfan yw'r cyfan Merkle yn y gwasanaeth.
+
+
+343
+00:28:18,000 --> 00:28:20,960
+Y peth y gallwch chi ei gyrru ar gyfer y defnyddiol fel github.com.
+
+
+344
+00:28:20,960 --> 00:28:24,960
+Yn fawr iawn.
+
+
+345
+00:28:24,960 --> 00:28:26,960
+Gadewch i ni wneud y demo hwn yn gyflym.
+
+
+346
+00:28:26,960 --> 00:28:30,960
+Yn fawr iawn iawn.
+
+
+347
+00:28:30,960 --> 00:28:34,960
+Gadewch i ni wneud y demo hwn yn gyflym.
+
+
+348
+00:28:34,960 --> 00:28:38,960
+Gadewch i ni wneud y demo hwn yn gyflym.
+
+
+349
+00:28:38,960 --> 00:28:42,960
+Yn fawr iawn iawn.
+
+
+350
+00:28:42,960 --> 00:28:46,960
+Yn fawr iawn iawn.
+
+
+351
+00:28:46,960 --> 00:28:50,960
+Beth yw'r peth?
+
+
+352
+00:28:50,960 --> 00:28:56,960
+Mae gen i ddau cyfnodau CLI.
+
+
+353
+00:28:56,960 --> 00:29:02,960
+Gallwn wneud, W3CLI, gwnes i gael y cyfnod o'r CLI.
+
+
+354
+00:29:02,960 --> 00:29:08,960
+Gallwch weld bod y cyfnodau gwahanol y gydag ni yma.
+
+
+355
+00:29:08,960 --> 00:29:16,960
+Rwyf wedi gwneud y gwaith o ddewis ymwneud â'r un ar y ddra.
+
+
+356
+00:29:16,960 --> 00:29:20,960
+Alice ar y ddra a Bob ar y ddra.
+
+
+357
+00:29:20,960 --> 00:29:24,960
+Rwyf wedi gwneud y gwaith o ddewis Bob,
+
+
+358
+00:29:24,960 --> 00:29:28,960
+gallu cynyddu'r cloc ar un ardal,
+
+
+359
+00:29:28,960 --> 00:29:32,960
+a chyfnodau i gysylltu'r pethau i un ardal neu byd.
+
+
+360
+00:29:32,960 --> 00:29:36,960
+Rwyf wedi cael y cydnabod o hynny.
+
+
+361
+00:29:36,960 --> 00:29:40,960
+Gallwn gysylltu'r ffaith bod gen i gysylltu'r cyfnod i'r adnodd.
+
+
+362
+00:29:40,960 --> 00:29:44,960
+Mae'r byd y gwnes i'w ddweud amdano.
+
+
+363
+00:29:44,960 --> 00:29:50,960
+Mae Bob yn gallu gwneud hynny ar y cloc Alice.
+
+
+364
+00:29:50,960 --> 00:29:52,960
+Mae'n dda iawn.
+
+
+365
+00:29:52,960 --> 00:29:58,960
+Mae gen i gysylltiad o cloc,
+
+
+366
+00:29:58,960 --> 00:30:08,960
+ac rwyf hefyd wedi sefydlu Bob fel gysylltiad cyfnodol.
+
+
+367
+00:30:08,960 --> 00:30:12,960
+Felly dyma'r gwneud y gynhyrch hon ddim yn cyd-dod yn ôl.
+
+
+368
+00:30:12,960 --> 00:30:18,960
+Bob yw'r ffyrdd,
+
+
+369
+00:30:18,960 --> 00:30:21,960
+a'r gynllun Bob.
+
+
+370
+00:30:21,960 --> 00:30:24,960
+Gallwch wneud cyfnod o fucat W3
+
+
+371
+00:30:24,960 --> 00:30:28,960
+a bydd yn dechrau cyflwyniad i'w ddod i mewn.
+
+
+372
+00:30:28,960 --> 00:30:31,960
+Mae'r gynllunau'n cael eu sefydlu fel gysylltiadau.
+
+
+373
+00:30:31,960 --> 00:30:40,960
+Ar y gynllun hon, mae Alice wedi'i sefydlu fel gysylltiadau.
+
+
+374
+00:30:40,960 --> 00:30:44,960
+Mae'r gynllunau'n cael eu sefydlu fel gysylltiadau.
+
+
+375
+00:30:44,960 --> 00:30:49,960
+Mae'r gynllun hon yn un o'r CLI y gwnaethof i chi,
+
+
+376
+00:30:49,960 --> 00:30:51,960
+felly gallwn ni llwyno gynllunau yn y bucat.
+
+
+377
+00:30:51,960 --> 00:30:53,960
+Mae gen i rai gweithiau i'w dystio.
+
+
+378
+00:30:53,960 --> 00:30:55,960
+Gadewch i ni allu hynny.
+
+
+379
+00:30:57,960 --> 00:30:59,960
+Gallwch weld...
+
+
+380
+00:30:59,960 --> 00:31:01,960
+Mae ganddo 13 pethau.
+
+
+381
+00:31:01,960 --> 00:31:03,960
+A dwi'n cael 12.
+
+
+382
+00:31:03,960 --> 00:31:15,960
+Yn y bucat, a yw'r un pethau'n un peth?
+
+
+383
+00:31:15,960 --> 00:31:21,960
+Wel, byddai'n gwneud y peth o orfod cloc.
+
+
+384
+00:31:21,960 --> 00:31:33,960
+Nid yn y bwysigrwydd, ond yn y bwysigrwydd,
+
+
+385
+00:31:33,960 --> 00:31:40,960
+os yw'r pethau'n un peth, byddai'r pethau'n un peth.
+
+
+386
+00:31:40,960 --> 00:31:44,960
+Os ydyn nhw'n cyflwyno'r un cyfnod a'r gwerth, byddwch chi'n cael yr un cyfnod.
+
+
+387
+00:31:44,960 --> 00:31:46,960
+Os ydyn nhw'n cael yr un cyfnod a gwerth, byddai'r pethau'n un peth.
+
+
+388
+00:31:46,960 --> 00:31:51,960
+Yn y bwysigrwydd, mae'r cyfnod a'r gwerth yn cael ei chreu.
+
+
+389
+00:31:51,960 --> 00:31:58,960
+Mae'n dweud bod yn ddepennod ar y pwynt hwnnw fel gweithgaredd diwethaf.
+
+
+390
+00:31:58,960 --> 00:32:03,960
+Byddwn yn gwneud cwestiynau ar ôl.
+
+
+391
+00:32:03,960 --> 00:32:22,960
+Rydw i'n mynd i wneud cyfnod, a dwi'n mynd i ddod yn un arall.
+
+
+392
+00:32:22,960 --> 00:32:41,960
+Mae'r cyfnod hwnnw wedi mynd yn y bucket Alice.
+
+
+393
+00:32:41,960 --> 00:32:53,960
+Mae'r cyfnod hwn yn y bucket Alice.
+
+
+394
+00:32:53,960 --> 00:33:15,960
+Mae'r cyfnod hwn yn y bucket Alice.
+
+
+395
+00:33:15,960 --> 00:33:27,960
+Mae'r cyfnod hwn yn y bucket Alice.
+
+
+396
+00:33:27,960 --> 00:33:50,960
+Mae'r cyfnod hwn yn y bucket Alice.
+
+
+397
+00:33:50,960 --> 00:34:02,960
+Mae'r cyfnod hwn yn y bucket Alice.
+
+
+398
+00:34:02,960 --> 00:34:09,960
+Mae'r cyfnod hwn yn y bucket Alice.
+
+
+399
+00:34:09,960 --> 00:34:23,960
+Mae'r cyfnod hwn yn y bucket Alice.
+
+
+400
+00:34:23,960 --> 00:34:44,960
+Mae'r cyfnod hwn yn y bucket Alice.
+
+
+401
+00:34:44,960 --> 00:34:56,960
+Mae'r cyfnod hwn yn y bucket Alice.
+
+
+402
+00:34:56,960 --> 00:35:09,960
+Mae'r cyfnod hwn yn y bucket Alice.
+
+
+403
+00:35:09,960 --> 00:35:20,960
+Mae'r cyfnod hwn yn y bucket Alice.
+
+
+404
+00:35:20,960 --> 00:35:32,960
+Mae'r cyfnod hwn yn y bucket Alice.
+
+
+405
+00:35:32,960 --> 00:35:44,960
+Mae'r cyfnod hwn yn y bucket Alice.
+
+
+406
+00:35:44,960 --> 00:35:56,960
+Mae'r cyfnod hwn yn y bucket Alice.
+
+
+407
+00:35:56,960 --> 00:36:05,960
+Mae'r cyfnod hwn yn y bucket Alice.
+
+
+408
+00:36:05,960 --> 00:36:15,960
+Mae'r cyfnod hwn yn y bucket Alice.
+
+
+409
+00:36:15,960 --> 00:36:23,960
+Mae'r cyfnod hwn yn y bucket Alice.
+
+
+410
+00:36:23,960 --> 00:36:34,960
+Mae'r cyfnod hwn yn y bucket Alice.
+
+
+411
+00:36:34,960 --> 00:36:44,960
+Mae'r cyfnod hwn yn y bucket Alice.
+
+
+412
+00:36:44,960 --> 00:36:54,960
+Mae'r cyfnod hwn yn y bucket Alice.
+
+
+413
+00:36:54,960 --> 00:37:04,960
+Mae'r cyfnod hwn yn y bucket Alice.
+
+
+414
+00:37:04,960 --> 00:37:14,960
+Mae'r cyfnod hwn yn y bucket Alice.
+
+
+415
+00:37:14,960 --> 00:37:24,960
+Mae'r cyfnod hwn yn y bucket Alice.
+
+
+416
+00:37:24,960 --> 00:37:34,960
+Mae'r cyfnod hwn yn y bucket Alice.
+
+
+417
+00:37:34,960 --> 00:37:44,960
+Mae'r cyfnod hwn yn y bucket Alice.
+
+
+418
+00:37:44,960 --> 00:37:54,960
+Mae'r cyfnod hwn yn y bucket Alice.
+
+
+419
+00:37:54,960 --> 00:38:04,960
+Mae'r cyfnod hwn yn y bucket Alice.
+
+
+420
+00:38:04,960 --> 00:38:14,960
+Mae'r cyfnod hwn yn y bucket Alice.
+
+
+421
+00:38:14,960 --> 00:38:24,960
+Mae'r cyfnod hwn yn y bucket Alice.
+
+
+422
+00:38:24,960 --> 00:38:34,960
+Mae'r cyfnod hwn yn y bucket Alice.
+
+
+423
+00:38:34,960 --> 00:38:44,960
+Mae'r cyfnod hwn yn y bucket Alice.
+
+
+424
+00:38:44,960 --> 00:38:54,960
+Mae'r cyfnod hwn yn y bucket Alice.
+
+
+425
+00:38:54,960 --> 00:39:04,960
+Mae'r cyfnod hwn yn y bucket Alice.
+
+
+426
+00:39:04,960 --> 00:39:14,960
+Mae'r cyfnod hwn yn y bucket Alice.
+
+
+427
+00:39:14,960 --> 00:39:24,960
+Mae'r cyfnod hwn yn y bucket Alice.
+
+
+428
+00:39:24,960 --> 00:39:34,960
+Mae'r cyfnod hwn yn y bucket Alice.
+
+
+429
+00:39:34,960 --> 00:39:44,960
+Mae'r cyfnod hwn yn y bucket Alice.
+
+
+430
+00:39:44,960 --> 00:39:54,960
+Mae'r cyfnod hwn yn y bucket Alice.
+
+
+431
+00:39:54,960 --> 00:40:14,960
+Mae'r cyfnod hwn yn y bucket Alice.
+
+
+432
+00:40:00,000 --> 00:40:07,640
+[...]
+
+
+433
+00:40:30,000 --> 00:40:35,000
+It's like a block cache for the events that you've received.
+
+
+434
+00:40:35,000 --> 00:40:38,800
+Okay, so the events are, this is my current route,
+
+
+435
+00:40:38,800 --> 00:40:40,720
+and this is the routes that are parents
+
+
+436
+00:40:40,720 --> 00:40:43,060
+of this event, essentially.
+
+
+437
+00:40:43,060 --> 00:40:44,640
+Yeah, yeah.
+
+
+438
+00:40:44,640 --> 00:40:45,480
+Yeah, yeah.
+
+
+439
+00:40:46,440 --> 00:40:48,560
+Because we're pushing events into Elastic IPFS,
+
+
+440
+00:40:48,560 --> 00:40:50,040
+we don't have to keep hold of them locally.
+
+
+441
+00:40:50,040 --> 00:40:53,280
+We can, you can just get them as and when they're needed
+
+
+442
+00:40:53,280 --> 00:40:55,840
+from the IPFS network, because Elastic is always on.
+
+
+443
+00:40:56,700 --> 00:40:58,880
+So you don't, like, you can literally delete
+
+
+444
+00:40:58,880 --> 00:41:03,800
+your local block store and still have access to the bucket,
+
+
+445
+00:41:03,800 --> 00:41:07,240
+because you've stored those blocks in web-free storage.
+
+
+446
+00:41:07,240 --> 00:41:09,740
+And those are events that are signed by the DITKey.
+
+
+447
+00:41:14,360 --> 00:41:19,360
+The, so the UCAN that says advance the clock
+
+
+448
+00:41:20,960 --> 00:41:24,500
+with this event is signed with my DITKey, yeah.
+
+
+449
+00:41:26,420 --> 00:41:27,840
+Yeah.
+
+
+450
+00:41:27,840 --> 00:41:30,940
+The events themselves are not, but they have CRDs.
+
+
+451
+00:41:32,080 --> 00:41:33,080
+This is good enough.
+
+
+452
+00:41:36,260 --> 00:41:39,620
+Sorry, I missed the reasoning for needing
+
+
+453
+00:41:39,620 --> 00:41:43,540
+the shard mechanic, like, in general.
+
+
+454
+00:41:43,540 --> 00:41:45,480
+Like, if you, like, just take a literal reading
+
+
+455
+00:41:45,480 --> 00:41:47,200
+of, like, the Merkle CRD paper,
+
+
+456
+00:41:47,200 --> 00:41:50,280
+like, where does the shard fit in into that model?
+
+
+457
+00:41:50,280 --> 00:41:53,720
+The sharding of the bucket is,
+
+
+458
+00:41:53,720 --> 00:41:58,560
+because it's one block, at some point,
+
+
+459
+00:41:58,560 --> 00:42:01,360
+you can fill that block up and make that block
+
+
+460
+00:42:01,360 --> 00:42:03,440
+too big for libp to be a transfer.
+
+
+461
+00:42:03,440 --> 00:42:06,560
+So when you add a new item, it adds to the same block?
+
+
+462
+00:42:06,560 --> 00:42:07,400
+Yeah.
+
+
+463
+00:42:07,400 --> 00:42:08,960
+It replicates everything from the old object
+
+
+464
+00:42:08,960 --> 00:42:10,440
+into a new block?
+
+
+465
+00:42:10,440 --> 00:42:11,280
+Yeah.
+
+
+466
+00:42:11,280 --> 00:42:12,600
+So it's like N from the old block,
+
+
+467
+00:42:12,600 --> 00:42:13,960
+N plus one in a new block?
+
+
+468
+00:42:16,000 --> 00:42:17,600
+Yeah, yeah, exactly.
+
+
+469
+00:42:17,600 --> 00:42:20,040
+Yeah, you'd have one block with, like, one key in it.
+
+
+470
+00:42:20,040 --> 00:42:22,000
+If you put another key, you'll get a new block
+
+
+471
+00:42:22,000 --> 00:42:23,680
+with those two keys in it.
+
+
+472
+00:42:24,680 --> 00:42:27,260
+And if that block gets too big,
+
+
+473
+00:42:27,260 --> 00:42:28,660
+you put too many things in it,
+
+
+474
+00:42:28,660 --> 00:42:31,960
+then it will create another block for one of the keys
+
+
+475
+00:42:31,960 --> 00:42:35,160
+that is a shard, which reduces the size a little bit
+
+
+476
+00:42:35,160 --> 00:42:38,600
+to accommodate other things.
+
+
+477
+00:42:38,600 --> 00:42:42,820
+Is that a causal duplication, like, between blocks then?
+
+
+478
+00:42:44,320 --> 00:42:48,040
+Or do you just, like, stop caring about the old ones?
+
+
+479
+00:42:48,040 --> 00:42:49,280
+They're kind of small.
+
+
+480
+00:42:49,280 --> 00:42:51,320
+The shard size doesn't have to be big,
+
+
+481
+00:42:51,320 --> 00:42:53,520
+so, like, there's some duplication, yeah.
+
+
+482
+00:42:54,560 --> 00:42:55,880
+Okay, cool.
+
+
+483
+00:42:55,880 --> 00:42:59,940
+Yeah, but the key here is that, like,
+
+
+484
+00:43:01,560 --> 00:43:04,160
+I don't really want to de-dupe everything
+
+
+485
+00:43:04,160 --> 00:43:06,720
+because I want to minimize traversals,
+
+
+486
+00:43:07,640 --> 00:43:12,640
+because fetching, like, blocks for each item is expensive,
+
+
+487
+00:43:13,360 --> 00:43:15,760
+and if I can just get one block with everything in it,
+
+
+488
+00:43:15,760 --> 00:43:20,200
+then that's faster than getting a block,
+
+
+489
+00:43:20,200 --> 00:43:22,420
+asking for a block, getting a block, decoding it,
+
+
+490
+00:43:22,420 --> 00:43:24,720
+getting the next block, decoding it.
+
+
+491
+00:43:24,720 --> 00:43:27,640
+Like, if I do that for every, like, if it's a deep shard,
+
+
+492
+00:43:27,640 --> 00:43:29,380
+then it's not so good.
+
+
+493
+00:43:30,320 --> 00:43:32,040
+All right, thanks, everyone.
+
+
+494
+00:43:32,040 --> 00:43:32,880
+Thank you.
+
+
+495
+00:43:32,880 --> 00:43:33,700
+Thank you.
+
+
+496
+00:43:33,700 --> 00:43:34,540
+Thank you.
+
+
+497
+00:43:34,540 --> 00:43:35,380
+Thank you.
+
+
+498
+00:43:35,380 --> 00:43:36,200
+Thank you.
+
+
+499
+00:43:36,200 --> 00:43:51,200
+Thank you.

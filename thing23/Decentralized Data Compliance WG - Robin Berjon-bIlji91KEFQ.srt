@@ -1,0 +1,528 @@
+1
+00:00:00,000 --> 00:00:13,440
+Who wants to talk about compliance? Yay! I'm glad that people are excited. So we have this
+
+
+2
+00:00:13,440 --> 00:00:21,000
+little thing that's been going on for a couple of months, I would say. Not super actively
+
+
+3
+00:00:21,000 --> 00:00:25,400
+yet, it's basically been ramping up. That's called the Decentralized Data Compliance Working
+
+
+4
+00:00:25,400 --> 00:00:29,020
+Group. It's one of those working groups that we've been talking about that are sprouting
+
+
+5
+00:00:29,020 --> 00:00:35,080
+up all over the place and that no one knows where to find or what to do with them. It's
+
+
+6
+00:00:35,080 --> 00:00:43,320
+been chaired by Juan Cabanero, and the purpose is basically anyone who's interested in this
+
+
+7
+00:00:43,320 --> 00:00:48,200
+set of issues, which I'm going to describe in greater detail afterwards, is absolutely
+
+
+8
+00:00:48,200 --> 00:00:56,240
+welcome to join us. It's been started by a bunch of IPFS Filecoin people, but it's open
+
+
+9
+00:00:56,240 --> 00:01:05,800
+to a much broader ecosystem. So what exactly does this working group work on? Well, it's
+
+
+10
+00:01:05,800 --> 00:01:14,720
+primarily focused on finding solutions to the problems that emerge once you start to
+
+
+11
+00:01:14,720 --> 00:01:24,480
+introduce decentralization into typical compliance problems. So if you're a regular Web2 or even
+
+
+12
+00:01:24,480 --> 00:01:31,040
+not Web company, you will have issues with privacy compliance and you might have issues
+
+
+13
+00:01:31,040 --> 00:01:40,480
+with... I mean, you would have to be probably a Web1 to have issues with DDPR, with takedown
+
+
+14
+00:01:40,480 --> 00:01:47,320
+and the such. But essentially, these are classic issues, but that are made more, let's say,
+
+
+15
+00:01:47,320 --> 00:01:52,920
+more interesting by their intersection with decentralized technologies. And so, for instance,
+
+
+16
+00:01:52,920 --> 00:02:00,480
+if someone starts storing personal data on IPFS and people replicate that content, who
+
+
+17
+00:02:00,480 --> 00:02:05,760
+is the data controller? What kind of encryption and controls might you need to have around
+
+
+18
+00:02:05,760 --> 00:02:12,560
+it? What kind of GDPR obligations or CPRA obligations? And there's a shit ton of privacy
+
+
+19
+00:02:12,560 --> 00:02:18,880
+regimes out there that we might need to think about. If you run a public gateway, I think
+
+
+20
+00:02:18,880 --> 00:02:23,920
+this is a problem that Boris is quite familiar with. How do you handle your copyright takedown
+
+
+21
+00:02:23,920 --> 00:02:27,880
+notices when it's not even your content to start with? Or how can you run a gateway such
+
+
+22
+00:02:27,880 --> 00:02:32,920
+that you won't have that problem? And yeah, I decided to just arbitrarily name the public
+
+
+23
+00:02:32,920 --> 00:02:38,400
+network slash DHT because we've been talking about it all day. So I figured it needed a
+
+
+24
+00:02:38,400 --> 00:02:39,400
+name there.
+
+
+25
+00:02:39,400 --> 00:02:44,080
+I didn't know what logo was born.
+
+
+26
+00:02:44,080 --> 00:02:51,640
+I don't even have an acronym for it. And this whole set of issues like CSAM and terrorist
+
+
+27
+00:02:51,640 --> 00:02:56,160
+content and one thing that came up in the meeting yesterday is that, have you thought
+
+
+28
+00:02:56,160 --> 00:03:04,880
+about libel, which is a horrendously complicated area that I don't want to handle, but that
+
+
+29
+00:03:04,880 --> 00:03:10,920
+we probably need to be thinking about. And so, this all ties to the technical mechanisms
+
+
+30
+00:03:10,920 --> 00:03:17,160
+that we can use to support some of this. And so, it also has to impact how we govern the
+
+
+31
+00:03:17,160 --> 00:03:20,160
+bad bit system in general.
+
+
+32
+00:03:20,160 --> 00:03:25,320
+There was a meeting of this working group earlier this week here. A bunch of us got
+
+
+33
+00:03:25,320 --> 00:03:30,960
+together in the short term. We're going to work on primarily developing an overview of
+
+
+34
+00:03:30,960 --> 00:03:36,000
+the issues because what we've been doing over the past few weeks has been mostly like, have
+
+
+35
+00:03:36,000 --> 00:03:41,240
+you thought also of that other problem? And, oh, I spoke to my DPO and they think that
+
+
+36
+00:03:41,240 --> 00:03:48,920
+could blow up in our face. And so, we have a DPO, sorry, a data privacy officer. Sorry
+
+
+37
+00:03:48,920 --> 00:03:54,520
+for the jargon. What, you don't know what a DPO is and you're in a compliance session?
+
+
+38
+00:03:54,520 --> 00:03:57,360
+This is a compliance track, right?
+
+
+39
+00:03:57,360 --> 00:04:02,680
+So yeah, we basically have a big pile of issues on the floor and we want to sort them into
+
+
+40
+00:04:02,680 --> 00:04:09,440
+buckets such that we can put our arms around it and start producing solutions or at least
+
+
+41
+00:04:09,440 --> 00:04:15,440
+recommendations to it. And so, part of that is figuring out what the problems face is.
+
+
+42
+00:04:15,440 --> 00:04:21,880
+Part of that is also understanding how to explain our space to regulators or people,
+
+
+43
+00:04:21,880 --> 00:04:29,160
+lawyers, experts in that domain who want to understand and want to help and are often
+
+
+44
+00:04:29,160 --> 00:04:34,280
+like glad that we're thinking about it in the first place. But as you know, it's not
+
+
+45
+00:04:34,280 --> 00:04:40,520
+always that easy to explain what we do. And I'm going to try to reach out to a number
+
+
+46
+00:04:40,520 --> 00:04:46,880
+of people who have faced these issues, but who are like large companies with like, you
+
+
+47
+00:04:46,880 --> 00:04:52,040
+know, an army of small army of lawyers to see if they're willing to also support. And
+
+
+48
+00:04:52,040 --> 00:04:55,680
+there's a bunch of people who are interested. The group has been steadily growing. Every
+
+
+49
+00:04:55,680 --> 00:04:59,440
+time someone hears about it, they go like, oh yeah, we should probably be thinking about
+
+
+50
+00:04:59,440 --> 00:05:05,360
+that as well. And so, you know, then the next steps that
+
+
+51
+00:05:05,360 --> 00:05:11,760
+we're going to take is like, so, you know, as Cade recommended that we should be doing
+
+
+52
+00:05:11,760 --> 00:05:16,320
+anti-user research. And so basically figuring out ways in which we can make it painful to
+
+
+53
+00:05:16,320 --> 00:05:22,480
+misuse things. As I said, we're going to build this overview of the problem space so that
+
+
+54
+00:05:22,480 --> 00:05:28,520
+we can like chunk it down into smaller issues to fix and also advocate for this. There's
+
+
+55
+00:05:28,520 --> 00:05:35,800
+a number of actors who are really YOLO about how to approach these problems. But I really
+
+
+56
+00:05:35,800 --> 00:05:42,440
+think that a lot of the companies in PLN and in the broader space want to address this
+
+
+57
+00:05:42,440 --> 00:05:48,520
+or at least would be willing to contribute a bit of time to helping address this. And
+
+
+58
+00:05:48,520 --> 00:05:54,960
+beyond that, once we figured out what we want to do, they'll depend on where we land, but
+
+
+59
+00:05:54,960 --> 00:05:58,640
+I think we will probably try to build things like shared legal notices that people can
+
+
+60
+00:05:58,640 --> 00:06:03,040
+reuse so that way you're an operator, you know, you need to have this special text in
+
+
+61
+00:06:03,040 --> 00:06:09,080
+the terms of service. You know, you need to have this specific like privacy process, things
+
+
+62
+00:06:09,080 --> 00:06:16,080
+that can be replicated easily, trying to build out best practices. One option on the table,
+
+
+63
+00:06:16,080 --> 00:06:20,560
+this is Europe only, but these things tend to have like international influence as well,
+
+
+64
+00:06:20,560 --> 00:06:25,400
+is that there's a process under the GDPR where an industry can come together and say for
+
+
+65
+00:06:25,400 --> 00:06:31,720
+these specific problems, that is how we address them and how we enforce the solutions. And
+
+
+66
+00:06:31,720 --> 00:06:41,120
+so that could be one outcome. And that's basically it. You know, if you want to come play, the
+
+
+67
+00:06:41,120 --> 00:06:53,440
+links are here. It's a friendly bunch and we talk about compliance. It's a lot of fun.
+
+
+68
+00:06:53,440 --> 00:07:00,440
+Are there any questions? Yep. Wait, wait, wait for the mic.
+
+
+69
+00:07:00,440 --> 00:07:04,240
+There's a lot of infrastructure already out there that can be leveraged today. A lot of
+
+
+70
+00:07:04,240 --> 00:07:10,300
+NGOs doing a lot of good work that you can work with. I happen to be a technical regulator,
+
+
+71
+00:07:10,300 --> 00:07:15,160
+so I'm offering to help your working group and help you move into compliance wherever
+
+
+72
+00:07:15,160 --> 00:07:18,800
+you want. I'll come out right to you and we can move forward.
+
+
+73
+00:07:18,800 --> 00:07:23,800
+That would be wonderful. Thank you. Yeah. So for the record, you're with Ofcom, right?
+
+
+74
+00:07:23,800 --> 00:07:29,000
+Yep. Yeah. No, that would be absolutely wonderful. Yeah. We actually talked about you a couple
+
+
+75
+00:07:29,000 --> 00:07:33,040
+of times at the meeting and we're really excited that you are participating, so we'd love to
+
+
+76
+00:07:33,040 --> 00:07:37,200
+work with you. Can you post these slides in the shared channel?
+
+
+77
+00:07:37,200 --> 00:07:50,400
+Yeah, of course. Yeah. Juan? I think this is great. I think there's going to be I think
+
+
+78
+00:07:50,400 --> 00:07:56,320
+we were able to close by with a lot of work on this while protocols were smaller and younger
+
+
+79
+00:07:56,320 --> 00:08:02,200
+and so on. But with a lot of the data coming into things like Filecoin and so on and the
+
+
+80
+00:08:02,200 --> 00:08:08,160
+distribution of network participants around the world in jurisdictions that disagree a
+
+
+81
+00:08:08,160 --> 00:08:13,280
+lot about what content should be distributed, it's going to become more and more and more
+
+
+82
+00:08:13,280 --> 00:08:20,200
+important. And so I think finding like solutions that work earlier on, even if they're not
+
+
+83
+00:08:20,200 --> 00:08:24,280
+like the good long-term thing to do, and then just incrementally improving them, I think
+
+
+84
+00:08:24,280 --> 00:08:28,680
+will be really valuable. And one other idea that has been looking around
+
+
+85
+00:08:28,680 --> 00:08:36,800
+the community for a long time is to just separate into like different sets of bad bits that
+
+
+86
+00:08:36,800 --> 00:08:41,080
+different communities can subscribe to so that the people that care about DMCA can follow
+
+
+87
+00:08:41,080 --> 00:08:47,680
+the DMCA list. The people that care about right to be forgotten can do that and so on.
+
+
+88
+00:08:47,680 --> 00:08:53,760
+So you can create like different clusters of self-governance around what a deny list
+
+
+89
+00:08:53,760 --> 00:08:59,480
+and whatnot should contain. And that might extend all the way into how you implemented
+
+
+90
+00:08:59,480 --> 00:09:04,480
+both like the groups, like the oversight over those lists, the technologies that you use
+
+
+91
+00:09:04,480 --> 00:09:10,880
+to distribute those lists and whatnot. Yep. Yeah, no, absolutely. I mean, I've had
+
+
+92
+00:09:10,880 --> 00:09:16,400
+to intersect a certain amount with safety teams from large platforms over the past few
+
+
+93
+00:09:16,400 --> 00:09:20,840
+years. And I mean, I respect what they're trying to do. They're really trying to keep
+
+
+94
+00:09:20,840 --> 00:09:26,800
+people safe, but I really cringe at the way in which they do it. I mean, their assumption
+
+
+95
+00:09:26,800 --> 00:09:31,920
+is you should have no privacy because otherwise we can't protect you. And so that's what I
+
+
+96
+00:09:31,920 --> 00:09:38,800
+listed as we want to avoid like becoming a renter cop model. And so yeah, absolutely.
+
+
+97
+00:09:38,800 --> 00:09:43,560
+We can't have just one bad bits list, but we should have expectations of each bad bits
+
+
+98
+00:09:43,560 --> 00:09:50,560
+list that we can always know if it's being kept up to date, for instance, what went into
+
+
+99
+00:09:50,560 --> 00:09:54,680
+it, how the sausage was made so that people can then be informed in picking which ones
+
+
+100
+00:09:54,680 --> 00:09:58,440
+they want. And we don't want operators going like, oh, I'll take all the bad bits lists
+
+
+101
+00:09:58,440 --> 00:10:05,000
+because that way I'm safe. And appeals. So often the most common thing
+
+
+102
+00:10:05,000 --> 00:10:07,880
+that happens, or not the most common, but one of the big common things that happens
+
+
+103
+00:10:07,880 --> 00:10:11,080
+is things get dragged into that list that should have never been there in the first
+
+
+104
+00:10:11,080 --> 00:10:15,320
+place and you need a good process for how do you get things out of that list.
+
+
+105
+00:10:15,320 --> 00:10:25,360
+Yeah, yeah, yeah. Yes. It's going to be fun. Are there any other questions? Well, thank
+
+
+106
+00:10:25,360 --> 00:10:45,360
+you very much. Let's move on to the next session then.

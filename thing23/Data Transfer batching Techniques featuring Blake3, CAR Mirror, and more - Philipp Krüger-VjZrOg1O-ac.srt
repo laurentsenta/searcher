@@ -1,0 +1,1078 @@
+1
+00:00:00,000 --> 00:00:12,040
+Hey everyone, I'm Filip, I work at Fission, and I want to talk a little bit about, well,
+
+
+2
+00:00:12,040 --> 00:00:18,560
+not a certain data transfer protocol in particular, but more like about a bunch of data protocols
+
+
+3
+00:00:18,560 --> 00:00:24,040
+and how they compare. I think Hanna gave a great overview this morning about different
+
+
+4
+00:00:24,040 --> 00:00:32,540
+kinds of ways or design goals that data transfer protocols can have, and I'm going to do somewhat
+
+
+5
+00:00:32,540 --> 00:00:39,920
+something similar, so maybe some repetitions, I'm sorry about that. Anyhow, well, let's
+
+
+6
+00:00:39,920 --> 00:00:45,640
+not get ahead of ourselves. Basically, when we began at Fission and we were thinking,
+
+
+7
+00:00:45,640 --> 00:00:52,680
+well, data transfer and IPFS, well, what do you do? Well, you use IPFS pin. So we would
+
+
+8
+00:00:52,680 --> 00:00:56,440
+have a server, we would have some clients, and when we want to transfer data, we would
+
+
+9
+00:00:56,440 --> 00:01:04,280
+pin from the server and fetch stuff from the clients. This turned out to be not amazing
+
+
+10
+00:01:04,280 --> 00:01:08,840
+sometimes, I mean, we've heard this story a bunch of times, so bitswap is behind IPFS
+
+
+11
+00:01:08,840 --> 00:01:15,960
+pin, and that can be difficult sometimes because of various issues, DHT issues, connection
+
+
+12
+00:01:15,960 --> 00:01:21,320
+management, and lots of WANs, like, I think, yeah, that was mentioned in a previous talk
+
+
+13
+00:01:21,320 --> 00:01:27,960
+also, but this talk is not about DHT issues, I mean, this is the data transfer talk, or
+
+
+14
+00:01:27,960 --> 00:01:33,440
+track, not the content writing track, so let me talk about the transfer issue, which is
+
+
+15
+00:01:33,440 --> 00:01:38,200
+basically what we found is, well, you fetch the root block in bitswap, then you find more
+
+
+16
+00:01:38,200 --> 00:01:44,040
+CADs at the client, then you fetch more blocks, and it continues, so you have a bunch of round
+
+
+17
+00:01:44,040 --> 00:01:50,480
+trips. How do you get rid of this problem? Well, you do batching. And so most of the
+
+
+18
+00:01:50,480 --> 00:01:55,240
+data transfer protocols that we see today, that people are building, are basically trying
+
+
+19
+00:01:55,240 --> 00:02:02,600
+to solve this by batching, but it's not obvious how, like, do you use bigger blocks? Some
+
+
+20
+00:02:02,600 --> 00:02:06,680
+protocols try that. Do you send car files? Well, they're not bigger blocks, they're just
+
+
+21
+00:02:06,680 --> 00:02:13,640
+a bunch of blocks together. So, yeah, if it's not that obvious, let's talk about some of
+
+
+22
+00:02:13,640 --> 00:02:19,040
+the design goals you could go for, that you could aim for, when you build a new data transfer
+
+
+23
+00:02:19,040 --> 00:02:25,680
+protocol. So, we've already established we want to have few round trips in our protocol,
+
+
+24
+00:02:25,680 --> 00:02:30,280
+but what is also very important, and again, Hannah mentioned this, I think I heard of
+
+
+25
+00:02:30,280 --> 00:02:35,360
+this term first time last year, the IPFS thing, and I think it's a great term, it's just incremental
+
+
+26
+00:02:35,360 --> 00:02:41,800
+verifiability. So this is what sets us apart, or IPFS in general, I think, apart from, like,
+
+
+27
+00:02:41,800 --> 00:02:48,840
+just normal HTTP transfer, FTP, or whatever. Basically, is the data that I got, that I
+
+
+28
+00:02:48,840 --> 00:02:53,400
+was transferred, part of what I actually care about, or is it something unrelated? Or I
+
+
+29
+00:02:53,400 --> 00:02:57,720
+also like to think of it as, like, the untrusted data buffer size. So you have some buffer
+
+
+30
+00:02:57,720 --> 00:03:03,360
+that you allocated at the, whatever it's trying to fetch, and it has some certain size, and
+
+
+31
+00:03:03,360 --> 00:03:08,760
+you don't want to, like, have too much untrusted data that you fetch, because it might be a
+
+
+32
+00:03:08,760 --> 00:03:13,760
+DOS attempt, it might just be something going wrong, and obviously you don't want to spend
+
+
+33
+00:03:13,760 --> 00:03:18,480
+resources on some data that you don't care about. It's also part of minimizing trust.
+
+
+34
+00:03:18,480 --> 00:03:23,680
+When you, like, talk to some other peer in the network, you have a different kind of
+
+
+35
+00:03:23,680 --> 00:03:30,080
+relationship you need with them. Like, I mean, we don't need to know who we're talking to
+
+
+36
+00:03:30,080 --> 00:03:34,400
+if all we care about is just a SID. So that's a nice advantage that we want to keep. So
+
+
+37
+00:03:34,400 --> 00:03:41,440
+that's incremental verifiability. Another thing that some protocols are aiming for is
+
+
+38
+00:03:41,440 --> 00:03:47,640
+query support. It's some protocols, again, not every protocol is trying to do that. So
+
+
+39
+00:03:47,640 --> 00:03:50,520
+for example, for GraphSync, that would be, well, you have a root SID and you have an
+
+
+40
+00:03:50,520 --> 00:03:56,160
+IPLD set, or you have a root IPNS, I guess. Or I think a different form of querying would
+
+
+41
+00:03:56,160 --> 00:04:02,640
+be range queries and files. Another thing that some protocols are trying to solve is
+
+
+42
+00:04:02,640 --> 00:04:07,440
+deduplication. So when your problem is not actually transferring some data for the first
+
+
+43
+00:04:07,440 --> 00:04:12,240
+time, but you actually want to sync something, mirroring, right? That's what Carmira is trying
+
+
+44
+00:04:12,240 --> 00:04:18,280
+to solve. Or it also crops up when you have data transfer, cold data transfer, kind of,
+
+
+45
+00:04:18,280 --> 00:04:23,200
+but it stops and you need to resume it. Although the resumption, I guess, and we've seen this
+
+
+46
+00:04:23,200 --> 00:04:29,840
+with the Blake 3 talk this morning, you can also solve this via just querying the parts
+
+
+47
+00:04:29,840 --> 00:04:37,320
+that you, that failed to transfer. Another big thing with deduplication is there are
+
+
+48
+00:04:37,320 --> 00:04:41,960
+some protocols and some Merkle trees that are really built around structural sharing.
+
+
+49
+00:04:41,960 --> 00:04:47,080
+So for example, if you have a proletary or if you have a hand, you, and you update this
+
+
+50
+00:04:47,080 --> 00:04:52,200
+very frequently, you may want to take advantage of structural sharing. And if you want to
+
+
+51
+00:04:52,200 --> 00:04:59,120
+sync the next version of this hand, and you want to only sync the diffs between basically
+
+
+52
+00:04:59,120 --> 00:05:05,080
+their new version and the last one. And finally, something, and I think this is not something
+
+
+53
+00:05:05,080 --> 00:05:10,040
+that I thought of in advance, but more like that is a result of the protocols that were
+
+
+54
+00:05:10,040 --> 00:05:18,640
+built. Some protocols have like a lot of flexibility in what kinds of DAGs they support. For example,
+
+
+55
+00:05:18,640 --> 00:05:24,400
+do you only support Blake 3, the hashing function, or do you support like arbitrary IPLD data,
+
+
+56
+00:05:24,400 --> 00:05:30,600
+or do you need some kind of ADL pre-installed? So ADL being like the advanced data layouts
+
+
+57
+00:05:30,600 --> 00:05:40,000
+in IPLD. So there's quite some like flexibility in the design goals of a data transfer protocol.
+
+
+58
+00:05:40,000 --> 00:05:47,480
+And let me just basically run through all of the protocols that we have and try to like
+
+
+59
+00:05:47,480 --> 00:05:54,680
+figure out where they lie. For that, I have this table and basically I'm going to compare
+
+
+60
+00:05:54,680 --> 00:06:02,120
+like IPFS pin, which is basically BitSwap, just sending a car file, then CarMirror, GraphSync,
+
+
+61
+00:06:02,120 --> 00:06:05,800
+and the Blake 3 and BIOS stuff. The reason I'm doing this is not only like trying to
+
+
+62
+00:06:05,800 --> 00:06:12,000
+categorize this and put things into like neat little boxes, it's also like trying to explain
+
+
+63
+00:06:12,000 --> 00:06:16,160
+why we have these many protocols, because some protocols focused in different design
+
+
+64
+00:06:16,160 --> 00:06:23,920
+goals firsthand rather than others. I think that every protocol in theory could like try
+
+
+65
+00:06:23,920 --> 00:06:29,080
+to solve every design goal, but it's just that they weren't tackled in the same order
+
+
+66
+00:06:29,080 --> 00:06:36,200
+for every protocol. And yeah, like everyone needs to simplify in some ways in order to
+
+
+67
+00:06:36,200 --> 00:06:45,180
+get to something that is working. So IPFS pin slash BitSwap, I just gave it like tick.
+
+
+68
+00:06:45,180 --> 00:06:49,320
+This works for all design goals except for a few round trips, because in practice you
+
+
+69
+00:06:49,320 --> 00:06:56,840
+get incremental verifiability since BitSwap actually just forces you to, I think the threshold
+
+
+70
+00:06:56,840 --> 00:07:01,360
+of like the block size is configurable, but like a conservative estimate of what you can
+
+
+71
+00:07:01,360 --> 00:07:06,800
+expect is like blocks shouldn't be bigger than 256 kilobytes. And if you build your
+
+
+72
+00:07:06,800 --> 00:07:11,560
+DAGs this way, and like in practice, most DAGs and IPFS are built that way, then you'll
+
+
+73
+00:07:11,560 --> 00:07:18,080
+end up only having to allocate like a buffer of 256 kilobytes before you can hash it and
+
+
+74
+00:07:18,080 --> 00:07:22,000
+see, oh yeah, okay, this is the data that I care about. You also kind of have query
+
+
+75
+00:07:22,000 --> 00:07:25,920
+support, but you need to do it on the client where I'm really stretching like the design
+
+
+76
+00:07:25,920 --> 00:07:32,280
+goal here. But if you think about like few round trips, not being the design goal, then
+
+
+77
+00:07:32,280 --> 00:07:36,080
+yeah, you kind of have query support. If you have like a hand, you can fetch one block
+
+
+78
+00:07:36,080 --> 00:07:41,400
+at a time and you get through and do a certain query. You also get data duplication and DAG
+
+
+79
+00:07:41,400 --> 00:07:47,560
+layout flexibility again, all without few round trips, which is a big kind of bummer.
+
+
+80
+00:07:47,560 --> 00:07:51,440
+With car file transfer, so there's something like, I think Web3 storage is basically doing
+
+
+81
+00:07:51,440 --> 00:07:56,480
+this and lots of other places are doing this today, which is like the basic way of doing
+
+
+82
+00:07:56,480 --> 00:08:01,560
+a batching of a block transfer. You get very few round trips. Yeah, you're just one, one
+
+
+83
+00:08:01,560 --> 00:08:05,600
+round trip. You ask for something, you get a car file and it's packed with whatever you
+
+
+84
+00:08:05,600 --> 00:08:12,720
+want. You don't get incremental verifiability out of the box, I guess. But I put in like
+
+
+85
+00:08:12,720 --> 00:08:17,720
+technically, you could put the orange kind of middle in between thing here everywhere,
+
+
+86
+00:08:17,720 --> 00:08:23,120
+because just depending on how you pack your car file, of course you can do that. But this
+
+
+87
+00:08:23,120 --> 00:08:28,960
+is really just as simple, like imagine an IPFS DAG export and then serving that over
+
+
+88
+00:08:28,960 --> 00:08:33,980
+HTTP is basically what I'm talking about here. And so you kind of get incremental verifiability
+
+
+89
+00:08:33,980 --> 00:08:40,080
+if you do like a topological sort of all of your blocks inside the car file. But it's
+
+
+90
+00:08:40,080 --> 00:08:46,120
+not technically guaranteed. Someone may send you something that is not that. And yeah,
+
+
+91
+00:08:46,120 --> 00:08:51,480
+I don't know. Basically it's not in the car file spec, but whatever. It's very easily
+
+
+92
+00:08:51,480 --> 00:08:57,040
+achievable. Query support and deduplication need to be built on top, but it's very flexible
+
+
+93
+00:08:57,040 --> 00:09:02,040
+in terms of the deck layout. You can put any kinds of blocks in there.
+
+
+94
+00:09:02,040 --> 00:09:07,640
+CarMirror is basically trying to just improve car file transfer. It's literally that plus
+
+
+95
+00:09:07,640 --> 00:09:14,080
+doing it in rounds. And it is not focusing on query because that wasn't what vision traditionally
+
+
+96
+00:09:14,080 --> 00:09:18,880
+had problems with. We just wanted to sync data faster. If you have a bunch of updates
+
+
+97
+00:09:18,880 --> 00:09:22,400
+and you've been offline on your phone for a while and you want to sync that, that should
+
+
+98
+00:09:22,400 --> 00:09:28,240
+be fast. But our DAG structure at the end of the day was unfavorable for that with BitSwap.
+
+
+99
+00:09:28,240 --> 00:09:35,200
+And so it took a bunch of time sometimes to get through all of the levels in our DAGs.
+
+
+100
+00:09:35,200 --> 00:09:40,480
+And so that's why this is built. It's basically just batching on a different level and a little
+
+
+101
+00:09:40,480 --> 00:09:45,240
+bit of deduplication on top of just sending car files around.
+
+
+102
+00:09:45,240 --> 00:09:49,800
+GraphSync I think actually achieves most of these things. I think there is an extension
+
+
+103
+00:09:49,800 --> 00:09:55,000
+for deduplication. So essentially the idea being you can do a query and you can add,
+
+
+104
+00:09:55,000 --> 00:10:03,200
+like, don't send me any of these bloom filter blocks. I think that works if I'm not wrong.
+
+
+105
+00:10:03,200 --> 00:10:06,760
+You can send a raw list of sys that you want to exclude, but you can't actually send a
+
+
+106
+00:10:06,760 --> 00:10:12,840
+bloom filter yet. But I think in principle you could build an extension. And I guess,
+
+
+107
+00:10:12,840 --> 00:10:18,400
+again, that's probably the case for most of these protocols, that you can evolve them
+
+
+108
+00:10:18,400 --> 00:10:22,680
+into getting at every design goal here.
+
+
+109
+00:10:22,680 --> 00:10:28,040
+And lastly, I think very interestingly, the Black3 and BAU stuff, it doesn't take a lot
+
+
+110
+00:10:28,040 --> 00:10:34,840
+of these boxes, but it's extremely fast. So that is great. And it also has amazing chromatography
+
+
+111
+00:10:34,840 --> 00:10:39,960
+and a lot of verifiability, even in a way that is, I think, very interesting. And what
+
+
+112
+00:10:39,960 --> 00:10:45,680
+I want to do now next is basically let's look at this and try to see how we can take some
+
+
+113
+00:10:45,680 --> 00:10:53,600
+of these ideas and just transfer them over, no pun intended, to other protocols. Right?
+
+
+114
+00:10:53,600 --> 00:10:59,520
+For that, let me repeat a little bit of what Rudi has talked about this morning. Basically
+
+
+115
+00:10:59,520 --> 00:11:05,360
+Black3 and BAU is the idea that you have huge byte arrays that you want to transfer, and
+
+
+116
+00:11:05,360 --> 00:11:11,240
+you create these, you chunk these byte arrays, and you create this Merkle structure, this
+
+
+117
+00:11:11,240 --> 00:11:19,440
+binary tree. On top of that, we're basically here, every line is this hash is two upwards.
+
+
+118
+00:11:19,440 --> 00:11:24,840
+And then you send over, starting, when you want to fetch a sys, you send over starting
+
+
+119
+00:11:24,840 --> 00:11:33,760
+with the tree, with a, what was it, preorder, left first, depth first, traversal. And so
+
+
+120
+00:11:33,760 --> 00:11:38,040
+it ends up being something like this. Basically, once you have these hashes, you can verify,
+
+
+121
+00:11:38,040 --> 00:11:43,520
+oh yeah, these hash to the state at the top. And so you know, oh yeah, this is the data
+
+
+122
+00:11:43,520 --> 00:11:48,320
+I care about. And it continues. And again, you can, at some point, you can hash stuff
+
+
+123
+00:11:48,320 --> 00:11:55,400
+again and realize, oh yeah, this is the data I care about. Yeah, that continues. But obviously,
+
+
+124
+00:11:55,400 --> 00:11:59,200
+there's some overhead to this. And so the idea that they had and that he presented was,
+
+
+125
+00:11:59,200 --> 00:12:06,040
+hey, let's just take out like one layer of this internal Merkle tree. And what we get
+
+
+126
+00:12:06,040 --> 00:12:14,800
+is we've reduced some overhead here in what we need to send, because we need to send some
+
+
+127
+00:12:14,800 --> 00:12:20,720
+hashes fewer. That's really cool, I think. So essentially, imagine, for example, you
+
+
+128
+00:12:20,720 --> 00:12:26,040
+have two peers who've never seen each other. They want to talk to each other. They may
+
+
+129
+00:12:26,040 --> 00:12:31,560
+not trust that they actually, or the other side actually sends them the valid data. But
+
+
+130
+00:12:31,560 --> 00:12:35,560
+if they've been talking for a while, if there's some kind of relationship between them, you
+
+
+131
+00:12:35,560 --> 00:12:40,560
+may trust for like a lot more data at the same time to be valid. So essentially, you
+
+
+132
+00:12:40,560 --> 00:12:47,640
+can have, at the time that you transfer, you can choose the level of incremental verifiability
+
+
+133
+00:12:47,640 --> 00:12:55,560
+that you want to have. Because traditionally, in IPLD in general, and with BitSwap, we've
+
+
+134
+00:12:55,560 --> 00:13:02,080
+had to choose the level of incremental verifiability in advance when we wrote these blocks, right?
+
+
+135
+00:13:02,080 --> 00:13:07,560
+Because we choose the chunk size in IPFS and UnixFS in advance. But what if we could do
+
+
+136
+00:13:07,560 --> 00:13:12,480
+this every time and choose it depending on what the connection is we talk to? So can
+
+
+137
+00:13:12,480 --> 00:13:17,800
+we do it? I think, yeah, we can. And the idea is basically this. So let's take some IPLD
+
+
+138
+00:13:17,800 --> 00:13:24,080
+block. This is actually like one node and a hand. It's in practice, it used to be like
+
+
+139
+00:13:24,080 --> 00:13:29,320
+DAG C-BOR, but I've rendered it as DAG JSON, because that's actually human readable. And
+
+
+140
+00:13:29,320 --> 00:13:32,680
+so we have a bunch of nested arrays, blah, blah, blah. And we have some data. And then
+
+
+141
+00:13:32,680 --> 00:13:39,360
+we have a link to some other block. And so this block isn't actually that big. And that
+
+
+142
+00:13:39,360 --> 00:13:44,800
+means that basically the ratio of how many hashes appear in it, so how much of the block
+
+
+143
+00:13:44,800 --> 00:13:51,480
+is actually a hash and how much of it is actual useful data, so to say, is not that good.
+
+
+144
+00:13:51,480 --> 00:13:55,520
+And so the block that is actually linked to there is just this small thing there. It
+
+
+145
+00:13:55,520 --> 00:14:01,880
+has a bunch of bytes, just a byte array. So what can we do? Well, we can just inline that.
+
+
+146
+00:14:01,880 --> 00:14:05,600
+And I've just done it like that. So if you look at this, it's basically just taking the
+
+
+147
+00:14:05,600 --> 00:14:11,740
+thing at the bottom and putting it there where the hash was. But we keep the original hashing
+
+
+148
+00:14:11,740 --> 00:14:17,620
+function that was used. We keep the code that was used. And we have some sort of special
+
+
+149
+00:14:17,620 --> 00:14:23,520
+marker that, yeah, this was inlined now. Think of it like taking the SID and just chopping
+
+
+150
+00:14:23,520 --> 00:14:28,960
+off the last 32 bytes from the hash in the SID and instead putting the block there. And
+
+
+151
+00:14:28,960 --> 00:14:34,120
+again, before someone comes up to me and says, like, identity hashes and SIDs, no, it's not
+
+
+152
+00:14:34,120 --> 00:14:39,600
+the same thing. It is not the same thing because when you actually compute the hash of the
+
+
+153
+00:14:39,600 --> 00:14:44,520
+whole block on the receiving side, you deconstruct this thing and split it into individual blocks
+
+
+154
+00:14:44,520 --> 00:14:51,560
+again. So where identity SIDs you can't replace with the SID that represents the SHA-2 hash
+
+
+155
+00:14:51,560 --> 00:14:57,000
+of what's inside the identity hash SID, this does. And I'm sorry for everyone who's not
+
+
+156
+00:14:57,000 --> 00:15:04,120
+familiar with identity hashes. Not that important. Basically, it's something different. But what
+
+
+157
+00:15:04,120 --> 00:15:14,040
+I think is pretty cool is you can also approach the limit of unverified data in the unverified
+
+
+158
+00:15:14,040 --> 00:15:19,480
+data in the buffer from the bottom instead of from the top. Like, for example, so that
+
+
+159
+00:15:19,480 --> 00:15:26,240
+is something that Blake 3 kind of did. And Blake 3 and BAU. You can choose the size all
+
+
+160
+00:15:26,240 --> 00:15:35,680
+the time or at the time that you do the transfer. But also, you could technically do the same
+
+
+161
+00:15:35,680 --> 00:15:41,720
+thing, like, if we go back to this, you could also choose to not, like, inline all of the
+
+
+162
+00:15:41,720 --> 00:15:47,400
+bottom parts, but inline the let's say the second layer. And instead, you have to, like,
+
+
+163
+00:15:47,400 --> 00:15:54,080
+send a bunch of hashes that you did not inline yet from the blocks below. So imagine, like,
+
+
+164
+00:15:54,080 --> 00:15:58,880
+not sending H6 and H7 and not sending H5, but instead sending the hashes in the layer
+
+
+165
+00:15:58,880 --> 00:16:05,640
+below. And you can do kind of a similar thing in with this idea and with IPLE. And what
+
+
+166
+00:16:05,640 --> 00:16:11,080
+you end up with is basically when you send something, you agree upon in the beginning
+
+
+167
+00:16:11,080 --> 00:16:17,680
+on, like, a certain size of whatever the incremental verifiability should be compared to. And then
+
+
+168
+00:16:17,680 --> 00:16:26,120
+you can take a block and inline hashes so long as the block is still just slightly below
+
+
+169
+00:16:26,120 --> 00:16:31,800
+the incremental verifiability buffer size. So that's how you maximize, like, the ratio
+
+
+170
+00:16:31,800 --> 00:16:37,960
+of how much hashes you send in terms of overhead to how much actual data you transfer. Which
+
+
+171
+00:16:37,960 --> 00:16:48,440
+I think is pretty interesting. For example, if you have, like, let's say very high frequency
+
+
+172
+00:16:48,440 --> 00:16:54,720
+write data structures, you may end up having lots and lots of small blocks so you can have
+
+
+173
+00:16:54,720 --> 00:16:59,920
+maximum structural sharing between revisions, but you can also transfer them on cold calls
+
+
+174
+00:16:59,920 --> 00:17:04,480
+very efficiently without incurring all of the overhead of all of the intermediate hashes.
+
+
+175
+00:17:04,480 --> 00:17:10,360
+And I think doing lots of hashing, Blake 3 seems to be a case in point that that's not
+
+
+176
+00:17:10,360 --> 00:17:14,760
+a bad thing to have small blocks that are hashed together and put into a structure.
+
+
+177
+00:17:14,760 --> 00:17:21,480
+It can be fast. Is this an idea for Carve V3? I don't know. Maybe. Maybe this is something
+
+
+178
+00:17:21,480 --> 00:17:27,480
+for that. I don't know. Take it, do something with it. Yeah. That's basically it.
+
+
+179
+00:17:27,480 --> 00:17:33,320
+Another idea is, well, queries are kind of like code. And I know that IPVM as a project
+
+
+180
+00:17:33,320 --> 00:17:41,200
+is starting up. We have FVM nowadays. So perhaps we can take and simplify all of the querying
+
+
+181
+00:17:41,200 --> 00:17:47,920
+code, which has a certain limit today on how, like, complex these queries can be, and replace
+
+
+182
+00:17:47,920 --> 00:17:52,440
+it with code. I mean, this is not the first time that I'm proposing this idea, but I'm
+
+
+183
+00:17:52,440 --> 00:17:57,680
+hopefully taking it a little bit further. Basically, there's a problem also, I think,
+
+
+184
+00:17:57,680 --> 00:18:04,840
+with IPVD selectors and querying, since you need to have these ADLs. So you need to have,
+
+
+185
+00:18:04,840 --> 00:18:09,680
+let's say, every node needs to know about, yeah, you have a ham data structure. These
+
+
+186
+00:18:09,680 --> 00:18:14,440
+are the support ham data structures. And these are the supported byte array abstractions
+
+
+187
+00:18:14,440 --> 00:18:18,400
+and the chunking methods. And then you need to have some code that knows how to, like,
+
+
+188
+00:18:18,400 --> 00:18:23,720
+transform path queries or range queries into these multi-block data structures. And it's
+
+
+189
+00:18:23,720 --> 00:18:27,360
+a certain set that you need to agree on with all of the peers that are talking to each
+
+
+190
+00:18:27,360 --> 00:18:36,480
+other. And I think that is one of the problems why adoption has possibly been harder previously.
+
+
+191
+00:18:36,480 --> 00:18:41,160
+So if you think about it, there's people who are coming up with new ways of structuring
+
+
+192
+00:18:41,160 --> 00:18:47,520
+Merkle data, for example, or different types of hams and different encodings, and they
+
+
+193
+00:18:47,520 --> 00:18:54,400
+can't really participate in all of this IPVD with ADLs world and IPVD selectors, because
+
+
+194
+00:18:54,400 --> 00:19:01,000
+they would have to convince IPFS implementations to adopt these IDLs. And even like on the
+
+
+195
+00:19:01,000 --> 00:19:07,760
+web, on the front end, we don't even have ADL support in browsers yet or in JS IPFS.
+
+
+196
+00:19:07,760 --> 00:19:19,360
+And so I think maybe there's a way of using, let's say, WASM to agree on something in advance
+
+
+197
+00:19:19,360 --> 00:19:28,480
+and use that to overcome all of the agreement that we would have to have on ADLs, right?
+
+
+198
+00:19:28,480 --> 00:19:31,520
+Basically the idea would be, well, you send some WASM that goes through your block store
+
+
+199
+00:19:31,520 --> 00:19:37,600
+and collects all the blocks you care about. There's lots of problems with this. So for
+
+
+200
+00:19:37,600 --> 00:19:41,960
+example, you need to transfer the WASM file in advance. It can be pretty big. In practice,
+
+
+201
+00:19:41,960 --> 00:19:45,640
+I guess you would be restricted to a bunch of programming languages, which have good
+
+
+202
+00:19:45,640 --> 00:19:53,240
+tooling to generate small WASM files. That's a very small set of programming languages.
+
+
+203
+00:19:53,240 --> 00:19:58,040
+There's some concerns about, yeah, what if your query runs forever? You suddenly have
+
+
+204
+00:19:58,040 --> 00:20:16,560
+something much, much, much more complex.
+
+
+205
+00:20:00,000 --> 00:20:14,000
+Although I think that queries on their own may have had issues with how making them more flexible at the same time makes you more susceptible to DOSing or resource hogging, basically.
+
+
+206
+00:20:14,000 --> 00:20:24,000
+Maybe all of that gets figured out, and it's easier once we have IPVM, because they need to tackle these problems anyhow. So just throwing that out there.
+
+
+207
+00:20:24,000 --> 00:20:36,000
+And then if we have queries as code, deduplication is kind of like a query. So basically what you say is, well, I already have a bunch of blocks, and I want to find the diff.
+
+
+208
+00:20:36,000 --> 00:20:48,000
+So you just write some code that is preloaded with all of the blocks you have. You send it over, and this code basically runs through the remote state and figures out what the diff is and sends only over the diff.
+
+
+209
+00:20:48,000 --> 00:21:04,000
+And this is, I think, maybe interesting or nice, because you can conceptually split data transfer into some preprocessing phase, which may be supported by WASM or something like that, and then a transfer phase.
+
+
+210
+00:21:04,000 --> 00:21:18,000
+I hope, I think, I made up some time. I basically just want to throw out these ideas. I'm excited for what's happening, and if you have any questions, please shoot them at me.
+
+
+211
+00:21:18,000 --> 00:21:37,000
+So on the BAU Blake 3 stuff, do you still get the same level of advantage if you have a really deep data structure, as opposed to, because what number zero, for example, looks at is sets, so it's really evenly done?
+
+
+212
+00:21:37,000 --> 00:21:40,000
+What about with something that's narrow and deep instead?
+
+
+213
+00:21:40,000 --> 00:21:56,000
+Yeah, I think that you would need to, I think the N0 stuff for now doesn't support that, but the more general idea of just inlining the contents of SIDS could theoretically work that.
+
+
+214
+00:21:56,000 --> 00:22:15,000
+So if you have just a very, very long, let's say, linked list encoded as a Merkle tree, or a Merkle list in that case, or call it a blockchain, whatever, what you end up doing is you just inline all of that until you have something that is a big size, and you can do it just going down.
+
+
+215
+00:22:15,000 --> 00:22:29,000
+So it doesn't matter what the topology of that DAG is. I mean, there's some questions around, like, if you don't have a linear kind of tree, but you actually have a tree with multiple children, where do you go down first?
+
+
+216
+00:22:29,000 --> 00:22:45,000
+Do you go breadth first, do you go depth first? So there are some open questions to that, but yeah.

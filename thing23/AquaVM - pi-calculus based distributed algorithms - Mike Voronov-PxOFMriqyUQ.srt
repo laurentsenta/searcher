@@ -1,0 +1,1453 @@
+1
+00:00:00,000 --> 00:00:08,680
+Hi guys, nice to meet you here. So I'm Mike, I'm doing engineering for Fluence Labs. And
+
+
+2
+00:00:08,680 --> 00:00:13,440
+today I'm going to tell you about our way to approach complex project or complex problem
+
+
+3
+00:00:13,440 --> 00:00:18,860
+of coordination web 3 computing workloads. In particular, the agenda is as follows. So
+
+
+4
+00:00:18,860 --> 00:00:23,960
+first of all, we will talk a bit about like the problem itself, about what's the difficulty
+
+
+5
+00:00:23,960 --> 00:00:28,320
+with algorithms and distributed networks. Then I will show you how we approach this
+
+
+6
+00:00:28,320 --> 00:00:34,320
+problem with AquaVM. Then I will talk a bit about our implementation of our proposal for
+
+
+7
+00:00:34,320 --> 00:00:41,120
+AquaVM. And finally, I will show you, I will talk a bit about our new group devoted to
+
+
+8
+00:00:41,120 --> 00:00:47,360
+distributed choreography and composition. And like where we want to share our experience
+
+
+9
+00:00:47,360 --> 00:00:53,280
+on the problem and probably unite some forces to solve some difficult problems and tasks
+
+
+10
+00:00:53,280 --> 00:00:59,440
+in this area. So let's start with the algorithms and the like assumptions and questions. So
+
+
+11
+00:00:59,440 --> 00:01:05,120
+okay, let's say that we have like a way to run computation locally on a peer, like in
+
+
+12
+00:01:05,120 --> 00:01:10,280
+the form of function or service. And let's say that this is a function from some inputs
+
+
+13
+00:01:10,280 --> 00:01:15,840
+to arguments, some outputs. Here I denoted by CID, but it doesn't matter. It's just a
+
+
+14
+00:01:15,840 --> 00:01:22,760
+way how you can type arguments and outputs. Okay, let's say that we can solve this problem.
+
+
+15
+00:01:22,760 --> 00:01:28,360
+Yeah, for example, we can use WebAssembly, we can use Docker, whatever. But there is
+
+
+16
+00:01:28,360 --> 00:01:33,440
+a much more complex problem. Okay, let's say that we have now distributed environments
+
+
+17
+00:01:33,440 --> 00:01:39,040
+and we have a lot of such functions. How we can compose them? How we can build this F
+
+
+18
+00:01:39,040 --> 00:01:46,920
+system that is composition of different function located on different peers? And actually for
+
+
+19
+00:01:46,920 --> 00:01:53,200
+this particular question, particular problems, there are a lot of questions. Yeah, for example,
+
+
+20
+00:01:53,200 --> 00:01:58,320
+how to put this function where it should be? Like how to advertise services in this network?
+
+
+21
+00:01:58,320 --> 00:02:05,240
+How to discover them? And a lot of questions. And humanity now came up with three approaches
+
+
+22
+00:02:05,240 --> 00:02:11,800
+for the problem. The first one is centralized computing. Those Web2, like usual clouds,
+
+
+23
+00:02:11,800 --> 00:02:17,840
+like Google clouds, IBM clouds, and so on. A lot of Web2 clouds. On the other side, there
+
+
+24
+00:02:17,840 --> 00:02:24,680
+is an on-chain computing. Blockchains and all the stuff, all DOT technologies. But there
+
+
+25
+00:02:24,680 --> 00:02:32,360
+is also decentralized computing. Yeah, I'm sure that every one of you know what it is.
+
+
+26
+00:02:32,360 --> 00:02:38,480
+And what is the benefit of each approach there, so I won't cover all of them. But there is
+
+
+27
+00:02:38,480 --> 00:02:44,240
+a, okay, let's say that we stick with this approach with decentralized computing. And
+
+
+28
+00:02:44,240 --> 00:02:52,400
+there are actually a lot of models to express and orchestrate decentralized computing. But
+
+
+29
+00:02:52,400 --> 00:02:58,840
+actually, like almost all of them are expressed with the so-called fork-join pattern. In other
+
+
+30
+00:02:58,840 --> 00:03:06,480
+words, let's say that we can express this rhombus somehow with our language, runtime,
+
+
+31
+00:03:06,480 --> 00:03:15,000
+stack, whatever. Sorry. Whatever. And if we can do that, so actually we can express almost
+
+
+32
+00:03:15,000 --> 00:03:22,800
+all problem that we can map and distribute with algorithms. It's very, very essence of
+
+
+33
+00:03:22,800 --> 00:03:31,280
+a problem. But okay, if you have this observation, now how we can find a theory that we can use
+
+
+34
+00:03:31,280 --> 00:03:38,840
+as a theory behind our stack, like runtime or whatever. And there is a natural answer
+
+
+35
+00:03:38,840 --> 00:03:45,880
+to this question called PyCalculus. PyCalculus is a kind of... So there are actually a lot
+
+
+36
+00:03:45,880 --> 00:03:53,160
+of branches of PyCalculus, a lot of types. But what's the same is all different variety
+
+
+37
+00:03:53,160 --> 00:04:01,240
+is that it has this core, as I call it core. For example, this one is about calling functions.
+
+
+38
+00:04:01,240 --> 00:04:07,160
+In PyCalculus, it called like sending some values to some channel or to some name and
+
+
+39
+00:04:07,160 --> 00:04:12,640
+receive it back from this name or channel. But the most important in this task to express
+
+
+40
+00:04:12,640 --> 00:04:19,120
+fork-join pattern is the combinators. In PyCalculus, there are three combinators, sequential execution,
+
+
+41
+00:04:19,120 --> 00:04:24,600
+parallel execution, and like so-called execution with errors. It's a bit more complex topic,
+
+
+42
+00:04:24,600 --> 00:04:31,080
+but it's presentation not about that. But we can consider it as an execution with errors,
+
+
+43
+00:04:31,080 --> 00:04:35,160
+with catching errors. Also, there is a branch and there is a restriction. Restriction could
+
+
+44
+00:04:35,160 --> 00:04:41,720
+be considered as a scoping in the usual programming languages. And of course, replication. Replication
+
+
+45
+00:04:41,720 --> 00:04:48,920
+makes this PyCalculus to incomplete. But okay, it's a theory, but what about practice? Okay,
+
+
+46
+00:04:48,920 --> 00:04:56,080
+let's say that we have a real problem. We want to call different set of oracles, get
+
+
+47
+00:04:56,080 --> 00:05:01,240
+prices for some symbol from this oracles, and then compute average of these prices.
+
+
+48
+00:05:01,240 --> 00:05:08,560
+Or for example, have a BFT consensus or whatever on a lot of values there. And then transmit
+
+
+49
+00:05:08,560 --> 00:05:13,600
+result back to our peer. How we should do that? So on the last part of the slide, you
+
+
+50
+00:05:13,600 --> 00:05:18,600
+could see six lines of code that solves this problem. It's written on our language called
+
+
+51
+00:05:18,600 --> 00:05:25,840
+Aqua. That's built on PyCalculus. So actually, under the scenes, PyCalculus and actually
+
+
+52
+00:05:25,840 --> 00:05:34,520
+there is a kind of more general calculus code, like some other type system that doesn't measure
+
+
+53
+00:05:34,520 --> 00:05:42,520
+what was the code. But from a practice, it's simple. If you provide a way to make it like
+
+
+54
+00:05:42,520 --> 00:05:49,240
+a six line of code, it's really useful. Okay, and now let's see how we actually approach
+
+
+55
+00:05:49,240 --> 00:05:55,480
+that. But first of all, let's talk a bit about how we think about these problems, how we
+
+
+56
+00:05:55,480 --> 00:06:02,520
+think about our research ideas, and how we approach complexity of development. For that,
+
+
+57
+00:06:02,520 --> 00:06:08,560
+we use idea of similarity. In most terms, it's a homomorphic mapping. Let's say that
+
+
+58
+00:06:08,560 --> 00:06:14,920
+we have this mapping where domain X is our Aqua VM, or our approach, and codomain is
+
+
+59
+00:06:14,920 --> 00:06:22,760
+Y, and Y is some different topics. And the homomorphic mapping idea is idea of this equation.
+
+
+60
+00:06:22,760 --> 00:06:27,280
+It's really simple one, and it's a practice in the common words. It's just idea of similarity
+
+
+61
+00:06:27,280 --> 00:06:34,120
+between different areas. And what's about Y? So our approach based on different calculus,
+
+
+62
+00:06:34,120 --> 00:06:40,680
+namely PyCalculus, LambdaCalculus, and a bunch of other theories, as well as, for example,
+
+
+63
+00:06:40,680 --> 00:06:50,400
+like compiler theory. Okay, one way to consider Aqua VM is to consider it as a finite state
+
+
+64
+00:06:50,400 --> 00:06:56,120
+machine. This finite state machine takes two states, like so-called current state, the
+
+
+65
+00:06:56,120 --> 00:07:00,520
+previous state, and produces a new state and a list of peers where the state should be
+
+
+66
+00:07:00,520 --> 00:07:07,000
+sent by some runtime. We don't care here about networking, about all the stuff, but we just
+
+
+67
+00:07:07,000 --> 00:07:13,120
+care only about algorithms there on this level. And this function is a pure function. It's
+
+
+68
+00:07:13,120 --> 00:07:18,280
+compiled to WebAssembly. It doesn't have any inputs. So because of that, it's really simple
+
+
+69
+00:07:18,280 --> 00:07:23,800
+to port it anywhere. For example, now we are working to run it on a FileCoin virtual machine
+
+
+70
+00:07:23,800 --> 00:07:31,000
+because we want to use FileCoin layer payments. And it's really simple. But it's not all.
+
+
+71
+00:07:31,000 --> 00:07:40,680
+To make this function really pure, we need to provide a way to extract call requests
+
+
+72
+00:07:40,680 --> 00:07:45,560
+from Aqua VM and pass call results for those call requests. Why does it need it? Because
+
+
+73
+00:07:45,560 --> 00:07:55,960
+it provides a way to make this as a pure function. It allows asynchronous service execution in
+
+
+74
+00:07:55,960 --> 00:08:02,040
+peer. Let's say that we don't have this scheme, and we have an import function from Aqua VM.
+
+
+75
+00:08:02,040 --> 00:08:10,360
+Now it would require a lot of moving parts here. Because, for example, it could be made
+
+
+76
+00:08:10,360 --> 00:08:15,640
+synchronous, it would take a lot of time, and it wouldn't allow asynchronous service
+
+
+77
+00:08:15,640 --> 00:08:21,840
+calls and whatever. And also in this, the last process of the scheme, execution takes
+
+
+78
+00:08:21,840 --> 00:08:29,320
+a fixed time. There are only two ways how Aqua VM could be triggered. The first one
+
+
+79
+00:08:29,320 --> 00:08:35,160
+is when a new network packet came from a network here. And then Aqua VM should be run with
+
+
+80
+00:08:35,160 --> 00:08:41,600
+this current state. Current state is a new state obtained from network. And the second
+
+
+81
+00:08:41,600 --> 00:08:47,640
+case is a handle call result when it's ready, when some service provided the result, then
+
+
+82
+00:08:47,640 --> 00:08:56,960
+it should be passed into Aqua VM. Now let's consider Aqua VM instructions. There are 14
+
+
+83
+00:08:56,960 --> 00:09:02,320
+instructions. And one of the most powerful is the call instruction. Call instructions
+
+
+84
+00:09:02,320 --> 00:09:12,680
+allows you to call this peer function, a function located on a particular peer. These three
+
+
+85
+00:09:12,680 --> 00:09:18,560
+instructions came directly from PyCalculus, allows you to express this rhombus pattern,
+
+
+86
+00:09:18,560 --> 00:09:23,920
+frog-join pattern. We can, for example, do sequential execution, parallel execution,
+
+
+87
+00:09:23,920 --> 00:09:29,480
+execution in this case in years. And this combination of them, we can express almost
+
+
+88
+00:09:29,480 --> 00:09:35,920
+any distributed algorithm. And there are a bunch of other instructions. For example,
+
+
+89
+00:09:35,920 --> 00:09:42,120
+we have match and mismatch for branching. We have some iteration with fault and next
+
+
+90
+00:09:42,120 --> 00:09:49,120
+that could be considered as a fixed combinator in terms of calculus. We have instructions
+
+
+91
+00:09:49,120 --> 00:09:54,440
+that are inspired by category theory, like this instruction to apply some lambdas to
+
+
+92
+00:09:54,440 --> 00:10:01,360
+values, apply functors and all the stuff. And a bunch of instructions that are just
+
+
+93
+00:10:01,360 --> 00:10:06,360
+useful for code generation, like now that simply does nothing, yeah, never stops execution
+
+
+94
+00:10:06,360 --> 00:10:12,760
+of a particular branch and fail to throw an error. There is 14 instructions and the set
+
+
+95
+00:10:12,760 --> 00:10:20,280
+is a fool, it's a complete insolvency because PyCalculus is insolvency. Now let's consider
+
+
+96
+00:10:20,280 --> 00:10:25,800
+a simple example of frog-join pattern and how AquaVM executes this. Let's say that we
+
+
+97
+00:10:25,800 --> 00:10:32,520
+have this script, the simple script, yeah, and now we will pass through details, through
+
+
+98
+00:10:32,520 --> 00:10:38,000
+instruction by instruction. But first of all, I need to say something more about how AquaVM
+
+
+99
+00:10:38,000 --> 00:10:44,400
+works. So in AquaVM, there is no safe entry point. Every time the execution starts from
+
+
+100
+00:10:44,400 --> 00:10:51,280
+the very beginning, from the first instruction. And finally, when a new result is obtained,
+
+
+101
+00:10:51,280 --> 00:10:58,760
+this result contains linearized execution trace of each of these instructions that were
+
+
+102
+00:10:58,760 --> 00:11:04,120
+executed. Okay, let's say that we start the script on the peer with peer ID user, for
+
+
+103
+00:11:04,120 --> 00:11:12,240
+example. Now we can see on this part of the slide that we have that peer ID now is a user,
+
+
+104
+00:11:12,240 --> 00:11:18,400
+is important. And the first instruction here is a seek. And seek basically takes two instructions
+
+
+105
+00:11:18,400 --> 00:11:25,520
+and executes them one by one. It executes the second instruction, here is a seek, another
+
+
+106
+00:11:25,520 --> 00:11:31,120
+seek instruction. Only if the first instruction was executed successfully. The first instruction
+
+
+107
+00:11:31,120 --> 00:11:38,280
+is a par. So okay, we should go next, further to the par. And par differs from seek, that
+
+
+108
+00:11:38,280 --> 00:11:44,720
+is, it executes two instructions simultaneously. Here are the two instructions there to calls,
+
+
+109
+00:11:44,720 --> 00:11:52,880
+to provider one and provider two. So, but we started on a peer with peer ID user. So
+
+
+110
+00:11:52,880 --> 00:12:00,120
+we count, and AquaVM obtains here peer ID from this part here. So basically signature
+
+
+111
+00:12:00,120 --> 00:12:04,920
+of call with a peer ID, service name, function name, arguments, and where results should
+
+
+112
+00:12:04,920 --> 00:12:11,200
+be bound. And AquaVM obtains it, so like, okay, it's provider one and provider two,
+
+
+113
+00:12:11,200 --> 00:12:20,400
+it's not user, not user peer ID. Then we should put in the next peers that's produced by AquaVM
+
+
+114
+00:12:20,400 --> 00:12:25,800
+as a result, just the providers, provider one and provider two, and a new state. And
+
+
+115
+00:12:25,800 --> 00:12:30,200
+this state, I won't cover that because I won't have much time for that, but in this state
+
+
+116
+00:12:30,200 --> 00:12:36,880
+there would be like some values that represent that these calls were actually called, and
+
+
+117
+00:12:36,880 --> 00:12:45,040
+the result was sent to these peers with the signatures. Okay, and now it's how RamboSER
+
+
+118
+00:12:45,040 --> 00:12:52,000
+works. Now by some runtime, so some runtime that executes AquaVM obtains these next peers,
+
+
+119
+00:12:52,000 --> 00:12:57,640
+these two next peers, and should send this data to these two peers simultaneously. Or
+
+
+120
+00:12:57,640 --> 00:13:02,960
+whatever, AquaVM doesn't consider it, it's kind of on the next level of abstraction.
+
+
+121
+00:13:02,960 --> 00:13:07,160
+And then on each of these peers of provider one and provider two, the same code will be
+
+
+122
+00:13:07,160 --> 00:13:13,400
+executed. So AquaVM starts with the very beginning, like with the C-Cue again, like pass through
+
+
+123
+00:13:13,400 --> 00:13:21,400
+this block, and this par treated as a completed when only one instruction is completed. And
+
+
+124
+00:13:21,400 --> 00:13:26,920
+okay, let's say that we run on the provider one, then this code will be completed. There
+
+
+125
+00:13:26,920 --> 00:13:32,480
+are some details, but I won't cover them. If you are interested in how exactly it will
+
+
+126
+00:13:32,480 --> 00:13:38,640
+be executed, please find me after my talk, or ask a question after that. So let's say
+
+
+127
+00:13:38,640 --> 00:13:45,720
+that on peer one, we like called successfully service prices and obtained result in the
+
+
+128
+00:13:45,720 --> 00:13:54,480
+price one variable. And then executes on this provider one, falls into this call instruction.
+
+
+129
+00:13:54,480 --> 00:14:01,920
+And this call instruction called service average, oh sorry, should call service average service
+
+
+130
+00:14:01,920 --> 00:14:07,080
+on the peer average. And this peer ID is not as we have, it's not provider one or provider
+
+
+131
+00:14:07,080 --> 00:14:13,480
+two. Then in the next peers, there will be average in a new state. And it's the same
+
+
+132
+00:14:13,480 --> 00:14:20,840
+for provider two. Okay, what now should be done on this average
+
+
+133
+00:14:20,840 --> 00:14:26,160
+peer? Average peer, like execute starts again from the very beginning, all this instruction
+
+
+134
+00:14:26,160 --> 00:14:33,440
+passed until we met this average, this call average service. And now we can see that in
+
+
+135
+00:14:33,440 --> 00:14:38,960
+arguments there are two variables, price one and price two. And for this variables, we
+
+
+136
+00:14:38,960 --> 00:14:46,000
+have so-called join behavior. And this call actually will be executed only if these, all
+
+
+137
+00:14:46,000 --> 00:14:52,320
+these two variables should be ready. All these two results will came to our peer, like somehow,
+
+
+138
+00:14:52,320 --> 00:14:55,720
+some moment of time. It doesn't matter for Aquavium because Aquavium doesn't consider
+
+
+139
+00:14:55,720 --> 00:15:01,560
+about networks, about all this stuff. And finally, when all these results are ready
+
+
+140
+00:15:01,560 --> 00:15:07,120
+and they came to our service, to our average service, then the result will be produced
+
+
+141
+00:15:07,120 --> 00:15:12,080
+and then will pass to user back, to user peers that want to see this result.
+
+
+142
+00:15:12,080 --> 00:15:18,400
+Okay, and that was a simple example of how Rombus pattern could be expressed with Aquavium
+
+
+143
+00:15:18,400 --> 00:15:27,000
+and how Aquavium executes this particular small script. Of course, doing the job manually
+
+
+144
+00:15:27,000 --> 00:15:32,440
+by hands, it's not possible. And for that, we have high-level language called Aqua that
+
+
+145
+00:15:32,440 --> 00:15:37,800
+allows you to compile to this intermediate presentation. And we call this as intermediate
+
+
+146
+00:15:37,800 --> 00:15:45,080
+presentation. And what about data types in Aqua, in Aquavium?
+
+
+147
+00:15:45,080 --> 00:15:50,720
+Actually we have three types of data types. First one is the scalars. They are fully consistent.
+
+
+148
+00:15:50,720 --> 00:15:57,480
+So like when you run one script on the same peers that the script like triggers, then
+
+
+149
+00:15:57,480 --> 00:16:02,720
+the scalars will be the same. On opposite side, there is a CRDT-like structures called
+
+
+150
+00:16:02,720 --> 00:16:12,520
+stream and map. They are CRDT-like. By CRDT-like, I mean that they're CRDT-like forces merge
+
+
+151
+00:16:12,520 --> 00:16:19,760
+function to be commutative. In our way, it's non-commutative. That's why I call it CRDT-like.
+
+
+152
+00:16:19,760 --> 00:16:26,560
+And so actually, yes, also regarding these properties, there's specified properties of
+
+
+153
+00:16:26,560 --> 00:16:35,840
+idempotence and some other monolithic properties. And there is a third value type that's called
+
+
+154
+00:16:35,840 --> 00:16:43,640
+canonicalized. So regarding the right side, so to this CRDT, now it's only possible to
+
+
+155
+00:16:43,640 --> 00:16:49,480
+write values. But if you want to read, you need to fix stream or map on a particular
+
+
+156
+00:16:49,480 --> 00:16:54,880
+peer. You need to kind of obtain the result, obtain a particular copy that you want to
+
+
+157
+00:16:54,880 --> 00:17:03,640
+read from. And with this value type, it's possible to do this kind of instruction. But
+
+
+158
+00:17:03,640 --> 00:17:10,520
+why is it a different value type? Because it has mixed algebra between scalars and streams.
+
+
+159
+00:17:10,520 --> 00:17:18,560
+If you want more details, please ask me questions, because it's so much for one talk.
+
+
+160
+00:17:18,560 --> 00:17:25,200
+OK, now let's see three slides about how we implemented AQVM in our stack. So on Fluence
+
+
+161
+00:17:25,200 --> 00:17:30,080
+Labs, we have a network, and every network consists of peer. And peer actually is a layer
+
+
+162
+00:17:30,080 --> 00:17:38,280
+structure that started with a leap P2P, is a networking layer. And the next layer is
+
+
+163
+00:17:38,280 --> 00:17:43,240
+with a peer core. Peer core actually is a manager of queues. Actually, there are more
+
+
+164
+00:17:43,240 --> 00:17:50,440
+than three queues in a peer, but it doesn't matter for high-level of architecture. And
+
+
+165
+00:17:50,440 --> 00:17:55,440
+there are two pools, pools of AQVMs. That's the kind of compute engine, orchestration
+
+
+166
+00:17:55,440 --> 00:18:01,200
+engine. And a pool of services. And services is a computation layer. Services basically
+
+
+167
+00:18:01,200 --> 00:18:07,520
+is all we are using interface types. And service basically is a bunch of modules combined together.
+
+
+168
+00:18:07,520 --> 00:18:12,840
+We use interface types as model linking. Services is a bunch of modules combined together with
+
+
+169
+00:18:12,840 --> 00:18:18,640
+a shared nested linking scheme. And they're run in our runtime called Marine. And both
+
+
+170
+00:18:18,640 --> 00:18:23,360
+AQVM also run in our runtime. This runtime allows you to run this multi-modal setup even
+
+
+171
+00:18:23,360 --> 00:18:30,360
+in browser. So in the clients, so for example, we can think about our network as a kind of
+
+
+172
+00:18:30,360 --> 00:18:36,920
+P2P network with Kademlia. And the browser could also serve services, for example. But
+
+
+173
+00:18:36,920 --> 00:18:42,800
+actually, it's not, but it's possible. It's not really handy, but it's possible.
+
+
+174
+00:18:42,800 --> 00:18:48,320
+And on each peer in our network, there is an AQVM run in our Marine runtime. Or WebAssembly,
+
+
+175
+00:18:48,320 --> 00:18:53,320
+whatever, it doesn't matter. So actually, AQVM could be compiled to native because it's
+
+
+176
+00:18:53,320 --> 00:18:58,320
+a peer function. And it's not really, it's kind of like algorithmic code and not so many
+
+
+177
+00:18:58,320 --> 00:19:04,280
+dependencies on that. So now, network is permissionless and incentivized. I will show next slide how
+
+
+178
+00:19:04,280 --> 00:19:12,140
+exactly. It's auditable. And we're now making it provable. Every node is a coordinator or
+
+
+179
+00:19:12,140 --> 00:19:17,640
+in other words, we can say that it's coordinator-free. There is no particular set of coordinators.
+
+
+180
+00:19:17,640 --> 00:19:22,920
+There is no consensus between set, like for example, in Blackglass solution. Every node
+
+
+181
+00:19:22,920 --> 00:19:30,240
+runs AQVM and every node coordinates requests. And that's why no implicit consensus required.
+
+
+182
+00:19:30,240 --> 00:19:34,880
+And so we're now working on incentivization layer. And for that, we came up with the idea
+
+
+183
+00:19:34,880 --> 00:19:41,720
+of golden particle. Every node mines network packet. And when it satisfies some condition,
+
+
+184
+00:19:41,720 --> 00:19:49,040
+one then node submitted to on-chain part and for chain part, we like now wanted to use
+
+
+185
+00:19:49,040 --> 00:19:55,000
+Filecoin virtual machine. And on on-chain part, there is also AQVM that's run on VVM
+
+
+186
+00:19:55,000 --> 00:20:00,400
+instead of Marine. And this on-chain part verifies that all topological holes are in
+
+
+187
+00:20:00,000 --> 00:20:15,300
+сколькоÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿ bisc espí Նֆար quickly with illegible multiple slip. So what we're basically going to push to they'll like out 6,000 language help. On 1 restore those 2,000 language in ֆ evacuate different languages, it becomesable
+
+
+188
+00:20:15,300 --> 00:20:16,780
+logical hops.
+
+
+189
+00:20:16,780 --> 00:20:19,260
+And we know each peer, each service that participated
+
+
+190
+00:20:19,260 --> 00:20:22,040
+in this packet, we call it particle actually.
+
+
+191
+00:20:23,660 --> 00:20:26,180
+And all of these peers will be rewarded.
+
+
+192
+00:20:26,180 --> 00:20:28,940
+For example, these three peers and client, for example.
+
+
+193
+00:20:31,000 --> 00:20:34,300
+Okay, now let's talk a bit about our GCC working group.
+
+
+194
+00:20:34,300 --> 00:20:37,780
+So we are working on the problem more than three years,
+
+
+195
+00:20:37,780 --> 00:20:40,180
+and we're working on WebAssembly and all this
+
+
+196
+00:20:40,180 --> 00:20:43,060
+distributed stuff more than five years.
+
+
+197
+00:20:43,060 --> 00:20:46,180
+And we have kind of a lot of experience on that area.
+
+
+198
+00:20:46,180 --> 00:20:48,780
+And also there is a lot of like, a lot more problems
+
+
+199
+00:20:48,780 --> 00:20:50,140
+that should be solved there.
+
+
+200
+00:20:50,140 --> 00:20:53,740
+And we believe that our approach could be used
+
+
+201
+00:20:53,740 --> 00:20:56,540
+in different companies, and if we unite together
+
+
+202
+00:20:57,640 --> 00:21:01,500
+developers, researchers, and people who cares about that,
+
+
+203
+00:21:01,500 --> 00:21:03,820
+then it would be really huge.
+
+
+204
+00:21:03,820 --> 00:21:06,180
+And we are thrilled to announce that we start,
+
+
+205
+00:21:06,180 --> 00:21:07,740
+we established distributed choreography
+
+
+206
+00:21:07,740 --> 00:21:09,240
+and composition working group.
+
+
+207
+00:21:09,240 --> 00:21:14,040
+So it will be, so I will show you on the last slide,
+
+
+208
+00:21:14,040 --> 00:21:16,480
+so links to our resources.
+
+
+209
+00:21:16,480 --> 00:21:18,200
+But there is some motivation, yeah?
+
+
+210
+00:21:18,200 --> 00:21:21,760
+But the main motivation is to build great tooling,
+
+
+211
+00:21:21,760 --> 00:21:26,760
+is to build great algorithms, is to move progress further.
+
+
+212
+00:21:27,440 --> 00:21:30,160
+It's the main, for example, my motivation.
+
+
+213
+00:21:30,160 --> 00:21:33,020
+It's really, a lot of really beautiful problems.
+
+
+214
+00:21:33,020 --> 00:21:36,000
+For example, like, the reason category theory,
+
+
+215
+00:21:36,000 --> 00:21:40,560
+so like, yesterday we, so I prepared this presentation,
+
+
+216
+00:21:40,560 --> 00:21:44,080
+and for example, I thought about, oh, there is a monad
+
+
+217
+00:21:44,080 --> 00:21:47,040
+in category theory, and we have this commutative diagram,
+
+
+218
+00:21:47,040 --> 00:21:48,720
+and you have this commutative diagram
+
+
+219
+00:21:48,720 --> 00:21:50,240
+follows rhombus pattern.
+
+
+220
+00:21:50,240 --> 00:21:53,400
+Can we obtain some other patterns
+
+
+221
+00:21:53,400 --> 00:21:56,040
+and apply it in our pattern?
+
+
+222
+00:21:56,040 --> 00:21:59,040
+So there's a lot of beautiful problems there.
+
+
+223
+00:21:59,040 --> 00:22:03,580
+And a lot of minds required to discuss them, to solve them.
+
+
+224
+00:22:03,580 --> 00:22:07,900
+And on this slide, it's actually last slide
+
+
+225
+00:22:07,900 --> 00:22:11,500
+of my presentation, you could see two QR codes.
+
+
+226
+00:22:11,500 --> 00:22:14,460
+Left side is for Telegram group.
+
+
+227
+00:22:14,460 --> 00:22:19,460
+It's DCC working group, and the right one is for GitHub,
+
+
+228
+00:22:21,340 --> 00:22:23,780
+where all material will be located.
+
+
+229
+00:22:23,780 --> 00:22:27,180
+So we are thinking now that the next call
+
+
+230
+00:22:27,180 --> 00:22:29,620
+will be in two or three weeks.
+
+
+231
+00:22:29,620 --> 00:22:32,260
+We'll have discussion on the working group
+
+
+232
+00:22:32,260 --> 00:22:34,020
+and established time.
+
+
+233
+00:22:34,020 --> 00:22:37,380
+So please, everyone who are interested in that,
+
+
+234
+00:22:37,380 --> 00:22:40,700
+who want to participate, who want to like,
+
+
+235
+00:22:41,580 --> 00:22:44,180
+move progress further, then please join.
+
+
+236
+00:22:44,180 --> 00:22:46,980
+If you have any questions, so please ask me,
+
+
+237
+00:22:46,980 --> 00:22:49,660
+please find me there, or for example,
+
+
+238
+00:22:49,660 --> 00:22:52,820
+contact me with my email, my Telegram, or whatever.
+
+
+239
+00:22:52,820 --> 00:22:54,860
+So you show this forked-chain diagram.
+
+
+240
+00:22:54,860 --> 00:22:59,460
+How many tasks can you have in one time in this system?
+
+
+241
+00:22:59,460 --> 00:23:04,460
+So it depends, it depends on, like, so actually,
+
+
+242
+00:23:04,980 --> 00:23:08,740
+I can't say any particular numbers now,
+
+
+243
+00:23:08,740 --> 00:23:13,420
+but like we have a network team and I can contact them,
+
+
+244
+00:23:13,420 --> 00:23:15,540
+and you came up with the question, with the answer.
+
+
+245
+00:23:15,540 --> 00:23:17,340
+Okay, but there's like more than one task at one time?
+
+
+246
+00:23:17,340 --> 00:23:18,420
+Of course, of course, yeah.
+
+
+247
+00:23:18,420 --> 00:23:20,300
+Okay, and how do you handle,
+
+
+248
+00:23:20,300 --> 00:23:23,340
+so I assume there are heterogeneous servers, right?
+
+
+249
+00:23:23,340 --> 00:23:25,460
+How do you handle these,
+
+
+250
+00:23:25,460 --> 00:23:30,460
+the rest of tasks are waiting for their peers to finish?
+
+
+251
+00:23:31,060 --> 00:23:35,460
+So for that, we have this, so we are using Tokyo Runtime.
+
+
+252
+00:23:35,460 --> 00:23:39,260
+So our peer, so we have actually two peer implementation
+
+
+253
+00:23:39,260 --> 00:23:41,460
+in JavaScript and Rust,
+
+
+254
+00:23:41,460 --> 00:23:42,940
+and for this two-peer implementation,
+
+
+255
+00:23:42,940 --> 00:23:44,900
+we have a pool of services,
+
+
+256
+00:23:44,900 --> 00:23:47,380
+and this execution of services,
+
+
+257
+00:23:47,380 --> 00:23:49,220
+they're absolutely asynchronous.
+
+
+258
+00:23:49,220 --> 00:23:52,620
+When the result is ready, then this result is,
+
+
+259
+00:23:52,620 --> 00:23:54,700
+came to the queue, and by peer core,
+
+
+260
+00:23:54,700 --> 00:23:57,180
+it's transmitted to proper AQUA VM.
+
+
+261
+00:23:57,180 --> 00:23:59,380
+AQUA VM, thanks to their,
+
+
+262
+00:24:01,060 --> 00:24:06,060
+to their interface, gets this core result as an input
+
+
+263
+00:24:06,540 --> 00:24:08,260
+with the previous state,
+
+
+264
+00:24:08,260 --> 00:24:10,140
+previous state located somewhere on a disk,
+
+
+265
+00:24:10,140 --> 00:24:12,260
+on database, somewhere locally,
+
+
+266
+00:24:12,260 --> 00:24:15,260
+and it merges this core result into this previous state.
+
+
+267
+00:24:15,260 --> 00:24:17,100
+And for example, for this particular core result,
+
+
+268
+00:24:17,100 --> 00:24:19,660
+there will be kind of new, like, sorry,
+
+
+269
+00:24:19,660 --> 00:24:22,940
+new new state, and a new list of peers provided,
+
+
+270
+00:24:22,940 --> 00:24:25,780
+for example, or not, it depends.
+
+
+271
+00:24:25,780 --> 00:24:28,300
+Like, in this particular example that we,
+
+
+272
+00:24:28,300 --> 00:24:29,860
+that I missed, yeah, this one,
+
+
+273
+00:24:29,860 --> 00:24:32,940
+that I said that, okay, I just,
+
+
+274
+00:24:32,940 --> 00:24:35,380
+we just assume that it's executed somehow.
+
+
+275
+00:24:35,380 --> 00:24:39,340
+In particular, this call not executed synchronously,
+
+
+276
+00:24:39,340 --> 00:24:42,460
+so AQUA VM captures all arguments.
+
+
+277
+00:24:42,460 --> 00:24:44,180
+Here it's empty list, but okay,
+
+
+278
+00:24:44,180 --> 00:24:46,700
+let's consider this example.
+
+
+279
+00:24:46,700 --> 00:24:49,260
+All arguments, and provided this call request
+
+
+280
+00:24:49,260 --> 00:24:51,060
+is output of AQUA VM.
+
+
+281
+00:24:51,060 --> 00:24:55,300
+And then it's through queues, came to the marine services,
+
+
+282
+00:24:55,300 --> 00:24:57,340
+and provides back, yeah.
+
+
+283
+00:24:57,340 --> 00:25:00,500
+Okay, how do you handle that there is no kind of
+
+
+284
+00:25:00,500 --> 00:25:04,900
+cache overflow where too many unfinished tasks are waiting?
+
+
+285
+00:25:06,100 --> 00:25:08,620
+We have a pattern timeout.
+
+
+286
+00:25:08,620 --> 00:25:10,340
+And pattern timeout naturally expressed
+
+
+287
+00:25:10,340 --> 00:25:12,740
+with PyCalculus, with the par instruction.
+
+
+288
+00:25:12,740 --> 00:25:13,580
+Okay.
+
+
+289
+00:25:14,500 --> 00:25:15,900
+Okay, thank you so much.
+
+
+290
+00:25:15,900 --> 00:25:18,260
+Yeah, thank you for questions, really great.
+
+
+291
+00:25:18,260 --> 00:25:23,260
+Thank you.

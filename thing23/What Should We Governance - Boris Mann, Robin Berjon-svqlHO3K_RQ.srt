@@ -1,0 +1,2753 @@
+1
+00:00:00,000 --> 00:00:09,460
+So, you know, since this is about community, we figured it would be a good idea to start
+
+
+2
+00:00:09,460 --> 00:00:14,920
+off on some kind of kind and gentle note.
+
+
+3
+00:00:14,920 --> 00:00:20,800
+So I assume people here are familiar with what a postmortem is.
+
+
+4
+00:00:20,800 --> 00:00:26,420
+Postmortem is when something has gone wrong and you get together after the thing has gone
+
+
+5
+00:00:26,420 --> 00:00:30,520
+wrong to discuss what went wrong.
+
+
+6
+00:00:30,520 --> 00:00:35,240
+And one thing that people often find out when doing a postmortem is that we knew that something
+
+
+7
+00:00:35,240 --> 00:00:40,800
+was going to go wrong, but either someone had figured it out but hadn't shared it well,
+
+
+8
+00:00:40,800 --> 00:00:48,040
+or someone could have thought about it but hadn't really believed that things were going
+
+
+9
+00:00:48,040 --> 00:00:49,540
+to fail as badly.
+
+
+10
+00:00:49,540 --> 00:00:53,340
+So it turns out the knowledge that something was going to fail usually exists before the
+
+
+11
+00:00:53,340 --> 00:00:57,120
+thing fails, unless it's a catastrophic surprise accident.
+
+
+12
+00:00:57,120 --> 00:00:58,760
+That's how it usually works.
+
+
+13
+00:00:58,760 --> 00:01:04,880
+So the purpose of a premortem is to actually try to figure that out before it happens.
+
+
+14
+00:01:04,880 --> 00:01:10,960
+The idea is really to get rid of optimism bias by projecting ourselves into the future,
+
+
+15
+00:01:10,960 --> 00:01:16,540
+say 10 years from now, noticing a failure and then going like, okay, it failed.
+
+
+16
+00:01:16,540 --> 00:01:21,920
+Why do we know from today, but, you know, retrospectively with the hindsight of 10 years
+
+
+17
+00:01:21,920 --> 00:01:27,300
+in the future, how do we know that this was going to fail?
+
+
+18
+00:01:27,300 --> 00:01:33,280
+And so, you know, I'm not saying that the ones that we listed are like the three only
+
+
+19
+00:01:33,280 --> 00:01:34,280
+failure modes.
+
+
+20
+00:01:34,280 --> 00:01:40,240
+I think that the idea is to invite people to sort of like think retrospectively that
+
+
+21
+00:01:40,240 --> 00:01:44,560
+way to try to figure out what might be wrong and what we should do about it today before
+
+
+22
+00:01:44,560 --> 00:01:46,980
+it actually goes wrong.
+
+
+23
+00:01:46,980 --> 00:01:53,960
+But I think one thing that's pretty clear is that if, you know, 10 years from now, IPFS
+
+
+24
+00:01:53,960 --> 00:02:00,560
+has failed, it seems unlikely or implausible that it will be for lack of technical excellence.
+
+
+25
+00:02:00,560 --> 00:02:05,280
+I think we've all seen, you know, of course in the community, but, you know, even more
+
+
+26
+00:02:05,280 --> 00:02:12,680
+clearly in the past few days that this is an absolutely excellent community at the technical
+
+
+27
+00:02:12,680 --> 00:02:13,680
+level.
+
+
+28
+00:02:13,680 --> 00:02:18,480
+And even though there are issues, I think we're very confident that they will be conquered.
+
+
+29
+00:02:18,480 --> 00:02:23,640
+However, we can imagine cases in which IPFS will have failed.
+
+
+30
+00:02:23,640 --> 00:02:27,400
+So let's imagine it's 2033.
+
+
+31
+00:02:27,400 --> 00:02:31,560
+And you know, these are just like three example potential premortems to think about.
+
+
+32
+00:02:31,560 --> 00:02:41,280
+But the first one is IPFS has succeeded, you know, to some degree, but it has been captured
+
+
+33
+00:02:41,280 --> 00:02:43,760
+by some big tech company or other.
+
+
+34
+00:02:43,760 --> 00:02:48,080
+So, you know, pick your least favorite one.
+
+
+35
+00:02:48,080 --> 00:02:53,080
+And they are basically for all intents and purposes owning IPFS.
+
+
+36
+00:02:53,080 --> 00:02:58,480
+And you know, in the same way that email and large parts of the web today, despite being
+
+
+37
+00:02:58,480 --> 00:03:03,600
+technically or supposedly some degree of decentralized, are, you know, captured and owned.
+
+
+38
+00:03:03,600 --> 00:03:06,680
+And so, you know, that's the failure mode for that first one.
+
+
+39
+00:03:06,680 --> 00:03:12,240
+If we look back, you know, what has failed to lead to that failure mode?
+
+
+40
+00:03:12,240 --> 00:03:18,000
+Well, one way of thinking about it is that perhaps we didn't think of capture resistance
+
+
+41
+00:03:18,000 --> 00:03:20,080
+sufficiently well.
+
+
+42
+00:03:20,080 --> 00:03:25,200
+We you know, there's a tendency in our community to imagine that if you make something decentralized,
+
+
+43
+00:03:25,200 --> 00:03:29,560
+if the tech is decentralized, then everything will just go well because the tech is decentralized.
+
+
+44
+00:03:29,560 --> 00:03:34,800
+But you know, the people who work to capture markets don't go like, oh, that tech is decentralized.
+
+
+45
+00:03:34,800 --> 00:03:35,800
+That's unfortunate.
+
+
+46
+00:03:35,800 --> 00:03:39,280
+Let's just like go monopolize something else.
+
+
+47
+00:03:39,280 --> 00:03:44,920
+You know, you have to get into a cybersecurity mindset about this and like really threat
+
+
+48
+00:03:44,920 --> 00:03:49,520
+model the hell out of it, because they will keep coming and they will find an exploit
+
+
+49
+00:03:49,520 --> 00:03:52,280
+and they will eventually monopolize something.
+
+
+50
+00:03:52,280 --> 00:03:59,080
+And so, you know, we need to build sort of the community culture of thinking not so much
+
+
+51
+00:03:59,080 --> 00:04:03,160
+in terms of decentralization, even though that's an important technical property, but
+
+
+52
+00:04:03,160 --> 00:04:08,000
+in terms of capture resistance so that we keep ourselves honest in terms of whether
+
+
+53
+00:04:08,000 --> 00:04:09,400
+we're succeeding on that front.
+
+
+54
+00:04:09,400 --> 00:04:12,000
+So that's one failure mode.
+
+
+55
+00:04:12,000 --> 00:04:18,200
+A second potential failure mode is the one in which, again, IPFS is maybe even super
+
+
+56
+00:04:18,200 --> 00:04:23,200
+successful, but it is entirely a Protocol Labs product.
+
+
+57
+00:04:23,200 --> 00:04:27,200
+Maybe we pretend that there's some kind of community and we take input, like we have
+
+
+58
+00:04:27,200 --> 00:04:30,000
+like developer events and we're like, yes, we listen to you.
+
+
+59
+00:04:30,000 --> 00:04:31,600
+This is very important.
+
+
+60
+00:04:31,600 --> 00:04:33,400
+We will consider it.
+
+
+61
+00:04:33,400 --> 00:04:36,240
+But it is actually completely owned by PL.
+
+
+62
+00:04:36,240 --> 00:04:39,640
+And this is a failure mode because this is supposed to be locked open.
+
+
+63
+00:04:39,640 --> 00:04:42,160
+This is supposed to be a common sting.
+
+
+64
+00:04:42,160 --> 00:04:44,880
+And how would we reach that kind of failure mode?
+
+
+65
+00:04:44,880 --> 00:04:50,440
+Well, if we don't take the steps to develop institutional capacity in the community to
+
+
+66
+00:04:50,440 --> 00:04:56,520
+properly own things and to properly govern things in a way that is open, then we could
+
+
+67
+00:04:56,520 --> 00:05:00,640
+easily progressively slip into that mode, even with good intentions.
+
+
+68
+00:05:00,640 --> 00:05:08,040
+And we've seen that happen over the past decade in tech.
+
+
+69
+00:05:08,040 --> 00:05:11,160
+And so a third failure mode is actually in this case.
+
+
+70
+00:05:11,160 --> 00:05:15,840
+So this is the one in which IPFS actually almost doesn't exist anymore.
+
+
+71
+00:05:15,840 --> 00:05:23,440
+And the thing that has happened is at some point there was some kind of absolutely catastrophic
+
+
+72
+00:05:23,440 --> 00:05:32,520
+usage of IPFS for some major phishing or some horrendous CSAM network or something like
+
+
+73
+00:05:32,520 --> 00:05:33,520
+that.
+
+
+74
+00:05:33,520 --> 00:05:38,240
+And the reason that happened is because we as a community didn't take the steps necessary
+
+
+75
+00:05:38,240 --> 00:05:44,240
+to integrate into the broader institutional ecosystem and play by its rules and actually
+
+
+76
+00:05:44,240 --> 00:05:46,560
+support people in building good things.
+
+
+77
+00:05:46,560 --> 00:05:54,560
+So again, this is a third case in which the failure is a failure of community and governance,
+
+
+78
+00:05:54,560 --> 00:05:56,520
+hence why we're here.
+
+
+79
+00:05:56,520 --> 00:05:57,520
+So now that I've...
+
+
+80
+00:05:57,520 --> 00:05:58,520
+Yes?
+
+
+81
+00:05:58,520 --> 00:05:59,520
+Do you want to ask?
+
+
+82
+00:05:59,520 --> 00:06:00,520
+Can anyone mention other failures?
+
+
+83
+00:06:00,520 --> 00:06:12,520
+Yes, this is going to be a participatory session, so you should expect not to sleep in the back.
+
+
+84
+00:06:12,520 --> 00:06:17,680
+How else do we fail?
+
+
+85
+00:06:17,680 --> 00:06:19,160
+Speak in the mic, Boris.
+
+
+86
+00:06:19,160 --> 00:06:23,880
+How else do we fail?
+
+
+87
+00:06:23,880 --> 00:06:28,740
+We can fail at delivering the decentralization bit.
+
+
+88
+00:06:28,740 --> 00:06:34,640
+We can be just smoke and mirrors at some point over time, adding more and more centralized
+
+
+89
+00:06:34,640 --> 00:06:36,560
+pieces of infrastructure.
+
+
+90
+00:06:36,560 --> 00:06:44,400
+So on the website, it may say we are decentralized, but if you shut down, like Amazon goes down,
+
+
+91
+00:06:44,400 --> 00:06:46,200
+suddenly content routing does not work.
+
+
+92
+00:06:46,200 --> 00:06:50,400
+I'd say that's a failure mode that should be on the list.
+
+
+93
+00:06:50,400 --> 00:06:53,800
+HTTP with extra steps.
+
+
+94
+00:06:53,800 --> 00:07:01,000
+Inefficient HTTP should not be synonym for IPFS.
+
+
+95
+00:07:01,000 --> 00:07:02,920
+That's a good one.
+
+
+96
+00:07:02,920 --> 00:07:06,120
+Anyone else?
+
+
+97
+00:07:06,120 --> 00:07:08,280
+So I think that was a really good one to capture.
+
+
+98
+00:07:08,280 --> 00:07:09,280
+Addy has one.
+
+
+99
+00:07:09,280 --> 00:07:12,280
+Can you wait for the mic?
+
+
+100
+00:07:12,280 --> 00:07:14,280
+Yeah, sorry.
+
+
+101
+00:07:14,280 --> 00:07:17,280
+I'll run it.
+
+
+102
+00:07:17,280 --> 00:07:20,280
+It's okay.
+
+
+103
+00:07:20,280 --> 00:07:21,280
+Is it working?
+
+
+104
+00:07:21,280 --> 00:07:22,280
+Yes.
+
+
+105
+00:07:22,280 --> 00:07:28,360
+I was going to say something around complexity or obfuscation and complexity, so we lack
+
+
+106
+00:07:28,360 --> 00:07:32,120
+mainstream adoption, especially outside of the West.
+
+
+107
+00:07:32,120 --> 00:07:33,120
+Yes.
+
+
+108
+00:07:33,120 --> 00:07:38,840
+Oh, look, everyone has failures now.
+
+
+109
+00:07:38,840 --> 00:07:39,840
+Keep the sharing coming.
+
+
+110
+00:07:39,840 --> 00:07:42,120
+It's a plus one on what Addy's saying.
+
+
+111
+00:07:42,120 --> 00:07:44,760
+Yeah, like poor product market fit.
+
+
+112
+00:07:44,760 --> 00:07:50,320
+Yeah, sure, we're open source and we scratch our own itches, but we really have to stand
+
+
+113
+00:07:50,320 --> 00:07:52,800
+back and say, is this a G-Wiz project?
+
+
+114
+00:07:52,800 --> 00:07:54,600
+Like, oh, great.
+
+
+115
+00:07:54,600 --> 00:07:57,080
+We actually have an interplanetary file system.
+
+
+116
+00:07:57,080 --> 00:07:58,080
+It's on satellites.
+
+
+117
+00:07:58,080 --> 00:07:59,080
+It's on Mars.
+
+
+118
+00:07:59,080 --> 00:08:00,240
+Cool.
+
+
+119
+00:08:00,240 --> 00:08:03,480
+Nobody uses it because it doesn't really solve a problem, right?
+
+
+120
+00:08:03,480 --> 00:08:08,800
+Because there's like infinitely easier, faster, simpler ways to do the same thing.
+
+
+121
+00:08:08,800 --> 00:08:13,800
+So there's a tendency for nerds to nerd out, right?
+
+
+122
+00:08:13,800 --> 00:08:17,560
+And we need to constantly check ourselves.
+
+
+123
+00:08:17,560 --> 00:08:18,560
+We used to do this at Mozilla.
+
+
+124
+00:08:18,560 --> 00:08:21,840
+It was like, oh, we could totally do that in the browser, right?
+
+
+125
+00:08:21,840 --> 00:08:23,320
+We can totally do that.
+
+
+126
+00:08:23,320 --> 00:08:27,560
+Yeah, we can remotely start a car using a browser.
+
+
+127
+00:08:27,560 --> 00:08:29,240
+But should you, right?
+
+
+128
+00:08:29,240 --> 00:08:30,240
+That's the question, right?
+
+
+129
+00:08:30,240 --> 00:08:34,240
+That's a failure mode is to not step back and say, should we do this enough?
+
+
+130
+00:08:34,240 --> 00:08:38,460
+And also that means that we need to be bringing people into the community who provide checks
+
+
+131
+00:08:38,460 --> 00:08:41,080
+and balances against groupthink.
+
+
+132
+00:08:41,080 --> 00:08:42,320
+Yep.
+
+
+133
+00:08:42,320 --> 00:08:43,520
+Yep.
+
+
+134
+00:08:43,520 --> 00:08:46,120
+Does anyone else want to be pessimistic this morning?
+
+
+135
+00:08:46,120 --> 00:08:47,800
+All right.
+
+
+136
+00:08:47,800 --> 00:08:49,800
+Well, thank you.
+
+
+137
+00:08:49,800 --> 00:08:50,800
+Thank you.
+
+
+138
+00:08:50,800 --> 00:08:52,760
+No, this is definitely very good input.
+
+
+139
+00:08:52,760 --> 00:08:57,280
+So in terms of like thinking about it, and again, like I just picked the three that we
+
+
+140
+00:08:57,280 --> 00:09:02,360
+thought about, but like the ones that you brought are also important.
+
+
+141
+00:09:02,360 --> 00:09:06,480
+Based on this kind of like premortem exercise, we can figure out the things we want to build
+
+
+142
+00:09:06,480 --> 00:09:13,200
+and why we want to build community and governance capacity to provide these checks and to provide
+
+
+143
+00:09:13,200 --> 00:09:17,160
+this input and to keep ourselves honest and on track.
+
+
+144
+00:09:17,160 --> 00:09:22,880
+And so, you know, this involves like really figuring out how to avoid capture, how to
+
+
+145
+00:09:22,880 --> 00:09:26,120
+build collective action, and how to play well with others.
+
+
+146
+00:09:26,120 --> 00:09:31,680
+Those are like really important institutional aspects, aspects of governance.
+
+
+147
+00:09:31,680 --> 00:09:37,840
+And I think from all those that we heard also map one way or another into this, right?
+
+
+148
+00:09:37,840 --> 00:09:44,520
+If we have ways of like getting real community input, and that's not just like a call center
+
+
+149
+00:09:44,520 --> 00:09:52,000
+input, but that's actually people have voice that translates to action.
+
+
+150
+00:09:52,000 --> 00:09:59,560
+I think we can avoid a lot of these issues because that's how we are smart together.
+
+
+151
+00:09:59,560 --> 00:10:07,340
+So you know, in terms of like, do you know why you should be afraid of the French?
+
+
+152
+00:10:07,340 --> 00:10:18,560
+Because they eat pain for breakfast.
+
+
+153
+00:10:18,560 --> 00:10:28,160
+So things we would like to get out of this workshop session today are we'd really like
+
+
+154
+00:10:28,160 --> 00:10:35,160
+to get an idea of the pain points regarding governance of the IPFS ecosystem.
+
+
+155
+00:10:35,160 --> 00:10:39,240
+I mean, a lot of you are involved in it.
+
+
+156
+00:10:39,240 --> 00:10:43,380
+When you are involved in it, what is painful for you, but also what is painful in terms
+
+
+157
+00:10:43,380 --> 00:10:49,120
+of the people who aren't showing up or the support you're not getting or things that
+
+
+158
+00:10:49,120 --> 00:10:52,600
+you've, everyone has been saying, yes, we should be doing that for five years.
+
+
+159
+00:10:52,600 --> 00:10:55,000
+And it still hasn't happened.
+
+
+160
+00:10:55,000 --> 00:10:56,000
+That kind of painful.
+
+
+161
+00:10:56,000 --> 00:10:57,240
+Oh, I see Lidl's face.
+
+
+162
+00:10:57,240 --> 00:11:00,000
+I think I like struck a chord right there.
+
+
+163
+00:11:00,000 --> 00:11:07,080
+We're going to talk about browser extensions.
+
+
+164
+00:11:07,080 --> 00:11:08,600
+Every community goes through this, right?
+
+
+165
+00:11:08,600 --> 00:11:13,800
+So we can just like enumerate these things, but we can also solve them.
+
+
+166
+00:11:13,800 --> 00:11:21,440
+And one thing also is that is, you know, doing governance well and right is something that
+
+
+167
+00:11:21,440 --> 00:11:26,560
+is very much an art and hasn't been developed into very much of a science yet.
+
+
+168
+00:11:26,560 --> 00:11:32,040
+And so like sharing ideas and thoughts and best practices about how to do it well is
+
+
+169
+00:11:32,040 --> 00:11:35,400
+also something that we'd like to invite today and in the future.
+
+
+170
+00:11:35,400 --> 00:11:43,440
+I think very specifically, no pain, no gain, meaning we actually have to practice governance,
+
+
+171
+00:11:43,440 --> 00:11:48,560
+which means we will also sometimes fail at governance.
+
+
+172
+00:11:48,560 --> 00:11:53,040
+And what we have to do is learn from it so that we can get better at it.
+
+
+173
+00:11:53,040 --> 00:12:00,280
+I mean, you know, in real world governance is always absolutely messy and chaotic and
+
+
+174
+00:12:00,280 --> 00:12:01,900
+horrendous.
+
+
+175
+00:12:01,900 --> 00:12:09,960
+And so, you know, like, yes, we'd gain for breakfast because no, wait, that doesn't work.
+
+
+176
+00:12:09,960 --> 00:12:16,520
+And so, you know, we want to basically use this to strengthen the ways in which we cooperate
+
+
+177
+00:12:16,520 --> 00:12:23,080
+and work together and like work with other institutions and the broader community.
+
+
+178
+00:12:23,080 --> 00:12:30,520
+And so, you know, just like as some open ideation issues, the list is actually longer.
+
+
+179
+00:12:30,520 --> 00:12:35,560
+Of course, we'll get to a longer list right afterwards.
+
+
+180
+00:12:35,560 --> 00:12:40,120
+But you know, one of the questions, some of the questions you need to think about when
+
+
+181
+00:12:40,120 --> 00:12:43,880
+thinking about governance in concrete terms in terms of like how to make it happen is
+
+
+182
+00:12:43,880 --> 00:12:45,720
+like, what is it that we're governing?
+
+
+183
+00:12:45,720 --> 00:12:48,160
+Actually, what are the resources that are in the commons?
+
+
+184
+00:12:48,160 --> 00:12:50,340
+Is it the open source code?
+
+
+185
+00:12:50,340 --> 00:12:52,400
+Is it the standards?
+
+
+186
+00:12:52,400 --> 00:12:55,500
+Is it the infrastructure?
+
+
+187
+00:12:55,500 --> 00:12:57,380
+Is it the community culture?
+
+
+188
+00:12:57,380 --> 00:13:01,200
+It might be all of these things, but it's good to have a clear idea of what it is that
+
+
+189
+00:13:01,200 --> 00:13:04,000
+we're actually managing through this governance process.
+
+
+190
+00:13:04,000 --> 00:13:05,760
+There always has to be a resource, right?
+
+
+191
+00:13:05,760 --> 00:13:12,200
+You're not just like governancing for the fun of like having meetings, right?
+
+
+192
+00:13:12,200 --> 00:13:16,560
+The other way, the other important thing is like which actors, you know, in terms of like
+
+
+193
+00:13:16,560 --> 00:13:22,280
+specific positions in the community, like people who use it, people who code on it,
+
+
+194
+00:13:22,280 --> 00:13:26,280
+people who might have, you know, opinions about things, people who write, who create
+
+
+195
+00:13:26,280 --> 00:13:32,040
+logos, I don't know, like different roles, like which of these actors do we like to see
+
+
+196
+00:13:32,040 --> 00:13:37,880
+taking which roles in terms of governing things is also an important thing.
+
+
+197
+00:13:37,880 --> 00:13:43,280
+Like who gets to have maybe more say over some parts, who gets to have like a specific
+
+
+198
+00:13:43,280 --> 00:13:47,460
+kind of input into this or that kind of resource.
+
+
+199
+00:13:47,460 --> 00:13:52,080
+And then based on this, like how do we organize these to achieve the goals that we want to
+
+
+200
+00:13:52,080 --> 00:13:53,080
+achieve?
+
+
+201
+00:13:53,080 --> 00:14:01,080
+And so, Boris, do you want to jump on the parking lot a bit?
+
+
+202
+00:14:01,080 --> 00:14:02,080
+Live up here?
+
+
+203
+00:14:02,080 --> 00:14:03,080
+Yep, you're live now.
+
+
+204
+00:14:03,080 --> 00:14:04,080
+Live, live.
+
+
+205
+00:14:04,080 --> 00:14:05,080
+Awesome.
+
+
+206
+00:14:05,080 --> 00:14:11,160
+Yeah, so this was a bit of a parking lot pointing out to some different areas.
+
+
+207
+00:14:11,160 --> 00:14:18,160
+We've got one area that Robert and I have prepared and almost given a little update
+
+
+208
+00:14:18,160 --> 00:14:22,840
+of sort of some emergent stuff that we see happening.
+
+
+209
+00:14:22,840 --> 00:14:27,440
+We've got about 15 minutes, we've got five minutes in, so I'd like to take 10 minutes
+
+
+210
+00:14:27,440 --> 00:14:31,080
+and basically go through some of these things so that we can start gathering this as a list
+
+
+211
+00:14:31,080 --> 00:14:34,880
+of like, oh, are we just going to come and talk about it here or is this something that
+
+
+212
+00:14:34,880 --> 00:14:39,560
+we're going to kick off and be like, how does this flow into other events and meetings and
+
+
+213
+00:14:39,560 --> 00:14:42,840
+other things that we have over time?
+
+
+214
+00:14:42,840 --> 00:14:45,000
+Standards.
+
+
+215
+00:14:45,000 --> 00:14:47,280
+What does that even mean?
+
+
+216
+00:14:47,280 --> 00:14:53,400
+I wanted to put that up there to kick things off because I think we do multiple kinds of
+
+
+217
+00:14:53,400 --> 00:14:54,400
+things.
+
+
+218
+00:14:54,400 --> 00:15:02,240
+We do standards that might be happening at the W3C or the ITF that I guess sits in Dietrich's
+
+
+219
+00:15:02,240 --> 00:15:03,240
+and your hands.
+
+
+220
+00:15:03,240 --> 00:15:04,240
+Is that correct?
+
+
+221
+00:15:04,240 --> 00:15:06,040
+I mean, kind of.
+
+
+222
+00:15:06,040 --> 00:15:10,040
+The ITF section is being discussed.
+
+
+223
+00:15:10,040 --> 00:15:15,040
+So the ITF is, it looks like ramping up a multi-formats working group, but that is just
+
+
+224
+00:15:15,040 --> 00:15:16,040
+for multi-formats.
+
+
+225
+00:15:16,040 --> 00:15:21,320
+It's not this tiny fraction of the stack.
+
+
+226
+00:15:21,320 --> 00:15:26,760
+But we do need to get our act together in terms of like finding chairs for it, figuring
+
+
+227
+00:15:26,760 --> 00:15:30,320
+out who's going to edit the specs, provide input.
+
+
+228
+00:15:30,320 --> 00:15:35,520
+At the very least, we need people to review the specs and help with that.
+
+
+229
+00:15:35,520 --> 00:15:37,240
+But that is one section.
+
+
+230
+00:15:37,240 --> 00:15:41,240
+But then there's the, what do we do with all the other specs that we have or that we should
+
+
+231
+00:15:41,240 --> 00:15:46,920
+have or all the parts of the stack that exist but don't have a spec?
+
+
+232
+00:15:46,920 --> 00:15:54,600
+Do we just like get LIDL to write all of them?
+
+
+233
+00:15:54,600 --> 00:15:56,720
+Or do we develop a system where...
+
+
+234
+00:15:56,720 --> 00:16:02,880
+I've been told that if I stop fucking around with mascot shaped stickers and just buckle
+
+
+235
+00:16:02,880 --> 00:16:09,360
+down and make hexagon shaped stickers for UCAN, then like it'll just automatically be
+
+
+236
+00:16:09,360 --> 00:16:12,480
+part of the IPFS universe.
+
+
+237
+00:16:12,480 --> 00:16:13,480
+Is this true?
+
+
+238
+00:16:13,480 --> 00:16:14,480
+Okay, great.
+
+
+239
+00:16:14,480 --> 00:16:15,760
+Okay, done.
+
+
+240
+00:16:15,760 --> 00:16:19,120
+Standards equal LIDL plus stickers.
+
+
+241
+00:16:19,120 --> 00:16:20,760
+Right.
+
+
+242
+00:16:20,760 --> 00:16:22,400
+Yeah.
+
+
+243
+00:16:22,400 --> 00:16:24,120
+Okay.
+
+
+244
+00:16:24,120 --> 00:16:26,440
+Fantastic.
+
+
+245
+00:16:26,440 --> 00:16:29,080
+And I think, yeah, just putting that down there because there's standards, standard
+
+
+246
+00:16:29,080 --> 00:16:33,800
+quotation mark, like it's both something that we shouldn't be afraid of being like, oh,
+
+
+247
+00:16:33,800 --> 00:16:36,880
+let's do a pattern of writing stuff down.
+
+
+248
+00:16:36,880 --> 00:16:40,360
+And again, some of that might come out of a hack project where we have something that
+
+
+249
+00:16:40,360 --> 00:16:42,840
+works and then, oh, we want more people working on it.
+
+
+250
+00:16:42,840 --> 00:16:50,480
+And this tension between I wrote some open source code and cool, can three or four other
+
+
+251
+00:16:50,480 --> 00:16:56,560
+organizations implement it because they like crabs better than gophers or whatever reason
+
+
+252
+00:16:56,560 --> 00:17:00,260
+they might want to do it, sort of thing like that.
+
+
+253
+00:17:00,260 --> 00:17:02,360
+And part of that can be like expectations, right?
+
+
+254
+00:17:02,360 --> 00:17:09,320
+So for instance, it's not perfect, but when a browser vendor ships a new technology that
+
+
+255
+00:17:09,320 --> 00:17:14,600
+they haven't even sort of like slightly contributed to the standards process, people scream at
+
+
+256
+00:17:14,600 --> 00:17:15,600
+them.
+
+
+257
+00:17:15,600 --> 00:17:19,000
+It doesn't stop them completely, but there's a cultural expectation that if you're going
+
+
+258
+00:17:19,000 --> 00:17:22,840
+to add a feature, you should at least like pretend to have a spec and give it to the
+
+
+259
+00:17:22,840 --> 00:17:26,000
+community, which is better than not even bothering.
+
+
+260
+00:17:26,000 --> 00:17:29,640
+And I don't think we have that muscle developed yet.
+
+
+261
+00:17:29,640 --> 00:17:35,920
+I think we don't want to stop people from coming up with ideas and trying stuff out.
+
+
+262
+00:17:35,920 --> 00:17:42,760
+But if you're going to add a significant feature and put it somehow in public where it's going
+
+
+263
+00:17:42,760 --> 00:17:46,680
+to be used by people, it's probably a good idea to develop the expectation that it should
+
+
+264
+00:17:46,680 --> 00:17:51,360
+be at least the outline of some kind of markdown spec and we make it pretty easy for people
+
+
+265
+00:17:51,360 --> 00:17:52,360
+to write specs.
+
+
+266
+00:17:52,360 --> 00:17:59,720
+So I think that should be an expectation that we grow to develop.
+
+
+267
+00:17:59,720 --> 00:18:09,880
+Thoughts, pains, delight around this word standards.
+
+
+268
+00:18:09,880 --> 00:18:15,800
+You should add this into your threat model for capture because I've seen so many open
+
+
+269
+00:18:15,800 --> 00:18:22,240
+source projects who started at the standards place and suddenly Microsoft comes in and
+
+
+270
+00:18:22,240 --> 00:18:24,400
+is like, oh, we're building Ion, right?
+
+
+271
+00:18:24,400 --> 00:18:28,880
+We're going to do this thing you call decentralized identity.
+
+
+272
+00:18:28,880 --> 00:18:35,640
+And since this group has not actually written a spec, there's no reference implementation,
+
+
+273
+00:18:35,640 --> 00:18:41,840
+we're going to push this standard in a direction that makes it only Microsoft who can do it.
+
+
+274
+00:18:41,840 --> 00:18:48,600
+So I think the one thing to keep in mind is we have a lot of technical advancement already.
+
+
+275
+00:18:48,600 --> 00:18:51,640
+We have a lot of specs we still need to write.
+
+
+276
+00:18:51,640 --> 00:18:52,640
+Look at Lidl.
+
+
+277
+00:18:52,640 --> 00:18:59,440
+He literally just said we should write some more specs in the previous meeting.
+
+
+278
+00:18:59,440 --> 00:19:04,760
+But anyway, there is this tension of do we implement it first and then write it down
+
+
+279
+00:19:04,760 --> 00:19:08,580
+and show the world that this solves a problem and this is what we're going to do?
+
+
+280
+00:19:08,580 --> 00:19:12,360
+Or do we go to the standards body and incorporate feedback as we design?
+
+
+281
+00:19:12,360 --> 00:19:13,800
+There's always tension there.
+
+
+282
+00:19:13,800 --> 00:19:21,080
+I think the rule of thumb is yes for protocols, no for implementations or no for anything
+
+
+283
+00:19:21,080 --> 00:19:25,440
+that would be considered implementation detail.
+
+
+284
+00:19:25,440 --> 00:19:30,160
+And that's where something like the decentralized identity and the CCG working group just went
+
+
+285
+00:19:30,160 --> 00:19:31,200
+off.
+
+
+286
+00:19:31,200 --> 00:19:35,920
+They went down the rabbit hole of all these little implementation details.
+
+
+287
+00:19:35,920 --> 00:19:40,480
+And I don't know that anybody uses CCG standards much.
+
+
+288
+00:19:40,480 --> 00:19:44,920
+We have tiny little bits of dits here, but they have all kinds of problems because of
+
+
+289
+00:19:44,920 --> 00:19:48,000
+it.
+
+
+290
+00:19:48,000 --> 00:19:57,360
+Maybe like potential mitigation here is to not just write text, not just write prose,
+
+
+291
+00:19:57,360 --> 00:20:18,240
+but also have a system when it's needed.
+
+
+292
+00:20:00,000 --> 00:20:06,600
+there's an expectation of having a working code with your spec proposal, kind of like reference implementation.
+
+
+293
+00:20:06,600 --> 00:20:16,200
+And then as a part of the ratification process, have expectation of some sort of a test suit that's vendor agnostic.
+
+
+294
+00:20:16,200 --> 00:20:25,400
+And we are trying to prototype a process like that for the gateway specs, where we have expectation you, there's a spec.
+
+
+295
+00:20:25,400 --> 00:20:33,800
+So one thing you need to have a spec, then you can have IPIP's improvement proposals, deltas against the spec.
+
+
+296
+00:20:33,800 --> 00:20:42,300
+And when you want to propose a change, you come in with code and then as a part of ratification process,
+
+
+297
+00:20:42,300 --> 00:20:51,100
+you are expected to also bring test fixtures to this vendor agnostic test suit.
+
+
+298
+00:20:51,100 --> 00:20:56,300
+For the gateway, it's fairly easy HTTP. For other things, it may be more tricky,
+
+
+299
+00:20:56,300 --> 00:21:07,700
+but I think this is a forcing function for people from the wider ecosystem to get an early warning where there's a capture attempt.
+
+
+300
+00:21:07,700 --> 00:21:16,100
+Because the moment I'm not able to like test it with the provided fixtures because it relies on some centralized thing
+
+
+301
+00:21:16,100 --> 00:21:20,600
+or some proprietary thing that I'm not able to implement because of patents or whatever.
+
+
+302
+00:21:20,600 --> 00:21:28,600
+That's the early warning. That's the time when you have a warning before you ratify the spec, before it gets like too far.
+
+
+303
+00:21:28,600 --> 00:21:30,100
+I agree.
+
+
+304
+00:21:30,100 --> 00:21:39,000
+You know, that's a good point. I mean, it's certainly true that defending against capture in standards is a problem
+
+
+305
+00:21:39,000 --> 00:21:45,000
+that we sadly have a lot of experience with based on the W3C, for instance.
+
+
+306
+00:21:45,000 --> 00:21:58,000
+I do think that ties to a broader discussion about how to organize the community and what happens when things start to become successful
+
+
+307
+00:21:58,000 --> 00:22:01,000
+and how do you scale your governance to match success.
+
+
+308
+00:22:01,000 --> 00:22:09,000
+A lot of the time you see projects that begin and the governance is basically just norms.
+
+
+309
+00:22:09,000 --> 00:22:13,000
+You have norms of how you're supposed to contribute and how you're supposed to participate.
+
+
+310
+00:22:13,000 --> 00:22:20,000
+And that's great so long as no one's income relies on it and so long as it's not too successful.
+
+
+311
+00:22:20,000 --> 00:22:27,000
+You know, like I don't want to do a thing that will make Boris angry at me, so I do the right thing.
+
+
+312
+00:22:27,000 --> 00:22:32,000
+But at some point it becomes big. Like my income depends on it.
+
+
+313
+00:22:32,000 --> 00:22:39,000
+And if it depends on doing something that makes Boris unhappy, well, maybe that makes me sad, but I'll still do it.
+
+
+314
+00:22:39,000 --> 00:22:45,000
+And then you get something that falls apart and that is easily captured because you need to go from norms to rules
+
+
+315
+00:22:45,000 --> 00:22:49,000
+and something that has a lot more enforcement capacity in it.
+
+
+316
+00:22:49,000 --> 00:22:56,000
+I wanted to point out actually, that's an excellent proposal of talking about that process.
+
+
+317
+00:22:56,000 --> 00:23:00,000
+Who funds that?
+
+
+318
+00:23:00,000 --> 00:23:03,000
+The infrastructure contest or the people who are...
+
+
+319
+00:23:03,000 --> 00:23:07,000
+Wait, wait, Mike, Mike, Mike, Mike, Mike.
+
+
+320
+00:23:07,000 --> 00:23:11,000
+I'm an indie hacker who would like to do a new thing.
+
+
+321
+00:23:11,000 --> 00:23:17,000
+And I can't possibly do all of those things as the first step.
+
+
+322
+00:23:17,000 --> 00:23:19,000
+And I don't think we should even dig into it.
+
+
+323
+00:23:19,000 --> 00:23:23,000
+This is the prompt of like, that sounds awesome.
+
+
+324
+00:23:23,000 --> 00:23:31,000
+So I can get some contributions to get all of that stuff done that's not me, the indie hacker or other things like that.
+
+
+325
+00:23:31,000 --> 00:23:36,000
+And this is some of the tensions of where some of this lives and what base infrastructure is.
+
+
+326
+00:23:36,000 --> 00:23:40,000
+To what you were saying in terms of the diff and other things like that,
+
+
+327
+00:23:40,000 --> 00:23:46,000
+what we really found is I think the ITF model of rough consensus and running code is a good starting point.
+
+
+328
+00:23:46,000 --> 00:23:49,000
+We went to the diff.
+
+
+329
+00:23:49,000 --> 00:23:55,000
+We'd done a bunch of early stuff with DIDs and we went there and did a demo for them.
+
+
+330
+00:23:55,000 --> 00:23:57,000
+They're like, oh, wait, this is working?
+
+
+331
+00:23:57,000 --> 00:24:00,000
+I'm like, yes.
+
+
+332
+00:24:00,000 --> 00:24:02,000
+And then we got into some discussions.
+
+
+333
+00:24:02,000 --> 00:24:07,000
+We found a lot of people there had thought a lot about identity and a bunch of other things like that.
+
+
+334
+00:24:07,000 --> 00:24:09,000
+But it was theoretical.
+
+
+335
+00:24:09,000 --> 00:24:17,000
+And so we didn't actually have a partner to do, for instance, interop testing with where the expectation was kind of like,
+
+
+336
+00:24:17,000 --> 00:24:20,000
+well, we'll write it all down, including some of us who had written code.
+
+
+337
+00:24:20,000 --> 00:24:28,000
+We're like, that is not going to be useful to implement or hard to implement in code.
+
+
+338
+00:24:28,000 --> 00:24:32,000
+So some of those tensions were, I would say, almost there.
+
+
+339
+00:24:32,000 --> 00:24:40,000
+Like, I start very early on in saying, I guess, intent to implement is sort of a thing that I almost,
+
+
+340
+00:24:40,000 --> 00:24:46,000
+it's just something that I know lots of people who are more into the W3C are twitching when I say that phrase sort of thing.
+
+
+341
+00:24:46,000 --> 00:24:49,000
+But I'm like, could we use some patterns and say, oh, I'm going to stick up my hand.
+
+
+342
+00:24:49,000 --> 00:24:58,000
+Yes, my org group, individual indie hacker would also like to run, deploy or code X.
+
+
+343
+00:24:58,000 --> 00:25:03,000
+And that kicks things off of saying, like, it's not just a single entity as an example.
+
+
+344
+00:25:03,000 --> 00:25:10,000
+Yeah. And I think, I'm not sure if that's where you're going, but I think parts of the standards,
+
+
+345
+00:25:10,000 --> 00:25:18,000
+it's like specs plus framework of testing that it's not, there's like no lock in around this test framework.
+
+
+346
+00:25:18,000 --> 00:25:25,000
+So the thing is, yet another example of the gateway conformance tests, we are prototyping the entire,
+
+
+347
+00:25:25,000 --> 00:25:34,000
+like the design decisions that we wrote down was, everyone, we should be able to run this on the canonical place
+
+
+348
+00:25:34,000 --> 00:25:36,000
+where people can compare implementations.
+
+
+349
+00:25:36,000 --> 00:25:40,000
+Then each implementation, it can run it in their own infra.
+
+
+350
+00:25:40,000 --> 00:25:51,000
+And then every end user could use it to empower themselves and verify products that provide gateways.
+
+
+351
+00:25:51,000 --> 00:26:04,000
+So the test capture and making sure it's locked open and not tied to a specific implementation is very important.
+
+
+352
+00:26:04,000 --> 00:26:10,000
+We struggle with that because the gateway implementations right now are mostly PL driven,
+
+
+353
+00:26:10,000 --> 00:26:14,000
+but through the project, we are in other places, we are able to, like,
+
+
+354
+00:26:14,000 --> 00:26:17,000
+at least we have multiple implementations with different limitations.
+
+
+355
+00:26:17,000 --> 00:26:19,000
+So that's a starting point.
+
+
+356
+00:26:19,000 --> 00:26:25,000
+And tests are a good way of getting community participation because, you know,
+
+
+357
+00:26:25,000 --> 00:26:29,000
+hackers can easily like go like, oh, this is a test suite.
+
+
+358
+00:26:29,000 --> 00:26:33,000
+I understand how this works and I can contribute something.
+
+
+359
+00:26:33,000 --> 00:26:40,000
+And in general, I've seen quite a bit of success in standards worlds where you make it easy for people to contribute tests
+
+
+360
+00:26:40,000 --> 00:26:42,000
+when they find a bug.
+
+
+361
+00:26:42,000 --> 00:26:46,000
+And they do because it's a great way of getting other people to fix the bug and to do the work for you.
+
+
+362
+00:26:46,000 --> 00:26:49,000
+So that is a helpful vector for sure.
+
+
+363
+00:26:49,000 --> 00:26:51,000
+So we've gone deep on the first one.
+
+
+364
+00:26:51,000 --> 00:26:57,000
+What I'd actually like to do is do a speed run of adding a little more color to each one of these things mean,
+
+
+365
+00:26:57,000 --> 00:27:02,000
+and then also just getting a kind of show of hands of which of these things are interesting that we might dig into.
+
+
+366
+00:27:02,000 --> 00:27:07,000
+Because a lot of these are just prompts for us to be like, oh, right, these are some people who are interested in this stuff.
+
+
+367
+00:27:07,000 --> 00:27:09,000
+Let's keep talking about it.
+
+
+368
+00:27:09,000 --> 00:27:18,000
+So network operations, and kind of put bad bits in there directly to say what Robin said about, like, oh, you know,
+
+
+369
+00:27:18,000 --> 00:27:25,000
+we don't want the main IPFS commons network.
+
+
+370
+00:27:25,000 --> 00:27:34,000
+Does anyone, I call it main net, borrowing from blockchains who have this concept.
+
+
+371
+00:27:34,000 --> 00:27:44,000
+And so an open question, is there a label for the main public reachable IPFS commons network?
+
+
+372
+00:27:44,000 --> 00:27:46,000
+Oh, that's like an open slot.
+
+
+373
+00:27:46,000 --> 00:27:48,000
+We are looking for a name for DHT.
+
+
+374
+00:27:48,000 --> 00:27:53,000
+But now it seems that we also need a name for the entire network.
+
+
+375
+00:27:53,000 --> 00:27:55,000
+So we need two names.
+
+
+376
+00:27:55,000 --> 00:27:56,000
+And logos.
+
+
+377
+00:27:56,000 --> 00:27:57,000
+Do we need two names?
+
+
+378
+00:27:57,000 --> 00:28:00,000
+Because do we need to name the DHT separately from the?
+
+
+379
+00:28:00,000 --> 00:28:01,000
+I don't know.
+
+
+380
+00:28:01,000 --> 00:28:06,000
+There was a proposal to call it Baba Yaga yesterday.
+
+
+381
+00:28:06,000 --> 00:28:09,000
+Plus one for vilification.
+
+
+382
+00:28:09,000 --> 00:28:11,000
+Literally.
+
+
+383
+00:28:11,000 --> 00:28:12,000
+Awesome.
+
+
+384
+00:28:12,000 --> 00:28:13,000
+That's really, that's really.
+
+
+385
+00:28:13,000 --> 00:28:20,000
+So, and then there's the actual network operations where some of the stuff that Rob and I have been looking at in the decentralized data compliance group
+
+
+386
+00:28:20,000 --> 00:28:29,000
+that we'll talk about this afternoon is like, okay, real companies that are registered in real countries are going to run real servers
+
+
+387
+00:28:29,000 --> 00:28:35,000
+as part of stuff that they run and where they operate those things, they have compliance needs.
+
+
+388
+00:28:35,000 --> 00:28:41,000
+Hey, instead of everyone having to do this all by themselves, can we cooperate and help each other out
+
+
+389
+00:28:41,000 --> 00:28:44,000
+so not everyone is starting from scratch,
+
+
+390
+00:28:44,000 --> 00:28:50,000
+including some shared compliance things around which bad bits we might not be allowed to serve.
+
+
+391
+00:28:50,000 --> 00:28:56,000
+So this is a guard as a community against the vilification.
+
+
+392
+00:28:56,000 --> 00:28:57,000
+Yep. Yep. Right.
+
+
+393
+00:28:57,000 --> 00:29:02,000
+And I think we're seeing the IPFS operators group kind of reboot and that'll hopefully kind of find a home in there.
+
+
+394
+00:29:02,000 --> 00:29:06,000
+But they're probably not that not the same set of people who are looking at compliance.
+
+
+395
+00:29:06,000 --> 00:29:08,000
+So like that.
+
+
+396
+00:29:08,000 --> 00:29:10,000
+I mean, the two work together.
+
+
+397
+00:29:10,000 --> 00:29:11,000
+But yeah.
+
+
+398
+00:29:11,000 --> 00:29:20,000
+Open source governance, a placeholder that is more about the code and goes into in the current model that we have,
+
+
+399
+00:29:20,000 --> 00:29:23,000
+where lots of code gets written by PL.
+
+
+400
+00:29:23,000 --> 00:29:31,000
+What is PL's approach to saying to taking feature requests or taking PRs or not taking PRs?
+
+
+401
+00:29:31,000 --> 00:29:34,000
+There's a bunch of different ways to do this and what this looks like.
+
+
+402
+00:29:34,000 --> 00:29:42,000
+Some of it is once again tied to funding as a form of power that you have to think about as well,
+
+
+403
+00:29:42,000 --> 00:29:44,000
+which is why I have that one as the next thing.
+
+
+404
+00:29:44,000 --> 00:29:47,000
+We have a bunch of things in motion.
+
+
+405
+00:29:47,000 --> 00:29:50,000
+There's an IPFS fund being formed.
+
+
+406
+00:29:50,000 --> 00:29:53,000
+Addy, is that going to be talked about here?
+
+
+407
+00:29:53,000 --> 00:29:56,000
+There's more than one.
+
+
+408
+00:29:56,000 --> 00:29:58,000
+There's more than one?
+
+
+409
+00:29:58,000 --> 00:30:00,000
+Okay.
+
+
+410
+00:30:00,000 --> 00:30:03,000
+Is that on the schedule anywhere?
+
+
+411
+00:30:03,000 --> 00:30:10,000
+There was a little bit touched upon in the keynote.
+
+
+412
+00:30:10,000 --> 00:30:13,000
+So we have two sort of divergences.
+
+
+413
+00:30:13,000 --> 00:30:18,000
+We have one that is the traditional IPFS fund, which I'm dubbing the Web 2.0 version.
+
+
+414
+00:30:18,000 --> 00:30:22,000
+And then we're building out a Web 3 version, which is all on chain.
+
+
+415
+00:30:22,000 --> 00:30:27,000
+So it's like based off of staking mechanism and pooling on GILF.
+
+
+416
+00:30:27,000 --> 00:30:34,000
+And then those will be fractionalized using quadratic voting or some kind of weighted voting scheme with governance
+
+
+417
+00:30:34,000 --> 00:30:40,000
+so that everything is on chain and essentially trackable and traceable for both the community and the funders,
+
+
+418
+00:30:40,000 --> 00:30:46,000
+with the idea being that the funding will be completely decentralized so it's not coming from a single entity.
+
+
+419
+00:30:46,000 --> 00:30:53,000
+And the hopes there is that we can then fund and allocate money to higher risk, higher reward projects.
+
+
+420
+00:30:53,000 --> 00:30:56,000
+So I don't know if that answers the question.
+
+
+421
+00:30:56,000 --> 00:30:59,000
+But there's sort of two tracks right now that are going in parallel.
+
+
+422
+00:30:59,000 --> 00:31:00,000
+That's amazing.
+
+
+423
+00:31:00,000 --> 00:31:05,000
+Like, again, this entire track is a honeypot for people with information and people with questions, right?
+
+
+424
+00:31:05,000 --> 00:31:10,000
+So even though like, oh, we need two names for the thing, we're having it recorded.
+
+
+425
+00:31:10,000 --> 00:31:16,000
+So this is the kind of thing where I'd love to follow up and be like, where do we go to follow along, find out more?
+
+
+426
+00:31:16,000 --> 00:31:22,000
+What is the Filecoin Slack channel or, you know, hashtag on Blue Sky to follow or whatever?
+
+
+427
+00:31:22,000 --> 00:31:23,000
+So that's awesome.
+
+
+428
+00:31:23,000 --> 00:31:24,000
+Thank you.
+
+
+429
+00:31:24,000 --> 00:31:28,000
+Evangelism and Ground Game.
+
+
+430
+00:31:28,000 --> 00:31:34,000
+So that's something that Yuni wants to cover a fair bit this afternoon and she's not here yet.
+
+
+431
+00:31:34,000 --> 00:31:42,000
+In a couple of different ways, which is, again, so to what you were saying in terms of like, it has to be useful to people generally,
+
+
+432
+00:31:42,000 --> 00:31:48,000
+which might start with cool technical hack that incites a community to keep going and sort of thing,
+
+
+433
+00:31:48,000 --> 00:31:56,000
+but then has to transition to exactly what Eddie was saying about like, hey, how about we use some languages other than English
+
+
+434
+00:31:56,000 --> 00:31:59,000
+and think about places other than the Western world?
+
+
+435
+00:31:59,000 --> 00:32:08,000
+I had an amazing discussion with some Mayan activists at IPFS camp, and they told me a little bit of like,
+
+
+436
+00:32:08,000 --> 00:32:16,000
+once we translate it into our language, here's some of our thoughts on how IPFS is or is not connected to some other things
+
+
+437
+00:32:16,000 --> 00:32:18,000
+and how it makes us feel.
+
+
+438
+00:32:18,000 --> 00:32:21,000
+And I'm like, super interesting, right?
+
+
+439
+00:32:21,000 --> 00:32:27,000
+So all of these, like, we have to do all of these things to some degree.
+
+
+440
+00:32:27,000 --> 00:32:30,000
+And some of this is like, great.
+
+
+441
+00:32:30,000 --> 00:32:35,000
+So there's these two parts of governance is in part the like, who decides or who prioritizes?
+
+
+442
+00:32:35,000 --> 00:32:38,000
+And community is the, in part, great.
+
+
+443
+00:32:38,000 --> 00:32:45,000
+How do we work together and do some collective action around it instead of just single individual or single org?
+
+
+444
+00:32:45,000 --> 00:32:48,000
+Yep.
+
+
+445
+00:32:48,000 --> 00:32:53,000
+I was just going to point out that the cool thing about the open source governance and evangelism and ground game,
+
+
+446
+00:32:53,000 --> 00:32:57,000
+and to some degree funding, these are well-trodden paths, right?
+
+
+447
+00:32:57,000 --> 00:33:02,000
+There's been a lot of success in the last 20 years for, you know, like Mozilla, Linux Foundation, lots of these.
+
+
+448
+00:33:02,000 --> 00:33:05,000
+And then, you know, even the IEEE is really good at this.
+
+
+449
+00:33:05,000 --> 00:33:11,000
+And so I think we should make sure that we go at this not thinking we're going to make a PL-flavored version of it.
+
+
+450
+00:33:11,000 --> 00:33:22,000
+I think we should definitely maybe organize a conversation around doing like a SWOT on what Mozilla did or what Linux Foundation did.
+
+
+451
+00:33:22,000 --> 00:33:26,000
+And pull from them, like learn from the people who have come before us.
+
+
+452
+00:33:26,000 --> 00:33:30,000
+Because we certainly have something to add to this.
+
+
+453
+00:33:30,000 --> 00:33:36,000
+You know, what Addy's talking about, you know, cutting new paths into Web 3 funding and how do we do voting?
+
+
+454
+00:33:36,000 --> 00:33:41,000
+And how do we do everything on-chain and transparently?
+
+
+455
+00:33:41,000 --> 00:33:49,000
+But to get there, right, there's so much we're going to need to do that has already been figured out.
+
+
+456
+00:33:49,000 --> 00:33:57,000
+So let's not spin our wheels on that. Let's work on, you know, the cool stuff that we can add.
+
+
+457
+00:33:57,000 --> 00:34:00,000
+Your laptop did not like staying.
+
+
+458
+00:34:00,000 --> 00:34:06,000
+Yeah, completely agree. I mean, two examples come to mind there.
+
+
+459
+00:34:06,000 --> 00:34:10,000
+Not necessarily fully successful, but that have interesting properties at least.
+
+
+460
+00:34:10,000 --> 00:34:16,000
+One is Wikipedia developed a pretty serious, like, ground game.
+
+
+461
+00:34:16,000 --> 00:34:23,000
+And everyone knows how bureaucratic and complicated it is to actually make Wikipedia function.
+
+
+462
+00:34:23,000 --> 00:34:31,000
+And that was a key part in getting an entire community to understand a very complex set of rules to build governance around a shared system.
+
+
+463
+00:34:31,000 --> 00:34:38,000
+That, you know, maybe bureaucratic, maybe difficult and painful, but generally works more than it doesn't.
+
+
+464
+00:34:38,000 --> 00:34:45,000
+And the other is ISOC, where they manage a pretty significant budget annually.
+
+
+465
+00:34:45,000 --> 00:34:55,000
+And I think it's a very significant chunk, maybe half, at least a third, possibly more than half of the budget is managed by ISOC chapters.
+
+
+466
+00:34:55,000 --> 00:35:01,000
+And so I'm not convinced that the community representation they have is very representative.
+
+
+467
+00:35:01,000 --> 00:35:07,000
+But at least they figured out a way of doing this kind of collective budgeting.
+
+
+468
+00:35:07,000 --> 00:35:16,000
+I actually 80% disagree with almost everything that you said.
+
+
+469
+00:35:16,000 --> 00:35:22,000
+Here's what I've seen having practiced a bunch of this stuff 20 years ago when open source was still a radical act.
+
+
+470
+00:35:22,000 --> 00:35:28,000
+I think those orgs figured it out from the early 2000s to today.
+
+
+471
+00:35:28,000 --> 00:35:35,000
+What I'm seeing is essentially open source 2.0, where a lot of people have come up without it being radical
+
+
+472
+00:35:35,000 --> 00:35:38,000
+and don't actually know how to practice.
+
+
+473
+00:35:38,000 --> 00:35:43,000
+Another point is you said PL. I believe you meant PLN, of course, right?
+
+
+474
+00:35:43,000 --> 00:35:49,000
+This is a problem that we generally have in the N part.
+
+
+475
+00:35:49,000 --> 00:35:56,000
+We don't talk about the N part, in part because of point four of funding where most of the locus of that lies.
+
+
+476
+00:35:56,000 --> 00:36:06,000
+I think a lot of the new stuff coming from Web 3.0 is super new and no one really has it figured out.
+
+
+477
+00:36:06,000 --> 00:36:08,000
+And there's some new techniques in there, right?
+
+
+478
+00:36:08,000 --> 00:36:15,000
+So how do we split these things and go double down on the things that we know that work that might target certain types of orgs?
+
+
+479
+00:36:15,000 --> 00:36:20,000
+Or I actually see that a bunch of those techniques work in the global northern west
+
+
+480
+00:36:20,000 --> 00:36:26,000
+and pretty much don't in the global south and southeast Asia.
+
+
+481
+00:36:26,000 --> 00:36:31,000
+And that's really the arc of, oh no, the Internet is now worldwide
+
+
+482
+00:36:31,000 --> 00:36:37,000
+and our ground game actually has to be global and not just English-centric, right?
+
+
+483
+00:36:37,000 --> 00:36:43,000
+So I'm not disagreeing, more saying, yes, and.
+
+
+484
+00:36:43,000 --> 00:36:47,000
+What I was thinking about is exactly what you were saying.
+
+
+485
+00:36:47,000 --> 00:36:53,000
+If you had me write down a list of the things that I admire from previous organizations,
+
+
+486
+00:36:53,000 --> 00:37:00,000
+I think the people who know anything about Mozilla would say the one thing they are really good at is translating.
+
+
+487
+00:37:00,000 --> 00:37:06,000
+They have all their documentation and all their educational material in like 80 different languages.
+
+
+488
+00:37:06,000 --> 00:37:09,000
+So I agree with you, Boris.
+
+
+489
+00:37:09,000 --> 00:37:14,000
+I'm not trying to be sort of like the global west-north-centric.
+
+
+490
+00:37:14,000 --> 00:37:19,000
+In fact, there are some things about some of these organizations that are so good about the global south
+
+
+491
+00:37:19,000 --> 00:37:22,000
+and getting it into places.
+
+
+492
+00:37:22,000 --> 00:37:28,000
+The IEEE does a really good ground game with institutions, educational institutions.
+
+
+493
+00:37:28,000 --> 00:37:30,000
+They're like a PhD factory.
+
+
+494
+00:37:30,000 --> 00:37:35,000
+And there is so much of what we're doing that it has open-ended questions,
+
+
+495
+00:37:35,000 --> 00:37:41,000
+like things that could fuel and also fund a lot of research.
+
+
+496
+00:37:41,000 --> 00:37:44,000
+And so anyway, that's what I'm thinking.
+
+
+497
+00:37:44,000 --> 00:37:47,000
+I think you and I agree we're saying the same thing.
+
+
+498
+00:37:47,000 --> 00:37:51,000
+I'm not thinking like, oh, you know, let's throw giant parties in New York City.
+
+
+499
+00:37:51,000 --> 00:37:52,000
+I'm thinking let's –
+
+
+500
+00:37:52,000 --> 00:37:54,000
+I'm not against it.
+
+
+501
+00:37:54,000 --> 00:37:59,000
+I'm not asking you to make a rule that's like a law.
+
+
+502
+00:37:59,000 --> 00:38:04,000
+My vision here is having a presence on the ground pretty much everywhere in the world
+
+
+503
+00:38:04,000 --> 00:38:09,000
+with people who are speaking in a native language and teaching people how to build with this.
+
+
+504
+00:38:09,000 --> 00:38:15,000
+That's an amazing mission statement and I think very good for UD's session.
+
+
+505
+00:38:15,000 --> 00:38:17,000
+Thank you for pushing back, though.
+
+
+506
+00:38:17,000 --> 00:38:19,000
+I love it.
+
+
+507
+00:38:19,000 --> 00:38:22,000
+Of course, we're over time now.
+
+
+508
+00:38:22,000 --> 00:38:28,000
+Let's quickly flip through the working group.
+
+
+509
+00:38:28,000 --> 00:38:32,000
+So having gone through –
+
+
+510
+00:38:32,000 --> 00:38:39,000
+one thing that we wanted to bring forward here is that there's this sort of like novel idea,
+
+
+511
+00:38:39,000 --> 00:38:45,000
+that novelish idea that's been floating around and where people are sprouting up working groups here and there.
+
+
+512
+00:38:45,000 --> 00:38:49,000
+And it's great because we should be working and in groups.
+
+
+513
+00:38:49,000 --> 00:38:53,000
+So you figured out that that should be a good idea.
+
+
+514
+00:38:53,000 --> 00:38:59,000
+But the purpose of working groups is to get us cross-organizationally to figure things out,
+
+
+515
+00:38:59,000 --> 00:39:02,000
+and they can have different types of approaches to different things.
+
+
+516
+00:39:02,000 --> 00:39:06,000
+Some of them are much more like pragmatic solving things.
+
+
+517
+00:39:06,000 --> 00:39:10,000
+Others are like let's organize towards a mission.
+
+
+518
+00:39:10,000 --> 00:39:17,000
+But we haven't really formalized this in any way or figured out what are the rules
+
+
+519
+00:39:17,000 --> 00:39:20,000
+and what does a working group need to be.
+
+
+520
+00:39:20,000 --> 00:39:26,000
+So I think we should be thinking as a community about what do we expect from a working group
+
+
+521
+00:39:26,000 --> 00:39:29,000
+and what should we bring into working groups.
+
+
+522
+00:39:29,000 --> 00:39:36,000
+And so there are basic building blocks like it should have a charter, it should be there for a purpose.
+
+
+523
+00:39:36,000 --> 00:39:44,000
+It should also know from the start when it stops to exist because you don't want these things to just live on forever for no reason.
+
+
+524
+00:39:44,000 --> 00:39:50,000
+They should have some communication channels that are where the community will expect to find them.
+
+
+525
+00:39:50,000 --> 00:39:57,000
+Today, if you wanted to find out all of the working groups that exist around the IPFS thing,
+
+
+526
+00:39:57,000 --> 00:40:22,000
+I have no fucking clue how you would go about it.
+
+
+527
+00:40:00,000 --> 00:40:05,200
+I'm not even sure that if we put all of our brains together in this room, we would succeed in listing all of them.
+
+
+528
+00:40:05,200 --> 00:40:08,800
+I think we'd probably forget some. There are probably some that we just don't know about.
+
+
+529
+00:40:08,800 --> 00:40:16,800
+Well, you have access to the secret V2 notion where all of this information is stored, don't you?
+
+
+530
+00:40:16,800 --> 00:40:20,200
+I thought that was in the secret V3 notion.
+
+
+531
+00:40:20,200 --> 00:40:23,200
+That was a PL joke from someone who's on the outside.
+
+
+532
+00:40:23,200 --> 00:40:37,800
+None of this should be shocking or particularly revolutionary, but this is basically how it's done
+
+
+533
+00:40:37,800 --> 00:40:43,000
+and the kind of thing that we should figure out how to normalize and have a list of them, for instance,
+
+
+534
+00:40:43,000 --> 00:40:46,600
+and how maybe they could share a code of conduct and stuff like that.
+
+
+535
+00:40:46,600 --> 00:40:54,000
+And so this brings the question that's always horrendous, is do we need standards for standards?
+
+
+536
+00:40:54,000 --> 00:41:03,200
+And the answer, sadly, is usually yes, much as you want to punch yourself in the face as you say these things.
+
+
+537
+00:41:03,200 --> 00:41:10,600
+But we probably need a working group working group of some kind.
+
+
+538
+00:41:10,600 --> 00:41:16,200
+Not that it should be an intensive amount of work. Ideally, this should be a very lightweight affair.
+
+
+539
+00:41:16,200 --> 00:41:23,200
+But some group that basically sets out these things. When do you start a new one?
+
+
+540
+00:41:23,200 --> 00:41:28,600
+Where do we put the list of all of them? What tools should they have? And that kind of stuff.
+
+
+541
+00:41:28,600 --> 00:41:33,800
+How do you announce and promote your working group so that it's not just you and the friends you met at the bar last night
+
+
+542
+00:41:33,800 --> 00:41:37,600
+who had a great idea, but also other people in the community who might be interested?
+
+
+543
+00:41:37,600 --> 00:41:45,000
+And really, the idea is how do we make this an effective structure that people can get off the shelf,
+
+
+544
+00:41:45,000 --> 00:41:53,000
+use to solve a problem, put back on the shelf when the problem is solved, and not become some big bureaucratic nightmare.
+
+
+545
+00:41:53,000 --> 00:42:00,000
+Moving on now, Enrique, what we're going to do next is, so we've got a channel in IPFS Slack.
+
+
+546
+00:42:00,000 --> 00:42:04,600
+I will take a bunch of these open things and some of the notes that I captured and tag some names of people,
+
+
+547
+00:42:04,600 --> 00:42:08,200
+get a HackMD up so that we can use that throughout the day for some of these other things,
+
+
+548
+00:42:08,200 --> 00:42:14,200
+along with communicating with all the speakers, which I did not do ahead of time
+
+
+549
+00:42:14,200 --> 00:42:19,600
+because we were running a little late in the massive atom in the sky last night.
+
+
+550
+00:42:19,600 --> 00:42:25,200
+That's great. This is recorded. Thank you very much. Enrique is up next.
+
+
+551
+00:42:25,200 --> 00:42:45,200
+Thank you.

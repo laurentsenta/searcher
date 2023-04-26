@@ -1,0 +1,318 @@
+1
+00:00:00,000 --> 00:00:10,600
+So Dietrich put me here in the spotlight to talk about ProbeLab, which is another way
+
+
+2
+00:00:10,600 --> 00:00:16,520
+of saying data-driven protocol design and optimization.
+
+
+3
+00:00:16,520 --> 00:00:18,240
+So this is what we do.
+
+
+4
+00:00:18,240 --> 00:00:25,000
+We're collecting and analyzing protocol data that make up all the components of the IPFS
+
+
+5
+00:00:25,000 --> 00:00:26,360
+network.
+
+
+6
+00:00:26,360 --> 00:00:33,560
+Because you know, things sometimes might work, but not in ways that you want them to or expect
+
+
+7
+00:00:33,560 --> 00:00:35,880
+them to.
+
+
+8
+00:00:35,880 --> 00:00:40,960
+So you've got to go and dig into the details to see how things work.
+
+
+9
+00:00:40,960 --> 00:00:44,440
+And that's what we do at ProbeLab.
+
+
+10
+00:00:44,440 --> 00:00:50,200
+If you navigate to probelab.io, you'll find this new web page and a collection of plots
+
+
+11
+00:00:50,200 --> 00:00:55,880
+out of the tools that we have put together in order to dig into the details and see how
+
+
+12
+00:00:55,880 --> 00:01:00,200
+the protocols actually perform.
+
+
+13
+00:01:00,200 --> 00:01:05,640
+For example, you're going to see DHT lookup measurements from several different regions
+
+
+14
+00:01:05,640 --> 00:01:07,840
+of the world.
+
+
+15
+00:01:07,840 --> 00:01:13,360
+What is unique about what we're doing is that it's not just a collection of plots, it's
+
+
+16
+00:01:13,360 --> 00:01:14,880
+got context as well.
+
+
+17
+00:01:14,880 --> 00:01:21,480
+So we're including details about what the experiments look like, what did we do, why
+
+
+18
+00:01:21,480 --> 00:01:28,800
+did we do it this way, as well as links to normally GitHub repositories where the tools
+
+
+19
+00:01:28,800 --> 00:01:31,140
+that we have used live.
+
+
+20
+00:01:31,140 --> 00:01:38,660
+So you get a whole view of what we've done to see if it's convenient for your purposes.
+
+
+21
+00:01:38,660 --> 00:01:43,200
+What we're also doing is that we're producing weekly reports, which you might have seen
+
+
+22
+00:01:43,200 --> 00:01:44,480
+around.
+
+
+23
+00:01:44,480 --> 00:01:51,440
+And these are kind of snapshots of the performance and health of the network on a weekly basis.
+
+
+24
+00:01:51,440 --> 00:01:55,680
+So more kind of short term and bounded.
+
+
+25
+00:01:55,680 --> 00:02:00,280
+As part of that, for example, we're monitoring a bunch of websites, the time to first byte
+
+
+26
+00:02:00,280 --> 00:02:03,920
+from again from several different regions.
+
+
+27
+00:02:03,920 --> 00:02:09,440
+Your website might be there, so go check how it performs.
+
+
+28
+00:02:09,440 --> 00:02:15,880
+And we compare the time to first byte from several different regions through Kubo and
+
+
+29
+00:02:15,880 --> 00:02:19,840
+through HTTP, just to see where we are.
+
+
+30
+00:02:19,840 --> 00:02:25,280
+This week, for example, you'll see that more often than not, content through IPFS, through
+
+
+31
+00:02:25,280 --> 00:02:30,120
+Kubo, is loading faster than HTTP.
+
+
+32
+00:02:30,120 --> 00:02:31,120
+Which is great.
+
+
+33
+00:02:31,120 --> 00:02:36,000
+It could be, you know, content addressing and universal caching that make up all the
+
+
+34
+00:02:36,000 --> 00:02:37,000
+magic.
+
+
+35
+00:02:37,000 --> 00:02:39,400
+So go check it out, see if your website is there.
+
+
+36
+00:02:39,400 --> 00:02:45,240
+If it's not and you want it to be, just come talk to us and we can probably add it.
+
+
+37
+00:02:45,240 --> 00:02:53,000
+Now we know that IPFS as a system is composed of many content routing subsystems.
+
+
+38
+00:02:53,000 --> 00:02:57,800
+And we know that we are focusing on a few of them right now.
+
+
+39
+00:02:57,800 --> 00:03:03,760
+Primarily the IPFS public DHT, but also we're looking into bitswap, hydras, and so on.
+
+
+40
+00:03:03,760 --> 00:03:10,960
+Now as we go on, we want to expand to other content routing systems, either on our own
+
+
+41
+00:03:10,960 --> 00:03:13,040
+or with your help.
+
+
+42
+00:03:13,040 --> 00:03:18,880
+So if you're building a protocol, if you have a protocol or a content routing subsystem,
+
+
+43
+00:03:18,880 --> 00:03:26,560
+and have measurement and monitoring tools, come talk to us and we can work together to
+
+
+44
+00:03:26,560 --> 00:03:31,760
+showcase how brilliant is what you're doing.
+
+
+45
+00:03:31,760 --> 00:03:33,920
+So where to find all these numbers?
+
+
+46
+00:03:33,920 --> 00:03:36,720
+Right now we have two places.
+
+
+47
+00:03:36,720 --> 00:03:38,200
+You have two places to monitor.
+
+
+48
+00:03:38,200 --> 00:03:45,280
+One is stats.ipfs.network, which points to the weekly reports, which is, as I said, a
+
+
+49
+00:03:45,280 --> 00:03:49,760
+snapshot, a summary of the health and performance of the network.
+
+
+50
+00:03:49,760 --> 00:03:56,120
+And then it's probelab.io, which is what I introduced before that, which is more detailed,
+
+
+51
+00:03:56,120 --> 00:04:02,880
+you know, nitty gritty stuff about protocols, their parameters, you know, how does the performance
+
+
+52
+00:04:02,880 --> 00:04:04,680
+evolve if you change some of them.
+
+
+53
+00:04:04,680 --> 00:04:07,800
+So it goes into much greater depth.
+
+
+54
+00:04:07,800 --> 00:04:12,960
+Now soon, what we're going to do is that we're going to bundle everything under stats.ipfs.network
+
+
+55
+00:04:12,960 --> 00:04:17,280
+so that you can navigate from there to different places.
+
+
+56
+00:04:17,280 --> 00:04:19,920
+Yeah, that's it.
+
+
+57
+00:04:19,920 --> 00:04:26,740
+We're having a measuring IPFS track after this session here in a room near you.
+
+
+58
+00:04:26,740 --> 00:04:28,840
+So figure it out.
+
+
+59
+00:04:28,840 --> 00:04:33,680
+Come with your questions and come to find out more of what we're doing.
+
+
+60
+00:04:33,680 --> 00:04:34,680
+Thank you.
+
+
+61
+00:04:34,680 --> 00:04:37,840
+And I will put in the spotlight Will Scott, I think.
+
+
+62
+00:04:37,840 --> 00:04:38,840
+Thank you.
+
+
+63
+00:04:38,840 --> 00:04:39,840
+Thank you.
+
+
+64
+00:04:39,840 --> 00:05:03,980
+We'll see you in ten.

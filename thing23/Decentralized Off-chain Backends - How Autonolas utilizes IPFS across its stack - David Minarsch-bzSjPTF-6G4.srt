@@ -1,0 +1,1013 @@
+1
+00:00:00,000 --> 00:00:13,180
+So as introduced I'll be talking about decentralized off-chain backends and in particular I'll first
+
+
+2
+00:00:13,180 --> 00:00:21,240
+introduce sort of what Autonomous is and how it gives rise to these kind of technologies
+
+
+3
+00:00:21,240 --> 00:00:31,780
+Then I'll cover how we use Autonomous today before I'll explain in detail how we basically
+
+
+4
+00:00:31,780 --> 00:00:37,640
+use IPFS across pretty much all layers of our stack
+
+
+5
+00:00:37,640 --> 00:00:47,220
+And finally I'll drive home how you and if you're a member of a DAO can benefit and give
+
+
+6
+00:00:47,220 --> 00:00:52,560
+a bit of a sneak peek ahead
+
+
+7
+00:00:52,560 --> 00:01:00,080
+So just one short slide on myself I'm one of the kind of original contributors to Autonomous
+
+
+8
+00:01:00,080 --> 00:01:04,480
+which itself is a DAO, an open source stack at the same time
+
+
+9
+00:01:04,480 --> 00:01:13,440
+I co-founded an AI and crypto labs called VALORI and prior to that I worked at the same
+
+
+10
+00:01:13,440 --> 00:01:21,480
+intersection of AI and crypto and prior to that did a PhD in economics
+
+
+11
+00:01:21,480 --> 00:01:30,120
+So let's have a first look at what Autonomous is in particular what the software stack is
+
+
+12
+00:01:30,120 --> 00:01:38,800
+its protocol and its purpose and how it can basically be seen as a foundational network
+
+
+13
+00:01:38,800 --> 00:01:47,480
+for a term we call co-owned AI and in a context I'll also explain what I mean by that
+
+
+14
+00:01:47,480 --> 00:01:54,980
+So first I'd like to kind of explain in a bit more detail this idea of the decentralized
+
+
+15
+00:01:54,980 --> 00:02:01,760
+off-chain backend and in the context of Autonomous we give it a specific name it's called an
+
+
+16
+00:02:01,760 --> 00:02:04,480
+Autonomous Service
+
+
+17
+00:02:04,480 --> 00:02:12,100
+And what you can do with this Autonomous Service Stack is build basically any kind of off-chain
+
+
+18
+00:02:12,100 --> 00:02:22,560
+application that takes arbitrary amounts of data from arbitrary sources be it web2 APIs
+
+
+19
+00:02:22,560 --> 00:02:30,880
+web2 like wrappers of web-free data or actual nodes participating in any sort of web-free
+
+
+20
+00:02:30,880 --> 00:02:32,800
+network
+
+
+21
+00:02:32,800 --> 00:02:38,040
+That data then gets consumed by the service which can run continuously because it's running
+
+
+22
+00:02:38,040 --> 00:02:51,040
+off-chain and can do arbitrarily complex things and ultimately it can then take actions on-chain
+
+
+23
+00:02:51,040 --> 00:02:56,920
+as well as of course off-chain so if it does take action on-chain it can do so at the moment
+
+
+24
+00:02:56,920 --> 00:03:06,040
+on any EVM compatible chain as well as to some degree also Cosmos and Solana chains
+
+
+25
+00:03:06,040 --> 00:03:11,400
+but the way it's architected is that it's totally kind of blockchain agnostic as long
+
+
+26
+00:03:11,400 --> 00:03:17,960
+as there's a smart contracting layer it should in principle be possible to deploy it on such
+
+
+27
+00:03:17,960 --> 00:03:21,960
+a chain or targeting such a chain
+
+
+28
+00:03:21,960 --> 00:03:29,280
+Now why do we call it decentralized because ultimately the software stack allows you to
+
+
+29
+00:03:29,280 --> 00:03:36,480
+run whatever application you're implementing here as a decentralized node system off-chain
+
+
+30
+00:03:36,480 --> 00:03:44,040
+So the way to think about it a bit is like a ephemeral blockchain for lack of a better
+
+
+31
+00:03:44,040 --> 00:03:46,160
+word
+
+
+32
+00:03:46,160 --> 00:03:53,520
+Now having introduced this concept I'm going to basically change gear and focus on the
+
+
+33
+00:03:53,520 --> 00:04:01,400
+protocol first so the Autonomous Protocol is what lives on the blockchain and it ultimately
+
+
+34
+00:04:01,400 --> 00:04:09,360
+facilitates three things it provides a set of on-chain registries to represent different
+
+
+35
+00:04:09,360 --> 00:04:16,720
+components of these applications it allows for the tokenomics mechanism the incentive
+
+
+36
+00:04:16,720 --> 00:04:20,200
+and it allows for governance
+
+
+37
+00:04:20,200 --> 00:04:29,120
+And so specifically today it's worth pointing out sort of two aspects of the protocol one
+
+
+38
+00:04:29,120 --> 00:04:33,640
+is kind of depicted here on the left which is how these autonomous services which live
+
+
+39
+00:04:33,640 --> 00:04:42,880
+off-chain are secured on-chain so they're represented on-chain as NFTs and the service
+
+
+40
+00:04:42,880 --> 00:04:51,400
+itself takes action via its service specific multi-sec so ultimately the threat model looks
+
+
+41
+00:04:51,400 --> 00:04:57,800
+very much like you would something you would be known from a proof of stake system with
+
+
+42
+00:04:57,800 --> 00:05:03,160
+a two-third plus one honest majority
+
+
+43
+00:05:03,160 --> 00:05:09,560
+This system then can take action against any other on-chain contract you know be it a DeFi
+
+
+44
+00:05:09,560 --> 00:05:15,840
+protocol a governance contract you name it
+
+
+45
+00:05:15,840 --> 00:05:21,720
+So this is how we security services and then in terms of the developer experience of developers
+
+
+46
+00:05:21,720 --> 00:05:28,800
+building services on this protocol they don't necessarily have to build the whole service
+
+
+47
+00:05:28,800 --> 00:05:38,200
+they can build sub-components of it so let's say a developer develops such a component
+
+
+48
+00:05:38,200 --> 00:05:45,920
+they can then register this in the protocol and that of course adds additional functionality
+
+
+49
+00:05:45,920 --> 00:05:51,640
+to these kind of off-chain services which can be built and if someone in particular
+
+
+50
+00:05:51,640 --> 00:05:57,320
+a DAO uses these functionalities in their own autonomous service and wants to reward
+
+
+51
+00:05:57,320 --> 00:06:02,960
+the developers who originally contributed to the service then they can do so natively
+
+
+52
+00:06:02,960 --> 00:06:05,960
+in the autonomous protocol
+
+
+53
+00:06:05,960 --> 00:06:11,360
+So the autonomous protocol ultimately has this incentive mechanism for developers to
+
+
+54
+00:06:11,360 --> 00:06:18,240
+bring these components which make up autonomous services and reward them for that
+
+
+55
+00:06:18,240 --> 00:06:24,440
+Now ultimately sort of before I kind of wrap on this autonomous piece and get into how
+
+
+56
+00:06:24,440 --> 00:06:30,480
+we use IPFS and the applications I just want to kind of give you a sort of sense of the
+
+
+57
+00:06:30,480 --> 00:06:36,880
+North Star which drives us or which we work towards it's this idea of having co-owned
+
+
+58
+00:06:36,880 --> 00:06:47,040
+AI programs i.e. AI programs or systems that are both co-owned where multiple parties own
+
+
+59
+00:06:47,040 --> 00:06:54,840
+the system as well as jointly operated so that there isn't a single party controlling
+
+
+60
+00:06:54,840 --> 00:07:04,080
+any aspect of the system and we refer to this as co-owned AI and ultimately we see sort
+
+
+61
+00:07:04,080 --> 00:07:13,840
+of autonomous as one of multiple ways in which you could build such a co-owned AI system
+
+
+62
+00:07:13,840 --> 00:07:21,840
+Now just to go from the theory into the practice I want to give a couple of examples of how
+
+
+63
+00:07:21,840 --> 00:07:25,640
+the stack is used today
+
+
+64
+00:07:25,640 --> 00:07:31,560
+We have the same software architecture driving quite different applications across different
+
+
+65
+00:07:31,560 --> 00:07:39,320
+verticals in crypto and so on the left we have built with Balancer underground product
+
+
+66
+00:07:39,320 --> 00:07:44,680
+which is called Balancer Smart Managed Pools it is effectively an autonomous asset management
+
+
+67
+00:07:44,680 --> 00:07:53,320
+product where this off-chain system the autonomous service ingests data does some minimal compute
+
+
+68
+00:07:53,320 --> 00:08:00,800
+and decision making on it and continuously then reweights a pool which is on-chain a
+
+
+69
+00:08:00,800 --> 00:08:07,560
+pool of assets and so what this allows us to basically create an index product based
+
+
+70
+00:08:07,560 --> 00:08:11,240
+off-chain data
+
+
+71
+00:08:11,240 --> 00:08:16,640
+On the other end of the spectrum we've got an automation product an autonomous keeper
+
+
+72
+00:08:16,640 --> 00:08:23,560
+service which is deployed in the keeper network protocol on Ethereum where it effectively
+
+
+73
+00:08:23,560 --> 00:08:30,800
+just works jobs so anyone who has an automation need can register there and the keeper system
+
+
+74
+00:08:30,800 --> 00:08:39,000
+will pick it up why is it interesting because basically it creates a sort of configurable
+
+
+75
+00:08:39,000 --> 00:08:48,480
+fault tolerance as to the job execution likelihood before we brought the autonomous keeper service
+
+
+76
+00:08:48,480 --> 00:08:57,920
+to the keeper network basically you had to hope that your job incentivized actors in
+
+
+77
+00:08:57,920 --> 00:09:03,680
+the network to work your job with the autonomous keeper service you can sort of configure that
+
+
+78
+00:09:03,680 --> 00:09:10,480
+because you can define how many keeper bots or agents you have in this network which are
+
+
+79
+00:09:10,480 --> 00:09:14,960
+continuously available and working jobs
+
+
+80
+00:09:14,960 --> 00:09:19,600
+We have a couple of more examples here but I'll leave them for you to look up if you're
+
+
+81
+00:09:19,600 --> 00:09:24,440
+curious in the interest of time
+
+
+82
+00:09:24,440 --> 00:09:33,000
+One particular spotlight I would like to put on the governor though and that's both a lighthearted
+
+
+83
+00:09:33,000 --> 00:09:39,320
+experiment as well as one with very serious implications and so effectively what we've
+
+
+84
+00:09:39,320 --> 00:09:45,480
+done is we've created an off-chain system to which you can delegate your governance
+
+
+85
+00:09:45,480 --> 00:09:51,760
+tokens and you can endow the system with one of two very extreme voting preferences that's
+
+
+86
+00:09:51,760 --> 00:09:58,320
+the lighthearted part good or evil and the system will then take those into account to
+
+
+87
+00:09:58,320 --> 00:10:02,840
+effectively vote on upcoming proposals fully autonomously
+
+
+88
+00:10:02,840 --> 00:10:07,120
+If you're curious about this like our twitter feed contains more information on this and
+
+
+89
+00:10:07,120 --> 00:10:10,680
+I'm happy to share afterwards
+
+
+90
+00:10:10,680 --> 00:10:17,440
+Now we obviously had an IPFS conference and I really want to kind of introduce how we're
+
+
+91
+00:10:17,440 --> 00:10:23,360
+using IPFS across all layers of the Autonomous Stack and that's where I want to spend the
+
+
+92
+00:10:23,360 --> 00:10:26,080
+rest of the time on
+
+
+93
+00:10:26,080 --> 00:10:34,240
+So there's four key areas where we do that one is to reference and retrieve code components
+
+
+94
+00:10:34,240 --> 00:10:40,240
+The second application is to provide a production-grade package registry
+
+
+95
+00:10:40,240 --> 00:10:46,360
+The third application is that the way we reference code components also contributes to the crypto
+
+
+96
+00:10:46,360 --> 00:10:53,440
+economic integrity of the system and then the fourth part is that we use effectively
+
+
+97
+00:10:53,440 --> 00:10:59,880
+libp2p for peer discovery in the network which is established by these agents so that they
+
+
+98
+00:10:59,880 --> 00:11:02,840
+can find and communicate with each other
+
+
+99
+00:11:02,840 --> 00:11:06,840
+So I introduce those in turn
+
+
+100
+00:11:06,840 --> 00:11:12,920
+Starting with the packages in the Autonomous Stack and as mentioned before they're referenced
+
+
+101
+00:11:12,920 --> 00:11:20,800
+using CIDs so specifically what happens is a developer creates and publishes a software
+
+
+102
+00:11:20,800 --> 00:11:28,160
+package which is specific to our framework it's a Python framework at the moment although
+
+
+103
+00:11:28,160 --> 00:11:33,920
+for the protocol that's irrelevant
+
+
+104
+00:11:33,920 --> 00:11:42,680
+So the developer would create this package publish it in the remote registry and in this
+
+
+105
+00:11:42,680 --> 00:11:50,360
+framework we reference all code files all packages via CIDs and so this gives us this
+
+
+106
+00:11:50,360 --> 00:11:57,840
+nice dependency tree where we can say okay a given code package is content addressed
+
+
+107
+00:11:57,840 --> 00:12:03,960
+by this hash we can take this up to the level of the agent as well as to the level of the
+
+
+108
+00:12:03,960 --> 00:12:12,840
+service and so that then allows us to represent these elements on-chain to which we'll come
+
+
+109
+00:12:12,840 --> 00:12:18,640
+in a second in more detail via NFTs
+
+
+110
+00:12:18,640 --> 00:12:25,360
+This the important thing here to keep in mind is that this mapping is between the on-chain
+
+
+111
+00:12:25,360 --> 00:12:32,960
+part and the off-chain code is entirely optimistic of course so there's no way for us to verify
+
+
+112
+00:12:32,960 --> 00:12:41,920
+cryptographically on-chain at the moment that these packages are in fact what the registrant
+
+
+113
+00:12:41,920 --> 00:12:50,920
+purports them to be instead the protocol incentives the economic aspects of the protocol try to
+
+
+114
+00:12:50,920 --> 00:12:57,520
+align the incentives for the developers to represent them correctly
+
+
+115
+00:12:57,520 --> 00:13:06,040
+So coming to the second part because we have this on-chain representations as NFTs of off-chain
+
+
+116
+00:13:06,040 --> 00:13:15,920
+packages we can do a number of interesting things so firstly we can use this as a system
+
+
+117
+00:13:15,920 --> 00:13:24,320
+to track contributions to a given autonomous service so if let's say a developer contributed
+
+
+118
+00:13:24,320 --> 00:13:29,520
+various of those components into an agent or even the agent and the service is made
+
+
+119
+00:13:29,520 --> 00:13:37,680
+up of those then if there's any rewards effectively associated with the service NFT then they
+
+
+120
+00:13:37,680 --> 00:13:43,720
+can be allocated to the contributing parts which make it up
+
+
+121
+00:13:43,720 --> 00:13:54,280
+There's another very practical element of using this mechanism to reference packages
+
+
+122
+00:13:54,280 --> 00:14:01,400
+which is that we can basically point the CLI tool to the on-chain NFT and from that spin
+
+
+123
+00:14:01,400 --> 00:14:06,920
+up the entire service including all its configuration etc.
+
+
+124
+00:14:06,920 --> 00:14:12,520
+Which means that in an autonomous service where let's say we have four different operators
+
+
+125
+00:14:12,520 --> 00:14:19,800
+one running an agent instance each when they want to launch their agent all they have to
+
+
+126
+00:14:19,800 --> 00:14:28,640
+do is point the CLI to the NFT ID of this service in which they're operating in and
+
+
+127
+00:14:28,640 --> 00:14:34,480
+then the CLI tool will be able to fetch the metadata from the metadata fetch the code
+
+
+128
+00:14:34,480 --> 00:14:44,800
+build the source code and then run it this also helps us to a degree to prevent sort
+
+
+129
+00:14:44,800 --> 00:14:52,240
+of default malicious behavior in the sense by default the application is compatible and
+
+
+130
+00:14:52,240 --> 00:15:04,440
+malicious actors basically have to a fork the stack and bypass the use of the hashing
+
+
+131
+00:15:04,440 --> 00:15:10,520
+to ensure for the integrity as well as are then subjected to a slashing protocol which
+
+
+132
+00:15:10,520 --> 00:15:20,720
+comes on top to address the outstanding issues which can't be addressed any other way.
+
+
+133
+00:15:20,720 --> 00:15:28,200
+So this was the second part where we use IPFS the third part is in order to store all this
+
+
+134
+00:15:28,200 --> 00:15:38,600
+code remotely off-chain we have implemented our own effectively IPFS enabled registry
+
+
+135
+00:15:38,600 --> 00:15:42,800
+where developers can pin autonomous packages.
+
+
+136
+00:15:42,800 --> 00:15:47,480
+Very practically the way this is implemented is as a cluster currently with three nodes
+
+
+137
+00:15:47,480 --> 00:15:55,520
+although it's scalable based on demand where each node represents a pod containing both
+
+
+138
+00:15:55,520 --> 00:16:04,880
+an IPFS node and an IPFS cluster node which allows us then by the IPFS cluster functionality
+
+
+139
+00:16:04,880 --> 00:16:11,120
+to synchronize the IPFS data between the underlying IPFS nodes and so what we have as a result
+
+
+140
+00:16:11,120 --> 00:16:19,760
+is this very resilient and fault tolerant IPFS infrastructure for fetching these packages
+
+
+141
+00:16:19,760 --> 00:16:21,400
+and storing them.
+
+
+142
+00:16:21,400 --> 00:16:29,880
+In fact we have also built a content verification layer on top which basically checks whether
+
+
+143
+00:16:29,880 --> 00:16:38,360
+the provided code is of the framework sorts and otherwise rejects these uploads.
+
+
+144
+00:16:38,360 --> 00:16:41,440
+There are some key learnings here.
+
+
+145
+00:16:41,440 --> 00:16:47,680
+They're from one of our developers who worked on it and he's in our discord if you want
+
+
+146
+00:16:47,680 --> 00:16:53,240
+to reach out he was very excited working on this product and made a lot of optimizations
+
+
+147
+00:16:53,240 --> 00:17:00,200
+around the cluster configurations which overall really helped us reduce our networking ingress
+
+
+148
+00:17:00,200 --> 00:17:06,480
+and egress costs which were initially quite high with the default configuration so if
+
+
+149
+00:17:06,480 --> 00:17:11,880
+this is something you're curious about please reach out.
+
+
+150
+00:17:11,880 --> 00:17:18,040
+And then the final and fourth part where we use parts of the IPFS stack is in the agent
+
+
+151
+00:17:18,040 --> 00:17:20,680
+communication network.
+
+
+152
+00:17:20,680 --> 00:17:23,880
+So first what does the agent communication network do?
+
+
+153
+00:17:23,880 --> 00:17:35,040
+It effectively allows point-to-point communication between agents where these agents initially
+
+
+154
+00:17:35,040 --> 00:17:38,960
+the only thing they have is their wallet addresses.
+
+
+155
+00:17:38,960 --> 00:17:45,840
+So agents all have a wallet so they have an account on let's say Ethereum and then there's
+
+
+156
+00:17:45,840 --> 00:17:50,280
+another one and they know that they want to talk to each other but that's all they've
+
+
+157
+00:17:50,280 --> 00:17:51,280
+got.
+
+
+158
+00:17:51,280 --> 00:17:57,240
+So they have no idea where in the network the public internet the other agent is located
+
+
+159
+00:17:57,240 --> 00:18:01,240
+and the role of the ACN is to establish that mapping.
+
+
+160
+00:18:01,240 --> 00:18:08,440
+And so we've built this kind of custom application there which under the hood uses the libpeer2peer
+
+
+161
+00:18:08,440 --> 00:18:17,480
+library and effectively establishes a distributed hash table to allow for this mapping between
+
+
+162
+00:18:17,480 --> 00:18:24,520
+wallet addresses and agents location in the internet.
+
+
+163
+00:18:24,520 --> 00:18:32,640
+So that wraps the section on how we use IPFS and we are as you can see using it quite widely
+
+
+164
+00:18:32,640 --> 00:18:37,400
+across our stack and are big fans of the ecosystem.
+
+
+165
+00:18:37,400 --> 00:18:42,400
+Please do reach out if you have any recommendations or questions.
+
+
+166
+00:18:42,400 --> 00:18:50,880
+And just to round off I want to re-emphasize that DAOs can benefit and entities wanting
+
+
+167
+00:18:50,880 --> 00:18:55,240
+to build DAOs can benefit from our stack today.
+
+
+168
+00:18:55,240 --> 00:19:01,080
+Our stack allows you to decentralize and make actually autonomous your off-chain processes.
+
+
+169
+00:19:01,080 --> 00:19:11,240
+A lot of DAOs have quite centrally operated fault intolerant processes off-chain so that
+
+
+170
+00:19:11,240 --> 00:19:13,240
+might be the stack for you.
+
+
+171
+00:19:13,240 --> 00:19:18,560
+It is a fully open source stack so you can fork it or contribute to it and it allows
+
+
+172
+00:19:18,560 --> 00:19:21,120
+for high composability and code reuse.
+
+
+173
+00:19:21,120 --> 00:19:27,120
+So all the applications which we saw before share a tremendous amount of the same even
+
+
+174
+00:19:27,120 --> 00:19:34,480
+application logic which is one of the big benefits of the stack.
+
+
+175
+00:19:34,480 --> 00:19:43,680
+These days we are mostly working on slashing which is coming live still this quarter and
+
+
+176
+00:19:43,680 --> 00:19:51,040
+we are exploring how DAOs can use their own governance tokens to effectively secure such
+
+
+177
+00:19:51,040 --> 00:19:57,400
+autonomous services to operate their own off-chain infrastructure.
+
+
+178
+00:19:57,400 --> 00:19:58,400
+And that wraps my presentation.
+
+
+179
+00:19:58,400 --> 00:20:15,400
+If you have any questions feel free to ask.
+
+
+180
+00:20:00,000 --> 00:20:09,000
+Q. Could you please tell me, you mentioned DAOs operators as users of autonomous. Do you focus on any other users?
+
+
+181
+00:20:09,000 --> 00:20:30,000
+Yes, it's a good question. We have basically an autonomous service has sort of different user group attaches. So there's the entity which could be like a single person or a DAO, a smart contract who owns the service.
+
+
+182
+00:20:30,000 --> 00:20:44,000
+So they effectively have like the rights to turn it on and off again effectively and configure. There's the operators, the entities who are running the different nodes in the service. And then there is the beneficiaries of the service.
+
+
+183
+00:20:44,000 --> 00:21:01,000
+All three could be the same or could be different entities. So in a DAO, for instance, in an autonomous DAO we have some of those services which serve the DAO itself. The beneficiaries might be community members in this case.
+
+
+184
+00:21:01,000 --> 00:21:14,000
+And the operators are DAO members and the actual service owner is the DAO governance contract itself. Does that answer your question?
+
+
+185
+00:21:14,000 --> 00:21:18,000
+Thank you.
+
+
+186
+00:21:18,000 --> 00:21:40,000
+Q. A question about the workings. Is it like that you deploy a service or a running autonomously running script on the P2P network, which listens to a blockchain and then does an action? Or is like the triggering coming from the contract on the blockchain and that calls like that?
+
+
+187
+00:21:40,000 --> 00:21:50,000
+Yeah, it's a great question. Thank you. Let me go back to one of the slides just for ease of reference.
+
+
+188
+00:21:50,000 --> 00:22:12,000
+So the autonomous service is its own node system and it is running off chain. So in the default sense of the ecosystem, if you come to it today, you would run your own autonomous service.
+
+
+189
+00:22:12,000 --> 00:22:30,000
+And so then you would decide how many operators there are. Probably initially you would want to be like the single operator and the single owner. And so then specifically, where are the events created in a sense?
+
+
+190
+00:22:30,000 --> 00:22:43,000
+So you have two parts here. So one, the service is continuously running. So it's not a smart contract on a chain, which only waits for transaction and then gets executed.
+
+
+191
+00:22:43,000 --> 00:22:49,000
+It is a continuously running process off chain. In fact, a number of them coordinated.
+
+
+192
+00:22:49,000 --> 00:23:04,000
+And so there's sort of two ways it could make progress, so to speak. One is it could listen for events either on some Web2 API or on a Web3 node, like an on-chain event.
+
+
+193
+00:23:04,000 --> 00:23:10,000
+And then that could trigger something in the logic of the service, which maybe leads to a new transaction or something internal.
+
+
+194
+00:23:10,000 --> 00:23:20,000
+And the other thing, and that's the key thing, is you could have proactive behavior of the service itself. So that's where really the autonomy comes from.
+
+
+195
+00:23:20,000 --> 00:23:34,000
+By proactively, basically, maybe on time or on internal states of a model it has of the world, it can take action.
+
+
+196
+00:23:34,000 --> 00:23:44,000
+And that's very different, obviously, from a smart contract on chain, because it can simply not do that. It needs to wait for transaction. Does that answer your question?
+
+
+197
+00:23:44,000 --> 00:23:55,000
+So, and when you say off chain, that could be my laptop or it could be multiple peers on the network.
+
+
+198
+00:23:55,000 --> 00:24:14,000
+Yes, a great question. So the deployment mode is up to the service owner. So you can run often the same application, like just locally as one agent instance on your laptop, let's say, or on a cloud server you provision.
+
+
+199
+00:24:14,000 --> 00:24:26,000
+And then once you want this kind of benefit of default tolerance of maybe decentralization by adding more operators, you would scale up the number of nodes.
+
+
+200
+00:24:26,000 --> 00:24:40,000
+And then they can run in different configuration as long as they have access to the public Internet and a static IP allocation and so on.
+
+
+201
+00:24:40,000 --> 00:24:45,000
+Does that satisfy your question or does this answer your question?
+
+
+202
+00:24:45,000 --> 00:24:49,000
+Yes. Okay. Thank you, David. It was a great presentation.
+
+
+203
+00:24:49,000 --> 00:25:10,000
+Thank you very much. Thanks for having me and I hope you have a nice rest of the conference.

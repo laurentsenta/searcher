@@ -1,0 +1,2538 @@
+1
+00:00:00,000 --> 00:00:06,640
+Hello, good morning everybody.
+
+
+2
+00:00:06,640 --> 00:00:11,360
+And yes, we start this track a little bit earlier than the other ones, so hopefully
+
+
+3
+00:00:11,360 --> 00:00:14,560
+people are awake here a bit.
+
+
+4
+00:00:14,560 --> 00:00:18,240
+Dieter is already asleep.
+
+
+5
+00:00:18,240 --> 00:00:19,240
+My name is Matt Hamilton.
+
+
+6
+00:00:19,240 --> 00:00:25,000
+I'm a developer advocate with Protocol Labs, working specifically on FVM, the Filecoin
+
+
+7
+00:00:25,000 --> 00:00:26,480
+virtual machine.
+
+
+8
+00:00:26,480 --> 00:00:34,040
+So in this talk today, I'm going to talk a bit about what is FVM and how FVM works
+
+
+9
+00:00:34,040 --> 00:00:36,400
+and the architecture a little bit on that.
+
+
+10
+00:00:36,400 --> 00:00:38,840
+And then I'm going to move on to some demos.
+
+
+11
+00:00:38,840 --> 00:00:44,400
+And I'm going to demo some stuff on the public testnet, Hyperspace, and then also I've got
+
+
+12
+00:00:44,400 --> 00:00:48,280
+some other stuff that I'm lining up to demo for you.
+
+
+13
+00:00:48,280 --> 00:00:52,040
+So let's start then.
+
+
+14
+00:00:52,040 --> 00:00:58,040
+So FVM delivers on-chain programmability to the Filecoin network.
+
+
+15
+00:00:58,040 --> 00:01:04,600
+So how many people here have done anything to do with, say, smart contracts on any other
+
+
+16
+00:01:04,600 --> 00:01:05,600
+blockchain?
+
+
+17
+00:01:05,600 --> 00:01:08,160
+Put your hands up if you've done anything to do with, like, deployed a smart contract
+
+
+18
+00:01:08,160 --> 00:01:09,160
+or whatever.
+
+
+19
+00:01:09,160 --> 00:01:14,920
+Two or three people, so that's about, yeah, two, three, four people.
+
+
+20
+00:01:14,920 --> 00:01:15,920
+Okay.
+
+
+21
+00:01:15,920 --> 00:01:23,840
+So how many people here think they know kind of like how Filecoin works and the deal, storage
+
+
+22
+00:01:23,840 --> 00:01:25,680
+deal flow?
+
+
+23
+00:01:25,680 --> 00:01:27,280
+Thinks they could give an explanation.
+
+
+24
+00:01:27,280 --> 00:01:29,280
+Luckily, the guys from Boost put their hands up.
+
+
+25
+00:01:29,280 --> 00:01:30,280
+That's good.
+
+
+26
+00:01:30,280 --> 00:01:31,280
+That's great.
+
+
+27
+00:01:31,280 --> 00:01:32,560
+But okay, again, only a few people.
+
+
+28
+00:01:32,560 --> 00:01:38,320
+So hopefully there's stuff to learn here from this talk.
+
+
+29
+00:01:38,320 --> 00:01:41,400
+So the Filecoin master plan is three stages.
+
+
+30
+00:01:41,400 --> 00:01:46,960
+And really this whole track today is about this third step, which is bringing compute
+
+
+31
+00:01:46,960 --> 00:01:48,120
+to the data.
+
+
+32
+00:01:48,120 --> 00:01:52,880
+So we've created the world's largest decentralized network, onboarding and safeguarding humanities
+
+
+33
+00:01:52,880 --> 00:02:00,320
+data, and we're now working on the aspect of bringing compute to that data.
+
+
+34
+00:02:00,320 --> 00:02:05,640
+FVM was launched a month ago on the 14th of March.
+
+
+35
+00:02:05,640 --> 00:02:14,880
+For the Americans, that's 314, aka Pi, Pi Day, and the chain ID of Filecoin network
+
+
+36
+00:02:14,880 --> 00:02:16,120
+is actually Pi as well.
+
+
+37
+00:02:16,120 --> 00:02:21,640
+It's 314, and all the testnets have a successive digit of Pi added to it.
+
+
+38
+00:02:21,640 --> 00:02:22,760
+So it was a month ago.
+
+
+39
+00:02:22,760 --> 00:02:30,800
+There's already about 400,000 filled for the Filecoin token on the FVM, and lots of contracts
+
+
+40
+00:02:30,800 --> 00:02:38,600
+deployed, and we've got an initial ecosystem, batch of partners building on the network
+
+
+41
+00:02:38,600 --> 00:02:41,760
+as well, as well as what we call the mainnet cohort.
+
+
+42
+00:02:41,760 --> 00:02:46,920
+So we had an early builders program of people learning about FVM before it launched and
+
+
+43
+00:02:46,920 --> 00:02:52,400
+building on it, and now we have this mainnet cohort of people building on it as well.
+
+
+44
+00:02:52,400 --> 00:02:58,600
+As we launched, the very first contract that was deployed was a commemorative NFT of the
+
+
+45
+00:02:58,600 --> 00:02:59,600
+FVM team.
+
+
+46
+00:02:59,600 --> 00:03:03,120
+So we have some other people, not all of them, but some of them that have been involved in
+
+
+47
+00:03:03,120 --> 00:03:10,200
+actually building and delivering FVM over the last about two years.
+
+
+48
+00:03:10,200 --> 00:03:18,360
+So FVM solidifies Filecoin as a layer one network for powering the open data economy.
+
+
+49
+00:03:18,360 --> 00:03:19,920
+So one of the things that...
+
+
+50
+00:03:19,920 --> 00:03:21,520
+So Filecoin will also...
+
+
+51
+00:03:21,520 --> 00:03:24,080
+Obviously, we're here at an IPFS conference.
+
+
+52
+00:03:24,080 --> 00:03:26,840
+IPFS, Filecoin, both decentralized networks.
+
+
+53
+00:03:26,840 --> 00:03:34,600
+The one element that Filecoin adds to the picture is an incentivization model for storage.
+
+
+54
+00:03:34,600 --> 00:03:38,320
+So storage providers are actually rewarded for storing data, and there's actually a crypto
+
+
+55
+00:03:38,320 --> 00:03:46,240
+economic model built into the network to not only reward people for storing data, but also
+
+
+56
+00:03:46,240 --> 00:03:52,120
+there's an integrity part there as well, that you can actually prove that the data is actually
+
+
+57
+00:03:52,120 --> 00:03:53,640
+stored as well.
+
+
+58
+00:03:53,640 --> 00:04:00,200
+So with IPFS, you have the assurance of the integrity of the data from the CID to the
+
+
+59
+00:04:00,200 --> 00:04:01,200
+data.
+
+
+60
+00:04:01,200 --> 00:04:03,960
+Once you get the data down, you can check that that is actually what you intended the
+
+
+61
+00:04:03,960 --> 00:04:04,960
+data to be.
+
+
+62
+00:04:04,960 --> 00:04:09,240
+But with Filecoin, it then goes a step further and there's actually further assurances on
+
+
+63
+00:04:09,240 --> 00:04:12,640
+the actual availability and storage of that data.
+
+
+64
+00:04:12,640 --> 00:04:17,640
+But one way to think about the two of them is if you think about Filecoin as being more
+
+
+65
+00:04:17,640 --> 00:04:23,120
+aimed at the moment, at least, towards archival and cold storage of data.
+
+
+66
+00:04:23,120 --> 00:04:27,960
+Whereas IPFS is more towards instant retrieval, sort of hot storage of data.
+
+
+67
+00:04:27,960 --> 00:04:30,040
+Those are where they are kind of at the moment.
+
+
+68
+00:04:30,040 --> 00:04:35,000
+Over time, that'll probably merge, and there's tools that are making these differences a
+
+
+69
+00:04:35,000 --> 00:04:36,000
+lot less visible.
+
+
+70
+00:04:36,000 --> 00:04:42,680
+So tools like LASI allow you to retrieve data from either IPFS or Filecoin, and you might
+
+
+71
+00:04:42,680 --> 00:04:46,280
+not necessarily notice the difference between them.
+
+
+72
+00:04:46,280 --> 00:04:51,640
+So FEM allows you to orchestrate kind of how, where data gets placed, allows you to do things
+
+
+73
+00:04:51,640 --> 00:04:53,560
+like incentivizations around it.
+
+
+74
+00:04:53,560 --> 00:04:56,200
+So you can build things like data DAOs.
+
+
+75
+00:04:56,200 --> 00:05:00,120
+A DAO is a decentralized autonomous organization.
+
+
+76
+00:05:00,120 --> 00:05:03,600
+You can have a data DAO in which maybe you have a number of participants that are sort
+
+
+77
+00:05:03,600 --> 00:05:11,320
+of members of this smart contract that collectively fund the storage of data and maybe vote on
+
+
+78
+00:05:11,320 --> 00:05:13,240
+the storage of that data, for example.
+
+
+79
+00:05:13,240 --> 00:05:17,720
+I'll give some more examples going forward.
+
+
+80
+00:05:17,720 --> 00:05:20,600
+I'm already at the stage of this conference where I'm starting to lose my voice.
+
+
+81
+00:05:20,600 --> 00:05:25,120
+So please excuse the slight raspiness here.
+
+
+82
+00:05:25,120 --> 00:05:28,920
+But yeah, there's a big market out there in the open data economy.
+
+
+83
+00:05:28,920 --> 00:05:35,160
+And FEM is one of the critical upgrades to Filecoin at the moment because it opens it
+
+
+84
+00:05:35,160 --> 00:05:40,000
+up to a much wider audience.
+
+
+85
+00:05:40,000 --> 00:05:45,720
+So we're bringing in everybody that's able to develop on top of the likes of Ethereum
+
+
+86
+00:05:45,720 --> 00:05:53,240
+and Polygon and other EVM based smart contract platforms onto Filecoin as well.
+
+
+87
+00:05:53,240 --> 00:05:57,920
+And again, I'll explain that in a bit more detail as we go forward.
+
+
+88
+00:05:57,920 --> 00:05:59,500
+So the FEM architecture.
+
+
+89
+00:05:59,500 --> 00:06:03,560
+So FEM is a polyglot virtual machine.
+
+
+90
+00:06:03,560 --> 00:06:08,480
+It is written, well, it executes WASM web assembly.
+
+
+91
+00:06:08,480 --> 00:06:13,040
+And the idea being is that you can then build additional runtimes on top of that.
+
+
+92
+00:06:13,040 --> 00:06:19,400
+So the first runtime that we've launched is F-EVM, the Filecoin Ethereum virtual machine.
+
+
+93
+00:06:19,400 --> 00:06:22,760
+And that's what I'm focusing on in this talk.
+
+
+94
+00:06:22,760 --> 00:06:29,080
+But there's also a bunch of user defined actors that control the actual operations of the
+
+
+95
+00:06:29,080 --> 00:06:31,120
+Filecoin network itself.
+
+
+96
+00:06:31,120 --> 00:06:35,200
+Sorry, built in actors that control the operation of the network itself.
+
+
+97
+00:06:35,200 --> 00:06:40,760
+And then there'll be the ability soon to deploy your own actors at the WASM level as well
+
+
+98
+00:06:40,760 --> 00:06:43,240
+in the near future.
+
+
+99
+00:06:43,240 --> 00:06:50,320
+And so, like I said, for the first time, it allows developers to actually interact with
+
+
+100
+00:06:50,320 --> 00:06:55,760
+the crypto economic model and the marketplace of Filecoin and actually write logic around
+
+
+101
+00:06:55,760 --> 00:07:00,260
+how and where and who is storing data on the network.
+
+
+102
+00:07:00,260 --> 00:07:06,200
+So they can write this in Solidity, which is the language used for Ethereum development.
+
+
+103
+00:07:06,200 --> 00:07:09,400
+And you can then take exactly those smart contracts that have been developed for say
+
+
+104
+00:07:09,400 --> 00:07:17,120
+Ethereum or other EVM compatible blockchains, and then they get run on F-EVM, interpreted
+
+
+105
+00:07:17,120 --> 00:07:21,880
+and run on the WASM runtime.
+
+
+106
+00:07:21,880 --> 00:07:27,400
+Now the way we do this, we have an Ethereum RPC or Ethereum compatible RPC.
+
+
+107
+00:07:27,400 --> 00:07:32,880
+So Lotus, which is the reference implementation of a Filecoin node, actually implements the
+
+
+108
+00:07:32,880 --> 00:07:36,120
+Ethereum JSON RPC API.
+
+
+109
+00:07:36,120 --> 00:07:41,680
+So what this means is that to all the developer tools, Ethereum based developer tools, the
+
+
+110
+00:07:41,680 --> 00:07:45,120
+Filecoin network now just looks like Ethereum to them.
+
+
+111
+00:07:45,120 --> 00:07:49,960
+So you can use the existing tools, hard hat, remix, and again, I'm going to give some demos
+
+
+112
+00:07:49,960 --> 00:07:57,560
+of these in a bit, to connect to Filecoin and interact with the Filecoin network.
+
+
+113
+00:07:57,560 --> 00:08:01,760
+There's a number of built in actors, like I mentioned, and these control the functions
+
+
+114
+00:08:01,760 --> 00:08:02,760
+of Filecoin.
+
+
+115
+00:08:02,760 --> 00:08:05,400
+So things to do with rewards of tokens.
+
+
+116
+00:08:05,400 --> 00:08:09,280
+So like I mentioned, the Filecoin network has a crypto economic model.
+
+
+117
+00:08:09,280 --> 00:08:15,360
+If I want to be a storage provider and store data on the network, then I have to put some
+
+
+118
+00:08:15,360 --> 00:08:19,960
+collateral up with respect to the storage capacity I have.
+
+
+119
+00:08:19,960 --> 00:08:26,280
+I'm then paid to store data kind of over time, and that payment is actually released over
+
+
+120
+00:08:26,280 --> 00:08:27,520
+the duration of the storage deal.
+
+
+121
+00:08:27,520 --> 00:08:35,320
+And if I lose the data, I lose that stake that I put up as well for that storage deal.
+
+
+122
+00:08:35,320 --> 00:08:41,360
+And there's other actors there that deal with things like the market itself and what is
+
+
+123
+00:08:41,360 --> 00:08:50,120
+stored where, how much power a miner has, which is based on how much storage capacity
+
+
+124
+00:08:50,120 --> 00:08:52,080
+they're bringing to the network.
+
+
+125
+00:08:52,080 --> 00:08:58,240
+So the Filecoin network, it's about 15, 16, I think it is, exabytes of data.
+
+
+126
+00:08:58,240 --> 00:09:01,560
+So it represents about 1% of the total data center storage capacity.
+
+
+127
+00:09:01,560 --> 00:09:07,120
+It really is a truly massive network.
+
+
+128
+00:09:07,120 --> 00:09:10,400
+So any developer can deploy smart contracts to Filecoin.
+
+
+129
+00:09:10,400 --> 00:09:15,560
+We've got some examples here, things like perpetual storage of NFTs.
+
+
+130
+00:09:15,560 --> 00:09:23,440
+So you might have a NFT collection, and you could have a smart contract that is paid via
+
+
+131
+00:09:23,440 --> 00:09:24,440
+like an endowment.
+
+
+132
+00:09:24,440 --> 00:09:30,600
+Maybe the smart contract itself has some sort of investment capabilities, and it then renews
+
+
+133
+00:09:30,600 --> 00:09:34,360
+the storage deals as they come up to expire.
+
+
+134
+00:09:34,360 --> 00:09:39,280
+So storage deals on the Filecoin network last for, I think it's about between six months
+
+
+135
+00:09:39,280 --> 00:09:42,160
+and two years, roughly.
+
+
+136
+00:09:42,160 --> 00:09:46,400
+And when a storage deal comes to an end, a smart contract could then automatically renew
+
+
+137
+00:09:46,400 --> 00:09:47,400
+that.
+
+
+138
+00:09:47,400 --> 00:09:51,360
+Data DAOs, I've mentioned, you might have people participating who then voting on what
+
+
+139
+00:09:51,360 --> 00:09:54,440
+gets stored, how it gets stored.
+
+
+140
+00:09:54,440 --> 00:09:59,240
+An example, I was at ETH Denver, and somebody came up to me and said they're working with
+
+
+141
+00:09:59,240 --> 00:10:01,160
+a film festival.
+
+
+142
+00:10:01,160 --> 00:10:03,640
+And I was thinking that could be an example thing.
+
+
+143
+00:10:03,640 --> 00:10:05,360
+You could have something like a film festival.
+
+
+144
+00:10:05,360 --> 00:10:07,960
+The films are stored on Filecoin.
+
+
+145
+00:10:07,960 --> 00:10:14,160
+You could actually have voting represents the competition element of the festival as
+
+
+146
+00:10:14,160 --> 00:10:19,120
+well in terms of winners of the best film or whatever it might be.
+
+
+147
+00:10:19,120 --> 00:10:21,920
+And that also determines things like storage.
+
+
+148
+00:10:21,920 --> 00:10:24,640
+And then you've got economic things like staking.
+
+
+149
+00:10:24,640 --> 00:10:30,160
+So I mentioned at the start that with Filecoin as a storage provider, you've got to put up
+
+
+150
+00:10:30,160 --> 00:10:31,160
+collateral.
+
+
+151
+00:10:31,160 --> 00:10:34,360
+Now that's quite a big barrier to entry to put that collateral up.
+
+
+152
+00:10:34,360 --> 00:10:39,560
+Well, now bringing kind of DeFi into the network, you could actually have storage providers
+
+
+153
+00:10:39,560 --> 00:10:43,720
+have the ability to borrow funds in order to do that.
+
+
+154
+00:10:43,720 --> 00:10:52,000
+So as individuals say, holders of the fill token, we could stake that token on the network
+
+
+155
+00:10:52,000 --> 00:10:55,160
+and earn a interest for doing so.
+
+
+156
+00:10:55,160 --> 00:11:02,040
+And that can then be borrowed by storage providers to set up their business, basically.
+
+
+157
+00:11:02,040 --> 00:11:07,720
+And what's interesting is that because of the nature of Filecoin and smart contracts
+
+
+158
+00:11:07,720 --> 00:11:13,600
+and that, the smart contract can actually verify that the storage provider has the capacity
+
+
+159
+00:11:13,600 --> 00:11:18,600
+they say they have and potentially look and see what future revenue that storage provider
+
+
+160
+00:11:18,600 --> 00:11:19,600
+has as well.
+
+
+161
+00:11:19,600 --> 00:11:23,920
+So a bit like say invoice factoring in traditional business, you could actually have a capability
+
+
+162
+00:11:23,920 --> 00:11:29,240
+where a storage provider could borrow against future revenue because that revenue can actually
+
+
+163
+00:11:29,240 --> 00:11:31,400
+be validated on chain on the network.
+
+
+164
+00:11:31,400 --> 00:11:36,040
+And you can actually see the storage deals and that storage provider has a certain number
+
+
+165
+00:11:36,040 --> 00:11:42,600
+of deals over the next year or two years that they will be paid for.
+
+
+166
+00:11:42,600 --> 00:11:46,360
+So what sort of things are people building on FEM so far?
+
+
+167
+00:11:46,360 --> 00:11:47,360
+So we've got various things.
+
+
+168
+00:11:47,360 --> 00:11:49,080
+We've got, I mentioned perpetual NFTs.
+
+
+169
+00:11:49,080 --> 00:11:53,920
+So NFT storage, for example, are working on a project called NFT Forever, I believe it
+
+
+170
+00:11:53,920 --> 00:11:54,920
+is.
+
+
+171
+00:11:54,920 --> 00:11:55,920
+So they're using that.
+
+
+172
+00:11:55,920 --> 00:12:00,040
+Glyph, these are the people that are behind one of the main Filecoin wallets.
+
+
+173
+00:12:00,040 --> 00:12:03,120
+They've got a staking pool that they're working on, Glyph pools.
+
+
+174
+00:12:03,120 --> 00:12:07,880
+And again, that allows you to deposit a fill and that'll then, there'll be a lending market
+
+
+175
+00:12:07,880 --> 00:12:10,160
+for storage providers.
+
+
+176
+00:12:10,160 --> 00:12:12,120
+Saturn, they're using FEM.
+
+
+177
+00:12:12,120 --> 00:12:13,760
+They've got a project called Retrieve.
+
+
+178
+00:12:13,760 --> 00:12:22,120
+They're using FEM4 and trying to move some of the more centralized elements into sort
+
+
+179
+00:12:22,120 --> 00:12:28,680
+of slightly more decentralized trustless elements by using smart contracts on the network.
+
+
+180
+00:12:28,680 --> 00:12:29,760
+DeFi staking and loans.
+
+
+181
+00:12:29,760 --> 00:12:35,920
+So fillet and collective DAO, both examples again of ability to kind of stake Filecoin
+
+
+182
+00:12:35,920 --> 00:12:38,800
+token and earn rewards.
+
+
+183
+00:12:38,800 --> 00:12:43,360
+Lighthouse, they're also a perpetual storage system as well.
+
+
+184
+00:12:43,360 --> 00:12:48,200
+They've been using other blockchains for the perpetualness and they're now able to implement
+
+
+185
+00:12:48,200 --> 00:12:54,800
+that on Filecoin and have more access to the data about the storage deals, which means
+
+
+186
+00:12:54,800 --> 00:12:58,080
+that gives them a bit more control over that.
+
+
+187
+00:12:58,080 --> 00:13:06,760
+Again, DataDAO, Lagrange and SpendDAO, they are both to do with decentralized science
+
+
+188
+00:13:06,760 --> 00:13:08,760
+and storing like public datasets.
+
+
+189
+00:13:08,760 --> 00:13:13,440
+So you can imagine a research organization having some kind of way in which they could
+
+
+190
+00:13:13,440 --> 00:13:18,520
+store large research datasets and have the funding for that in place to fund for that
+
+
+191
+00:13:18,520 --> 00:13:21,840
+continual storage of data.
+
+
+192
+00:13:21,840 --> 00:13:25,200
+And another example that you'll hear more about later on.
+
+
+193
+00:13:25,200 --> 00:13:29,080
+So Bakkiao have a project, Bakkiao's big decentralized storage platform.
+
+
+194
+00:13:29,080 --> 00:13:33,160
+You'll find out more from Wes and Irina, I think later on.
+
+
+195
+00:13:33,160 --> 00:13:41,400
+And they've got a project called Lilypad, which is a bridge between FEM and Bakkiao.
+
+
+196
+00:13:41,400 --> 00:13:45,240
+And they'll be giving a demo of, I believe Waterlily is it, which is an application on
+
+
+197
+00:13:45,240 --> 00:13:52,960
+top that allows you to run stable diffusion jobs on Bakkiao and have the resulting images
+
+
+198
+00:13:52,960 --> 00:13:57,320
+stored as NFTs on FEM.
+
+
+199
+00:13:57,320 --> 00:13:59,080
+So how do people go about this?
+
+
+200
+00:13:59,080 --> 00:14:04,200
+Like I said, what we do is FEM looks like an Ethereum network to most tools.
+
+
+201
+00:14:04,200 --> 00:14:09,380
+So things like Metamask, which is one of the most popular wallets that people use for interacting
+
+
+202
+00:14:09,380 --> 00:14:11,200
+with Ethereum.
+
+
+203
+00:14:11,200 --> 00:14:15,040
+You can use that, you can configure Metamask and I'll show you that in a bit to connect
+
+
+204
+00:14:15,040 --> 00:14:16,040
+to Filecoin.
+
+
+205
+00:14:16,040 --> 00:14:18,920
+Remix, again, you'll see this in the demo.
+
+
+206
+00:14:18,920 --> 00:14:24,280
+There's an IDE for developing Ethereum solidity smart contracts.
+
+
+207
+00:14:24,280 --> 00:14:31,280
+Wide hat is another tool, and again, I'll show that for deploying and compiling smart
+
+
+208
+00:14:31,280 --> 00:14:33,400
+contracts.
+
+
+209
+00:14:33,400 --> 00:14:36,240
+So a couple of things before we get on.
+
+
+210
+00:14:36,240 --> 00:14:40,520
+One other thing to note, and you'll see this a bit later on, that Filecoin has a number
+
+
+211
+00:14:40,520 --> 00:14:42,960
+of different what are called address classes.
+
+
+212
+00:14:42,960 --> 00:14:47,000
+So each account, each wallet has an address, generally starts with an F, or if you're on
+
+
+213
+00:14:47,000 --> 00:14:50,840
+a test network, starts with a T. And most wallet accounts you'll see start with like
+
+
+214
+00:14:50,840 --> 00:14:52,240
+F1 or F3.
+
+
+215
+00:14:52,240 --> 00:14:57,040
+If you've got an account, a wallet, and you receive a fill, for example, your account
+
+
+216
+00:14:57,040 --> 00:14:59,960
+probably starts F1 or F3.
+
+
+217
+00:14:59,960 --> 00:15:07,200
+FEM brings in the ability to have kind of foreign addresses from other runtimes and
+
+
+218
+00:15:07,200 --> 00:15:09,400
+other blockchains.
+
+
+219
+00:15:09,400 --> 00:15:14,620
+And so we've developed this additional address class F4, that is a delegated address class.
+
+
+220
+00:15:14,620 --> 00:15:17,960
+And so there's what's called the Ethereum, in this example, the Ethereum address manager
+
+
+221
+00:15:17,960 --> 00:15:19,480
+that sits at address 10.
+
+
+222
+00:15:19,480 --> 00:15:24,500
+So anything that starts F410, the rest of the address is actually translatable into
+
+
+223
+00:15:24,500 --> 00:15:26,000
+an Ethereum address.
+
+
+224
+00:15:26,000 --> 00:15:31,120
+So Ethereum addresses that start 0x can be directly translated to a fill address that
+
+
+225
+00:15:31,120 --> 00:15:33,600
+starts F410 and back again.
+
+
+226
+00:15:33,600 --> 00:15:38,280
+So this means that we can translate an Ethereum address, sorry, a Filecoin address to an address
+
+
+227
+00:15:38,280 --> 00:15:44,000
+that looks like an Ethereum address, so all the Ethereum tooling is happy with it, right?
+
+
+228
+00:15:44,000 --> 00:15:47,120
+But you'll see why that's necessary in a bit.
+
+
+229
+00:15:47,120 --> 00:15:53,680
+And we have a series of libraries, Solidity libraries, that give you access to that underlying
+
+
+230
+00:15:53,680 --> 00:15:54,960
+Filecoin functionality.
+
+
+231
+00:15:54,960 --> 00:16:02,120
+So those inbuilt actors that I mentioned before, so there's some libraries that kind of give
+
+
+232
+00:16:02,120 --> 00:16:07,800
+you a slightly higher level access to those actors, things like types that are used as
+
+
+233
+00:16:07,800 --> 00:16:11,760
+well within the network.
+
+
+234
+00:16:11,760 --> 00:16:14,360
+So good, how are we doing?
+
+
+235
+00:16:14,360 --> 00:16:15,360
+Great.
+
+
+236
+00:16:15,360 --> 00:16:16,520
+On to the first two demos.
+
+
+237
+00:16:16,520 --> 00:16:23,480
+So this first demo is going to be on Hyperspace, which is the testnet, the public testnet for
+
+
+238
+00:16:23,480 --> 00:16:25,280
+FEM.
+
+
+239
+00:16:25,280 --> 00:16:28,640
+And I'm going to test and deploy NFT.
+
+
+240
+00:16:28,640 --> 00:16:32,880
+So I'm going to upload an NFT and its metadata to NFT storage.
+
+
+241
+00:16:32,880 --> 00:16:35,360
+So it's then accessible via IPFS.
+
+
+242
+00:16:35,360 --> 00:16:41,000
+I'm going to show you configuring Metamask to connect to the Hyperspace network.
+
+
+243
+00:16:41,000 --> 00:16:46,200
+We're going to use OpenZeppelin, which is a repository of existing Solidity smart contracts,
+
+
+244
+00:16:46,200 --> 00:16:50,520
+and they've got a wizard that allows you to easily create a smart contract that represents
+
+
+245
+00:16:50,520 --> 00:16:51,520
+an NFT.
+
+
+246
+00:16:51,520 --> 00:16:55,160
+There's a standard called ERC-721 that's used for that.
+
+
+247
+00:16:55,160 --> 00:16:59,600
+We're going to deploy that to Hyperspace using the Remix IDE, and we're going to mint an
+
+
+248
+00:16:59,600 --> 00:17:01,000
+NFT to an account.
+
+
+249
+00:17:01,000 --> 00:17:04,840
+And then, because Dietrich's here, I'm going to import it into Brave Wallet and show it
+
+
+250
+00:17:04,840 --> 00:17:06,080
+in Brave.
+
+
+251
+00:17:06,080 --> 00:17:12,560
+So I made lots of sacrifices to the demo gods last night, so hopefully we're going to go
+
+
+252
+00:17:12,560 --> 00:17:13,560
+well.
+
+
+253
+00:17:13,560 --> 00:17:14,720
+So let's start off here.
+
+
+254
+00:17:14,720 --> 00:17:20,920
+So first of all, configuring the network here.
+
+
+255
+00:17:20,920 --> 00:17:24,680
+So there's a site called Chainlist, chainlist.org, and you can go on there and you can search
+
+
+256
+00:17:24,680 --> 00:17:25,680
+for Filecoin.
+
+
+257
+00:17:25,680 --> 00:17:28,920
+And if you include Testnet, you'll get a list of networks.
+
+
+258
+00:17:28,920 --> 00:17:31,280
+And there's the Filecoin Hyperspace Testnet.
+
+
+259
+00:17:31,280 --> 00:17:33,880
+And you can click Add to Metamask.
+
+
+260
+00:17:33,880 --> 00:17:39,640
+If you install Metamask, which is a little browser-based wallet, then it will configure
+
+
+261
+00:17:39,640 --> 00:17:43,000
+itself automatically there for you.
+
+
+262
+00:17:43,000 --> 00:17:49,800
+We can actually go and see in here the networks, and we can actually see our networks here.
+
+
+263
+00:17:49,800 --> 00:17:54,740
+So Filecoin Hyperspace, and you can see we've configured it here.
+
+
+264
+00:17:54,740 --> 00:18:00,960
+There's this RPC URL, so that's where we're connecting to actually submit the commands.
+
+
+265
+00:18:00,960 --> 00:18:09,280
+The chain ID there of the Hyperspace Testnet, the currency name, and a URL for Block Explorer.
+
+
+266
+00:18:09,280 --> 00:18:10,840
+So I've done that already.
+
+
+267
+00:18:10,840 --> 00:18:18,640
+So we've got Metamask account set up here, and I have some funds in it, 250 T-FIL.
+
+
+268
+00:18:18,640 --> 00:18:27,600
+I got those by going to the Hyperspace faucet, hyperspace.yoga for some reason.
+
+
+269
+00:18:27,600 --> 00:18:33,200
+If you click on Faucet, you can put in your address there and click Send, and it will
+
+
+270
+00:18:33,200 --> 00:18:36,400
+send you some funds to the account.
+
+
+271
+00:18:36,400 --> 00:18:45,920
+So if I copy my address, put it there, prove that I'm a human.
+
+
+272
+00:18:45,920 --> 00:18:50,600
+These seriously get harder and harder every day.
+
+
+273
+00:18:50,600 --> 00:18:54,880
+Yeah, yeah.
+
+
+274
+00:18:54,880 --> 00:18:57,800
+Chicken or croissant.
+
+
+275
+00:18:57,800 --> 00:18:58,800
+Wow.
+
+
+276
+00:18:58,800 --> 00:19:01,200
+I don't know what version.
+
+
+277
+00:19:01,200 --> 00:19:05,280
+I think they're using just like a particularly hard version on this site for that.
+
+
+278
+00:19:05,280 --> 00:19:06,360
+Anyway, that's being sent.
+
+
+279
+00:19:06,360 --> 00:19:10,880
+So I mean, I've already done it, so I've already got some T-FIL here in the account, but we'll
+
+
+280
+00:19:10,880 --> 00:19:14,280
+see next time I bring up the wallet, you'll probably see that's jumped up some more.
+
+
+281
+00:19:14,280 --> 00:19:16,880
+It seems to be delivering 250 T-FIL per go.
+
+
+282
+00:19:16,880 --> 00:19:20,160
+It was originally about five, so they've bumped it up quite a bit now.
+
+
+283
+00:19:20,160 --> 00:19:23,280
+So we'll probably see that jump up to sort of 500 or so.
+
+
+284
+00:19:23,280 --> 00:19:24,840
+So we've got a wallet.
+
+
+285
+00:19:24,840 --> 00:19:30,200
+Our wallet is connected to the Hyperspace Testnet.
+
+
+286
+00:19:30,200 --> 00:19:35,320
+So now we need our smart contract for this.
+
+
+287
+00:19:35,320 --> 00:19:42,680
+Actually, no, first of all, I'm going to upload the data to NFT Storage.
+
+
+288
+00:19:42,680 --> 00:19:50,680
+So I've actually got here a quick script that was taken from, I think, NFT Storage's website.
+
+
+289
+00:19:50,680 --> 00:19:58,240
+It's in JavaScript that basically takes some metadata information and the name of an image
+
+
+290
+00:19:58,240 --> 00:20:07,400
+and that will then store that.
+
+
+291
+00:20:00,000 --> 00:20:19,000
+on NFT.Storage so it will be stored on IPFS and what's nice about it is that it will store the image as one IPFS item and then it will store the metadata as another IPFS item and link the two together and come back and tell me where it is.
+
+
+292
+00:20:19,000 --> 00:20:33,000
+So that's where it is now and I've loaded there's an image there IPFS thing and you're going to have to guess what that is. You'll see what it is in a bit. So that's the address of where it is there. So we'll need that in a second.
+
+
+293
+00:20:33,000 --> 00:20:59,000
+So first of all, I'm going to open Zeppelin's contract wizard. It shows an ERC721. I want it to be mintable, have auto-incremental IDs and use a thing called URI storage, which means I can tell it where the asset is. I'm going to call this token IPFS thing.
+
+
+294
+00:20:59,000 --> 00:21:17,000
+And there we go. So I'm going to then click open in Remix and that's going to open it in Remix, which is a web-based IDE. This is something that's very familiar to people that develop on Ethereum. Like I said, it's the same kind of technology and we've got our contract there ready to deploy.
+
+
+295
+00:21:17,000 --> 00:21:34,000
+I can click compile. It will compile that. And now to deploy it, I need to just tell Remix where I want to deploy it to. I choose injected provider Metamask. Now pick the network that's in Metamask, which is our testnet.
+
+
+296
+00:21:34,000 --> 00:21:48,000
+You can see here it says 500, although it's Ether, it's actually T-Fill, but that's because we've had that extra 250 delivered by the faucet. So we've jumped up to 500. Woohoo, I'm rich.
+
+
+297
+00:21:48,000 --> 00:22:07,000
+And I can click deploy. It will bring up Metamask and ask me to sign the transaction. The reason we need some funds is every transaction on to a blockchain requires some funds on there to pay for that transaction. So that's what we've done. And that will then deploy that to the hyperspace testnet.
+
+
+298
+00:22:07,000 --> 00:22:21,000
+So while that's deploying, that'll take a minute or so. Are there any questions so far? I'm probably going to stop and ask if there's any questions as we go along, because there's a few points in which we kind of stop and have to wait for blockchains to do their thing.
+
+
+299
+00:22:21,000 --> 00:22:43,000
+So are there any questions so far? Everybody clear? Good. So yeah, this is, like I said, this is just minting NFT, well, creating the contract that represents an NFT. So non-fungible tokens on most of the Ethereum-based networks, EVM networks, are represented as smart contracts.
+
+
+300
+00:22:43,000 --> 00:23:00,000
+Some of the blockchains have NFTs as actual native functionality. But here they're represented as smart contracts using this standard called ERC-721, which is one standard. There's another standard called ERC-1155. And that's deploying on there.
+
+
+301
+00:23:00,000 --> 00:23:22,000
+Most of this contract is kind of boilerplate on here. Like I said, we've included the ability to be able to set when we mint the token, we can set where the URI is on there.
+
+
+302
+00:23:22,000 --> 00:23:37,000
+So that's now deployed, that little green check down the bottom there. And down the left here, I can interact with the contract. It now shows it here and shows me that a contract has been deployed at that address there.
+
+
+303
+00:23:37,000 --> 00:23:54,000
+And I can now interact with that. So now what I want to do is I want to mint a smart contract. So I need an address to send it to and I need a URI. So the address is going to be the address of my wallet. So if I click on there, I can copy that and put that there.
+
+
+304
+00:23:54,000 --> 00:24:12,000
+And the address of the URI is from back here. And it's an IPFS URI. Yay. I hit transact. And again, I need to sign the transaction.
+
+
+305
+00:24:12,000 --> 00:24:28,000
+And then we just wait again a little bit while that submits to the testnet. So the nice thing with using IPFS with things like NFTs is because IPFS, because you have the immutability of IPFS, or at least you can detect whether something has changed.
+
+
+306
+00:24:28,000 --> 00:24:50,000
+It means if you create an NFT, so an NFT is just a representation, it's just like a title deed to something. And so an NFT generally is basically just, I own this thing that is over at that URI. And so, yeah, having it being an IPFS URI means you can't just go and swap out the thing at the end of the URI.
+
+
+307
+00:24:50,000 --> 00:25:08,000
+So there have been examples where there's been NFTs and they've used HTTP URIs, and somebody has literally gone in and replaced all the images with pictures of rugs to indicate what's known as a rug pull in Web3, which is when the owner runs off with all your money and pulls the rug out from underneath you.
+
+
+308
+00:25:08,000 --> 00:25:29,000
+So, right, so that is now minting, and we will have that soon. Now, what I'm also going to mention, ah, that's done, good. So we have MetaMask, and you can see our balance has gone down slightly because we've been doing transactions, and those transactions cost a little bit of funds.
+
+
+309
+00:25:29,000 --> 00:25:50,000
+But we also have Brave Wallet, part of the Brave browser. And I've got that connected to Hyperspace SNET, and it's the same account that I've got configured in there, so you can see it's got the same balance there.
+
+
+310
+00:25:50,000 --> 00:26:08,000
+Now, what I want to do is, if I click View Account Assets, and I can click Add Asset, and I can add a custom asset here, add a custom NFT, and I need the address of the NFT, that's the contract address, and we can get that again back from Remix.
+
+
+311
+00:26:08,000 --> 00:26:22,000
+We can see here we have the contract address, so I'm going to copy that and put that in there, and select, I've got here, Filecoin FEM Hyperspace.
+
+
+312
+00:26:22,000 --> 00:26:40,000
+So similarly to within MetaMask, you can configure custom networks. One thing, unfortunately, it doesn't do is it doesn't automatically look that up, so I have to put that in. So, and then Token ID is, I believe, 0, there for that.
+
+
+313
+00:26:40,000 --> 00:26:54,000
+I click Add, and Done, and that should have added that. So if I click on the NFT tab, ta-da! We've got, so that was the image that I uploaded. So there we go.
+
+
+314
+00:26:54,000 --> 00:27:12,000
+So that is an NFT stored on Filecoin on FEM. So the actual asset there, that image, was taken last night with my FEM teammates, and we have stored that on an IPFS URI via NFT storage.
+
+
+315
+00:27:12,000 --> 00:27:24,000
+And so that, actually, the image itself, because of NFT storage, will be making its way towards Filecoin at some point as well to be stored on Filecoin for archival purposes.
+
+
+316
+00:27:24,000 --> 00:27:38,000
+So, that was the first demo. On to the second demo. Can anybody tell me the significance, what might be of this picture, what the link might be? Anybody recognize where this picture is from?
+
+
+317
+00:27:38,000 --> 00:27:47,000
+Men in Black. Who said that? Somebody said that before Dietrich. Got it before Men in Black, exactly. What's your name, sorry? Fabio. Okay.
+
+
+318
+00:27:47,000 --> 00:27:58,000
+Yes. And what was in the? A universe. So he has, the cat has the entire universe there around its neck.
+
+
+319
+00:27:58,000 --> 00:28:11,000
+So that will probably give you maybe a little tenuous link to the next demo, which is I'm going to run an entire Filecoin setup, an entire Filecoin universe, I might say, or at least part of the universe, on my laptop here.
+
+
+320
+00:28:11,000 --> 00:28:23,000
+So, one of the things with Filecoin is that it's a very big system, and it's quite hard to demo or test the functions and learn how to develop on top of Filecoin because there's a number of different parties involved.
+
+
+321
+00:28:23,000 --> 00:28:39,000
+So, with storage on Filecoin, and I'll go into the, like the storage deal flow in a bit, but in short, as a client, you say, I want to store some data, and then you have a number of storage providers, one of which will say, yes, I will take that data and I will store it.
+
+
+322
+00:28:39,000 --> 00:28:50,000
+So, it's two parties that are involved. So, it's very difficult to actually demo or develop yourself locally when you're reliant upon another party to do the other half of the conversation, right?
+
+
+323
+00:28:50,000 --> 00:28:59,000
+You try and test something and you're waiting for something on the other end to respond, and in the case of storage providers, there is a human element there as well.
+
+
+324
+00:28:59,000 --> 00:29:11,000
+So, what I've done is I've developed a series of Docker images that you can run locally on your laptop, and that will give you the ability to play both halves of that conversation.
+
+
+325
+00:29:11,000 --> 00:29:22,000
+So, in this demo, I'm going to clone the FEM local net repo, bring up a completely brand new, fresh local network.
+
+
+326
+00:29:22,000 --> 00:29:34,000
+We're going to use Hard Hat, which is one of the other tools I mentioned earlier, to deploy what's called this deal contract, which is an example smart contract that can create a storage deal to the local net.
+
+
+327
+00:29:34,000 --> 00:29:41,000
+I'm going to invoke it with some data to store and say, go get this data and store on Filecoin, our local copy of Filecoin.
+
+
+328
+00:29:41,000 --> 00:29:48,000
+There's some software called Boost that the storage providers run, and we have a local instance of Boost running, so we can now play a storage provider.
+
+
+329
+00:29:48,000 --> 00:29:57,000
+We can see that data, that request come in, and we can approve that and then publish the storage deal, and then complete the circle.
+
+
+330
+00:29:57,000 --> 00:30:13,000
+We can actually fetch that data from Filecoin with Lassie, and big thanks to the Boost guys. Thank you, who have helped out with this, because 24 hours ago, this was not working, and we got to the bottom of it to get it all polished off, so it is actually working now.
+
+
+331
+00:30:13,000 --> 00:30:20,000
+So, that's a pre-recording. Pre-recording is for WUSs. Let's get on with the live one.
+
+
+332
+00:30:20,000 --> 00:30:40,000
+So, there is a project here, Filecoin project, Filecoin FEM local net. All I need to do is clone that.
+
+
+333
+00:30:40,000 --> 00:31:05,000
+So, if I copy that address and clone that, and then go into that repository, and type docker-compose up.
+
+
+334
+00:31:05,000 --> 00:31:20,000
+And that is now starting up a complete Filecoin network locally. So, there's, I think, five parts to that. There is the Lotus node, that is the node that you interact with.
+
+
+335
+00:31:20,000 --> 00:31:24,000
+There's the Lotus miner, that is one that is producing the blocks.
+
+
+336
+00:31:24,000 --> 00:31:32,000
+There is Boost, which is the software that I mentioned that the storage providers use to manage their end of the process.
+
+
+337
+00:31:32,000 --> 00:31:42,000
+And then there's two other additional parts to Boost. There's Boost BitSwap and Boost HTTP, that speak respectively HTTP and BitSwap out to the wider world.
+
+
+338
+00:31:42,000 --> 00:31:52,000
+So, this is starting up, like I said, a completely brand new network. When you run this initially from scratch, it has to download the docker image, and it has to download some initial proof data.
+
+
+339
+00:31:52,000 --> 00:32:02,000
+In total, that's about three gigabytes of data. So, be careful if you try and do that on conference Wi-Fi. But once that's down, then it's cached. So, I've got the cached version here.
+
+
+340
+00:32:02,000 --> 00:32:10,000
+But this is actually starting up a brand new chain and creating a new genesis block doing this. This takes about three minutes to complete that side there.
+
+
+341
+00:32:10,000 --> 00:32:24,000
+So, while that is doing that, and let's try and move on here. So, the deal making flow at the protocol level on Filecoin, you might not necessarily be able to read all of that.
+
+
+342
+00:32:24,000 --> 00:32:37,000
+But the point being is it is fairly convoluted, right? And it moves around through various parties for the deal to be created, some of which is off-chain, which is the stuff on the left-hand side as you're looking here.
+
+
+343
+00:32:37,000 --> 00:32:45,000
+And some of it is on-chain, which is the right-hand side. So, Filecoin is designed to allow you to do a lot of stuff completely off-chain.
+
+
+344
+00:32:45,000 --> 00:32:55,000
+The reason being is you're dealing with potentially gigabytes, terabytes, petabytes of data, and that would be too much to be dealing with actually on a blockchain itself.
+
+
+345
+00:32:55,000 --> 00:33:05,000
+So, the point with Filecoin is a lot of stuff can happen off-chain, and then the proof of that stuff happening is what is stored on the chain there for the deal flow.
+
+
+346
+00:33:05,000 --> 00:33:17,000
+So, in terms of smart contracts, there's two main ways we have at the moment for interacting with the deal process and resulting in data being stored on the network.
+
+
+347
+00:33:17,000 --> 00:33:33,000
+The first one we had is called the bounty hunter sort of flow, and that follows a fairly typical Web3 model in which the smart contract doesn't actually do anything per se, but it incentivizes humans to go and do something.
+
+
+348
+00:33:33,000 --> 00:33:40,000
+So, what happens with the bounty smart contract is I say, I would like to store some data that's at this CID.
+
+
+349
+00:33:40,000 --> 00:33:46,000
+I send that to the smart contract, and I'm willing to pay this amount of funds for that to happen.
+
+
+350
+00:33:46,000 --> 00:33:56,000
+And then any other third party can see that and go, okay, I can make that happen, fetch the data, store it on Filecoin.
+
+
+351
+00:33:56,000 --> 00:34:09,000
+And once it's stored on Filecoin, they'll get back a deal ID, and they can then present that deal ID and what's called the piece CID, which is the CID that represents that data, back to the smart contract.
+
+
+352
+00:34:09,000 --> 00:34:15,000
+The smart contract can then use the inbuilt market actor to actually look and see, has that actually been stored?
+
+
+353
+00:34:15,000 --> 00:34:17,000
+And if it has, pay out the bounty, right?
+
+
+354
+00:34:17,000 --> 00:34:21,000
+So, that's basically incentivizing a human to do the difficult bit.
+
+
+355
+00:34:21,000 --> 00:34:29,000
+And then we have a newer approach, which is what I'm going to demo today, which involves what's called a client deal contract.
+
+
+356
+00:34:29,000 --> 00:34:48,000
+And that is the smart contract emits an event, and that event comes out of the Lotus Node software, boost the storage provider software, observes that, sees it, and then will go and fetch the data and do that process.
+
+
+357
+00:34:48,000 --> 00:34:51,000
+That's a slightly more automated approach there.
+
+
+358
+00:34:51,000 --> 00:34:53,000
+So, how are we doing here?
+
+
+359
+00:34:53,000 --> 00:35:00,000
+Our network is currently setting up, and we'll be able to tell that it's up and running when boost is running.
+
+
+360
+00:35:00,000 --> 00:35:05,000
+And boost, if we've got local boost instance, local host 8080, yes, it's running.
+
+
+361
+00:35:05,000 --> 00:35:06,000
+So, there we go.
+
+
+362
+00:35:06,000 --> 00:35:08,000
+This is boost running locally.
+
+
+363
+00:35:08,000 --> 00:35:19,000
+Now, the first thing I'm just going to do is go down to settings and just change the price that we're demanding to zero so that we don't have to worry about funding a wallet for that transaction.
+
+
+364
+00:35:19,000 --> 00:35:23,000
+I'm just going to set both of those to zero.
+
+
+365
+00:35:23,000 --> 00:35:24,000
+There we go.
+
+
+366
+00:35:24,000 --> 00:35:25,000
+Right.
+
+
+367
+00:35:25,000 --> 00:35:27,000
+We have zero deals on the network.
+
+
+368
+00:35:27,000 --> 00:35:38,000
+So, next stage, we need to deploy this deal smart contract to our local network here.
+
+
+369
+00:35:38,000 --> 00:35:42,000
+And let's see what I've got here.
+
+
+370
+00:35:42,000 --> 00:35:46,000
+Okay.
+
+
+371
+00:35:46,000 --> 00:35:52,000
+So, which one is it here?
+
+
+372
+00:35:52,000 --> 00:35:57,000
+One of these terminals I've got set up.
+
+
+373
+00:35:57,000 --> 00:36:00,000
+So, there is a starter kit, the FEVM hard hat starter kit.
+
+
+374
+00:36:00,000 --> 00:36:09,000
+Again, it's in the Filecoin project, and that gives you a number of example contracts that you can use to get started with a full network.
+
+
+375
+00:36:09,000 --> 00:36:12,000
+So, I'm going to deploy that.
+
+
+376
+00:36:12,000 --> 00:36:19,000
+So, type yarn hard hat deploy.
+
+
+377
+00:36:19,000 --> 00:36:23,000
+And this is the terminal that I don't have my private key set in.
+
+
+378
+00:36:23,000 --> 00:36:28,000
+Maybe this one is the one that I do.
+
+
+379
+00:36:28,000 --> 00:36:35,000
+Let's try it in here.
+
+
+380
+00:36:35,000 --> 00:36:37,000
+No. Okay.
+
+
+381
+00:36:37,000 --> 00:36:39,000
+I need my secret key.
+
+
+382
+00:36:39,000 --> 00:36:40,000
+I can export that.
+
+
+383
+00:36:40,000 --> 00:36:42,000
+Again, this is a test network.
+
+
+384
+00:36:42,000 --> 00:36:48,000
+Do not do this on live networks.
+
+
+385
+00:36:48,000 --> 00:36:56,000
+I can export my private key.
+
+
+386
+00:36:56,000 --> 00:37:02,000
+Take that and...
+
+
+387
+00:37:02,000 --> 00:37:07,000
+Right.
+
+
+388
+00:37:07,000 --> 00:37:10,000
+Okay.
+
+
+389
+00:37:10,000 --> 00:37:13,000
+Wow. That's quite a failure there.
+
+
+390
+00:37:13,000 --> 00:37:19,000
+Ah, I know why it is, because I've just created a brand new network and I don't have any funds in that wallet.
+
+
+391
+00:37:19,000 --> 00:37:30,000
+So, because that wallet is not the wallet that I had on the hyperspace network, this is a wallet on this local network that's completely fresh, I need some funds in that wallet.
+
+
+392
+00:37:30,000 --> 00:37:34,000
+So, what I actually need to do is I need to get the wallet address.
+
+
+393
+00:37:34,000 --> 00:37:37,000
+So, I need to get that from here.
+
+
+394
+00:37:37,000 --> 00:37:44,000
+Now, it says 499 because I'm still looking at hyperspace. If I switch that now to Filecoin local net, that says zero.
+
+
+395
+00:37:44,000 --> 00:37:48,000
+That's why that failed, because we didn't have any funds to actually deploy that contract.
+
+
+396
+00:37:48,000 --> 00:38:02,000
+So, I'm going to copy that address from there, and I need to tell the Lotus instance that I want to...
+
+
+397
+00:38:02,000 --> 00:38:21,000
+That I need some funds, so I need to transfer some funds to it. So, I need to go into where we had our network, and I can call docker compose exec lotus evm stat.
+
+
+398
+00:38:21,000 --> 00:38:35,000
+And I need to convert that Ethereum address to an F4 address, and Lotus has a command called lotus evm stat, and that should run that, and then we get back a Filecoin address that starts T4, because it's a test network, be it F4 if it's a production network.
+
+
+399
+00:38:35,000 --> 00:38:39,000
+And now I need to send some funds to that.
+
+
+400
+00:38:39,000 --> 00:38:44,000
+So, lotus send 100.
+
+
+401
+00:38:44,000 --> 00:38:49,000
+There we go. So, that is now sending some funds to that account.
+
+
+402
+00:38:49,000 --> 00:38:57,000
+So, we'll just wait for that to happen. So, this local network that I've set up has a 15 second block time.
+
+
+403
+00:38:57,000 --> 00:39:05,000
+The main production network mainnet has a 30 second block time, so it runs about twice as fast as the production network.
+
+
+404
+00:39:05,000 --> 00:39:16,000
+The actual original devnet that developers use had a three second time, but that seems to be a little bit too fast for laptops to keep up with, so I extended that to 15 seconds.
+
+
+405
+00:39:16,000 --> 00:39:20,000
+So, it's still a bit faster than working with the production network.
+
+
+406
+00:39:20,000 --> 00:39:29,000
+So, when you submit a transaction, it gets into one block, then you have another block of effectively confirmation, and then you get the result back in the third block.
+
+
+407
+00:39:29,000 --> 00:39:32,000
+So, 15 second block times, about 45 seconds.
+
+
+408
+00:39:32,000 --> 00:39:35,000
+So, well, there we go. 100 T-FIL. So, we have some funds now.
+
+
+409
+00:39:35,000 --> 00:39:44,000
+So, that means, let's try again with our deployment.
+
+
+410
+00:39:44,000 --> 00:39:49,000
+Opening, opening, that sounds like opening the champagne.
+
+
+411
+00:39:49,000 --> 00:39:52,000
+It's deploying. Yes. Good. Right.
+
+
+412
+00:39:52,000 --> 00:40:14,000
+So, that is deploying that smart contract to the local instance of Filecoin that is running in the production network.
+
+
+413
+00:40:00,000 --> 00:40:30,000
+A ball around a cat's neck.
+
+
+414
+00:40:30,000 --> 00:40:40,400
+it to go and store some data on the network somewhere. So we need some data to store.
+
+
+415
+00:40:40,400 --> 00:40:44,160
+Now on this network we're running two kilobyte sector sizes, which means we can only store up
+
+
+416
+00:40:44,160 --> 00:40:48,800
+to two kilobytes. There is a config entry you can change and get it up to eight megabytes.
+
+
+417
+00:40:48,800 --> 00:40:52,800
+You don't want to go any bigger than that because again running locally on laptops it takes a long
+
+
+418
+00:40:52,800 --> 00:40:58,400
+time to seal each sector on there. So on the production network it's 32 gigabytes and the
+
+
+419
+00:40:58,400 --> 00:41:03,040
+sector takes about four hours to seal. Obviously that's no good for demos so we're going to do it
+
+
+420
+00:41:03,040 --> 00:41:09,360
+here locally. So I'm going to call this hello ipfs.txt.
+
+
+421
+00:41:14,080 --> 00:41:22,080
+Hello ipfs. So what do you say your name was at the back that guessed the cat? Is it Marco? Fabio.
+
+
+422
+00:41:22,080 --> 00:41:29,120
+Fabio is cool. There we go. Right just to show that there's nothing up my sleeves here. You know
+
+
+423
+00:41:29,120 --> 00:41:35,280
+this is a live demo here. So hello ipfs.txt. Fabio is cool. So we need to put that somewhere
+
+
+424
+00:41:35,280 --> 00:41:42,560
+for the contract to, sorry for boost to go and fetch that. Now there is a nice little site
+
+
+425
+00:41:42,560 --> 00:41:54,720
+data.lighthouse.storage and this just is a convenience site for onboarding data into Filecoin.
+
+
+426
+00:41:54,720 --> 00:42:00,080
+You can actually do this manually yourself locally but you just need to put the data somewhere that
+
+
+427
+00:42:00,080 --> 00:42:05,440
+boost can get a hold of it. Somewhere initially so whether that's http or ipfs it doesn't particularly
+
+
+428
+00:42:05,440 --> 00:42:10,480
+matter but just somewhere it could get to it. So I'm going to upload a new file and I'm going to
+
+
+429
+00:42:10,480 --> 00:42:23,520
+choose here hello ipfs. That's uploaded and so we can see here hello ipfs and this gives us a number
+
+
+430
+00:42:23,520 --> 00:42:28,080
+of pieces of information that we need to pass to our smart contract. So we can plug those bits and
+
+
+431
+00:42:28,080 --> 00:42:33,440
+pieces into the invocation we're going to do on our smart contract. So I've got that actually
+
+
+432
+00:42:33,440 --> 00:42:44,400
+written out here. So the thing that we need we need the PCID which I think is that there yeah PCID.
+
+
+433
+00:42:46,080 --> 00:42:57,120
+We need the payload CID. Let me just make sure I've got the right yeah hello ipfs. The payload
+
+
+434
+00:42:57,120 --> 00:43:14,480
+payload CID which goes in here. Piece size is 256 car size is 220. So piece size 256
+
+
+435
+00:43:14,480 --> 00:43:25,040
+car size 220. I need the URL to fetch it from which is down here so I can copy that
+
+
+436
+00:43:33,840 --> 00:43:39,200
+and change that. So I think that's everything there car size location. We set the price we want
+
+
+437
+00:43:39,200 --> 00:43:43,360
+to pay zero. If you remember at the start I set boost to say it demands zero so we don't have to
+
+
+438
+00:43:43,360 --> 00:43:48,480
+actually pay for this storage. We set the start and the end epoch so that's when we want our
+
+
+439
+00:43:48,480 --> 00:43:53,840
+storage deal to start when we want it to end. We set the piece size the CID up the contract. We
+
+
+440
+00:43:53,840 --> 00:44:06,400
+need the contract address which we have here. So place that there. So right let's now execute that
+
+
+441
+00:44:06,400 --> 00:44:17,760
+and copy that and I'll run that here. I'm in the wrong directory. I'm going to run that here.
+
+
+442
+00:44:17,760 --> 00:44:26,320
+Right so that is now submitting a transaction to that smart contract on our local network saying
+
+
+443
+00:44:26,320 --> 00:44:34,240
+hey here's some data I want you to store and go and fetch it. And we can actually see this is the
+
+
+444
+00:44:34,240 --> 00:44:40,560
+the the log output of everything that's going on on the on the network that we set up and at some
+
+
+445
+00:44:40,560 --> 00:44:49,520
+point we'll see that come past. We'll see boost hopefully spot that that contract has omitted an
+
+
+446
+00:44:49,520 --> 00:44:58,640
+event and yet boost storage deal boost has seen that. So that should mean now if I go back to boost
+
+
+447
+00:44:58,640 --> 00:45:08,400
+deal one here we go and it says transfer queued. So it has queued that transfer for retrieval and
+
+
+448
+00:45:08,400 --> 00:45:13,360
+it's now going to try and retrieve it from that id. It's actually started it's very quick because
+
+
+449
+00:45:13,360 --> 00:45:24,560
+it's only 256 bytes. It has fetched that so the transfer has finished successfully. Now the boost
+
+
+450
+00:45:24,560 --> 00:45:31,760
+network is going to go on and do some other bits. It waits for a little bit and then it will start
+
+
+451
+00:45:31,760 --> 00:45:37,440
+sealing the sector. So what happens with Filecoin is when data is taken on by a storage client
+
+
+452
+00:45:37,440 --> 00:45:43,440
+it then you then see what's called seal the data which converts it to a format you can then run
+
+
+453
+00:45:43,440 --> 00:45:49,360
+these regular proofs on. So a storage provider has to do a proof of that data every 24 hours.
+
+
+454
+00:45:49,360 --> 00:45:53,920
+So it has to prove to the network yes I still have your data and I haven't lost it. So there
+
+
+455
+00:45:53,920 --> 00:46:00,080
+we go we're slightly running out of time but hopefully this will finish very shortly and we
+
+
+456
+00:46:00,080 --> 00:46:07,120
+can then kind of go on to the next step. So that is now grabbing that and doing the sealing.
+
+
+457
+00:46:07,920 --> 00:46:13,920
+Boost people do you know will do you know if this if Lassie can fetch at this point or not?
+
+
+458
+00:46:18,880 --> 00:46:22,400
+Right that's the step that I've missed we're ready to publish.
+
+
+459
+00:46:22,400 --> 00:46:29,280
+So after publishing you can fetch it. So I hit publish, publish now and it's going to go ahead
+
+
+460
+00:46:29,280 --> 00:46:33,840
+and publish that deal and we can actually see here awaiting publish confirmation.
+
+
+461
+00:46:35,520 --> 00:46:43,280
+So that is now publishing that storage deal. So that is the miner telling the network yes I am
+
+
+462
+00:46:43,280 --> 00:46:50,160
+dealing with this piece of data. I fetched it and I'm now doing the sealing process. So that's going
+
+
+463
+00:46:50,160 --> 00:46:53,840
+to do that. So while that's going on what I'm going to try and do is I'm going to try and fetch
+
+
+464
+00:46:53,840 --> 00:46:56,800
+the data since we're running out of time. I'm going to try and fetch the data now and see if
+
+
+465
+00:46:56,800 --> 00:47:05,920
+we can get the data back from this from Filecoin as well. So we've gone full circle round. So what
+
+
+466
+00:47:05,920 --> 00:47:20,000
+I need is the root CID I believe this one. Yep good thank you and I'm going to run Lassie.
+
+
+467
+00:47:20,000 --> 00:47:29,200
+So Lassie is a retrieval client. Actually I'm just going to go there. So I can say Lassie fetch now.
+
+
+468
+00:47:31,680 --> 00:47:36,400
+If I give it that CID and run that Lassie is going to try and fetch it. Now Lassie is very clever
+
+
+469
+00:47:36,400 --> 00:47:42,320
+and it's going to contact thing called the IP and IV interplanetary network indexer and try and find
+
+
+470
+00:47:42,320 --> 00:47:46,800
+it. Now it can't find it because we're not in the real world we're just running this on my laptop
+
+
+471
+00:47:46,800 --> 00:47:50,800
+remember. So it can't find it. So what we need to do is we actually need to tell it where to find it.
+
+
+472
+00:47:50,800 --> 00:47:57,120
+We need to give Lassie a little bit of a hint. So fetch dash dash providers and we need to give it
+
+
+473
+00:47:57,760 --> 00:48:01,600
+tell it where we can actually fetch our data from and we can get that from
+
+
+474
+00:48:03,120 --> 00:48:10,560
+boost. I can go to settings and down here we see
+
+
+475
+00:48:10,560 --> 00:48:25,040
+the addresses. Now I think I need that bit and then it is port 8888 I believe
+
+
+476
+00:48:27,120 --> 00:48:33,520
+and we need the peer ID which I think is that one slash peer to peer.
+
+
+477
+00:48:36,080 --> 00:48:39,760
+I think if I get it wrong it'll tell me yes the peer ID didn't match that's because I've got I've
+
+
+478
+00:48:39,760 --> 00:48:45,600
+actually got the wrong that's not the right peer ID there you need the actual one from
+
+
+479
+00:48:47,520 --> 00:48:52,080
+lib p2p which shows up in the log somewhere but it actually helpfully just tells me here that
+
+
+480
+00:48:52,080 --> 00:49:01,200
+it didn't find the right one. So peer ID so that's one that's ended 17 still I need this one
+
+
+481
+00:49:01,200 --> 00:49:13,520
+there we go so let's run that so that is Lassie fetching that hopefully
+
+
+482
+00:49:15,920 --> 00:49:16,800
+it's taking its time
+
+
+483
+00:49:19,600 --> 00:49:25,040
+is bitswap 8888 or is it 777 I have got it right have I okay
+
+
+484
+00:49:25,040 --> 00:49:31,520
+ah okay what have I got wrong there anybody see anything boost people see anything obviously
+
+
+485
+00:49:33,040 --> 00:49:33,520
+wrong there
+
+
+486
+00:49:38,080 --> 00:49:43,440
+let's just try it again oh there we go well it worked a second time um so we've got that so we've
+
+
+487
+00:49:43,440 --> 00:49:56,720
+we've we've now got a car file so I can say ibfs car dash dash unpack pass that I get that I now
+
+
+488
+00:49:56,720 --> 00:50:03,760
+have a directory I go into there and in there is a file ipfs fabio is cool
+
+
+489
+00:50:06,800 --> 00:50:12,240
+so there we go so that is a full demo there of spinning up a complete file coin instance and
+
+
+490
+00:50:12,240 --> 00:50:16,800
+going through like the full workflow there so there you go you can try it out yourself
+
+
+491
+00:50:16,800 --> 00:50:22,160
+there's some resources if you scan that qr code you'll get to a link tree you'll get to that url
+
+
+492
+00:50:22,160 --> 00:50:26,480
+down there that gives you a whole bunch of links jump off points to a whole bunch of other stuff
+
+
+493
+00:50:27,440 --> 00:50:34,480
+find me on twitter hamato we've also got the fm dev twitter account for the fm developers and
+
+
+494
+00:50:34,480 --> 00:50:41,120
+you'll find us on twitch generally on a thursday doing a live stream I think it's 1600 hours utc
+
+
+495
+00:50:41,120 --> 00:50:48,560
+on twitch twitch.tv slash fill builders so there's normally myself and my colleague sarah doing live
+
+
+496
+00:50:48,560 --> 00:50:52,320
+stuff like this and building things so thank you very much
+
+
+497
+00:50:57,120 --> 00:51:00,560
+I ran over slightly so I'm not sure if we got any time for questions but if anybody wants any then
+
+
+498
+00:51:01,200 --> 00:51:02,640
+wants to know anything then come find me
+
+
+499
+00:51:02,640 --> 00:51:08,480
+yeah
+
+
+500
+00:51:11,120 --> 00:51:16,880
+what advice would you give to organizations who are looking to integrate fbm into their
+
+
+501
+00:51:16,880 --> 00:51:22,080
+stack what what advice would I give to organizations want to integrate fbm into their stack um
+
+
+502
+00:51:23,680 --> 00:51:25,120
+what kind of benefits they can see
+
+
+503
+00:51:27,200 --> 00:51:31,840
+well benefits I mean like I said the the main thing that ip uh the fbm allows is you to
+
+
+504
+00:51:31,840 --> 00:51:37,040
+interact with the storage markets right so if you are trying to do something that involves
+
+
+505
+00:51:38,080 --> 00:51:42,720
+you know instructing the filecoin network to do some data storage and that's really kind of
+
+
+506
+00:51:42,720 --> 00:51:48,640
+where they need to be for it to kind of make sense for them to do it and then advice on how to do it
+
+
+507
+00:51:48,640 --> 00:51:55,440
+you know come find us on on slack on fill builders we're normally in there or like I said you can
+
+
+508
+00:51:55,440 --> 00:52:02,800
+find us on twitter or twitch thank you

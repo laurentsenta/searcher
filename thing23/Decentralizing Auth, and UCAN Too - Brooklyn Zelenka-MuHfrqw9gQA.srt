@@ -1,0 +1,1903 @@
+1
+00:00:00,000 --> 00:00:08,560
+and a lot of other things. So thanks, everyone, for coming to the first of several YouCan
+
+
+2
+00:00:08,560 --> 00:00:13,520
+talks. I think we're just going to call this now the YouCan track for the rest of the day,
+
+
+3
+00:00:13,520 --> 00:00:19,120
+basically. Because I'm up, then Irakli is giving a tutorial, and then after that, talking
+
+
+4
+00:00:19,120 --> 00:00:24,480
+about IPVM, which is actually built on top of a lot of this work. So YouCan decentralized
+
+
+5
+00:00:24,480 --> 00:00:31,520
+auth. In the YouCan community, we really enjoy the pun, you can do this, you can do that.
+
+
+6
+00:00:31,520 --> 00:00:38,600
+To kick things off, Mark Miller was, well, or slash is, yeah, the guy who really came
+
+
+7
+00:00:38,600 --> 00:00:44,480
+up with the modern conception of capabilities. So YouCan's a capability-based system. And
+
+
+8
+00:00:44,480 --> 00:00:50,000
+goes way further than what most people think of auth, right, which is just login. To the
+
+
+9
+00:00:50,000 --> 00:00:54,160
+point that you can structure your entire application around it, right? So we'll touch on that a
+
+
+10
+00:00:54,160 --> 00:00:58,920
+little bit in this talk. But just to kind of, you know, help free your mind a little
+
+
+11
+00:00:58,920 --> 00:01:04,600
+bit from auth is login. My name is Brooklyn Zelenka, you can find me anywhere on the internet
+
+
+12
+00:01:04,600 --> 00:01:09,680
+as xpeed. I'm the co-founder and CTO of a company called Fission. You can find us on
+
+
+13
+00:01:09,680 --> 00:01:17,920
+Discord, on the Protocol Labs network, Mastodon, or all over the internet. And I might know
+
+
+14
+00:01:17,920 --> 00:01:23,520
+a thing or two about YouCan. I helped start the project. I still do a lot of work with
+
+
+15
+00:01:23,520 --> 00:01:29,080
+the governance and standards in it, though it's now grown well beyond Fission and is
+
+
+16
+00:01:29,080 --> 00:01:36,200
+a fully community project. And because programming languages and distributed systems are my jam,
+
+
+17
+00:01:36,200 --> 00:01:40,640
+capability systems are right in the middle of that. So it's like the exact sort of thing
+
+
+18
+00:01:40,640 --> 00:01:50,920
+that I like to do. So let's get started. So why do we want to do auth in this way and
+
+
+19
+00:01:50,920 --> 00:01:56,320
+everywhere? It used to be that you had a beige box under a desk somewhere and somebody would
+
+
+20
+00:01:56,320 --> 00:01:59,440
+log in and then they would log out and then the next person would come and they'd log
+
+
+21
+00:01:59,440 --> 00:02:04,400
+in and they'd log out. And they wanted to make sure that, you know, person A didn't
+
+
+22
+00:02:04,400 --> 00:02:08,760
+have access to person B's files, right? And that's really how access control lists were
+
+
+23
+00:02:08,760 --> 00:02:15,160
+born in the 70s. These days we have a lot of stuff, right? With different consistency
+
+
+24
+00:02:15,160 --> 00:02:21,320
+levels, with different distances to the user. We have commons networks, right? We've got
+
+
+25
+00:02:21,320 --> 00:02:26,640
+stuff way at the edge. We have computers in our pockets. It's a completely different world
+
+
+26
+00:02:26,640 --> 00:02:30,800
+and there's so many applications now that need to be able to interoperate and connect
+
+
+27
+00:02:30,800 --> 00:02:36,800
+and that today you can do it, but it's way more painful than it has to be. So how do
+
+
+28
+00:02:36,800 --> 00:02:42,120
+we actually get things to talk to each other in an easier, simpler, consistent way? When
+
+
+29
+00:02:42,120 --> 00:02:46,680
+we started at Fission, we wanted to always get to compute, which we're now just starting
+
+
+30
+00:02:46,680 --> 00:02:51,600
+to do, which is great. But to do compute, you need to do data and to do data, you need
+
+
+31
+00:02:51,600 --> 00:02:55,760
+to do auth, at least if you want to do data in production, right? Having everything be
+
+
+32
+00:02:55,760 --> 00:03:00,480
+totally public and accessible all the time isn't really a production use case. It's good
+
+
+33
+00:03:00,480 --> 00:03:06,200
+for some things, not good for a lot of things. So with Ucan, we're solving this bottom auth
+
+
+34
+00:03:06,200 --> 00:03:17,480
+layer. So I think in IPFS generally, we're trying to power a new internet. And to do
+
+
+35
+00:03:17,480 --> 00:03:23,200
+that, we have to think about how we're going to grow all of these technologies to impact
+
+
+36
+00:03:23,200 --> 00:03:27,960
+as many people as possible. And people often get really worried about this idea of crossing
+
+
+37
+00:03:27,960 --> 00:03:32,280
+the chasm, right? Of taking it from early adopters to the early majority who have very
+
+
+38
+00:03:32,280 --> 00:03:39,640
+different needs and philosophies about things. But we're not even close to that one. We are,
+
+
+39
+00:03:39,640 --> 00:03:45,440
+everyone in this room, are this tiny little sliver called innovators. We are crossing
+
+
+40
+00:03:45,440 --> 00:03:51,640
+that tiny little chasm there right now. And if we want this to grow, we need to focus
+
+
+41
+00:03:51,640 --> 00:03:54,880
+on these people, the early adopters, the people that are just going to hack something into
+
+
+42
+00:03:54,880 --> 00:03:59,440
+a system and get it running and get it moving, right? We want to bring all the nice security
+
+
+43
+00:03:59,440 --> 00:04:05,800
+properties of capabilities and decentralization, right? But we need to put it in a format and
+
+
+44
+00:04:05,800 --> 00:04:12,120
+in a way that's interoperable with how things currently are to kind of help drag people
+
+
+45
+00:04:12,120 --> 00:04:18,320
+kicking and screaming into the future, right? I think it's relatively uncontroversial to
+
+
+46
+00:04:18,320 --> 00:04:27,000
+say that Web3 UX is too hard, just like in general, right? So in order to meet this goal,
+
+
+47
+00:04:27,000 --> 00:04:33,440
+we need to be easier, as secure, and more open than OAuth, X.509, SAML, Macroons, Metamask,
+
+
+48
+00:04:33,440 --> 00:04:40,240
+WALConnect, et cetera. Basically all the other options, right? Now, I won't claim that we've
+
+
+49
+00:04:40,240 --> 00:04:44,940
+surpassed all of these in every possible dimension, but we're actually making pretty good headway
+
+
+50
+00:04:44,940 --> 00:04:51,400
+against a lot of them. So OAuth is the big one, right? That everyone interacts with when
+
+
+51
+00:04:51,400 --> 00:04:56,640
+you sign in with Twitter, sign in with GitHub, all those things, you're using OAuth. This
+
+
+52
+00:04:56,640 --> 00:05:03,480
+is pretty typical OAuth login flow. You have a user, the application that's asking for
+
+
+53
+00:05:03,480 --> 00:05:08,180
+access to something, to some resource, an authorization server that actually controls
+
+
+54
+00:05:08,180 --> 00:05:18,000
+the access to things, and the resource server. The first phase is the leftmost three coordinating
+
+
+55
+00:05:18,000 --> 00:05:25,240
+on can the application actually request the thing, and then these last few steps are actually
+
+
+56
+00:05:25,240 --> 00:05:29,800
+getting the resource. And you have to have this authorization server in the middle, because
+
+
+57
+00:05:29,800 --> 00:05:34,080
+everything, all of the knowledge and all the information about who's allowed to access
+
+
+58
+00:05:34,080 --> 00:05:37,960
+what, is centralized in that OAuth server. Which then begs the question, what if we got
+
+
+59
+00:05:37,960 --> 00:05:44,000
+rid of that? And we made it, instead of a stateful protocol, into a stateless protocol.
+
+
+60
+00:05:44,000 --> 00:05:51,640
+It simplifies the picture quite a lot. It's really easy to reason about. We don't need
+
+
+61
+00:05:51,640 --> 00:05:57,520
+an OAuth server anymore, because the user is their own OAuth server. The application
+
+
+62
+00:05:57,520 --> 00:06:02,960
+asks the user, can I have access to this thing? Can I have OAuth? Yep, here you go. And then
+
+
+63
+00:06:02,960 --> 00:06:11,960
+it can make requests to the resource server. One way of thinking of the approach that Ucann
+
+
+64
+00:06:11,960 --> 00:06:17,320
+takes in general is that we're trying to be a Trojan horse for Web 3 into Web 2. So building
+
+
+65
+00:06:17,320 --> 00:06:22,600
+on widely supported, familiar, well-understood standards and tools, things that are not cool,
+
+
+66
+00:06:22,600 --> 00:06:30,560
+right, like JWTs, gets us in the door to bring these ideas to where people are actually using
+
+
+67
+00:06:30,560 --> 00:06:37,360
+things. So one example is putting in a bearer header, a bearer token header. Ucann is not
+
+
+68
+00:06:37,360 --> 00:06:42,480
+a bearer token, right? It is absolutely an authorization token. But by formatting it
+
+
+69
+00:06:42,480 --> 00:06:48,280
+this way, it automatically works out of the box with every web server out there and every
+
+
+70
+00:06:48,280 --> 00:06:53,440
+front-end framework out there. They just all work together. Newsphere is doing this. We've
+
+
+71
+00:06:53,440 --> 00:07:00,800
+been doing this at Fission for a long time. It works really well.
+
+
+72
+00:07:00,800 --> 00:07:07,280
+And another approach to things like this, right, because we try to be self-sovereign,
+
+
+73
+00:07:07,280 --> 00:07:13,080
+and Ucann gives you a lot of flexibility and self-sovereignty. One of the things that we're
+
+
+74
+00:07:13,080 --> 00:07:17,400
+trying to fix in there is when you have to run your own infrastructure completely, so
+
+
+75
+00:07:17,400 --> 00:07:23,240
+you have to run your own IPFS nodes to do IPNS, for example. So this is great. You can
+
+
+76
+00:07:23,240 --> 00:07:29,280
+exchange messages with all the other peers in the network. You own this particular node.
+
+
+77
+00:07:29,280 --> 00:07:34,720
+You can run it on your desktop. You own your own key. But the problem is, what if you're
+
+
+78
+00:07:34,720 --> 00:07:40,320
+on a device that doesn't have an IPFS node in it, or that's not currently accessible
+
+
+79
+00:07:40,320 --> 00:07:44,920
+because it's asleep? Well, then you need to have somebody else run one of these things
+
+
+80
+00:07:44,920 --> 00:07:50,760
+for you. So now there's users of a particular node who have to log in with some separate
+
+
+81
+00:07:50,760 --> 00:07:56,920
+mechanism, username, password, something like this, to get access to the namespace that
+
+
+82
+00:07:56,920 --> 00:08:01,960
+that IPNS node is managing. So what we've done by creating decentralization is actually
+
+
+83
+00:08:01,960 --> 00:08:09,400
+created a point of centralization, ironically. The same thing goes for edge and decentralized
+
+
+84
+00:08:09,400 --> 00:08:15,880
+apps. If you needed to keep a list of who's allowed to access things or who's allowed
+
+
+85
+00:08:15,880 --> 00:08:23,120
+to do updates, you've created another point of centralization. The nice thing about this
+
+
+86
+00:08:23,120 --> 00:08:26,520
+is that they're actually the same picture. They're the same situation. So if we can solve
+
+
+87
+00:08:26,520 --> 00:08:32,400
+for one, we can actually solve for the other. So enough preamble. Let's actually talk about
+
+
+88
+00:08:32,400 --> 00:08:38,240
+what a capability is. Broadly speaking, there's two models. There's access control lists,
+
+
+89
+00:08:38,240 --> 00:08:42,720
+which most people are more familiar with. And as I mentioned off the top, this is really
+
+
+90
+00:08:42,720 --> 00:08:47,720
+from the day of people will log in and log out, right? For sharing a terminal one at
+
+
+91
+00:08:47,720 --> 00:08:55,600
+a time. It's since been extended to more things. Capabilities were designed from day one for
+
+
+92
+00:08:55,600 --> 00:09:03,600
+logging, for concurrent use cases, for many. ACLs are fundamentally stateful. So here's
+
+
+93
+00:09:03,600 --> 00:09:09,760
+my user. Here's some service that they want to access. And when they make the request,
+
+
+94
+00:09:09,760 --> 00:09:14,920
+they get stopped by some guarding process. So this is a little bit like having a bouncer
+
+
+95
+00:09:14,920 --> 00:09:19,280
+at the club who checks their list to see if you're one of the cool people and says, okay,
+
+
+96
+00:09:19,280 --> 00:09:24,720
+yeah, cool, yeah, you're on the list, and I'll forward that on to the service. The advantage
+
+
+97
+00:09:24,720 --> 00:09:28,840
+of this is that it comes in three really clear stages, right? You can throw an auth server
+
+
+98
+00:09:28,840 --> 00:09:33,600
+in front of basically anything, right? It's totally decoupled. The downside is that these
+
+
+99
+00:09:33,600 --> 00:09:40,480
+two are not in control. So if you either take control of this one or the service, you have
+
+
+100
+00:09:40,480 --> 00:09:47,780
+access to absolutely everything. It doesn't provide the user or the service with agency.
+
+
+101
+00:09:47,780 --> 00:09:53,280
+And we have all of the data centralized in this one list. So if another service wants
+
+
+102
+00:09:53,280 --> 00:10:00,920
+to reuse this, they have to either synchronize in the back this list continuously or make
+
+
+103
+00:10:00,920 --> 00:10:07,600
+roundtrip requests always to the same server. Some of you might be thinking, well, that's
+
+
+104
+00:10:07,600 --> 00:10:15,920
+really simple, right? These days we have things like CRDTs. The bad news is that CRDTs don't
+
+
+105
+00:10:15,920 --> 00:10:21,640
+express ACLs very well. So not to pick on this one post in particular, but this is to
+
+
+106
+00:10:21,640 --> 00:10:28,880
+say there be dragons. A lot of very, very, very smart people have tried to do a CRDT
+
+
+107
+00:10:28,880 --> 00:10:35,920
+ACL. Hasn't worked. There's a bunch of reasons, but just, you know, I mean, this is a half
+
+
+108
+00:10:35,920 --> 00:10:43,520
+hour slot. I could give an entire talk about this. But just as an intuition pump, if you
+
+
+109
+00:10:43,520 --> 00:10:48,040
+have, for example, two admins of a system, so they can accept and reject people into
+
+
+110
+00:10:48,040 --> 00:10:52,920
+a group and they have the power to reject each other. If you have a malicious one, it
+
+
+111
+00:10:52,920 --> 00:10:58,120
+will immediately try to eject the other admin. The good admin will try to eject the malicious
+
+
+112
+00:10:58,120 --> 00:11:02,840
+one. And nobody in the system now knows who to trust because you have an eventually consistent
+
+
+113
+00:11:02,840 --> 00:11:08,960
+CRDT, right? People have tried to tackle this problem at the user experience level and expose
+
+
+114
+00:11:08,960 --> 00:11:16,720
+all of the, you know, the gory details of that to the user. It doesn't really work out.
+
+
+115
+00:11:16,720 --> 00:11:21,040
+Capabilities don't have this problem because we always root our authority for a resource
+
+
+116
+00:11:21,040 --> 00:11:28,960
+in the resource itself. It always owns from the get go. It can delegate out to who it
+
+
+117
+00:11:28,960 --> 00:11:34,160
+wants to be able to access it. Capabilities have a slightly different picture. Here's
+
+
+118
+00:11:34,160 --> 00:11:39,160
+the user, here's the service they want to access, and the user has some address, some
+
+
+119
+00:11:39,160 --> 00:11:45,540
+pointer to the thing, and a cryptographic token that says they're allowed to go and
+
+
+120
+00:11:45,540 --> 00:11:50,200
+access this. So instead of being like a bouncer in front of the club, it's like having a ticket
+
+
+121
+00:11:50,200 --> 00:11:54,440
+to the movie theater. When I go to the movies, they don't check my ID on the way in. They
+
+
+122
+00:11:54,440 --> 00:11:59,200
+check I have a ticket and that's it. If I can't make it, that's fine. I can give my
+
+
+123
+00:11:59,200 --> 00:12:04,920
+ticket to Steven. Steven can go see the movie instead of me. This puts the user and the
+
+
+124
+00:12:04,920 --> 00:12:12,160
+service in control. All of the required info sits inside of the token. It's stateless.
+
+
+125
+00:12:12,160 --> 00:12:17,280
+I can make copies of the capability and hand them out to other people. I can attenuate
+
+
+126
+00:12:17,280 --> 00:12:25,760
+them and I can share them with others so they can also access this.
+
+
+127
+00:12:25,760 --> 00:12:31,520
+You can do things with this that are actually more powerful than with ACLs. There's a really
+
+
+128
+00:12:31,520 --> 00:12:38,080
+great paper called ACLs Don't that explains that you can model anything in an ACL as capabilities
+
+
+129
+00:12:38,080 --> 00:12:45,280
+but not everything is from capabilities as ACLs. It's a more powerful concept. The composition
+
+
+130
+00:12:45,280 --> 00:12:51,040
+of capabilities is interesting. The classic example of this is I have a capability that
+
+
+131
+00:12:51,040 --> 00:12:56,440
+gives me access to soup in a can. I have another one that gives me access to a can opener.
+
+
+132
+00:12:56,440 --> 00:13:01,120
+If I just have the can, I'm going to go hungry. If I have just the can opener, I'm going to
+
+
+133
+00:13:01,120 --> 00:13:05,960
+go hungry. If I bring them together, I can get into the soup, I can have a nice lunch.
+
+
+134
+00:13:05,960 --> 00:13:13,720
+To put this in more technical terms, if you have access to a database and access to send
+
+
+135
+00:13:13,720 --> 00:13:18,920
+email, you can now compose, read from database, operate on it, send email. But if you want
+
+
+136
+00:13:18,920 --> 00:13:23,280
+to make the read or the write side of that something else, you can compose those together
+
+
+137
+00:13:23,280 --> 00:13:26,840
+in different ways. Instead of being a database, maybe it's going to read out of Filecoin.
+
+
+138
+00:13:26,840 --> 00:13:36,200
+Instead of email, maybe it's going to post to IPNS. Now, that's a lot of detail. That's
+
+
+139
+00:13:36,200 --> 00:13:43,000
+a lot of things that are unfamiliar. But auth, fundamentally, should be just extremely boring.
+
+
+140
+00:13:43,000 --> 00:13:50,520
+So this is something we've had in production for a while. It looks exactly like an OAuth
+
+
+141
+00:13:50,520 --> 00:13:53,820
+screen where you say, ah, I want to give them access to these things. And then you get access
+
+
+142
+00:13:53,820 --> 00:13:58,840
+to, in this case, it's basically a Dropbox clone. I want to give them access to my public
+
+
+143
+00:13:58,840 --> 00:14:06,080
+files, my private files, for this amount of time. Yeah, go for it.
+
+
+144
+00:14:06,080 --> 00:14:13,240
+So let's actually look at one of the tokens in detail. One of the things that people ask
+
+
+145
+00:14:13,240 --> 00:14:18,160
+me all the time about UCAN, like, literally including during breakfast this morning, was
+
+
+146
+00:14:18,160 --> 00:14:24,880
+how is it different from DIDs? And DIDs are actually inside of UCAN. It's not an or. It's
+
+
+147
+00:14:24,880 --> 00:14:30,360
+a building block that we build UCANs out of. DIDs say who you are. They give you a public
+
+
+148
+00:14:30,360 --> 00:14:38,800
+key that you can prove that this agent, this person, this process was allowed to sign.
+
+
+149
+00:14:38,800 --> 00:14:46,400
+And UCANs say what you can do. So the distinction is a did is, let's make sure I don't get these
+
+
+150
+00:14:46,400 --> 00:14:50,480
+backwards, is authentication. It proves that some data is authentic. It comes from a trusted
+
+
+151
+00:14:50,480 --> 00:14:56,720
+source who you know. And UCANs are authorization. They say that you're authorized to do some
+
+
+152
+00:14:56,720 --> 00:15:02,400
+action. So here's an example token with the signature
+
+
+153
+00:15:02,400 --> 00:15:08,880
+and header taken out. We have an issuer, which is a DID. In this case, it did key. And an
+
+
+154
+00:15:08,880 --> 00:15:13,360
+audience. So in this case, I'm transferring authority for the things in the cap section,
+
+
+155
+00:15:13,360 --> 00:15:21,360
+which we'll look at in a second, from, say, from me to Steven.
+
+
+156
+00:15:21,360 --> 00:15:26,600
+We have some time bounds on this to say this can't be used before these times and it expires
+
+
+157
+00:15:26,600 --> 00:15:34,540
+at this time. So that you only give access to things in the, if somebody were to, say,
+
+
+158
+00:15:34,540 --> 00:15:38,120
+get a hold of your private key, it's not a disaster now that they have access to all
+
+
+159
+00:15:38,120 --> 00:15:41,720
+this stuff. So you follow the principle of least authority whenever possible. You can
+
+
+160
+00:15:41,720 --> 00:15:46,440
+make them as long lived as you like, but scoping them down to just the resources that you need
+
+
+161
+00:15:46,440 --> 00:15:52,680
+for a particular request. And then the actual capabilities themselves.
+
+
+162
+00:15:52,680 --> 00:15:58,560
+There can be several in here. We'll look at these in more detail in a moment.
+
+
+163
+00:15:58,560 --> 00:16:04,080
+So I mentioned a moment ago signature and header. It's a JWT by default. So you also
+
+
+164
+00:16:04,080 --> 00:16:09,600
+have a JWT header. In this case, it says the kind of algorithm you use, and that's JWT.
+
+
+165
+00:16:09,600 --> 00:16:16,360
+You have the payload and the signature. The signature must match the did in the issuer,
+
+
+166
+00:16:16,360 --> 00:16:22,840
+which is then signed over as part of the payload. So you have this guarantee that this was signed
+
+
+167
+00:16:22,840 --> 00:16:29,440
+by who they claimed the issuer was. And we have proofs that say I claim that I
+
+
+168
+00:16:29,440 --> 00:16:33,240
+have access to these capabilities because somebody delegated them to me. Here are those
+
+
+169
+00:16:33,240 --> 00:16:38,320
+delegations. Here's those other UCANs that I had access to.
+
+
+170
+00:16:38,320 --> 00:16:46,520
+The actual capabilities. Again, you can have several in any given UCAN. They always have
+
+
+171
+00:16:46,520 --> 00:16:54,520
+a resource. So it's any URI. It's the noun. So in this case, it's a HTTP path to Alice's
+
+
+172
+00:16:54,520 --> 00:17:01,400
+photos. Then you have some verb, in this case, read access. And then you can add optional
+
+
+173
+00:17:01,400 --> 00:17:09,160
+additional fields such as in this second one, sending email only internal to phish and dot
+
+
+174
+00:17:09,160 --> 00:17:18,920
+codes email addresses. So you can send as Boris, the CEO, only internally.
+
+
+175
+00:17:18,920 --> 00:17:29,760
+Because we have dids, we have all the resources and tools available for PKI. So we don't have
+
+
+176
+00:17:29,760 --> 00:17:36,200
+to send keys around anymore. Moving keys from one machine to another is super dangerous.
+
+
+177
+00:17:36,200 --> 00:17:40,120
+Browsers now, all the major browsers, have non-extractable keys. So you can sign things
+
+
+178
+00:17:40,120 --> 00:17:45,520
+without ever seeing the private key. Obviously, you see the public key. And without them being
+
+
+179
+00:17:45,520 --> 00:17:50,240
+able to be stolen by, say, a malicious browser extension.
+
+
+180
+00:17:50,240 --> 00:17:59,240
+So I have my keys on these different browsers. And I can use them to sign tokens. And then
+
+
+181
+00:17:59,240 --> 00:18:03,080
+doing this delegation and pointing between them from issuer to audience without moving
+
+
+182
+00:18:03,080 --> 00:18:12,000
+keys. So we say this is delegating authority without delegating keys.
+
+
+183
+00:18:12,000 --> 00:18:17,000
+I've mentioned attenuation a few times. The basic idea here is when I'm delegating to
+
+
+184
+00:18:17,000 --> 00:18:23,980
+somebody else, I can give them access to the capabilities that I have or fewer. So I can't,
+
+
+185
+00:18:23,980 --> 00:18:29,400
+out of thin air, say, oh, yeah, totally I have access to that database. I would have
+
+
+186
+00:18:29,400 --> 00:18:32,600
+some proof that I have access to it to give to them.
+
+
+187
+00:18:32,600 --> 00:18:37,600
+So here's Alice. Alice has a bunch of capabilities represented by these various icons. Here's
+
+
+188
+00:18:37,600 --> 00:18:42,680
+Bob. Bob has a desktop. And she's going to delegate absolutely everything to him. Maybe
+
+
+189
+00:18:42,680 --> 00:18:50,680
+he helps her out with stuff. He also has a phone that maybe he trusts less. So he doesn't
+
+
+190
+00:18:50,680 --> 00:18:54,000
+need to delegate absolutely everything to his phone. So it's not just about the individual
+
+
+191
+00:18:54,000 --> 00:18:59,920
+person. It's any agent. It's from phones to laptops to servers. You can move straight
+
+
+192
+00:18:59,920 --> 00:19:03,920
+through those.
+
+
+193
+00:19:03,920 --> 00:19:10,920
+Bob from his phone delegates to Carol here, who only gets the one capability at the end.
+
+
+194
+00:19:10,920 --> 00:19:17,200
+And these all are proven in this chain with those proofs, which are just CIDs for the
+
+
+195
+00:19:17,200 --> 00:19:21,840
+previous you can. Now, it doesn't have to be a linear chain like this. We can branch
+
+
+196
+00:19:21,840 --> 00:19:29,280
+at any point and give a different subset of capabilities to somebody else. They can further
+
+
+197
+00:19:29,280 --> 00:19:33,840
+sub delegate that. And you can also take from multiple sources, and they don't have to be
+
+
+198
+00:19:33,840 --> 00:19:38,020
+rooted in the same user like they are here, but for multiple sources, and bring them together
+
+
+199
+00:19:38,020 --> 00:19:46,000
+to say, well, I can actually compose together rainbow and dog. Everybody's favorite capabilities.
+
+
+200
+00:19:46,000 --> 00:19:49,460
+The other advantage is this doesn't care where it lives anymore. We're not waiting and looking
+
+
+201
+00:19:49,460 --> 00:19:52,560
+at is it in this database, is it in that database, do I have to talk to this one, do I have to
+
+
+202
+00:19:52,560 --> 00:19:57,720
+talk to that one? It's just everything's in the token itself. So it doesn't care which
+
+
+203
+00:19:57,720 --> 00:20:18,720
+application it's powering. It can go from...
+
+
+204
+00:20:00,000 --> 00:20:07,700
+a messaging app to doing analysis to spreadsheets to just sitting on somebody's
+
+
+205
+00:20:07,700 --> 00:20:14,460
+cli doing individual tasks. It doesn't care, it can move straight through all of
+
+
+206
+00:20:14,460 --> 00:20:18,960
+those. So it lets you compose applications as well.
+
+
+207
+00:20:19,680 --> 00:20:26,840
+Revocation. So let's say that Bob discovers that Carol's laptop was stolen
+
+
+208
+00:20:26,840 --> 00:20:32,360
+and doesn't want to have all those, you know, this capability in use in the wild
+
+
+209
+00:20:32,360 --> 00:20:40,680
+by some malicious person. He can issue a revocation by CID and as long as he's in
+
+
+210
+00:20:40,680 --> 00:20:44,560
+the proof chain he can revoke anything below that. So it doesn't have to be the
+
+
+211
+00:20:44,560 --> 00:20:50,200
+very next one, it's anywhere in there and that will revoke everything after that.
+
+
+212
+00:20:50,200 --> 00:20:56,160
+These are gossips. It is eventually consistent. So it's not that when you
+
+
+213
+00:20:56,160 --> 00:21:00,360
+issue it, it's immediately done. You can send it to where they'll need to
+
+
+214
+00:21:00,360 --> 00:21:08,040
+terminate that invocation of the UCAN. So if it's, say, access to, you know,
+
+
+215
+00:21:08,040 --> 00:21:12,040
+some specific server, say it's for Web3 storage, you could send directly to
+
+
+216
+00:21:12,040 --> 00:21:14,760
+Web3 storage, hey I'm revoking this and then I'll gossip it to everybody else as
+
+
+217
+00:21:14,760 --> 00:21:20,160
+well. But because all this is designed to also work offline, we can't guarantee a
+
+
+218
+00:21:20,160 --> 00:21:24,160
+strong consistency model. You can add more consistency as you need, but it's
+
+
+219
+00:21:24,160 --> 00:21:31,040
+designed to be very flexible. It's also designed so that, you know, we have these
+
+
+220
+00:21:31,040 --> 00:21:36,200
+nouns and verbs, that those can be composed separately as well. URIs, there
+
+
+221
+00:21:36,200 --> 00:21:38,640
+are an infinite number of them but there's only a certain number that are
+
+
+222
+00:21:38,640 --> 00:21:42,880
+registered, right? You could put literally whatever string you want in there as
+
+
+223
+00:21:42,880 --> 00:21:48,600
+long as it's a valid URI. We think most people will only need a handful, right? So
+
+
+224
+00:21:48,600 --> 00:21:53,860
+by having those and then a standard library of capabilities, it makes it
+
+
+225
+00:21:53,860 --> 00:21:56,960
+really easy to not have to sit there and think like, oh how am I gonna model this?
+
+
+226
+00:21:56,960 --> 00:21:59,440
+You just say I need one of these and one of those, I'm gonna stick them together
+
+
+227
+00:21:59,440 --> 00:22:03,000
+and send it off. And now we all understand the same vocabulary. It's
+
+
+228
+00:22:03,000 --> 00:22:08,000
+always extensible, you're always allowed to add more, but to get people started at
+
+
+229
+00:22:08,000 --> 00:22:13,040
+least this will cover sort of the 95% use case. I mentioned a few times now,
+
+
+230
+00:22:13,040 --> 00:22:17,620
+this is all done with JWTs and those aren't like the hippest, coolest
+
+
+231
+00:22:17,620 --> 00:22:22,640
+structure. Good news, the good folks at DAG House have solved this. There's a
+
+
+232
+00:22:22,640 --> 00:22:30,800
+UCAN IPLD and CACAL from Ceramic that puts this into IPLD schemas. You still
+
+
+233
+00:22:30,800 --> 00:22:35,600
+have to be able to turn them into a JWT if you want to interoperate with anybody
+
+
+234
+00:22:35,600 --> 00:22:38,880
+who's adopted the standard, but if you're say communicating between your own
+
+
+235
+00:22:38,880 --> 00:22:47,120
+servers you can absolutely do this. The case study from before, the IPNS version,
+
+
+236
+00:22:47,120 --> 00:22:50,760
+so we had this point of centralization because the key only lived in that one
+
+
+237
+00:22:50,760 --> 00:22:54,760
+place, but now with UCAN we can transfer authority without having to move
+
+
+238
+00:22:54,760 --> 00:23:00,640
+keys around. So we can completely break this up. I don't even need to have an IP
+
+
+239
+00:23:00,640 --> 00:23:08,320
+an IPFS node around anymore to update records. I can issue a UCAN as long as I
+
+
+240
+00:23:08,320 --> 00:23:12,120
+can prove that I have control over that namespace and I can gossip it through
+
+
+241
+00:23:12,120 --> 00:23:18,080
+the network. And as long as those point back to this one, it all works. I can
+
+
+242
+00:23:18,080 --> 00:23:22,520
+delegate access between people so that it doesn't even have to be literally
+
+
+243
+00:23:22,520 --> 00:23:27,240
+this machine or even me as an individual making updates. I can share that with
+
+
+244
+00:23:27,240 --> 00:23:32,600
+other people and they can make updates as needed. And this is something that
+
+
+245
+00:23:32,600 --> 00:23:38,480
+we're actually exploring at Fission for a sort of broad system called NNS or the
+
+
+246
+00:23:38,480 --> 00:23:43,880
+the name name system as some of you may have seen the talk yesterday. And DAG
+
+
+247
+00:23:43,880 --> 00:23:50,160
+House also has a proposal for something between this and today's IPNS to get
+
+
+248
+00:23:50,160 --> 00:23:54,680
+closer to this without having to throw out all of IPNS in the meantime.
+
+
+249
+00:23:54,680 --> 00:23:59,960
+Basically having a proxy server that you can use UCANs and then it'll do the
+
+
+250
+00:23:59,960 --> 00:24:05,080
+publishing on behalf of people. We can also do things like authorized data
+
+
+251
+00:24:05,080 --> 00:24:09,040
+retrieval. So it's great to have encryption at rest, we do a lot of that
+
+
+252
+00:24:09,040 --> 00:24:12,720
+at Fission, but if you want to prevent somebody from even asking for something
+
+
+253
+00:24:12,720 --> 00:24:15,560
+over the network because it's always better to do something off the network,
+
+
+254
+00:24:15,560 --> 00:24:22,160
+you can also model that with UCAN and ask for that even I think now it's
+
+
+255
+00:24:22,160 --> 00:24:30,520
+actually even implemented in BitSwap. You can put that in a BitSwap header. If any
+
+
+256
+00:24:30,520 --> 00:24:35,840
+of you saw Philip's talk day before yesterday I think, this is also baked in
+
+
+257
+00:24:35,840 --> 00:24:40,840
+deeply into the web native file system. So all of the write access in WinFS is
+
+
+258
+00:24:40,840 --> 00:24:46,720
+managed with this and it powers a bunch of apps today including the one that I
+
+
+259
+00:24:46,720 --> 00:24:55,480
+showed earlier, the sort of Dropbox clone on IPFS called Fission Drive. We are
+
+
+260
+00:24:55,480 --> 00:25:00,960
+building all kinds of stuff out of this, so authorized channels. So if you want to
+
+
+261
+00:25:00,960 --> 00:25:07,360
+have a group chat or set up gossip between collaborating peers that are
+
+
+262
+00:25:07,360 --> 00:25:13,600
+working on some shared resource like a database or you know a group chat, you
+
+
+263
+00:25:13,600 --> 00:25:17,920
+can use this to say hey look we all have a shared capability, we're gonna join a
+
+
+264
+00:25:17,920 --> 00:25:21,400
+group together and use that to prove that they should be allowed into the
+
+
+265
+00:25:21,400 --> 00:25:27,480
+into the secure channel. We had built this out of originally the double
+
+
+266
+00:25:27,480 --> 00:25:32,440
+ratchet from Signal, but good news messaging layer security from the IETF
+
+
+267
+00:25:32,440 --> 00:25:38,760
+just got approved and so we can plug this in directly into the authorization
+
+
+268
+00:25:38,760 --> 00:25:43,680
+portion of MLS and it just works. We need to go back and update the spec because
+
+
+269
+00:25:43,680 --> 00:25:48,120
+this was literally last week I think that they finally got that thumbs up. But
+
+
+270
+00:25:48,120 --> 00:25:55,480
+the actual flow otherwise in that spec basically looks the same. And if you
+
+
+271
+00:25:55,480 --> 00:26:00,200
+can't get enough of UCAN today, come back in the afternoon and we'll talk
+
+
+272
+00:26:00,200 --> 00:26:05,320
+about how we're using this to power decentralized compute as well, including
+
+
+273
+00:26:05,320 --> 00:26:09,080
+interesting things like doing distributed pipelines and collaborating
+
+
+274
+00:26:09,080 --> 00:26:17,080
+processes dynamically. So some final resources to leave you with. If you're
+
+
+275
+00:26:17,080 --> 00:26:21,280
+interested or want to get involved, there's the UCAN community. We run
+
+
+276
+00:26:21,280 --> 00:26:27,680
+monthly community calls, we have a discord, it's an open process, anyone
+
+
+277
+00:26:27,680 --> 00:26:33,280
+can get involved. We have a bunch of implementations, they're not all in the
+
+
+278
+00:26:33,280 --> 00:26:37,320
+same version unfortunately. The main implementation these days are Rust and
+
+
+279
+00:26:37,320 --> 00:26:43,560
+the TypeScript ones. We also have some early work with Passkeys, which is the
+
+
+280
+00:26:43,560 --> 00:26:50,160
+new Apple, Google, Microsoft key syncing system. Works in browsers, etc. You can
+
+
+281
+00:26:50,160 --> 00:26:53,800
+basically authenticate with your fingerprint so we can sign UCANs with
+
+
+282
+00:26:53,800 --> 00:26:58,360
+those. Metamask as well, we've done some work with that. And if you want to add to
+
+
+283
+00:26:58,360 --> 00:27:03,000
+this list of implementations, let us know and we'll even get you a cute sticker
+
+
+284
+00:27:03,000 --> 00:27:08,880
+mascot. If you want to go deeper into capabilities, Capabilities Myths
+
+
+285
+00:27:08,880 --> 00:27:14,840
+Demolished is a great paper. ACLs don't. The eWrites website, so Mark Miller's
+
+
+286
+00:27:14,840 --> 00:27:19,000
+website, does lots of writing about this for quite a while. It's a fantastic
+
+
+287
+00:27:19,000 --> 00:27:25,520
+resource and if you're interested in sort of more of the, you know, where have
+
+
+288
+00:27:25,520 --> 00:27:29,320
+people tried to do this before in the late 90s, the Simple Public Key
+
+
+289
+00:27:29,320 --> 00:27:35,440
+Infrastructure or Spooky group did a lot of this. They didn't have all the the
+
+
+290
+00:27:35,440 --> 00:27:39,780
+same pieces that we have today, so it wasn't as successful. They had a hard
+
+
+291
+00:27:39,780 --> 00:27:44,200
+time, for example, with revocation. That we now have the tools for literally the
+
+
+292
+00:27:44,200 --> 00:27:50,560
+computer science and the networks to do. Later today, Irakli will be giving a
+
+
+293
+00:27:50,560 --> 00:27:55,520
+workshop on getting started with UCAN. If you want to do something from home,
+
+
+294
+00:27:55,520 --> 00:28:02,880
+there's UCAN.lol, which was put together by Brian, which is a plain text
+
+
+295
+00:28:02,880 --> 00:28:10,640
+getting started with UCAN game. And we have UCAN.xyz, which is a token
+
+
+296
+00:28:10,640 --> 00:28:14,280
+explorer. You can paste a token in, it'll break it apart for you and show you
+
+
+297
+00:28:14,280 --> 00:28:20,640
+here's who's making the claim, here's what
+
+
+298
+00:28:20,640 --> 00:28:26,040
+capabilities it allows, and you can even explore the proofs. So the whole proof
+
+
+299
+00:28:26,040 --> 00:28:31,560
+tree. You can go and click through dynamically and explore that. So thank
+
+
+300
+00:28:31,560 --> 00:28:37,960
+you. And that's the QR code for the community group and I have stickers, so
+
+
+301
+00:28:37,960 --> 00:28:42,920
+does Boris. Come find us if you want any of those. Thanks.
+
+
+302
+00:28:42,920 --> 00:28:50,080
+To create one of these, you need to know the public key did for whoever you're
+
+
+303
+00:28:50,080 --> 00:28:55,840
+sending it to. What is the system that gets carried through? How do you discover
+
+
+304
+00:28:55,840 --> 00:29:04,560
+the public keys? So by default, it only supports didkey and didpkh,
+
+
+305
+00:29:04,560 --> 00:29:10,160
+same basic thing, which are the public keys. You can also do, as long as your
+
+
+306
+00:29:10,160 --> 00:29:13,960
+collaborators understand other did methods, you can have other ones that are
+
+
+307
+00:29:13,960 --> 00:29:18,120
+more semantic. So you can give, you know, based on a username, things like that,
+
+
+308
+00:29:18,120 --> 00:29:22,640
+right, in the did method. But yeah, you absolutely need to know who you're
+
+
+309
+00:29:22,640 --> 00:29:26,040
+pointing it at. So this is one of the things that we hope to solve in the
+
+
+310
+00:29:26,040 --> 00:29:28,760
+NameName system. So you could give somebody's email and it would look up
+
+
+311
+00:29:28,760 --> 00:29:32,840
+for you because underneath it's all UCAN. So you'd be able to find, hey, here's
+
+
+312
+00:29:32,840 --> 00:29:39,080
+their claimed did. You can also use things like didDNS. So if somebody says
+
+
+313
+00:29:39,080 --> 00:29:45,600
+I'm, you know, alitatexample.com, it can go and look up from the DNS record,
+
+
+314
+00:29:45,600 --> 00:29:49,800
+there's a text record in there that gives you the did key, for example. Okay,
+
+
+315
+00:29:49,800 --> 00:29:55,080
+one more question. So I presume the proofs need to be public so that other
+
+
+316
+00:29:55,080 --> 00:29:59,680
+people can travel them. Where do those get saved? So they actually don't have to
+
+
+317
+00:29:59,680 --> 00:30:05,800
+be public. You can put it entirely over private channels as well. So one way of
+
+
+318
+00:30:05,800 --> 00:30:09,240
+managing that is you can pack them into a car file and ship them around. And then
+
+
+319
+00:30:09,240 --> 00:30:14,120
+once they're, like, let's say that you're just collaborating between a small
+
+
+320
+00:30:14,120 --> 00:30:17,680
+number of parties. Once they have them, they have them cached, you don't have to
+
+
+321
+00:30:17,680 --> 00:30:25,280
+send them again, right. We have this, well, have this running over IPFS. So they all
+
+
+322
+00:30:25,280 --> 00:30:29,440
+have CIDs, right. You can pass them around as car files, you can put them in HTTP
+
+
+323
+00:30:29,440 --> 00:30:32,720
+headers. There's, in the UCann working group, there's a whole spec on how to do
+
+
+324
+00:30:32,720 --> 00:30:38,720
+this purely in HTTP headers without any decentralized tech at all. Gotcha, thanks.
+
+
+325
+00:30:38,720 --> 00:30:44,320
+Sorry I ask a question at the end of everything, but I am a huge capability
+
+
+326
+00:30:44,320 --> 00:30:49,480
+fan. I mean, one of the things we support at the foundation is the Sprightly
+
+
+327
+00:30:49,480 --> 00:30:55,720
+Institute that's doing OCAPN. And so with kind of, kind of inside baseball thing,
+
+
+328
+00:30:55,720 --> 00:31:02,440
+I'm interested in how you might think of OCAPN, which is a sort of, I guess, an
+
+
+329
+00:31:02,440 --> 00:31:07,800
+RPC kind of protocol that uses capabilities and how these might fit
+
+
+330
+00:31:07,800 --> 00:31:11,680
+together, because I know that's going through a kind of pre-standards
+
+
+331
+00:31:11,680 --> 00:31:17,080
+process. And I guess related to that, you talked a little bit about eventual
+
+
+332
+00:31:17,080 --> 00:31:23,440
+consistency and revocation. Definitely something in sort of Mark Miller's, sort
+
+
+333
+00:31:23,440 --> 00:31:28,680
+of, the historical view of this is you have this sort of proxy, right, where you
+
+
+334
+00:31:28,680 --> 00:31:34,560
+go, I can ask for this permission but it's going through something that
+
+
+335
+00:31:34,560 --> 00:31:40,600
+can kind of mediate in real time whether this should be rejected. And I was
+
+
+336
+00:31:40,600 --> 00:31:44,320
+wondering if that is, is that something that fits into the UCann
+
+
+337
+00:31:44,320 --> 00:31:52,200
+space or is UCann more static than that? Yeah, both fantastic questions. So on
+
+
+338
+00:31:52,200 --> 00:31:56,000
+OCAPN, we're part of this OCAPN standardization process. So this is all
+
+
+339
+00:31:56,000 --> 00:32:01,160
+OCAPN compatible or it will be when that's a finalized spec, right. So this
+
+
+340
+00:32:01,160 --> 00:32:04,720
+will all work together. Something Mark has been very vocal about in that
+
+
+341
+00:32:04,720 --> 00:32:09,400
+process is that it shouldn't, there shouldn't be an OCAPN token. There
+
+
+342
+00:32:09,400 --> 00:32:12,760
+should be a bunch of them that are just different representations of the same
+
+
+343
+00:32:12,760 --> 00:32:25,200
+ideas, right. And so you can, and say ZCAP for example, there's some differences but
+
+
+344
+00:32:25,200 --> 00:32:29,840
+the overlap is quite large and so we can interoperate between those as long as
+
+
+345
+00:32:29,840 --> 00:32:36,320
+both clients understand both, right. The second question was about revocation. So
+
+
+346
+00:32:36,320 --> 00:32:40,200
+you're absolutely right. This actually isn't full-blown, full-blown OCAPs.
+
+
+347
+00:32:40,200 --> 00:32:48,160
+You can bootstrap up into them but this is SPKI or spooky. So there's, I
+
+
+348
+00:32:48,160 --> 00:32:51,240
+think actually in Capabilities Myths Demolished, I think, they have a
+
+
+349
+00:32:51,240 --> 00:32:58,200
+comparison chart that says, you know, how far along this road are you and spooky is
+
+
+350
+00:32:58,200 --> 00:33:05,080
+the step before. So the reason that we need that is everything, at least for our
+
+
+351
+00:33:05,080 --> 00:33:10,600
+use case, has to work offline and be highly cacheable. You can put it into a
+
+
+352
+00:33:10,600 --> 00:33:14,160
+mode, like you could use them in a way where you don't have revocation and you
+
+
+353
+00:33:14,160 --> 00:33:20,400
+have this proxy system which is awesome, but in sort of classic OCAPs you
+
+
+354
+00:33:20,400 --> 00:33:24,880
+have fail-stop. So if that proxy goes down, even if there's a network partition,
+
+
+355
+00:33:24,880 --> 00:33:28,160
+you can't do anything and you always have to make these round-trip network
+
+
+356
+00:33:28,160 --> 00:33:32,040
+requests. One way of looking at UCAN, this is getting a little bit in the weeds, is
+
+
+357
+00:33:32,040 --> 00:33:36,080
+you can think of it almost like a set of instructions, like an AST, that you're
+
+
+358
+00:33:36,080 --> 00:33:41,040
+going to execute when somebody reads the token. To say this is the intention as
+
+
+359
+00:33:41,040 --> 00:33:45,480
+long as there isn't revocation. So it's been interesting talking to people
+
+
+360
+00:33:45,480 --> 00:33:49,760
+like Alan Karp and some others about the differences and we're kind of
+
+
+361
+00:33:49,760 --> 00:33:53,520
+exploring this sort of less-discovered space now that we have some of these
+
+
+362
+00:33:53,520 --> 00:33:58,360
+newer tools versus the last time with the original spooky implementations.
+
+
+363
+00:33:58,360 --> 00:34:05,840
+Firstly, fantastic slides. Could you talk more through the revocation
+
+
+364
+00:34:05,840 --> 00:34:10,920
+process and how that would work? So if I, for example, delegate authority to some
+
+
+365
+00:34:10,920 --> 00:34:15,720
+capabilities to you and you in turn delegate it to someone malicious, how
+
+
+366
+00:34:15,720 --> 00:34:20,040
+would I, so yeah I'm the first link in that tree and I want to revoke access to
+
+
+367
+00:34:20,040 --> 00:34:24,480
+the ones that are marked there, how does that propagate through the entire tree?
+
+
+368
+00:34:24,480 --> 00:34:31,880
+Yeah, fantastic question. So there's a specific format where you say here's my
+
+
+369
+00:34:31,880 --> 00:34:39,800
+DID, here's the token that I'm revoking, and here's a signature over that. You
+
+
+370
+00:34:39,800 --> 00:34:45,160
+can't unrevoke something, so it's a one-way operation, right? And as soon as
+
+
+371
+00:34:45,160 --> 00:34:51,040
+somebody receives that, up until the point that the token is valid for us
+
+
+372
+00:34:51,040 --> 00:34:55,920
+because we have that time expiration, they cache the CID of it and if they see it
+
+
+373
+00:34:55,920 --> 00:35:03,600
+in any proof chain it's not considered a valid proof, right? It doesn't have to,
+
+
+374
+00:35:03,600 --> 00:35:08,160
+it's not that you're revoking the first thing that you delegated, it might be
+
+
+375
+00:35:08,160 --> 00:35:12,080
+something further down in the chain and so you can target anything that you're
+
+
+376
+00:35:12,080 --> 00:35:16,200
+in the proof chain for and say yeah that one down there, like I like this person, I
+
+
+377
+00:35:16,200 --> 00:35:21,440
+like this person, but not them. They can't have this anymore. So I have a question
+
+
+378
+00:35:21,440 --> 00:35:24,080
+which I know many people have been wondering over the course of this
+
+
+379
+00:35:24,080 --> 00:35:31,680
+conference, which is who designs all of your wonderful stickers? That is Bruno.
+
+
+380
+00:35:31,680 --> 00:35:39,800
+We had him on sort of like a sticker retainer basically for a while and we
+
+
+381
+00:35:39,800 --> 00:35:48,120
+eventually just hired him. He's fantastic. Yeah, awesome. Thanks.

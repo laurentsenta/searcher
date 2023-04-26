@@ -1,0 +1,1308 @@
+1
+00:00:00,000 --> 00:00:11,240
+Okay, so my name is Peter, I work at Protocol Apps in the IPDX team, that stands for Interplanetary
+
+
+2
+00:00:11,240 --> 00:00:17,360
+Developer Experience, and our main goal is to improve developer experience within IPsecure's
+
+
+3
+00:00:17,360 --> 00:00:18,360
+team.
+
+
+4
+00:00:18,360 --> 00:00:20,560
+So you might wonder what am I doing here?
+
+
+5
+00:00:20,560 --> 00:00:22,160
+Oh, closer.
+
+
+6
+00:00:22,160 --> 00:00:26,240
+I thought I was being a bit too loud.
+
+
+7
+00:00:26,240 --> 00:00:28,120
+So that's the other way around.
+
+
+8
+00:00:28,120 --> 00:00:36,160
+All right, so one thing that we noticed is that recently a lot more HTTP gateway implementation
+
+
+9
+00:00:36,160 --> 00:00:43,080
+started springing up, and they started taking quite a lot of time from IP stewards to actually
+
+
+10
+00:00:43,080 --> 00:00:45,040
+help with their development.
+
+
+11
+00:00:45,040 --> 00:00:53,500
+So we saw a place for us to help with that, and that was the testing space.
+
+
+12
+00:00:53,500 --> 00:00:58,360
+So first we had to answer the question, what are HTTP gateways?
+
+
+13
+00:00:58,360 --> 00:01:04,400
+And luckily, they are quite well specced out in the IPFS spec, so that was really helpful.
+
+
+14
+00:01:04,400 --> 00:01:13,440
+They are just the HTTP access point to IPFS network, and that was good enough of an explanation
+
+
+15
+00:01:13,440 --> 00:01:15,560
+for us to get started.
+
+
+16
+00:01:15,560 --> 00:01:21,700
+And the things that are currently part of the specification, and things like what does
+
+
+17
+00:01:21,700 --> 00:01:25,320
+it mean to be a path or a trustless gateway?
+
+
+18
+00:01:25,320 --> 00:01:31,340
+What does it mean to implement a DNS link or subdomain features or redirects files?
+
+
+19
+00:01:31,340 --> 00:01:39,720
+So ideally, we'll have a way to test all of those and even more once we expand the spec.
+
+
+20
+00:01:39,720 --> 00:01:46,140
+So the question that we put in front of ourselves is how to ensure that my implementation confirms
+
+
+21
+00:01:46,140 --> 00:01:51,000
+to the specification that we have written down.
+
+
+22
+00:01:51,000 --> 00:01:54,760
+For the time being, the answer was, well, you're on your own.
+
+
+23
+00:01:54,760 --> 00:01:57,800
+You have to implement your own tests.
+
+
+24
+00:01:57,800 --> 00:02:00,200
+And that's what happened in Kuba, for example.
+
+
+25
+00:02:00,200 --> 00:02:06,080
+We did have quite an extensive test suite, but it was impossible to reuse it in any other
+
+
+26
+00:02:06,080 --> 00:02:07,520
+place.
+
+
+27
+00:02:07,520 --> 00:02:12,720
+When we had a new implementation coming up, they would have to do this exact same exercise
+
+
+28
+00:02:12,720 --> 00:02:13,720
+from scratch.
+
+
+29
+00:02:13,720 --> 00:02:18,120
+And that seemed wasteful because we already did this work.
+
+
+30
+00:02:18,120 --> 00:02:26,240
+And in Kuba, we already found plenty of edge cases that might not think of the first time
+
+
+31
+00:02:26,240 --> 00:02:28,760
+they get to writing the test.
+
+
+32
+00:02:28,760 --> 00:02:34,280
+But as we thought more and more about it, we realized that that's not really the only
+
+
+33
+00:02:34,280 --> 00:02:40,680
+question that we like answering, because it might be also useful to make sure that your
+
+
+34
+00:02:40,680 --> 00:02:43,960
+implementation of the gateway confirms to the specification.
+
+
+35
+00:02:43,960 --> 00:02:49,240
+Me as a user, I might be interested in actually confirming it myself, whether what you're
+
+
+36
+00:02:49,240 --> 00:02:50,360
+telling me is true.
+
+
+37
+00:02:50,360 --> 00:02:57,120
+So that's another thing that we do keep in mind when working on the testing tool for
+
+
+38
+00:02:57,120 --> 00:02:58,120
+the gateways.
+
+
+39
+00:02:58,120 --> 00:03:03,260
+And that's how the gateway conformance testing tool came to be.
+
+
+40
+00:03:03,260 --> 00:03:11,640
+And we set one and only one goal for it, which is to ensure compliance with the specification.
+
+
+41
+00:03:11,640 --> 00:03:13,440
+Yay!
+
+
+42
+00:03:13,440 --> 00:03:19,120
+So we knew what we wanted to do, and that was only the easy part of how to do it.
+
+
+43
+00:03:19,120 --> 00:03:29,520
+Luckily, we are dealing with HTTP gateway, so we have some expertise in how to make HTTP
+
+
+44
+00:03:29,520 --> 00:03:31,960
+requests and verify the responses.
+
+
+45
+00:03:31,960 --> 00:03:37,020
+So we thought that's something we can implement.
+
+
+46
+00:03:37,020 --> 00:03:44,340
+So without further ado, let me just show you how a test in our testing tool looks like.
+
+
+47
+00:03:44,340 --> 00:03:48,360
+First of all, the testing tool is written in Go.
+
+
+48
+00:03:48,360 --> 00:03:55,440
+However, we do expect contributions from people coming from many different language ecosystems.
+
+
+49
+00:03:55,440 --> 00:04:01,800
+So when we are writing this tool, we try to keep that in mind and make sure that the way
+
+
+50
+00:04:01,800 --> 00:04:08,760
+we expect people to write the tests in the tool isn't really that language specific.
+
+
+51
+00:04:08,760 --> 00:04:14,220
+We wanted it to be readable to anyone familiar with programming.
+
+
+52
+00:04:14,220 --> 00:04:24,620
+So let's maybe analyze this one particular test case that takes car support in gateways.
+
+
+53
+00:04:24,620 --> 00:04:30,520
+So first of all, we do have static fixtures in our testing tool.
+
+
+54
+00:04:30,520 --> 00:04:40,880
+So that means that we can have a car file, which is our fixture that defines all the
+
+
+55
+00:04:40,880 --> 00:04:45,580
+data that we will be requesting from the gateway.
+
+
+56
+00:04:45,580 --> 00:04:53,660
+And as long as your gateway provides this data, the test should pass.
+
+
+57
+00:04:53,660 --> 00:04:58,960
+What's more, we can reuse this fixture when we write our test case.
+
+
+58
+00:04:58,960 --> 00:05:05,680
+So for example, here, when you look a bit lower, like 22 data, we are not really hardcoding
+
+
+59
+00:05:05,680 --> 00:05:07,240
+CIDs anymore.
+
+
+60
+00:05:07,240 --> 00:05:13,520
+We are just reading the same car file that should be available in your gateway and extracting
+
+
+61
+00:05:13,520 --> 00:05:17,760
+root CID in this case.
+
+
+62
+00:05:17,760 --> 00:05:20,560
+Next part, you just define a name for the test case.
+
+
+63
+00:05:20,560 --> 00:05:25,440
+So that's pretty straightforward, but that's not all of the repository that you get here.
+
+
+64
+00:05:25,440 --> 00:05:33,120
+You can even write more verbose hints associated with each specific test case.
+
+
+65
+00:05:33,120 --> 00:05:42,320
+Also, not only test cases, you can assign hints to any check that you might make for
+
+
+66
+00:05:42,320 --> 00:05:45,400
+the response, and that's really helpful for debugging.
+
+
+67
+00:05:45,400 --> 00:05:50,000
+So when something goes wrong, you not only get the name of the test that failed, but
+
+
+68
+00:05:50,000 --> 00:05:55,600
+also what it was trying to do, a bit more context on that, and also context on the specific
+
+
+69
+00:05:55,600 --> 00:05:57,640
+check.
+
+
+70
+00:05:57,640 --> 00:06:03,720
+For example, here, why are we even expecting the specific content type or specific content
+
+
+71
+00:06:03,720 --> 00:06:04,720
+length?
+
+
+72
+00:06:04,720 --> 00:06:12,900
+And that is really useful when debugging test failures.
+
+
+73
+00:06:12,900 --> 00:06:15,600
+So then we come to the meat of the tests.
+
+
+74
+00:06:15,600 --> 00:06:20,880
+You have to define what kind of requests to the gateway you want to make, so in this part,
+
+
+75
+00:06:20,880 --> 00:06:30,060
+you just specify anything you might need to specify for an HTTP request.
+
+
+76
+00:06:30,060 --> 00:06:33,400
+And finally, you have multiple response validators.
+
+
+77
+00:06:33,400 --> 00:06:38,700
+So here we are validating the status codes and some headers.
+
+
+78
+00:06:38,700 --> 00:06:46,760
+And our goal was to make it sort of read close to how natural language does, so you're making
+
+
+79
+00:06:46,760 --> 00:06:51,800
+a request for a path where at the root CID of our static fixture, we are requesting sub
+
+
+80
+00:06:51,800 --> 00:06:54,240
+dir and ASCII text.
+
+
+81
+00:06:54,240 --> 00:07:01,520
+We make a request, we then accept header for application vnd.ipod.car, and we expect it
+
+
+82
+00:07:01,520 --> 00:07:09,680
+to come back to us with 200 status codes and a content type header and an empty contents
+
+
+83
+00:07:09,680 --> 00:07:12,240
+length header.
+
+
+84
+00:07:12,240 --> 00:07:14,800
+So that was the goal, that's how it looks like.
+
+
+85
+00:07:14,800 --> 00:07:23,920
+And now I'm going to show you how to run it, because the test case itself is not that interesting
+
+
+86
+00:07:23,920 --> 00:07:25,420
+if we can't run it.
+
+
+87
+00:07:25,420 --> 00:07:27,820
+So what do we do first?
+
+
+88
+00:07:27,820 --> 00:07:29,640
+First we have to start our gateway.
+
+
+89
+00:07:29,640 --> 00:07:37,020
+In this case, I'm going to start a Kubo gateway in the offline mode.
+
+
+90
+00:07:37,020 --> 00:07:41,560
+It comes up pretty quickly when it's just a screenshot.
+
+
+91
+00:07:41,560 --> 00:07:49,280
+And it also told us that it's already listening, or it also started a gateway at port 8080.
+
+
+92
+00:07:49,280 --> 00:07:55,920
+That's a really useful information because that's what we are going to need for our test
+
+
+93
+00:07:55,920 --> 00:08:00,320
+tool to know where to make those requests.
+
+
+94
+00:08:00,320 --> 00:08:06,680
+So then, since we're running Kubo gateway in offline mode, it won't be able to get fixtures
+
+
+95
+00:08:06,680 --> 00:08:08,200
+from anywhere on the network.
+
+
+96
+00:08:08,200 --> 00:08:15,200
+We do actually have to explicitly load the fixtures into the offline gateway.
+
+
+97
+00:08:15,200 --> 00:08:20,720
+So we are just using the command that Kubo provides, but it might be different for different
+
+
+98
+00:08:20,720 --> 00:08:23,440
+gateway implementations.
+
+
+99
+00:08:23,440 --> 00:08:25,260
+So that worked as well.
+
+
+100
+00:08:25,260 --> 00:08:31,320
+And finally, we're all set to run the test case.
+
+
+101
+00:08:31,320 --> 00:08:38,760
+The gateway-conformance-testing tool is a CLI tool that comes under the name of gateway-conformance.
+
+
+102
+00:08:38,760 --> 00:08:42,880
+One of the commands it provides is test.
+
+
+103
+00:08:42,880 --> 00:08:48,240
+Then you just have to provide a gateway URL of the gateway that you want to test.
+
+
+104
+00:08:48,240 --> 00:08:51,860
+And here in particular, we're also providing some additional arguments because we only
+
+
+105
+00:08:51,860 --> 00:08:56,840
+want to run a single test rather than all of them.
+
+
+106
+00:08:56,840 --> 00:09:04,640
+Some other arguments that you could provide is specific features that you might want to
+
+
+107
+00:09:04,640 --> 00:09:05,640
+test.
+
+
+108
+00:09:05,640 --> 00:09:11,640
+For example, if you were only interested in testing the subdomain gateway part of the
+
+
+109
+00:09:11,640 --> 00:09:20,980
+spec that's supported by the CLI tool, you could provide it with an argument that says
+
+
+110
+00:09:20,980 --> 00:09:24,720
+only test the subdomain gateway spec.
+
+
+111
+00:09:24,720 --> 00:09:27,580
+But here we're just running one test.
+
+
+112
+00:09:27,580 --> 00:09:29,280
+So let's see what happens.
+
+
+113
+00:09:29,280 --> 00:09:35,160
+And let's open the results in VS Code.
+
+
+114
+00:09:35,160 --> 00:09:38,860
+And it didn't quite work, unfortunately.
+
+
+115
+00:09:38,860 --> 00:09:42,240
+So some things did, but not all of them.
+
+
+116
+00:09:42,240 --> 00:09:47,560
+When we look a little bit more closely at the results, we see that the check for the
+
+
+117
+00:09:47,560 --> 00:09:49,600
+content type header did work.
+
+
+118
+00:09:49,600 --> 00:09:50,600
+So that's cool.
+
+
+119
+00:09:50,600 --> 00:09:56,360
+However, unfortunately, when we are checking the content length header, it blew up.
+
+
+120
+00:09:56,360 --> 00:09:59,920
+So we get a detailed report of what happened.
+
+
+121
+00:09:59,920 --> 00:10:07,200
+First, we get the name of the test within which the failure happened, then the more
+
+
+122
+00:10:07,200 --> 00:10:11,800
+insightful description of the contents of the test.
+
+
+123
+00:10:11,800 --> 00:10:16,120
+And finally, the core of the issue, which is the error that we encountered.
+
+
+124
+00:10:16,120 --> 00:10:23,440
+So here it says that our content length header check was expecting an empty value, but in
+
+
+125
+00:10:23,440 --> 00:10:26,720
+fact it got the actual content length.
+
+
+126
+00:10:26,720 --> 00:10:31,200
+But here we get a helpful tip that we were expecting the response to be streamed, so
+
+
+127
+00:10:31,200 --> 00:10:35,520
+we weren't expecting an exact length in the response.
+
+
+128
+00:10:35,520 --> 00:10:38,360
+So what was going on there?
+
+
+129
+00:10:38,360 --> 00:10:42,400
+So I can tell you that the test itself is correct.
+
+
+130
+00:10:42,400 --> 00:10:44,220
+The spec does make sense.
+
+
+131
+00:10:44,220 --> 00:10:54,560
+And Kubo is implemented as it should really, but as we found out, the HTTP package in the
+
+
+132
+00:10:54,560 --> 00:10:58,600
+code language library always sets content length header.
+
+
+133
+00:10:58,600 --> 00:11:06,440
+So we did trace that with GoFolks, but we didn't hear back about it yet.
+
+
+134
+00:11:06,440 --> 00:11:12,960
+But that's how an example of an error looks like in our testing tool.
+
+
+135
+00:11:12,960 --> 00:11:18,160
+But I wouldn't be myself if I didn't also tell you how to automate this and not have
+
+
+136
+00:11:18,160 --> 00:11:20,360
+to run it by hand.
+
+
+137
+00:11:20,360 --> 00:11:27,280
+So let's get straight into that and analyze the workflow definition for GitHub Action
+
+
+138
+00:11:27,280 --> 00:11:32,440
+that would do that for you on, for example, every PR or every push.
+
+
+139
+00:11:32,440 --> 00:11:33,440
+And it's pretty straightforward.
+
+
+140
+00:11:33,440 --> 00:11:38,320
+Like, we do provide a GitHub Action that lets you download the picture, so all the car files
+
+
+141
+00:11:38,320 --> 00:11:44,000
+that you might want to import to your gateway if you want to run in an offline mode that
+
+
+142
+00:11:44,000 --> 00:11:48,000
+don't get it from the network.
+
+
+143
+00:11:48,000 --> 00:11:51,560
+Then there is the part of starting the gateway, so that's up to each implementation.
+
+
+144
+00:11:51,560 --> 00:11:58,640
+Like, we can't really impose the way in which you should be bringing your gateway up.
+
+
+145
+00:11:58,640 --> 00:12:04,080
+So in this case, we're also starting a Kubo gateway.
+
+
+146
+00:12:04,080 --> 00:12:05,320
+Then importing fixtures.
+
+
+147
+00:12:05,320 --> 00:12:08,320
+So that's also gateway-specific.
+
+
+148
+00:12:08,320 --> 00:12:10,160
+And finally, we're running tests.
+
+
+149
+00:12:10,160 --> 00:12:15,680
+So we do provide another GitHub Actions that's responsible for running the tests.
+
+
+150
+00:12:15,680 --> 00:12:22,320
+It takes, again, just the gateway URL as the argument, but also a couple of fine names
+
+
+151
+00:12:22,320 --> 00:12:24,920
+for reports it can create.
+
+
+152
+00:12:24,920 --> 00:12:29,640
+So it can create report JSON, XML, HTML, and Markdown reports.
+
+
+153
+00:12:29,640 --> 00:12:35,880
+So yeah, whatever you prefer, there is a report for that.
+
+
+154
+00:12:35,880 --> 00:12:38,000
+They have slightly different formats.
+
+
+155
+00:12:38,000 --> 00:12:42,920
+All may be useful, as we're going to look in a second into two.
+
+
+156
+00:12:42,920 --> 00:12:45,880
+But it also takes additional arguments.
+
+
+157
+00:12:45,880 --> 00:12:51,880
+So here, for example, in case of Kubo, we are skipping this particular test case, the
+
+
+158
+00:12:51,880 --> 00:12:58,040
+context-length header check in the gateway car test, because we know there is no way
+
+
+159
+00:12:58,040 --> 00:13:02,480
+it's going to work, but we would like all the other testing to happen.
+
+
+160
+00:13:02,480 --> 00:13:06,600
+So we can request that from our testing tool.
+
+
+161
+00:13:06,600 --> 00:13:11,680
+And finally, we just share the results by uploading them to artifacts and setting the
+
+
+162
+00:13:11,680 --> 00:13:13,880
+summary for the job.
+
+
+163
+00:13:13,880 --> 00:13:17,400
+So the summary looks a little bit like that for a success case.
+
+
+164
+00:13:17,400 --> 00:13:23,120
+It just creates a summary of how many tests run, how many were skipped, and that's all.
+
+
+165
+00:13:23,120 --> 00:13:30,920
+If there were failures, it would show inline reports for those failures.
+
+
+166
+00:13:30,920 --> 00:13:33,680
+So you wouldn't even have to download anything.
+
+
+167
+00:13:33,680 --> 00:13:38,640
+You could just inspect it directly there in the job, which is quite nice.
+
+
+168
+00:13:38,640 --> 00:13:45,880
+But if you want a bit more details, we also the HTML reports might be your thing, because
+
+
+169
+00:13:45,880 --> 00:13:52,700
+here you can click through everything, get more specific data on what kind of outputs
+
+
+170
+00:13:52,700 --> 00:13:58,560
+each test case produced, how long it took, when it started, when it finished, what exactly
+
+
+171
+00:13:58,560 --> 00:14:00,960
+was run.
+
+
+172
+00:14:00,960 --> 00:14:02,680
+So where are we right now?
+
+
+173
+00:14:02,680 --> 00:14:05,800
+We are already running this testing tool in three projects.
+
+
+174
+00:14:05,800 --> 00:14:08,000
+We are testing Kubo gateway.
+
+
+175
+00:14:08,000 --> 00:14:12,040
+We are testing car gateway that lives in the Boxer repository.
+
+
+176
+00:14:12,040 --> 00:14:17,080
+And we're also running this on PRs in Bifrost gateway.
+
+
+177
+00:14:17,080 --> 00:14:23,800
+So for a project that's quite young, that's pretty cool that we're already there and already
+
+
+178
+00:14:23,800 --> 00:14:26,760
+helping developers.
+
+
+179
+00:14:26,760 --> 00:14:33,320
+We purchased around 30% of the tests that currently live in Kubo to the new testing
+
+
+180
+00:14:33,320 --> 00:14:38,640
+tool, but we aim to get to 100% at some point.
+
+
+181
+00:14:38,640 --> 00:14:46,400
+We don't have a date set, but we're making quite good progress on these fronts.
+
+
+182
+00:14:46,400 --> 00:14:53,360
+So what's next for us apart from getting to migrating 100% of the tests from Kubo to the
+
+
+183
+00:14:53,360 --> 00:14:54,360
+new testing tool?
+
+
+184
+00:14:54,360 --> 00:14:58,640
+We'd also like to make sure that we do cover the entire spec.
+
+
+185
+00:14:58,640 --> 00:15:05,800
+We haven't really written that out yet, and so can't tell you exactly what it entails
+
+
+186
+00:15:05,800 --> 00:15:11,960
+and how long it's going to take, but that is our overarching goal.
+
+
+187
+00:15:11,960 --> 00:15:17,760
+We think it would also be amazing if we could integrate more closely with the spec contribution
+
+
+188
+00:15:17,760 --> 00:15:19,280
+process.
+
+
+189
+00:15:19,280 --> 00:15:26,300
+So think of like when you propose a new spec, it will be great if at the same time you could
+
+
+190
+00:15:26,300 --> 00:15:31,200
+write tests for it, maybe some small implementation of them.
+
+
+191
+00:15:31,200 --> 00:15:35,440
+That would give everyone more context about what the change is really about.
+
+
+192
+00:15:35,440 --> 00:15:36,760
+Does it actually work?
+
+
+193
+00:15:36,760 --> 00:15:39,020
+Is it feasible to implement?
+
+
+194
+00:15:39,020 --> 00:15:42,320
+So that's something we do have in mind.
+
+
+195
+00:15:42,320 --> 00:15:49,600
+And a little bit closer to today, we are also running a Gateway Conformance Testing Workshop
+
+
+196
+00:15:49,600 --> 00:15:51,920
+on Wednesday.
+
+
+197
+00:15:51,920 --> 00:15:56,480
+It's mainly targeted at Kubo maintainers, but if you're interested in testing out the
+
+
+198
+00:15:56,480 --> 00:16:02,680
+tool and seeing how implementing new tests works, we really want feedback.
+
+
+199
+00:16:02,680 --> 00:16:04,160
+So please come.
+
+
+200
+00:16:04,160 --> 00:16:10,760
+It's going to be, we won't give you that much instructions in this workshop because we want
+
+
+201
+00:16:10,760 --> 00:16:18,560
+to see how developers react to being presented with it, but we're going to be there to gather
+
+
+202
+00:16:18,560 --> 00:16:20,640
+feedback and help you along the way.
+
+
+203
+00:16:20,640 --> 00:16:23,160
+So it should be fun.
+
+
+204
+00:16:23,160 --> 00:16:27,920
+And also one more thing that me and Russell got to talking, we think it would be really
+
+
+205
+00:16:27,920 --> 00:16:36,880
+cool if we could adapt it somehow to be able to test also the Service Worker Gateway, but
+
+
+206
+00:16:36,880 --> 00:16:41,200
+we're not there just yet.
+
+
+207
+00:16:41,200 --> 00:16:42,200
+And that's it.
+
+
+208
+00:16:42,200 --> 00:16:43,200
+Here is the repo.
+
+
+209
+00:16:43,200 --> 00:16:47,760
+It's ipfs.gateway.conformance.
+
+
+210
+00:16:47,760 --> 00:16:56,480
+Thank you.
+
+
+211
+00:16:56,480 --> 00:17:00,160
+So how many bugs have you found?
+
+
+212
+00:17:00,160 --> 00:17:04,920
+One in go, so that's one.
+
+
+213
+00:17:04,920 --> 00:17:06,760
+Definitely a couple already.
+
+
+214
+00:17:06,760 --> 00:17:15,440
+Laura would be better suited to answer that because he was closer to actually to the work
+
+
+215
+00:17:15,440 --> 00:17:21,120
+of migrating the test from Kubo to our new testing tool.
+
+
+216
+00:17:21,120 --> 00:17:28,200
+We definitely seen at least a dozen of cases where we're in Kubo tests.
+
+
+217
+00:17:28,200 --> 00:17:32,040
+We are actually copy pasting the same tests and changing the description of the test,
+
+
+218
+00:17:32,040 --> 00:17:33,920
+but not really what it was doing.
+
+
+219
+00:17:33,920 --> 00:17:39,920
+So that's another area of being tested that we already discovered.
+
+
+220
+00:17:39,920 --> 00:17:49,400
+But even for that, it's been beneficial to go through this work and have a more structured
+
+
+221
+00:17:49,400 --> 00:17:54,800
+way to write the test than through Bash and Sharness.
+
+
+222
+00:17:54,800 --> 00:17:55,800
+Cool.
+
+
+223
+00:17:55,800 --> 00:18:01,520
+And is there thoughts on adding randomness to the tests as well?
+
+
+224
+00:18:01,520 --> 00:18:04,880
+Adding randomness or generating random test cases?
+
+
+225
+00:18:04,880 --> 00:18:06,600
+Not yet.
+
+
+226
+00:18:06,600 --> 00:18:07,600
+We didn't get it.
+
+
+227
+00:18:07,600 --> 00:18:13,340
+So right now we do focus on trying to make sure that we don't lose any of the expertise
+
+
+228
+00:18:13,340 --> 00:18:19,360
+that we built up in Kubo testing suite and we want to preserve it in the new testing.
+
+
+229
+00:18:19,360 --> 00:18:30,120
+So when it comes to development or new novel ideas for testing, we'll get to that after.
+
+
+230
+00:18:30,120 --> 00:18:33,720
+I know Laurent is not here, but I had a conversation about this with him.
+
+
+231
+00:18:33,720 --> 00:18:39,760
+So maybe like channeling Laurent is that he has a, I think he has a proof of concept where
+
+
+232
+00:18:39,760 --> 00:18:49,840
+he's testing false positives by mutating a percentage of responses, introducing random
+
+
+233
+00:18:49,840 --> 00:18:56,560
+bytes to headers or bodies just to make sure we don't have tests which always pass.
+
+
+234
+00:18:56,560 --> 00:19:02,800
+And that's been the bane of existence in Kubo because for a while we had, oh, we have everything
+
+
+235
+00:19:02,800 --> 00:19:09,040
+passing, but that someone forgot to add like a double ampersand somewhere in the Bash.
+
+
+236
+00:19:09,040 --> 00:19:11,200
+And it was always passing.
+
+
+237
+00:19:11,200 --> 00:19:18,160
+So the killer feature of this test suite is that we will know when it's actually, where's
+
+
+238
+00:19:18,160 --> 00:19:19,320
+this regression?
+
+
+239
+00:19:19,320 --> 00:19:22,040
+It will be like self-testing itself.
+
+
+240
+00:19:22,040 --> 00:19:24,560
+And I have like an actual question for myself.
+
+
+241
+00:19:24,560 --> 00:19:30,320
+But before you begin, I just want to ask that, I did forget about that, but it's really clever
+
+
+242
+00:19:30,320 --> 00:19:36,760
+that what Laurent came up with, like basically generates like random payloads for HTTP requests.
+
+
+243
+00:19:36,760 --> 00:19:44,240
+And then we run like each test case with this random payloads couple of times.
+
+
+244
+00:19:44,240 --> 00:19:50,360
+And if it passes on all the locations, then we really hope that something's coming from
+
+
+245
+00:19:50,360 --> 00:19:52,240
+it because we are not testing anything.
+
+
+246
+00:19:52,240 --> 00:19:53,240
+Yeah.
+
+
+247
+00:19:53,240 --> 00:19:54,280
+You expect, you know, it should fail.
+
+
+248
+00:19:54,280 --> 00:19:56,520
+If it passes, you know, there's something wrong with the tests.
+
+
+249
+00:19:56,520 --> 00:19:58,720
+And that's like the nice inversion of this.
+
+
+250
+00:19:58,720 --> 00:19:59,720
+Run your tests twice.
+
+
+251
+00:19:59,720 --> 00:20:00,720
+I should like test twice.
+
+
+252
+00:20:00,720 --> 00:20:01,720
+Yeah.
+
+
+253
+00:20:01,720 --> 00:20:02,720
+Yeah.
+
+
+254
+00:20:02,720 --> 00:20:03,720
+Yeah.
+
+
+255
+00:20:03,720 --> 00:20:04,720
+Yeah.
+
+
+256
+00:20:04,720 --> 00:20:05,720
+Yeah.
+
+
+257
+00:20:05,720 --> 00:20:06,720
+Yeah.
+
+
+258
+00:20:00,000 --> 00:20:30,000
+I have a question because I really like your slide that you suggested that this is not test just for implementers, but also for users. There may be like multiple commercial or non commercial gateways that you may trust. They may give you like a free tier, but then you maybe you want to verify what's the value of the product, right? But then I think another demographic that could benefit from this is developers who wants to build on IPFS. Maybe they want to use the IPFS. Maybe they want to use the IPFS.
+
+
+259
+00:20:30,000 --> 00:21:00,000
+Maybe they want to integrate a gateway library in a specific language into their code. Did you have any like initial thoughts about what should be the approach? I understand that this is like a tool that people building a library could run on their CI, but is there like the idea of creating something like web platform test website where project libraries and projects could sign in to show that they are conformant?
+
+
+260
+00:21:00,000 --> 00:21:07,740
+As like a marketing strategy for developers? Yeah, definitely. And that's also why we're working closely with Robin on that.
+
+
+261
+00:21:07,740 --> 00:21:18,140
+So he's the perfect person to lead us through how to make it a reality because of his previous work with web platform test.
+
+
+262
+00:21:18,140 --> 00:21:31,260
+So yeah, that's definitely a plan at some point in the future, but not quite yet.

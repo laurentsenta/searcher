@@ -1,0 +1,123 @@
+1
+00:00:00,000 --> 00:00:11,000
+Hi everyone! I see a lot of faces from last year, a lot of new faces, some faces from
+
+
+2
+00:00:11,000 --> 00:00:18,960
+IPFS Camp 2022, but we're here to announce the dates and the location for IPFS Camp 2023,
+
+
+3
+00:00:18,960 --> 00:00:29,560
+which is going to be November 3rd through the 5th in Bangalore, India.
+
+
+4
+00:00:29,560 --> 00:00:34,960
+We're super excited, and if you take a photo of this QR code, it'll link you to our pre-registration
+
+
+5
+00:00:34,960 --> 00:00:39,960
+page along with some other links in there. So go ahead and pre-register to stay up to
+
+
+6
+00:00:39,960 --> 00:00:46,560
+date on all the news and updates. Yay! Super exciting! Nikki's going to talk a bit more
+
+
+7
+00:00:46,560 --> 00:00:47,560
+about India.
+
+
+8
+00:00:47,560 --> 00:00:55,280
+Hi everyone, I'm Nikki, I lead the Hackathons program at Protocol Labs, and also coordinate
+
+
+9
+00:00:55,280 --> 00:01:00,800
+India-related initiatives. I just wanted to give you a little bit of a background on why
+
+
+10
+00:01:00,800 --> 00:01:09,000
+India for IPFS Camp. So according to GitHub, 2.5 million out of the 20 million new developers
+
+
+11
+00:01:09,000 --> 00:01:19,560
+they got in 2022, 2.5 million are from India. And by 2025, 10 million devs would be from
+
+
+12
+00:01:19,560 --> 00:01:28,200
+India. And in one to two years, the highest number of web 3.0 devs globally would be from
+
+
+13
+00:01:28,200 --> 00:01:35,280
+here. It's a country with 1.4 billion in population, and 60% of them own a smartphone, so that's
+
+
+14
+00:01:35,280 --> 00:01:47,400
+like a huge audience that is available to scale IPFS and distributed web.
+
+
+15
+00:01:47,400 --> 00:01:55,240
+We also had an amazing experience last year at India Blockchain Week in 2022. We did Phil
+
+
+16
+00:01:55,240 --> 00:02:01,200
+Bangalore, which had 1,300 attendees. We have a very strong community, Hudlo1, which is
+
+
+17
+00:02:01,200 --> 00:02:06,720
+a PL network company built on top of Lippie2P and Filecoin. They organized Phil Bangalore
+
+
+18
+00:02:06,720 --> 00:02:14,520
+for us, 1,300 attendees, all of them really strong developers. And we also were a big
+
+
+19
+00:02:14,520 --> 00:02:21,360
+part of ETH India, which is a hackathon by ETH Global. And the India hackathon was the
+
+
+20
+00:02:21,360 --> 00:02:27,240
+biggest hackathon they had done till date, with 1,750 hackers, 2,100 total attendees,
+
+
+21
+00:02:27,240 --> 00:02:33,960
+and 450 projects were built in those two days. So yeah, we got great energy, and India is
+
+
+22
+00:02:33,960 --> 00:02:41,000
+like full of developers who want to solve really hard problems in networking. And yeah,
+
+
+23
+00:02:41,000 --> 00:02:45,440
+I look forward to doing a few initiatives with all of you before we do IPFS camp so
+
+
+24
+00:02:45,440 --> 00:02:50,120
+we can get the India community going. Please come find me and talk to me if you would be
+
+
+25
+00:02:50,120 --> 00:03:11,880
+interested. Otherwise, I will definitely come find you. Thank you.

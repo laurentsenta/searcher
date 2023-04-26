@@ -1,0 +1,2243 @@
+1
+00:00:00,000 --> 00:00:10,720
+So to just kick this off, I'm going to kind of introduce what the panel is, and then I'm
+
+
+2
+00:00:10,720 --> 00:00:15,360
+actually probably going to, Brendan, if I might ask you to speak first, since Mood the
+
+
+3
+00:00:15,360 --> 00:00:20,000
+Bytes was originally your undertaking.
+
+
+4
+00:00:20,000 --> 00:00:30,040
+So in November, I think as I mentioned in the initial track, we formed a group to make
+
+
+5
+00:00:30,040 --> 00:00:33,840
+data transfer awesome in IPFS.
+
+
+6
+00:00:33,840 --> 00:00:36,760
+It was called the Mood the Bytes Working Group.
+
+
+7
+00:00:36,760 --> 00:00:43,880
+It was originally set up with a goal of replacing bitswap as the default protocol in four months.
+
+
+8
+00:00:43,880 --> 00:00:45,960
+Is that accurate?
+
+
+9
+00:00:45,960 --> 00:00:46,960
+That was the original goal?
+
+
+10
+00:00:46,960 --> 00:00:47,960
+Yes.
+
+
+11
+00:00:47,960 --> 00:00:49,160
+Okay, cool.
+
+
+12
+00:00:49,160 --> 00:00:52,840
+So we've been running this group now for a few months.
+
+
+13
+00:00:52,840 --> 00:00:55,480
+We've actually gotten a lot done.
+
+
+14
+00:00:55,480 --> 00:01:02,280
+There's been some amazing protocols demoed, built, lots of stuff.
+
+
+15
+00:01:02,280 --> 00:01:08,400
+But we haven't actually, there hasn't been a bitswap replacement across the board yet,
+
+
+16
+00:01:08,400 --> 00:01:12,840
+so I want to kind of just reflect on where we're at and what the process was like and
+
+
+17
+00:01:12,840 --> 00:01:14,080
+where we're going next.
+
+
+18
+00:01:14,080 --> 00:01:20,680
+So I guess I would start, and I'd love to hear, like, Brendan, from you, like, what
+
+
+19
+00:01:20,680 --> 00:01:25,360
+made you want to start this group?
+
+
+20
+00:01:25,360 --> 00:01:27,660
+What was it like running it?
+
+
+21
+00:01:27,660 --> 00:01:33,280
+What do you feel like went well and what maybe do you think we could improve upon?
+
+
+22
+00:01:33,280 --> 00:01:35,840
+So yeah, is that a good intro?
+
+
+23
+00:01:35,840 --> 00:01:36,840
+Take it whatever direction you want.
+
+
+24
+00:01:36,840 --> 00:01:37,840
+It's a great intro.
+
+
+25
+00:01:37,840 --> 00:01:38,840
+Totally.
+
+
+26
+00:01:38,840 --> 00:01:39,840
+Thanks, Anna.
+
+
+27
+00:01:39,840 --> 00:01:40,840
+Hi, everybody.
+
+
+28
+00:01:40,840 --> 00:01:42,320
+It's nice to see all of you.
+
+
+29
+00:01:42,320 --> 00:01:46,720
+I deeply miss all of you, and I really wish I could be there in person.
+
+
+30
+00:01:46,720 --> 00:01:47,720
+So hopefully you can hear me.
+
+
+31
+00:01:47,720 --> 00:01:49,680
+If you can't, Anna, interrupt me.
+
+
+32
+00:01:49,680 --> 00:01:53,560
+But yeah, move the bytes.
+
+
+33
+00:01:53,560 --> 00:01:56,320
+So I don't know that folks know the origin story behind this.
+
+
+34
+00:01:56,320 --> 00:02:03,640
+We, Dig was about to go give a talk at IPFS camp, and I was standing next to Carson Farmer
+
+
+35
+00:02:03,640 --> 00:02:07,000
+from Textile, and we were like, you know what?
+
+
+36
+00:02:07,000 --> 00:02:08,360
+We should stop complaining about this.
+
+
+37
+00:02:08,360 --> 00:02:11,000
+And just like a lot, a number of us are working on this.
+
+
+38
+00:02:11,000 --> 00:02:14,920
+And so we went around and just like quickly took a poll of a number of the folks who are
+
+
+39
+00:02:14,920 --> 00:02:15,920
+in the room.
+
+
+40
+00:02:15,920 --> 00:02:20,440
+I'm like, hey, would you join this working group if we made one to like try and do something
+
+
+41
+00:02:20,440 --> 00:02:23,480
+about our data transfer story?
+
+
+42
+00:02:23,480 --> 00:02:27,360
+And I believe we talked to some folks at DAG House, some folks at Vision, some folks at
+
+
+43
+00:02:27,360 --> 00:02:31,900
+definitely a bunch of PL teams, folks like in multiple teams at PL.
+
+
+44
+00:02:31,900 --> 00:02:33,800
+And everyone's like, yeah, let's do it.
+
+
+45
+00:02:33,800 --> 00:02:34,800
+Let's go working group.
+
+
+46
+00:02:34,800 --> 00:02:41,120
+And so we jammed a slide in and named it move the bytes in the like sort of 20 minutes before
+
+
+47
+00:02:41,120 --> 00:02:43,680
+Dig went on stage and said, okay, cool, let's do it.
+
+
+48
+00:02:43,680 --> 00:02:48,800
+And then we actually had the first meeting, I think that Sunday, and just at IPFS camp,
+
+
+49
+00:02:48,800 --> 00:02:52,320
+just to say, hey, can we gather some requirements to understand what this was?
+
+
+50
+00:02:52,320 --> 00:02:58,480
+And really, it definitely like from the get go, I was like, very fired up to try and make
+
+
+51
+00:02:58,480 --> 00:03:04,920
+a major community contribution in the form of getting us all to work together.
+
+
+52
+00:03:04,920 --> 00:03:08,080
+Because I think I caught a little bit of Philip's talk.
+
+
+53
+00:03:08,080 --> 00:03:11,600
+We have a lot of data transfer protocols, we have a lot of knowledge in our community
+
+
+54
+00:03:11,600 --> 00:03:14,480
+around how to move bytes around.
+
+
+55
+00:03:14,480 --> 00:03:18,400
+And it just seemed a lot of us have sort of like openly mused that like, it's kind of
+
+
+56
+00:03:18,400 --> 00:03:21,280
+tragic that we're working on disparate things.
+
+
+57
+00:03:21,280 --> 00:03:26,580
+Why don't we try and coordinate and work together and build one thing or fewer things.
+
+
+58
+00:03:26,580 --> 00:03:28,840
+And so we started with the bytes.
+
+
+59
+00:03:28,840 --> 00:03:34,840
+And we had numerous meetings and it became very quickly apparent that it was going to
+
+
+60
+00:03:34,840 --> 00:03:37,480
+be really hard to actually ship code.
+
+
+61
+00:03:37,480 --> 00:03:40,920
+Like I basically just like threw together a timeline of like, cool, we're gonna and
+
+
+62
+00:03:40,920 --> 00:03:44,520
+like, try something more experimental with the working group thing.
+
+
+63
+00:03:44,520 --> 00:03:48,200
+Mainly because in other working groups, we'd sort of gotten this feedback that like, we
+
+
+64
+00:03:48,200 --> 00:03:49,200
+don't always get stuff done.
+
+
+65
+00:03:49,200 --> 00:03:50,560
+Like, what is the value of this working group?
+
+
+66
+00:03:50,560 --> 00:03:54,400
+And if we're going to ask people to meet every two weeks and commit time to this, can we
+
+
+67
+00:03:54,400 --> 00:03:55,680
+make sure that they get something out of it?
+
+
+68
+00:03:55,680 --> 00:04:00,440
+And the thing I really wanted out of it was like better working code.
+
+
+69
+00:04:00,440 --> 00:04:03,520
+And so that was the first couple of meetings, we sort of had this timeline that I kept posting
+
+
+70
+00:04:03,520 --> 00:04:06,440
+up and like, cool, we're going to evaluate different options, we're going to go to like
+
+
+71
+00:04:06,440 --> 00:04:08,240
+an implementation phase.
+
+
+72
+00:04:08,240 --> 00:04:12,720
+And then we'll and then we'll choose a protocol and use that to be a replacement for bit swap.
+
+
+73
+00:04:12,720 --> 00:04:15,160
+And that kind of got softened and softened and softened over time.
+
+
+74
+00:04:15,160 --> 00:04:23,400
+And really, that was you could see that as like, not accomplishing our goal.
+
+
+75
+00:04:23,400 --> 00:04:28,480
+But you could also see that as just like, that was sort of the needs of the community
+
+
+76
+00:04:28,480 --> 00:04:33,560
+emerging at the same time, I think would be another narrative, where what I think we ended
+
+
+77
+00:04:33,560 --> 00:04:39,000
+up with in Move the Bytes was a really nice place to do knowledge share outs on work that's
+
+
+78
+00:04:39,000 --> 00:04:40,200
+been happening to date.
+
+
+79
+00:04:40,200 --> 00:04:47,560
+And I'm actually quite proud of the videos, like the recordings from those meetings, and
+
+
+80
+00:04:47,560 --> 00:04:52,480
+the presentations that everybody gave, I thought we created a space for folks to really show
+
+
+81
+00:04:52,480 --> 00:04:54,160
+some really interesting stuff.
+
+
+82
+00:04:54,160 --> 00:04:59,320
+And I personally have been like, affected by numerous talks given by numerous folks
+
+
+83
+00:04:59,320 --> 00:05:02,520
+in those working group calls.
+
+
+84
+00:05:02,520 --> 00:05:05,480
+And so yeah, the original purpose was like, heck, yeah, we're all gonna work together,
+
+
+85
+00:05:05,480 --> 00:05:07,120
+we're gonna ship some code kumbaya.
+
+
+86
+00:05:07,120 --> 00:05:11,160
+And the like, ending spot was like, you know what, maybe we should just have some space
+
+
+87
+00:05:11,160 --> 00:05:13,880
+to listen to each other and be influenced by each other.
+
+
+88
+00:05:13,880 --> 00:05:17,280
+I don't know if that's good or bad, but that seems to be what happened.
+
+
+89
+00:05:17,280 --> 00:05:20,240
+And hopefully, that's like a nice summary of where we ended up.
+
+
+90
+00:05:20,240 --> 00:05:25,400
+And I'm gonna stop rambling now, but does that feel like it tees things up, Hannah?
+
+
+91
+00:05:25,400 --> 00:05:27,840
+That totally tees things up.
+
+
+92
+00:05:27,840 --> 00:05:37,320
+So I think I'm gonna reflect for a couple minutes on my own experience of Move the Bytes.
+
+
+93
+00:05:37,320 --> 00:05:42,480
+And then Martin Seaman from the LibP2P team is gonna do a couple minutes.
+
+
+94
+00:05:42,480 --> 00:05:48,160
+And then the remainder of the panel is not a panel, it's just a discussion, particularly
+
+
+95
+00:05:48,160 --> 00:05:53,200
+whether you were in the group or not, feel free to contribute your reflections.
+
+
+96
+00:05:53,200 --> 00:05:54,520
+And we'll see where it goes.
+
+
+97
+00:05:54,520 --> 00:05:59,480
+I'm not gonna, this is a sort of like a retro, but not like I'm gonna have like a pluses
+
+
+98
+00:05:59,480 --> 00:06:03,080
+and deltas sheet going and we're not gonna have, yeah.
+
+
+99
+00:06:03,080 --> 00:06:05,640
+So we'll just see what we learn.
+
+
+100
+00:06:05,640 --> 00:06:11,760
+Yeah, so my own experience, sorry.
+
+
+101
+00:06:11,760 --> 00:06:16,120
+It's hard to start without mentioning that my first experience of Move the Bytes was
+
+
+102
+00:06:16,120 --> 00:06:20,880
+I was running said data transfer track and I did not have the information that the Move
+
+
+103
+00:06:20,880 --> 00:06:22,880
+the Bytes group was going to be announced.
+
+
+104
+00:06:22,880 --> 00:06:29,360
+And so it was a surprise to me, which was really exciting though, because it was sort
+
+
+105
+00:06:29,360 --> 00:06:34,680
+of totally aligned with what I thought needed to happen, was to get these different groups
+
+
+106
+00:06:34,680 --> 00:06:38,520
+working together.
+
+
+107
+00:06:38,520 --> 00:06:44,920
+And I also from the beginning was a little skeptical of the four months around, let's
+
+
+108
+00:06:44,920 --> 00:06:49,000
+build a protocol in four months together that replaces BitSwap.
+
+
+109
+00:06:49,000 --> 00:06:56,640
+And I think part of the reason that didn't happen is I think we actually revealed some
+
+
+110
+00:06:56,640 --> 00:07:01,120
+things that were inherent problems in an endeavor like that.
+
+
+111
+00:07:01,120 --> 00:07:04,360
+And I think that in that, that's not actually a fault.
+
+
+112
+00:07:04,360 --> 00:07:10,440
+That doesn't, again to like Brendan's point, that actually was a strength of the process
+
+
+113
+00:07:10,440 --> 00:07:15,800
+as opposed to like, oh, we didn't replace BitSwap, which at the end of the day isn't
+
+
+114
+00:07:15,800 --> 00:07:18,560
+probably the most important goal.
+
+
+115
+00:07:18,560 --> 00:07:25,320
+I think we really, some things that I saw coming out is that people's, similar to the
+
+
+116
+00:07:25,320 --> 00:07:30,480
+talk that Philip just gave, like people's use cases dictate how they want to move data
+
+
+117
+00:07:30,480 --> 00:07:37,040
+to an extent that makes it hard to have a single mega protocol.
+
+
+118
+00:07:37,040 --> 00:07:42,160
+And we quickly came up against some people really wanted to just move blocks and other
+
+
+119
+00:07:42,160 --> 00:07:46,000
+people had other needs.
+
+
+120
+00:07:46,000 --> 00:07:53,440
+And I think that, I think it was useful to start to identify all the different concerns
+
+
+121
+00:07:53,440 --> 00:07:58,200
+that kind of come out around data transfer that aren't just like, how do we technically
+
+
+122
+00:07:58,200 --> 00:08:02,800
+move this data quickest?
+
+
+123
+00:08:02,800 --> 00:08:08,400
+The other thing that I think is challenging about, I don't think this is really a solved
+
+
+124
+00:08:08,400 --> 00:08:14,120
+problem in our ecosystem, but how do we work together across teams where teams are actually
+
+
+125
+00:08:14,120 --> 00:08:16,320
+potentially different companies?
+
+
+126
+00:08:16,320 --> 00:08:20,480
+It's hard enough within a large, different teams in a large organization like Protocol
+
+
+127
+00:08:20,480 --> 00:08:26,520
+Labs, but we have here truly a network where many of the teams are their own entities.
+
+
+128
+00:08:26,520 --> 00:08:30,480
+And it's tricky because everyone has their priority list in a work stream and a manager
+
+
+129
+00:08:30,480 --> 00:08:34,680
+who has said, these are the things you've got to get done.
+
+
+130
+00:08:34,680 --> 00:08:41,320
+And it can be very, it's not 100% clear how to mix that up across organizations.
+
+
+131
+00:08:41,320 --> 00:08:42,560
+So I thought that was really interesting.
+
+
+132
+00:08:42,560 --> 00:08:48,560
+I thought, again, that Brendan, you're completely right, the things that I learned just watching
+
+
+133
+00:08:48,560 --> 00:08:55,960
+people talk about what they're doing was so, so, like enlightening and I've been working
+
+
+134
+00:08:55,960 --> 00:08:59,160
+on this stuff for like four years.
+
+
+135
+00:08:59,160 --> 00:09:03,440
+It's new ideas, new techniques.
+
+
+136
+00:09:03,440 --> 00:09:07,520
+It's fascinating to realize how much people actually are reading each other's code and
+
+
+137
+00:09:07,520 --> 00:09:12,600
+trying to figure out what we're doing and that it's nicer when we actually explain it
+
+
+138
+00:09:12,600 --> 00:09:14,320
+to each other.
+
+
+139
+00:09:14,320 --> 00:09:17,160
+So I thought that was really amazing.
+
+
+140
+00:09:17,160 --> 00:09:22,200
+I hope that when the question of what are we going to, are we going to continue to move
+
+
+141
+00:09:22,200 --> 00:09:28,640
+the bytes, I'm not sure we're going to have it run indefinitely, but I do hope that maybe
+
+
+142
+00:09:28,640 --> 00:09:35,160
+as needed, maybe we need to have these sorts of knowledge shares because it was quite cool.
+
+
+143
+00:09:35,160 --> 00:09:38,760
+Yeah, that was my experience of it.
+
+
+144
+00:09:38,760 --> 00:09:41,560
+I want to hear from Martin.
+
+
+145
+00:09:41,560 --> 00:09:43,720
+How did you get involved?
+
+
+146
+00:09:43,720 --> 00:09:46,040
+What did you think of what was produced?
+
+
+147
+00:09:46,040 --> 00:09:47,040
+Yeah.
+
+
+148
+00:09:47,040 --> 00:09:54,200
+I was there in Lisbon and we had this big meeting around the table with Juan and everyone
+
+
+149
+00:09:54,200 --> 00:09:57,480
+and we didn't really know what we were doing.
+
+
+150
+00:09:57,480 --> 00:10:06,240
+We were just collecting this list of requirements, like what should the new protocol do?
+
+
+151
+00:10:06,240 --> 00:10:11,040
+One thing I was very happy about to see was that a lot of people were advocating for making
+
+
+152
+00:10:11,040 --> 00:10:18,200
+this HTTP compatible just because there's, that's one thing I'm excited about because
+
+
+153
+00:10:18,200 --> 00:10:27,040
+there's a lot of existing infrastructure around for HTTP, right, with load balancing and caching.
+
+
+154
+00:10:27,040 --> 00:10:34,280
+So building something that works both on top of what we have in LibP2P but can also be
+
+
+155
+00:10:34,280 --> 00:10:42,600
+applied on top of HTTP was very encouraging for me and I made a proposal for that later
+
+
+156
+00:10:42,600 --> 00:10:46,400
+during the working group.
+
+
+157
+00:10:46,400 --> 00:10:53,000
+Another thing I found really interesting in the discussions that we had in the meetings
+
+
+158
+00:10:53,000 --> 00:11:00,160
+was that we tried to come up with a benchmarking solution and we said like, okay, we now have
+
+
+159
+00:11:00,160 --> 00:11:05,120
+like BitSwap and we benchmark this against the other protocols.
+
+
+160
+00:11:05,120 --> 00:11:12,000
+And I mean this is already a little bit problematic because you're not benchmarking a protocol,
+
+
+161
+00:11:12,000 --> 00:11:18,120
+you're benchmarking an implementation and that implementation might not be the most
+
+
+162
+00:11:18,120 --> 00:11:26,040
+performant implementation of that protocol, but then the interesting thing was, I didn't
+
+
+163
+00:11:26,040 --> 00:11:33,360
+have the impression that we could agree on what the data should look like that we are
+
+
+164
+00:11:33,360 --> 00:11:41,160
+transferring because this is so much informed by what you're working on in your day-to-day,
+
+
+165
+00:11:41,160 --> 00:11:47,400
+what your day-to-day use case of this would be, that everybody had very different ideas
+
+
+166
+00:11:47,400 --> 00:11:51,720
+of how our benchmarking data set should look like.
+
+
+167
+00:11:51,720 --> 00:12:01,080
+Yeah, it was super, did you, I'm curious, the LibP2P team, you guys built the HTTP on
+
+
+168
+00:12:01,080 --> 00:12:02,080
+LibP2P.
+
+
+169
+00:12:02,080 --> 00:12:04,360
+We did, we'll demo it tomorrow.
+
+
+170
+00:12:04,360 --> 00:12:06,880
+Yeah, was that partly inspired by the group?
+
+
+171
+00:12:06,880 --> 00:12:09,840
+Were you planning to do that already?
+
+
+172
+00:12:09,840 --> 00:12:14,160
+It was a mix of both.
+
+
+173
+00:12:14,160 --> 00:12:19,880
+I think that project is one of the coolest things that I've encountered from the LibP2P
+
+
+174
+00:12:19,880 --> 00:12:21,920
+team in a while.
+
+
+175
+00:12:21,920 --> 00:12:28,760
+Essentially it just solves a problem which is like, if you want to write request response,
+
+
+176
+00:12:28,760 --> 00:12:35,120
+can I write it once and have it run on LibP2P and traditional IP systems?
+
+
+177
+00:12:35,120 --> 00:12:40,440
+And essentially the solution is if you write an HTTP protocol you can run it on LibP2P
+
+
+178
+00:12:40,440 --> 00:12:46,760
+and also over a traditional web client, which is always a big barrier to entry when you
+
+
+179
+00:12:46,760 --> 00:12:51,040
+get into the mobile world where you're not going to be running LibP2P.
+
+
+180
+00:12:51,040 --> 00:12:55,360
+So let that be an advertisement to the talk tomorrow.
+
+
+181
+00:12:55,360 --> 00:12:56,360
+What time is that?
+
+
+182
+00:12:56,360 --> 00:12:59,360
+You're asking the hard questions.
+
+
+183
+00:12:59,360 --> 00:13:01,360
+Oh, okay.
+
+
+184
+00:13:01,360 --> 00:13:03,360
+I tried.
+
+
+185
+00:13:03,360 --> 00:13:07,320
+Anyway, yeah, I thought that was really interesting.
+
+
+186
+00:13:07,320 --> 00:13:15,200
+And also it's interesting because we didn't ultimately ship an HTTP protocol, but that
+
+
+187
+00:13:15,200 --> 00:13:20,280
+group for me actually convinced me to be an HTTP believer.
+
+
+188
+00:13:20,280 --> 00:13:26,560
+I was one of the holdouts of, we've got to only use LibP2P.
+
+
+189
+00:13:26,560 --> 00:13:32,480
+I think it was a really interesting group to talk about real world use cases.
+
+
+190
+00:13:32,480 --> 00:13:38,040
+I would love to open up the floor to, raise your hand here if you participated in the
+
+
+191
+00:13:38,040 --> 00:13:40,480
+Move the Bytes work group.
+
+
+192
+00:13:40,480 --> 00:13:41,480
+I love it.
+
+
+193
+00:13:41,480 --> 00:13:42,480
+Yes.
+
+
+194
+00:13:42,480 --> 00:13:43,480
+That's so cool.
+
+
+195
+00:13:43,480 --> 00:13:48,680
+Did anybody, I'm curious, did anybody not attend the meetings but watch them later?
+
+
+196
+00:13:48,680 --> 00:13:49,680
+See?
+
+
+197
+00:13:49,680 --> 00:13:53,520
+Yeah, that is super cool.
+
+
+198
+00:13:53,520 --> 00:13:59,960
+So this is a panel, but it's sort of a fake panel because we're not trying to just talk
+
+
+199
+00:13:59,960 --> 00:14:03,080
+at you for the remaining time.
+
+
+200
+00:14:03,080 --> 00:14:08,320
+So I would actually love to open up the floor to anyone who is in the group sharing anything
+
+
+201
+00:14:08,320 --> 00:14:14,720
+that worked really, that you, so I'll ask the question this way.
+
+
+202
+00:14:14,720 --> 00:14:18,840
+What happened in the group that was really valuable to you?
+
+
+203
+00:14:18,840 --> 00:14:24,120
+Or what happened in the group that looking back maybe we could have done it a little
+
+
+204
+00:14:24,120 --> 00:14:25,800
+differently?
+
+
+205
+00:14:25,800 --> 00:14:31,000
+And for the AV folks in the back, if you don't mind walking around with the microphone to
+
+
+206
+00:14:31,000 --> 00:14:34,920
+folks who are speaking so that you can get it onto the recording.
+
+
+207
+00:14:34,920 --> 00:14:35,920
+Yes.
+
+
+208
+00:14:35,920 --> 00:14:36,920
+Thumbs up.
+
+
+209
+00:14:36,920 --> 00:14:37,920
+Cool.
+
+
+210
+00:14:37,920 --> 00:14:38,920
+Anybody want to get started?
+
+
+211
+00:14:38,920 --> 00:14:50,480
+I guess just raise your hand and they'll take the microphone over to you.
+
+
+212
+00:14:50,480 --> 00:14:57,160
+So one thing that I found really interesting that didn't get too far I think was that you
+
+
+213
+00:14:57,160 --> 00:15:03,120
+mentioned it I think just now Martin, the defining different test data sets and then
+
+
+214
+00:15:03,120 --> 00:15:08,400
+actually testing them because there's a huge difference between transferring a large video
+
+
+215
+00:15:08,400 --> 00:15:13,520
+file or transferring the Linux kernel with like, I don't know, 20,000 small files or
+
+
+216
+00:15:13,520 --> 00:15:18,640
+transferring some deeply nested graph data structure.
+
+
+217
+00:15:18,640 --> 00:15:25,880
+And yeah, I think that's something that could be taken further to like create some test
+
+
+218
+00:15:25,880 --> 00:15:32,680
+data sets and then actually try them on different protocols and see how it fares to kind of
+
+
+219
+00:15:32,680 --> 00:15:39,760
+both inform like the high and low points of different approaches and maybe improve upon
+
+
+220
+00:15:39,760 --> 00:15:40,760
+that.
+
+
+221
+00:15:40,760 --> 00:15:44,720
+And I think that's, yeah, like having these measurements, even if it's difficult and you're
+
+
+222
+00:15:44,720 --> 00:15:49,520
+benchmarking implementations and not protocols and so on, but I still think that that could
+
+
+223
+00:15:49,520 --> 00:15:52,400
+inform some further developments very much.
+
+
+224
+00:15:52,400 --> 00:15:53,400
+Yeah.
+
+
+225
+00:15:53,400 --> 00:16:01,120
+To add to this, it's a lot more complicated than just defining a data set that's like
+
+
+226
+00:16:01,120 --> 00:16:03,600
+a video file or a lot of small files, right?
+
+
+227
+00:16:03,600 --> 00:16:10,080
+You can also have the case where, do you want to benchmark multi-party transfers?
+
+
+228
+00:16:10,080 --> 00:16:14,960
+Do you have like a data set which is already replicated pretty well between the two nodes
+
+
+229
+00:16:14,960 --> 00:16:16,920
+and you just want to do a sync operation?
+
+
+230
+00:16:16,920 --> 00:16:21,520
+Like there's a lot of different dimensions to this problem.
+
+
+231
+00:16:21,520 --> 00:16:24,720
+Can I jump in on that?
+
+
+232
+00:16:24,720 --> 00:16:25,720
+Yeah, for sure.
+
+
+233
+00:16:25,720 --> 00:16:29,600
+I was going to just ask you what it was like to run those benchmarks.
+
+
+234
+00:16:29,600 --> 00:16:30,600
+Yeah.
+
+
+235
+00:16:30,600 --> 00:16:34,480
+And I think I want to point to a sort of broader pattern here, because I think that question
+
+
+236
+00:16:34,480 --> 00:16:39,640
+really invites part of what I was seeing at the beginning and part of the experience that
+
+
+237
+00:16:39,640 --> 00:16:45,520
+I left with working on trying to shepherd the group.
+
+
+238
+00:16:45,520 --> 00:16:50,080
+Because I think we got this sense that everybody agrees, yeah, we should have a set of basically
+
+
+239
+00:16:50,080 --> 00:16:51,640
+data set test fixtures, right?
+
+
+240
+00:16:51,640 --> 00:16:53,400
+We should have those.
+
+
+241
+00:16:53,400 --> 00:16:58,760
+And our team put in a lot of effort to try and collect those things and to try and build
+
+
+242
+00:16:58,760 --> 00:17:01,360
+really frictionless.
+
+
+243
+00:17:01,360 --> 00:17:05,280
+My perception was that, okay, maybe this is just sort of an organizational challenge.
+
+
+244
+00:17:05,280 --> 00:17:12,520
+Everyone needs to put the energy into setting up a place where we can sort of have a common
+
+
+245
+00:17:12,520 --> 00:17:17,280
+test ground to actually run some of these simulations or at least establish them.
+
+
+246
+00:17:17,280 --> 00:17:22,240
+And so the first plan was like, okay, cool, we'll gather the text fixtures and we'll start
+
+
+247
+00:17:22,240 --> 00:17:25,240
+to define a thing that can actually run and compare these protocols.
+
+
+248
+00:17:25,240 --> 00:17:30,840
+That turned out to be way too hard and lowering, but more importantly, we actually published
+
+
+249
+00:17:30,840 --> 00:17:34,560
+a guide to say, hey, here's how you submit your protocol for testing.
+
+
+250
+00:17:34,560 --> 00:17:36,720
+Here's a rundown on how that'll work.
+
+
+251
+00:17:36,720 --> 00:17:40,920
+And that guide was too complicated and nobody took us up on it.
+
+
+252
+00:17:40,920 --> 00:17:43,240
+And we get the same thing where it's like, yeah, it'd be really nice.
+
+
+253
+00:17:43,240 --> 00:17:46,520
+I think all of us would agree that it would be awesome if we had a set of data sets we
+
+
+254
+00:17:46,520 --> 00:17:51,880
+could use to, you know, at Numbers Zero, we use the Linux kernel, we use a couple of other
+
+
+255
+00:17:51,880 --> 00:17:55,560
+key things that are just kind of our offhand things.
+
+
+256
+00:17:55,560 --> 00:17:59,280
+And we try to be really public about the data sets we work with so that others can just
+
+
+257
+00:17:59,280 --> 00:18:02,800
+easily grab those and compare them and run them in their own.
+
+
+258
+00:18:02,800 --> 00:18:08,400
+But I think this is a real collective action challenge where it's like, how do you actually
+
+
+259
+00:18:08,400 --> 00:18:11,040
+get things done in a group across organizations?
+
+
+260
+00:18:11,040 --> 00:18:13,880
+Because we all agree it would be really nice to have those things.
+
+
+261
+00:18:13,880 --> 00:18:16,400
+And Martin, you're totally right.
+
+
+262
+00:18:16,400 --> 00:18:19,520
+It only gets more complex once you have some of those commonly understood stuff.
+
+
+263
+00:18:19,520 --> 00:18:25,000
+Sorry, it's like, if we all just agreed, like take this exact one megabyte of data and then
+
+
+264
+00:18:25,000 --> 00:18:28,720
+figure out how you're going to transfer it.
+
+
+265
+00:18:28,720 --> 00:18:32,080
+The other thing we sort of saw in the group was we didn't even have consensus on how to
+
+
+266
+00:18:32,080 --> 00:18:33,080
+measure stuff.
+
+
+267
+00:18:33,080 --> 00:18:34,080
+Right.
+
+
+268
+00:18:34,080 --> 00:18:36,840
+And like, that's, I think, not surprising.
+
+
+269
+00:18:36,840 --> 00:18:40,360
+And felt like the beginning of a conversation, not the end of one.
+
+
+270
+00:18:40,360 --> 00:18:46,640
+But it became really difficult for us to advance that conversation because we didn't have a
+
+
+271
+00:18:46,640 --> 00:18:49,960
+shared set of information that we're all looking at and agreeing.
+
+
+272
+00:18:49,960 --> 00:18:54,280
+Like, when we started putting up these slides of like, here's the number of messages that
+
+
+273
+00:18:54,280 --> 00:18:57,480
+BitSwap sends, everyone was like, well, what's a message anyways?
+
+
+274
+00:18:57,480 --> 00:19:00,560
+And we and we and that's a really important question.
+
+
+275
+00:19:00,560 --> 00:19:02,800
+Like, what is the message?
+
+
+276
+00:19:02,800 --> 00:19:03,800
+Are we talking about bytes?
+
+
+277
+00:19:03,800 --> 00:19:04,800
+Are we talking about packets?
+
+
+278
+00:19:04,800 --> 00:19:05,800
+Are we talking about logical messages?
+
+
+279
+00:19:05,800 --> 00:19:10,040
+Well, then if it's logical, logical message, like that, like, how does that compare apples
+
+
+280
+00:19:10,040 --> 00:19:11,400
+to apples across protocols?
+
+
+281
+00:19:11,400 --> 00:19:12,400
+Right.
+
+
+282
+00:19:12,400 --> 00:19:16,200
+And it felt like we got to the beginning of this really exciting conversation.
+
+
+283
+00:19:16,200 --> 00:19:21,000
+And then the like, who's going to do this to advance this conversation?
+
+
+284
+00:19:21,000 --> 00:19:25,680
+Because you need to do real work to sort of get that to happen.
+
+
+285
+00:19:25,680 --> 00:19:27,280
+Didn't happen.
+
+
+286
+00:19:27,280 --> 00:19:28,440
+And I don't think that's anybody's fault.
+
+
+287
+00:19:28,440 --> 00:19:33,360
+I think it's this really inherent challenge in working across organizations and figuring
+
+
+288
+00:19:33,360 --> 00:19:37,400
+out as Hannah mentioned, like, you know, everybody has their own work stream and their own work
+
+
+289
+00:19:37,400 --> 00:19:38,400
+to do.
+
+
+290
+00:19:38,400 --> 00:19:43,340
+And like, how do you find and allocate time for a working group that like is that doesn't
+
+
+291
+00:19:43,340 --> 00:19:46,560
+directly benefit your department or product?
+
+
+292
+00:19:46,560 --> 00:19:50,240
+So I just wanted to jump in and say like, that's I completely agree.
+
+
+293
+00:19:50,240 --> 00:19:51,760
+I want those pictures.
+
+
+294
+00:19:51,760 --> 00:19:52,920
+I want them to exist very proudly.
+
+
+295
+00:19:52,920 --> 00:19:55,200
+We tried to make them happen, and sort of fell flat.
+
+
+296
+00:19:55,200 --> 00:19:58,520
+And I think that's part of why we're having a sort of open conversation.
+
+
+297
+00:19:58,520 --> 00:20:26,560
+So I just wanted to like, let them.
+
+
+298
+00:20:00,000 --> 00:20:03,200
+some of the how could we improve flow into this chat. Hopefully that helps.
+
+
+299
+00:20:05,600 --> 00:20:12,400
+I'm curious, Brendan, do you, how much of that was affected by the tools, namely TestGround?
+
+
+300
+00:20:13,200 --> 00:20:15,680
+Or how much do you think is just inherent to this problem?
+
+
+301
+00:20:17,760 --> 00:20:21,280
+I think it's inherent to the problem. It's really easy to point fingers to the tools.
+
+
+302
+00:20:22,560 --> 00:20:25,280
+I definitely definitely got like a lot like, Azmir from our team
+
+
+303
+00:20:26,000 --> 00:20:29,680
+was just at one point he just turned to me, he's like, dude, I have work to do.
+
+
+304
+00:20:29,680 --> 00:20:34,400
+You can't just come to me on Mondays and be like, I need this thing by Wednesday.
+
+
+305
+00:20:34,400 --> 00:20:38,160
+And like, it's just killing my capacity to get anything done for org internally.
+
+
+306
+00:20:38,160 --> 00:20:42,400
+And yeah, that was like TestGround is hard to set up. And we, at number zero,
+
+
+307
+00:20:42,400 --> 00:20:46,560
+we switched very quickly to Linux namespaces, because it actually lets you simulate latency.
+
+
+308
+00:20:47,120 --> 00:20:53,680
+But that's not the challenge. The challenge is like, that's Azmir's full time job at our org,
+
+
+309
+00:20:53,680 --> 00:20:58,880
+like someone's full time job is just measuring stuff. And the idea that you would then do that
+
+
+310
+00:20:58,880 --> 00:21:03,040
+and be able to figure out how to do that across organizations, it's just like really, really,
+
+
+311
+00:21:03,040 --> 00:21:05,920
+really hard. So I'm pretty like halfway through, I switched my opinions and just being like,
+
+
+312
+00:21:06,480 --> 00:21:10,960
+let's establish shared nomenclature and try and figure out how we measure in a way that everyone
+
+
+313
+00:21:10,960 --> 00:21:13,840
+could just publish their own benchmarks. At least we can have a conversation from there.
+
+
+314
+00:21:16,960 --> 00:21:22,560
+I'm curious, how do you do you think we can get to there? Like, how do we get from here to there?
+
+
+315
+00:21:22,560 --> 00:21:29,280
+Because we don't yet have a, how would we gather a set of common benchmarks and or datasets?
+
+
+316
+00:21:29,280 --> 00:21:32,720
+And does this problem eventually, like, I don't know, like, if you go on like the web,
+
+
+317
+00:21:32,720 --> 00:21:37,680
+there's websites that are like, what is the fastest programming language for like, you know,
+
+
+318
+00:21:37,680 --> 00:21:42,800
+like, you can find, you know, like the one programming language that was like,
+
+
+319
+00:21:42,800 --> 00:21:45,520
+I'm going to optimize for this test, you know, always.
+
+
+320
+00:21:45,520 --> 00:21:46,020
+Yeah.
+
+
+321
+00:21:46,560 --> 00:21:47,120
+So yeah.
+
+
+322
+00:21:47,920 --> 00:21:51,840
+I think Martin has some like good input here, because like, there are other working groups
+
+
+323
+00:21:51,840 --> 00:21:57,120
+that Martin, that you're a part of that do a lot of this kind of stuff. I don't know,
+
+
+324
+00:21:57,120 --> 00:22:01,760
+I'd be interested to hear you too. My sense is just that like, people should publish what
+
+
+325
+00:22:01,760 --> 00:22:07,760
+they publish and we should all decide how to evaluate that as a community. But self-publishing
+
+
+326
+00:22:07,760 --> 00:22:09,680
+is probably the only thing that I see as an option.
+
+
+327
+00:22:11,440 --> 00:22:12,240
+You have ideas?
+
+
+328
+00:22:12,880 --> 00:22:21,600
+I have ideas. Benchmarking is hard. It is, especially when you move past the obvious
+
+
+329
+00:22:21,600 --> 00:22:30,000
+things. It's really hard to generate good data sets and good scenarios that work. So in a lot
+
+
+330
+00:22:30,000 --> 00:22:40,960
+of cases, and what I've seen in my work on the QUIC protocol is that the most meaningful data
+
+
+331
+00:22:40,960 --> 00:22:47,200
+you can get is data that's actually obtained in production, where you actually use production
+
+
+332
+00:22:47,200 --> 00:22:53,360
+traffic and just measure what happens, because in the end, that's the traffic that you care
+
+
+333
+00:22:53,360 --> 00:23:00,480
+about. You don't care about your test data set. And you include all the other factors
+
+
+334
+00:23:00,480 --> 00:23:09,200
+that might not contribute to your benchmark. Of course, that makes it a lot harder to design
+
+
+335
+00:23:09,200 --> 00:23:15,040
+and iterate quickly on protocols if you first have to deploy it and get real world data.
+
+
+336
+00:23:15,040 --> 00:23:24,320
+Yeah. And the LASI project, we do have load testing tools to demo stuff ahead of time,
+
+
+337
+00:23:25,040 --> 00:23:31,600
+just sort of assess things ahead of time, but we rely primarily on production metrics of all
+
+
+338
+00:23:31,600 --> 00:23:34,160
+the gateway traffic. Go ahead.
+
+
+339
+00:23:34,160 --> 00:23:36,640
+Should I wait for a mic?
+
+
+340
+00:23:36,640 --> 00:23:38,400
+Yeah, sorry, thank you.
+
+
+341
+00:23:38,400 --> 00:23:46,400
+Yeah. So I guess that definitely feels like a good moment to ask my kind of question,
+
+
+342
+00:23:46,400 --> 00:23:52,880
+which is the sort of interface between the kind of work you're doing in this working group and
+
+
+343
+00:23:52,880 --> 00:23:58,320
+production. There are a lot of things that I've seen today that are super exciting. I love LASI,
+
+
+344
+00:23:58,320 --> 00:24:05,680
+I love RAPID. And I definitely see with that ambition to ship this stuff and replace BitSwap
+
+
+345
+00:24:05,680 --> 00:24:14,080
+in four months, right? There's a real strong urge to take these experiments and put them
+
+
+346
+00:24:14,080 --> 00:24:20,720
+into production and get them used. So LASI is now one of the ways we officially say to people,
+
+
+347
+00:24:21,360 --> 00:24:26,800
+this is a good way of getting stuff from the Filecoin network. And I guess my question is,
+
+
+348
+00:24:26,800 --> 00:24:39,200
+is how do we correctly say to the rest of the world, this is the stuff that you should use,
+
+
+349
+00:24:39,200 --> 00:24:46,240
+or this is an experiment. And when I'm playing around here, I can download and install LASI,
+
+
+350
+00:24:47,360 --> 00:24:52,640
+it's much harder for me to get repeat going. But how do we define a perimeter between the
+
+
+351
+00:24:52,640 --> 00:25:00,240
+experiments that you're doing here, stuff that ships, and how do we guide people away from the
+
+
+352
+00:25:00,240 --> 00:25:05,120
+experiments sometime and go, actually, we're not doing that anymore. That's something that's
+
+
+353
+00:25:05,120 --> 00:25:10,720
+archived. And how do we signal the stuff that comes out of the working group? I'm sorry,
+
+
+354
+00:25:10,720 --> 00:25:17,280
+that was like a million questions. No, it was a good one. Brendan, do you have any thoughts on
+
+
+355
+00:25:17,280 --> 00:25:22,960
+that? You guys just had a major shift from one architecture of a product to another. So I'm
+
+
+356
+00:25:22,960 --> 00:25:31,520
+curious how you handled that messaging. Yeah, it's a toughie. I think culturally,
+
+
+357
+00:25:31,520 --> 00:25:40,320
+we have shied away from 1.0 in a way that hurts our ability to communicate with other folks. It's
+
+
+358
+00:25:40,320 --> 00:25:50,160
+funny to see this. We have this culture of our release of our release is 0.4.2. And yet, we're
+
+
+359
+00:25:50,160 --> 00:25:55,200
+also at the same time saying, and this is being used in Delta Chat. This has production usage.
+
+
+360
+00:25:55,200 --> 00:26:00,320
+And I think that's incongruent and hard. And maybe we could just go back to, well, if it's
+
+
+361
+00:26:00,320 --> 00:26:05,520
+being used in prod, call it 1.0 and have the courage to stand behind the spec you shipped,
+
+
+362
+00:26:05,520 --> 00:26:14,160
+which is really hard. And I think that's because it's totally fine to have, in my mind, this is
+
+
+363
+00:26:15,840 --> 00:26:20,320
+exactly the challenge. We get folks arriving at the outside of our community trying to play and
+
+
+364
+00:26:20,320 --> 00:26:25,760
+use our technology. And we don't have a meaningful sorting hat for, oh, yeah, go here, not there.
+
+
+365
+00:26:26,560 --> 00:26:30,640
+And I've seen numerous efforts to try and do that where you catalog things and write documentation
+
+
+366
+00:26:30,640 --> 00:26:36,000
+and say, go here, not there. But the truth of the matter is we're dealing in the cutting edge
+
+
+367
+00:26:36,000 --> 00:26:42,640
+of what's possible. Repeat represents an experiment in how to do really smart client-side
+
+
+368
+00:26:42,640 --> 00:26:46,880
+optimization. Is it a thing you should use tomorrow? I don't know. Talk to Jeropo.
+
+
+369
+00:26:46,880 --> 00:26:54,880
+But I think giving users a capacity to set for themselves what they should and shouldn't be using,
+
+
+370
+00:26:54,880 --> 00:27:00,160
+yeah, I personally think that we should be a little, we should make it a little more culturally
+
+
+371
+00:27:00,160 --> 00:27:03,840
+okay for each other to say, no, no, no, you should just, are you releasing this? Maybe we should just
+
+
+372
+00:27:03,840 --> 00:27:09,440
+put a 1.0 behind this and maybe we should make it more okay to have version two, three, four,
+
+
+373
+00:27:09,440 --> 00:27:13,040
+like major versions exist for a reason, right? That'd be my answer.
+
+
+374
+00:27:15,040 --> 00:27:17,920
+I would add that the one other thing that's interesting is that
+
+
+375
+00:27:17,920 --> 00:27:28,080
+in the past two years we went from two implementations of IPFS to fairly sizable
+
+
+376
+00:27:28,080 --> 00:27:36,640
+implementations, maybe production-ish ready to maybe, what are we, I don't know what the number
+
+
+377
+00:27:36,640 --> 00:27:40,240
+is. I don't want to say the number because I'm sure I'll get it too low. But it's at least,
+
+
+378
+00:27:41,520 --> 00:27:44,960
+we had what, like five showcases this morning and they were all
+
+
+379
+00:27:44,960 --> 00:27:50,240
+IPFS implementations that were saying, use this. And I think one thing that we're going to probably
+
+
+380
+00:27:50,240 --> 00:27:57,680
+figure out over time is messaging around, so which one and why? And hopefully we kind of all
+
+
+381
+00:27:57,680 --> 00:28:02,560
+work together and start to recognize that our things are good at certain things and maybe not
+
+
+382
+00:28:02,560 --> 00:28:08,960
+at others. So, yeah, I don't know. And that will also enable teams to have focus if we can all
+
+
+383
+00:28:08,960 --> 00:28:16,320
+get there because I think Kubo has had to be the be-all and end-all for everything and it's sort
+
+
+384
+00:28:16,320 --> 00:28:26,400
+of like, you know, the jack of all trades, the master of some. So, yeah. Other thoughts, folks?
+
+
+385
+00:28:26,400 --> 00:28:31,840
+By the way, if somebody said something earlier and you want to react to it, you should feel free
+
+
+386
+00:28:31,840 --> 00:28:34,880
+to, you are an expert as well. Any other thoughts?
+
+
+387
+00:28:34,880 --> 00:28:40,960
+Yes, go ahead. I had a more technical question about the working group.
+
+
+388
+00:28:40,960 --> 00:28:46,640
+In thinking about all these different protocols that were generated and ideas, I was curious to
+
+
+389
+00:28:46,640 --> 00:28:52,960
+stay on trend. Was there any work on ML-generated models? It feels like a lot of the data transfer
+
+
+390
+00:28:52,960 --> 00:28:57,840
+protocols are based on kind of like the usage patterns in production, as we were saying.
+
+
+391
+00:28:57,840 --> 00:29:03,760
+Has there been any thought in that direction or have people thought about it? Just curious.
+
+
+392
+00:29:03,760 --> 00:29:10,160
+I have a very short answer to that, but I don't know if anyone else... Does anyone else actually
+
+
+393
+00:29:10,160 --> 00:29:19,680
+have like a more in-depth experiment on that? Yeah. The LASI protocol... In LASI, the protocol
+
+
+394
+00:29:19,680 --> 00:29:27,920
+that we're working on, we're like, well, we're going to collect a bunch of stats and make them
+
+
+395
+00:29:27,920 --> 00:29:33,760
+all exponential decay averages, and then we're going to produce a weighted average for each
+
+
+396
+00:29:33,760 --> 00:29:39,360
+peer, and then the way we produce the weighted average, we could just run it through a giant
+
+
+397
+00:29:39,360 --> 00:29:43,840
+testing structure and a neural net and... Not a neural net, an ML model until it takes the
+
+
+398
+00:29:43,840 --> 00:29:50,080
+parameters. I mean, I proposed that to the team, but it was mostly as a joke because... I mean,
+
+
+399
+00:29:50,080 --> 00:29:54,720
+it's very... I think partly the reason we didn't get that far, we haven't gotten that far yet,
+
+
+400
+00:29:54,720 --> 00:30:02,560
+is because in a lot of situations, it still feels like, oh, that's like a hyper-optimization that
+
+
+401
+00:30:02,560 --> 00:30:07,360
+we'll get to at the end, but maybe it's not a terrible idea. Yeah. I don't know.
+
+
+402
+00:30:07,360 --> 00:30:13,600
+I think that ML and protocols is... Maybe there are people who are doing work in it, but it seems
+
+
+403
+00:30:13,600 --> 00:30:20,640
+like a relatively new kind of concept. Sort of. The major CDNs have been doing this
+
+
+404
+00:30:20,640 --> 00:30:26,000
+for a long time, but there's nothing that I know of in our space that is doing machine learning
+
+
+405
+00:30:26,000 --> 00:30:31,200
+at the protocol level. I mean, I guarantee you there's some chat GPT code sneaking in here and
+
+
+406
+00:30:31,200 --> 00:30:35,520
+there, but I don't know. I mean, I think it's a really interesting idea.
+
+
+407
+00:30:35,520 --> 00:30:47,200
+Yeah. Yeah. Cool. Other thoughts? Reflections?
+
+
+408
+00:30:50,400 --> 00:30:52,240
+I'm curious... Can we ask folks if we should keep going?
+
+
+409
+00:30:53,280 --> 00:31:00,320
+Oh, wait. What time is it, actually? We're... Do we have... We got six minutes. So you can either
+
+
+410
+00:31:00,320 --> 00:31:04,560
+have six minutes back. I do want to ask one thing, which I would love to hear from someone
+
+
+411
+00:31:04,560 --> 00:31:10,400
+who either watched videos or attended the group, but is not otherwise... Was not coming from a
+
+
+412
+00:31:10,400 --> 00:31:15,680
+standpoint of deeply being engaged with data transfer and what it was like for you to attend
+
+
+413
+00:31:15,680 --> 00:31:24,560
+the group and watch. Does anybody fit that description? Curious. Or even midpoint? No?
+
+
+414
+00:31:24,560 --> 00:31:29,360
+Okay. You're all experts. You all think about data transfer all the time.
+
+
+415
+00:31:29,360 --> 00:31:35,280
+Yeah. Well, I kind of love the idea of giving people five more minutes unless anyone has any
+
+
+416
+00:31:35,280 --> 00:31:38,880
+clothing thoughts. Yeah. Oh, one in the back.
+
+
+417
+00:31:46,640 --> 00:31:49,040
+Move the Bytes Working Group gave me hope.
+
+
+418
+00:31:50,720 --> 00:31:51,220
+Wow.
+
+
+419
+00:31:51,220 --> 00:31:57,860
+So the natural question for me is, what is next for Move the Bytes Working Group?
+
+
+420
+00:31:59,380 --> 00:32:00,980
+That's a great question.
+
+
+421
+00:32:03,380 --> 00:32:05,140
+Now that we... Can I be totally real?
+
+
+422
+00:32:05,860 --> 00:32:09,780
+Yeah. Move the Bytes Working Group hurt my soul.
+
+
+423
+00:32:09,780 --> 00:32:20,500
+It was a lot of work. And so, I mean, it was really nice to... I'm really happy with where
+
+
+424
+00:32:20,500 --> 00:32:29,380
+we landed, but I personally feel like we should wait until we know there's another buildup of
+
+
+425
+00:32:29,380 --> 00:32:36,020
+stuff to talk about. Towards the end, I was looking at scheduling the next talks and wasn't anybody
+
+
+426
+00:32:36,020 --> 00:32:39,780
+with a burning desire to speak. And for the first little while, there were people with burning desires
+
+
+427
+00:32:39,780 --> 00:32:43,220
+to speak. I just would have people messaging me being like, I have a thing I want to talk about.
+
+
+428
+00:32:44,820 --> 00:32:49,780
+It'd be awesome to pass the baton to somebody else, have them leave the group if they want to
+
+
+429
+00:32:49,780 --> 00:32:56,020
+keep going. But from here, I think it would be... If the baton stays with me because nobody else
+
+
+430
+00:32:56,020 --> 00:33:01,380
+wants to take it, which has happened in the past, I will just wait until more folks message and then
+
+
+431
+00:33:01,380 --> 00:33:07,060
+maybe we'll put up the bat signal and say, okay, maybe we can reconvene the group at some point,
+
+
+432
+00:33:07,060 --> 00:33:11,380
+maybe towards the end of the year. That would be my inclination.
+
+
+433
+00:33:13,380 --> 00:33:18,900
+My impression is the coordination was a good amount of work. You were the one who was doing
+
+
+434
+00:33:18,900 --> 00:33:27,140
+work that was definitely not in your work stream otherwise. Yeah. We have one. No? You were going
+
+
+435
+00:33:27,140 --> 00:33:32,980
+to volunteer, weren't you? To take it? No, everyone's like, I'm not raising my hand anymore.
+
+
+436
+00:33:37,220 --> 00:33:43,220
+I will say, I think there's likely to be a hiatus. We have a lot of really awesome projects that
+
+
+437
+00:33:43,780 --> 00:33:48,980
+have sort of partially emerged from this, partially emerged from other trends. But
+
+
+438
+00:33:48,980 --> 00:33:56,180
+like, I think it'll be interesting to see where some of these projects go first. I think that
+
+
+439
+00:33:57,620 --> 00:34:10,100
+see what the 1.0 version of Iroh, Bao, Super Transfer looks like. See where Lassie ends up.
+
+
+440
+00:34:10,100 --> 00:34:18,660
+See what the production repeat looks like. And see if we get some HTTP usage going around
+
+
+441
+00:34:19,860 --> 00:34:27,460
+the network. And then maybe figure out from there what we want to do. I also think,
+
+
+442
+00:34:28,100 --> 00:34:33,380
+I will say, I think it's a really interesting model. I don't really know if it applies to other
+
+
+443
+00:34:33,380 --> 00:34:41,220
+sort of areas of the IPFS system, but like having a bunch of groups of cross orgs talking about a
+
+
+444
+00:34:41,220 --> 00:34:45,940
+problem people are all struggling with for a long time and sharing their ideas. Which is what we do
+
+
+445
+00:34:45,940 --> 00:34:51,460
+at the conference, too, but it's useful to do it kind of apart from that and give people a little
+
+
+446
+00:34:51,460 --> 00:34:56,580
+bit more time and a little bit more time to digest and consume and sort of think about things. So,
+
+
+447
+00:34:56,580 --> 00:35:05,860
+I don't know, maybe there needs to be the move the find the bytes working group. So, yeah.
+
+
+448
+00:35:07,620 --> 00:35:11,220
+Do you have any closing thoughts or should we wrap up and give folks a couple minutes?
+
+
+449
+00:35:11,220 --> 00:35:24,980
+Let's do the break now. Yes, break now. Yay!

@@ -1,0 +1,533 @@
+1
+00:00:00,000 --> 00:00:09,800
+Hey everyone, my name is Alex, I'm product manager on Saturn and today I want to talk
+
+
+2
+00:00:09,800 --> 00:00:17,040
+to you about how Saturn accelerates retrievals from IPFS and Filecoin. Before I get started,
+
+
+3
+00:00:17,040 --> 00:00:21,520
+there's one thing to celebrate today, I was actually waiting for the countdown, we reached
+
+
+4
+00:00:21,520 --> 00:00:31,800
+over 2000 nodes on Saturn today. So it's a big achievement. A bit of a caveat here, this
+
+
+5
+00:00:31,800 --> 00:00:35,800
+number might go down because there's still a little bit of multi-noding going on and
+
+
+6
+00:00:35,800 --> 00:00:41,640
+we'll be a little bit stricter on our requirements for performance and also availability to actually
+
+
+7
+00:00:41,640 --> 00:00:48,480
+improve the resilience of the network. Today I'm going to talk a little bit about the background
+
+
+8
+00:00:48,480 --> 00:00:55,920
+on Saturn, why we build it, which problems we solve. Then introduce Saturn itself and
+
+
+9
+00:00:55,920 --> 00:01:01,000
+talk a little bit how it fits into the context of the project Rhea, connecting basically
+
+
+10
+00:01:01,000 --> 00:01:11,240
+dots where we left off before. And lastly I would like to talk about a service worker
+
+
+11
+00:01:11,240 --> 00:01:19,000
+example how to actually get to work and directly retrieve files from Saturn. And an outlook
+
+
+12
+00:01:19,000 --> 00:01:25,440
+in the end. Okay, let's start with the background context.
+
+
+13
+00:01:25,440 --> 00:01:29,920
+So what's the core problem that Saturn is trying to solve? So number one, most of the
+
+
+14
+00:01:29,920 --> 00:01:36,040
+traffic and retrievals from IPFS today is going through public centralised gateways.
+
+
+15
+00:01:36,040 --> 00:01:41,580
+So these don't really match the speeds that modern DApps and large-scale applications
+
+
+16
+00:01:41,580 --> 00:01:48,720
+in Web3 require today. And secondly, there is currently no cache and acceleration layer
+
+
+17
+00:01:48,720 --> 00:01:54,760
+for Filecoin, so Filecoin retrievals are not ideal. So there's lots of work being done
+
+
+18
+00:01:54,760 --> 00:02:00,360
+there. Saturn should help actually accelerate retrievals from Filecoin, apart from the incentivisation
+
+
+19
+00:02:00,360 --> 00:02:07,600
+layer of course. So why are we building Saturn? So from a commercial perspective, if we look
+
+
+20
+00:02:07,600 --> 00:02:13,160
+at the market at large, the global CDN market is expected to be twice as large as the cloud
+
+
+21
+00:02:13,160 --> 00:02:18,360
+object storage market. Of course only trust the statistics that you falsified, so take
+
+
+22
+00:02:18,360 --> 00:02:23,760
+this with a pinch of salt. But yeah, so there is definitely a commercial reason to build
+
+
+23
+00:02:23,760 --> 00:02:31,480
+a CDN and that also goes for Web3. So let's move on to Saturn as a decentralised
+
+
+24
+00:02:31,480 --> 00:02:37,440
+CDN. So for anyone who has not heard yet, but I assume everyone has, Saturn is a decentralised
+
+
+25
+00:02:37,440 --> 00:02:46,160
+CDN that supports retrievals from Filecoin and IPFS. A few stats apart from the 2000
+
+
+26
+00:02:46,160 --> 00:02:52,080
+nodes that we have achieved since November in 2022, we have now a capacity of around
+
+
+27
+00:02:52,080 --> 00:02:57,920
+11 terabits per second, which is about 5% of the network capacity of Cloudflare, just
+
+
+28
+00:02:57,920 --> 00:03:03,320
+to give you a comparison. So it's a huge growth that we had in the last 5-6 months and we're
+
+
+29
+00:03:03,320 --> 00:03:09,680
+currently serving about 158 million requests daily.
+
+
+30
+00:03:09,680 --> 00:03:14,000
+And just before that presentation here, we had a chat with Diego and we pulled up the
+
+
+31
+00:03:14,000 --> 00:03:18,760
+stats that were presented in November when the network was launched. And so looking at
+
+
+32
+00:03:18,760 --> 00:03:25,040
+actually some of the performance numbers for the time at the first byte. Back then we had
+
+
+33
+00:03:25,040 --> 00:03:31,880
+about 135 milliseconds on median response time, which was like 2.9 times the speed of
+
+
+34
+00:03:31,880 --> 00:03:39,320
+the IPFS gateway. And today we measured a median of 10x faster than the IPFS gateway,
+
+
+35
+00:03:39,320 --> 00:03:44,000
+averaging at around 64 milliseconds, which is a really great achievement.
+
+
+36
+00:03:44,000 --> 00:03:49,680
+The same goes actually across the board for the average for P95 and also for the P5, where
+
+
+37
+00:03:49,680 --> 00:03:57,560
+Saturn is already beating the IPFS gateway at large. We don't yet have the traffic fully
+
+
+38
+00:03:57,560 --> 00:04:01,680
+running through Saturn, so these numbers will definitely change. But I think that's a really
+
+
+39
+00:04:01,680 --> 00:04:05,960
+good indication that shows that the network is becoming more performant the more nodes
+
+
+40
+00:04:05,960 --> 00:04:09,980
+are actually added to the network.
+
+
+41
+00:04:09,980 --> 00:04:14,900
+So talking about commercial viability of Saturn. So who is actually Saturn for and what can
+
+
+42
+00:04:14,900 --> 00:04:20,520
+it do for you? So first of all, we're targeting a couple of verticals. Not all of them are
+
+
+43
+00:04:20,520 --> 00:04:26,280
+our first priority right now. But just to give you an indication, Saturn could be used,
+
+
+44
+00:04:26,280 --> 00:04:31,120
+for example, by storage providers who want to accelerate and have instant retrievability
+
+
+45
+00:04:31,120 --> 00:04:37,800
+of a file that has been uploaded and improve the user experience for the end users. It
+
+
+46
+00:04:37,800 --> 00:04:46,320
+could be used for NFT projects, like marketplaces, etc. to retrieve NFT assets really quickly
+
+
+47
+00:04:46,320 --> 00:04:54,640
+and also improve basically the overall performance. It could be used by blockchains to, for example,
+
+
+48
+00:04:54,640 --> 00:05:02,120
+sync blockchain snapshots for node providers to actually get up and running faster, for
+
+
+49
+00:05:02,120 --> 00:05:08,320
+example. It could be used by video projects to do browser-side HLS streaming using ServiceWorker,
+
+
+50
+00:05:08,320 --> 00:05:12,540
+an example that I'm going to show a little bit later today. It could be used by game
+
+
+51
+00:05:12,540 --> 00:05:19,120
+studios, for example, to load any textures, skins, like this large amount of data, like
+
+
+52
+00:05:19,120 --> 00:05:24,640
+gigs of data, for example, when you play one of those modern games, which you typically
+
+
+53
+00:05:24,640 --> 00:05:29,520
+load either up front when you actually start the game or during the gameplay. So that's
+
+
+54
+00:05:29,520 --> 00:05:34,280
+what Saturn could be used for, especially in a client-side implementation. It will enable
+
+
+55
+00:05:34,280 --> 00:05:40,920
+you to use the full power of the network and also in general for the app developers.
+
+
+56
+00:05:40,920 --> 00:05:49,740
+So talking about Saturn, the first client of Saturn is IPFS.io, as we have seen before.
+
+
+57
+00:05:49,740 --> 00:05:57,720
+So just to put it in perspective, as a summary to Will's presentation before on a high level,
+
+
+58
+00:05:57,720 --> 00:06:03,840
+typically a customer would request a SID from IPFS.io. IPFS.io will proxy that request to
+
+
+59
+00:06:03,840 --> 00:06:11,900
+Saturn. Saturn, using LASI, will either serve it from the Nginx cache or it will cache miss
+
+
+60
+00:06:11,900 --> 00:06:18,160
+if it doesn't have actually a file to IPFS or Filecoin using bits of Graph Sync. You
+
+
+61
+00:06:18,160 --> 00:06:22,420
+have the Saturn orchestrator here on the bottom. There has been previously a presentation on
+
+
+62
+00:06:22,420 --> 00:06:27,200
+how the orchestrator works. So the orchestrator is currently still a centralized service that
+
+
+63
+00:06:27,200 --> 00:06:35,200
+manages the network, allows who can join the network, who leads the network, is responsible
+
+
+64
+00:06:35,200 --> 00:06:40,680
+for logging and also for recalculating the weights of each node on the network. And so
+
+
+65
+00:06:40,680 --> 00:06:49,240
+Saturn can currently serve car files or blocks back and the IPFS.io gateway will do the verification
+
+
+66
+00:06:49,240 --> 00:06:55,560
+for you. So moving over to the use case example for
+
+
+67
+00:06:55,560 --> 00:07:01,240
+today, so there are currently different integration types how you could use the Saturn network.
+
+
+68
+00:07:01,240 --> 00:07:07,240
+So one is the browser retrievals via the service worker where you actually use the full power
+
+
+69
+00:07:07,240 --> 00:07:11,960
+of the network because you actually interact with the untrusted nodes and the verification
+
+
+70
+00:07:11,960 --> 00:07:18,360
+is happening on the client side incrementally. Secondly, it could be server retrievals where
+
+
+71
+00:07:18,360 --> 00:07:25,440
+you could potentially use something like Caboose as server client libraries for use cases like
+
+
+72
+00:07:25,440 --> 00:07:30,160
+blockchain nodes who sync state for example and have to run it directly on the node. And
+
+
+73
+00:07:30,160 --> 00:07:35,120
+then lastly gateway retrievals using IPFS.io or the service worker implementation that
+
+
+74
+00:07:35,120 --> 00:07:40,880
+Adeen just presented. So let me dive into the browser retrievals
+
+
+75
+00:07:40,880 --> 00:07:48,320
+example and let's hope that the service worker works. All right. So it's pretty simple. So
+
+
+76
+00:07:48,320 --> 00:07:54,880
+we have to add actually just a script tag to our file and then also download the service
+
+
+77
+00:07:54,880 --> 00:08:01,920
+worker itself, add it to the root of our directory and hope that we can actually play that. So
+
+
+78
+00:08:01,920 --> 00:08:11,000
+let's give it a go. So I'll make this smaller. So I have prepared an empty file here that
+
+
+79
+00:08:11,000 --> 00:08:17,520
+just embeds video.js so that you can do HLS streaming. So there's nothing else configured
+
+
+80
+00:08:17,520 --> 00:08:23,200
+here. There's no service worker, nothing. So let's give it a go.
+
+
+81
+00:08:23,200 --> 00:08:35,040
+So first we have to add the tag. Let's do that here. Okay. So it's there. All right.
+
+
+82
+00:08:35,040 --> 00:08:44,920
+And then let's try to fetch this. So I've prepared this up front. So let's have a look
+
+
+83
+00:08:44,920 --> 00:08:52,160
+at the IPFS desktop. So I have a bunny video here. So all the different
+
+
+84
+00:08:52,160 --> 00:08:56,160
+like HLS chunks are uploaded. We have the manifest files here in the bottom. It's the
+
+
+85
+00:08:56,160 --> 00:09:12,320
+HD version of that. So let me add the source here. Okay. Cool. Okay. So what else is missing?
+
+
+86
+00:09:12,320 --> 00:09:19,880
+So now we need to actually add the service worker to the root directory of that file.
+
+
+87
+00:09:19,880 --> 00:09:41,440
+Let's fetch that one. Nice. Okay. That's fun. Space between? Oh, yeah. Great. Perfect. Harder
+
+
+88
+00:09:41,440 --> 00:09:46,600
+to see on the stage. Thank you so much. So, yeah, we see we've got the service worker
+
+
+89
+00:09:46,600 --> 00:10:00,600
+here responding to the correct domain. Okay. Let's save this. Let's start this. Okay. Wish
+
+
+90
+00:10:00,600 --> 00:10:07,840
+me luck. Okay. So let me make this a little bit smaller.
+
+
+91
+00:10:07,840 --> 00:10:16,880
+And it's loading directly. So we see there's a cache hit. It's playing directly. Let's
+
+
+92
+00:10:16,880 --> 00:10:40,740
+jump somewhere else. It's working pretty well. Okay. So you see here's the remote address
+
+
+93
+00:10:40,740 --> 00:10:46,100
+of the node that we are connected to. So I also want to show you one more product that
+
+
+94
+00:10:46,100 --> 00:10:51,560
+we're about to release. So that's the Saturn Explorer. It has been built by an external
+
+
+95
+00:10:51,560 --> 00:11:02,640
+company for us. So let's search for the nodes that are available in Brussels. And there
+
+
+96
+00:11:02,640 --> 00:11:12,040
+you go. So we have two nodes. One of these nodes is the one that we're connected to.
+
+
+97
+00:11:12,040 --> 00:11:32,600
+Perfect. Cool. And so as an outlook for what's coming next,
+
+
+98
+00:11:32,600 --> 00:11:39,380
+it's a lot of moving pieces at the moment. So first of all, we actually have well, we
+
+
+99
+00:11:39,380 --> 00:11:45,580
+have achieved the sub second time to first byte for P95 already last month and currently
+
+
+100
+00:11:45,580 --> 00:11:50,420
+actually working on stabilizing that, especially when real traffic will come up to keep that
+
+
+101
+00:11:50,420 --> 00:11:55,820
+performance. So end of this month, we want to launch a
+
+
+102
+00:11:55,820 --> 00:12:01,700
+better test program for Saturn customers, because we're really commercially driven to
+
+
+103
+00:12:01,700 --> 00:12:08,900
+also start onboarding like the first customers. Next month, we will release the decentralized
+
+
+104
+00:12:08,900 --> 00:12:13,740
+payouts with the smart contracts on FVM, where currently there's a beta running with a Cassini
+
+
+105
+00:12:13,740 --> 00:12:21,100
+test group. And by hopefully end of this quarter, we've got 100% of all the traffic flowing
+
+
+106
+00:12:21,100 --> 00:12:25,860
+from RIA through Saturn, and we achieve a way better performance correctness and latency
+
+
+107
+00:12:25,860 --> 00:12:41,700
+for that. That's it. Thank you very much.

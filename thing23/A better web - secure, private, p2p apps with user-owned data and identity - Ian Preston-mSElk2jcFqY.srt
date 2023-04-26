@@ -1,0 +1,1013 @@
+1
+00:00:00,000 --> 00:00:10,600
+Hello, I'm Ian Preston from Pegos. I'm going to tell you about what a better web could be.
+
+
+2
+00:00:10,600 --> 00:00:19,280
+But first, what's wrong with the web today? So, in short, it's kind of become a bit of
+
+
+3
+00:00:19,280 --> 00:00:29,400
+a surveillance dystopia to our feudal overlords. It's basically every website you visit has
+
+
+4
+00:00:29,400 --> 00:00:34,880
+first-party surveillance, third-party surveillance. You don't own the data you create, and if
+
+
+5
+00:00:34,880 --> 00:00:42,560
+you have any kind of logins, then you don't own your identity either. But let's have a
+
+
+6
+00:00:42,560 --> 00:00:47,400
+look at what happens when you visit a website these days. So there's a lot of stuff that
+
+
+7
+00:00:47,400 --> 00:00:51,720
+goes on. So the first thing is your browser will do a DNS lookup to find the IP address
+
+
+8
+00:00:51,720 --> 00:00:57,760
+to connect to. Then you'll make a TLS connection to this IP address, which involves trusting
+
+
+9
+00:00:57,760 --> 00:01:03,560
+about 140 certificate authorities in your browser. Any one of those could man-in-the-middle
+
+
+10
+00:01:03,560 --> 00:01:08,680
+the connection if they wanted to. You don't have any direct relationship with any of these
+
+
+11
+00:01:08,680 --> 00:01:16,480
+CAs, typically, and most of the time the web host doesn't either. So now you've got your
+
+
+12
+00:01:16,480 --> 00:01:21,840
+TLS connection to the browser. You then load some arbitrary code. Now it's arbitrary. It
+
+
+13
+00:01:21,840 --> 00:01:25,880
+could be different for different people. It could be different on different devices or
+
+
+14
+00:01:25,880 --> 00:01:33,180
+two seconds later. It's arbitrary code. And then you run it. So then this code will probably
+
+
+15
+00:01:33,180 --> 00:01:37,480
+load some third-party code. So then you're now talking to a bunch of other servers. So
+
+
+16
+00:01:37,480 --> 00:01:42,040
+they know what website you've just visited and where you are, your IP address and all
+
+
+17
+00:01:42,040 --> 00:01:47,200
+kinds of stuff. And then maybe it's not just a blog you're reading. Maybe it's a site you're
+
+
+18
+00:01:47,200 --> 00:01:52,040
+using to do stuff. And so then you would log in. So you put in whatever it is, your username
+
+
+19
+00:01:52,040 --> 00:01:57,520
+and password, or you log in with some other, again, a third-party identity provider. And
+
+
+20
+00:01:57,520 --> 00:02:03,080
+then you start doing stuff. I'm going to make some posts or create some documents or whatever.
+
+
+21
+00:02:03,080 --> 00:02:07,320
+And so you're sending your personal data to the server. So they then own that data. And
+
+
+22
+00:02:07,320 --> 00:02:13,760
+then if the site has any kind of social aspect, then there might be a social feed. And this
+
+
+23
+00:02:13,760 --> 00:02:20,960
+will be curated according to the algorithms that they choose to run, which is to protect
+
+
+24
+00:02:20,960 --> 00:02:26,080
+their incentives. So they want to maximize their revenue, which means maximizing your
+
+
+25
+00:02:26,080 --> 00:02:32,320
+attention. And so you end up with manipulation by AI-curated feeds. And the end result of
+
+
+26
+00:02:32,320 --> 00:02:40,160
+this is subverted democracy, compromised consensus. Society can't agree on what is an objective
+
+
+27
+00:02:40,160 --> 00:02:49,360
+truth. It's not a great state. So could a better design fix these problems, or at least
+
+
+28
+00:02:49,360 --> 00:02:56,560
+help? So I'm obviously here because I think the answer is yes. But what are the requirements?
+
+
+29
+00:02:56,560 --> 00:03:05,520
+So following on from the previous talk, these basically amount to user agency. So I don't
+
+
+30
+00:03:05,520 --> 00:03:09,480
+need to tell anyone here about the benefits of content address data. It should also be
+
+
+31
+00:03:09,480 --> 00:03:15,440
+signed, content address data, because people don't normally remember hashes. And then probably
+
+
+32
+00:03:15,440 --> 00:03:22,640
+for the same reason, you need a mapping from something human memorable to a public key.
+
+
+33
+00:03:22,640 --> 00:03:28,160
+Because again, people don't remember public keys either. Now, the web is actually okay
+
+
+34
+00:03:28,160 --> 00:03:35,160
+at sandboxing stuff, because after all, it is a platform for running untrusted code.
+
+
+35
+00:03:35,160 --> 00:03:40,240
+But the sandboxes aren't really designed to protect you from the server you're talking
+
+
+36
+00:03:40,240 --> 00:03:46,280
+to. They're mainly designed to protect the rest of your machine. What else would be cool
+
+
+37
+00:03:46,280 --> 00:03:51,600
+in terms of user agency would be if we could grant permissions to these web apps to do
+
+
+38
+00:03:51,600 --> 00:03:58,160
+stuff that we want them to do. And in terms of any data that we create, that should be
+
+
+39
+00:03:58,160 --> 00:04:03,080
+stored in something that we own and control. And to ensure that we own and control it,
+
+
+40
+00:04:03,080 --> 00:04:08,960
+it should be end-to-end encrypted. Ideally, you'd be able to take your data between apps
+
+
+41
+00:04:08,960 --> 00:04:17,320
+and somehow all of this should work in existing browsers. So this is where Pyrgos comes in.
+
+
+42
+00:04:17,320 --> 00:04:24,320
+So Pyrgos is a global private file system. It has signed content address data, human
+
+
+43
+00:04:24,320 --> 00:04:31,360
+readable paths, and it works in existing browsers. But we didn't have a safe way to run apps
+
+
+44
+00:04:31,360 --> 00:04:41,600
+or HTML5 apps or a permission system for them. So we built an application sandbox. Basically,
+
+
+45
+00:04:41,600 --> 00:04:50,560
+it allows you to run untrusted code over private data such that the app can't steal your data
+
+
+46
+00:04:50,560 --> 00:04:56,620
+and the app can't read anything it's not granted access to. And the app itself has a simple
+
+
+47
+00:04:56,620 --> 00:05:04,920
+REST API, but there isn't a server. We'll get to that. So this is how the sandbox is
+
+
+48
+00:05:04,920 --> 00:05:12,080
+designed. So you log into Pyrgos on the main domain, in this case, pyrgos.net. It also
+
+
+49
+00:05:12,080 --> 00:05:17,680
+works on localhost. All of this works on localhost. So you don't actually have to rely on DNS
+
+
+50
+00:05:17,680 --> 00:05:23,880
+if you don't want to. Then you tell Pyrgos, I want to open this app. And an app, as I
+
+
+51
+00:05:23,880 --> 00:05:30,760
+mentioned, is just a folder of HTML5, which is stored into and encrypted itself in Pyrgos.
+
+
+52
+00:05:30,760 --> 00:05:38,040
+And we load that on a hash domain, which we sandbox in such a way. So there's a different
+
+
+53
+00:05:38,040 --> 00:05:45,920
+sandbox for every page. The hash is basically the path, which is unique because it's a file
+
+
+54
+00:05:45,920 --> 00:05:53,960
+file. And what the server actually does for all these subdomains, it serves up exactly
+
+
+55
+00:05:53,960 --> 00:06:00,000
+the same static content. And what that all that does, that small static content, is set
+
+
+56
+00:06:00,000 --> 00:06:08,240
+up a service worker, which then communicates with the main Pyrgos tab via post messages.
+
+
+57
+00:06:08,240 --> 00:06:12,560
+And then in the main Pyrgos tab, there's the thing that is basically the trusted code,
+
+
+58
+00:06:12,560 --> 00:06:19,160
+which enforces the app permissions. And then once the service worker has that post messaging
+
+
+59
+00:06:19,160 --> 00:06:25,240
+system working, it then loads a sub iframe for itself, which is where the app gets to
+
+
+60
+00:06:25,240 --> 00:06:34,880
+render itself. And the CSP firewall around the app is, as I mentioned, is designed to
+
+
+61
+00:06:34,880 --> 00:06:40,680
+prevent exfiltrating data. So you have to worry about things like DNS prefetch and any
+
+
+62
+00:06:40,680 --> 00:06:47,800
+other mechanism that could be used to talk to the external world.
+
+
+63
+00:06:47,800 --> 00:06:53,760
+So we have a browser app, which is kind of a special app that it doesn't just have one
+
+
+64
+00:06:53,760 --> 00:06:59,600
+fixed domain that it runs on. It has another parameter which goes into the hash so it can
+
+
+65
+00:06:59,600 --> 00:07:05,520
+isolate different things that it's trying to render. So then you can just open any folder
+
+
+66
+00:07:05,520 --> 00:07:12,120
+in Pyrgos as a HTML site. You can have internal links, which are relative links, or you can
+
+
+67
+00:07:12,120 --> 00:07:19,120
+have external links to anything in the global Pyrgos file system. It works in secret links
+
+
+68
+00:07:19,120 --> 00:07:24,640
+and markdown pages work. They're rendered natively as well. I'll have a demo of this
+
+
+69
+00:07:24,640 --> 00:07:30,720
+later. But more generally, what is a custom app in this context? So I've said it's a folder
+
+
+70
+00:07:30,720 --> 00:07:36,960
+of HTML5 assets. An app, you can install it. It can be upgraded. Installing it basically
+
+
+71
+00:07:36,960 --> 00:07:44,280
+just means copying that folder into your Pyrgos space. And by default, an app can read its
+
+
+72
+00:07:44,280 --> 00:07:50,200
+own assets. So that's the minimum it can do with no permissions. And that might be enough
+
+
+73
+00:07:50,200 --> 00:07:55,760
+for some things. If it's like a single player game or something like that, that could be
+
+
+74
+00:07:55,760 --> 00:08:04,080
+enough. Or it can request more permissions from the user. An app could, say, be an editor
+
+
+75
+00:08:04,080 --> 00:08:09,440
+for some kind of file. So it can register for viewing or editing certain file types
+
+
+76
+00:08:09,440 --> 00:08:19,760
+or MIME types. So we've got some examples of apps that we've written which can do things.
+
+
+77
+00:08:19,760 --> 00:08:24,560
+Most of these are pre-existing web apps. We've just done a minor modification to work in
+
+
+78
+00:08:24,560 --> 00:08:28,920
+Pyrgos. So we haven't actually written these from scratch. So the first one is a word processor.
+
+
+79
+00:08:28,920 --> 00:08:41,040
+So a viewer for Microsoft documents. Spreadsheets, viewing and editing. An image editor. What
+
+
+80
+00:08:41,040 --> 00:08:48,640
+you see is what you get. Markdown editor. TiddlyWiki notebooks. Or more advanced things
+
+
+81
+00:08:48,640 --> 00:08:53,000
+for apps. You could have a media player. That's more. So it needs access to more than one
+
+
+82
+00:08:53,000 --> 00:09:03,240
+file in theory. Multiplayer games. Chat. How do you do chat? We'll get to that. So the
+
+
+83
+00:09:03,240 --> 00:09:09,560
+app structure I mentioned has a folder of assets. There's a JSON file in the root, which
+
+
+84
+00:09:09,560 --> 00:09:17,160
+is the manifest. So that has a bunch of stuff we'll see in a second. And one of the permissions
+
+
+85
+00:09:17,160 --> 00:09:25,800
+is to store app data. And what that lets the app do is to read and write to an app-specific
+
+
+86
+00:09:25,800 --> 00:09:35,360
+private folder, but in your space. So that could be settings or save games or whatever.
+
+
+87
+00:09:35,360 --> 00:09:40,360
+So this is what an app manifest looks like. Roughly what you'd expect. Things like name,
+
+
+88
+00:09:40,360 --> 00:09:45,480
+description, version, author. Launchable is just whether or not you can run it on its
+
+
+89
+00:09:45,480 --> 00:09:54,120
+own without opening a file per se or folder. Icons. So I mentioned file extensions, file
+
+
+90
+00:09:54,120 --> 00:10:00,080
+types. There's also MIME types. And then just a list of permissions. And we support wildcards
+
+
+91
+00:10:00,080 --> 00:10:07,360
+as well in the file types and extensions. So at the moment there's only four permissions,
+
+
+92
+00:10:07,360 --> 00:10:12,360
+but the idea is to add more when we see good use cases. So I've talked about store app
+
+
+93
+00:10:12,360 --> 00:10:19,320
+data. There's edit chosen files. So when an app says I can edit, I can open whatever,
+
+
+94
+00:10:19,320 --> 00:10:24,400
+image files, then this allows you that the app, when you open a file with a particular
+
+
+95
+00:10:24,400 --> 00:10:31,720
+app, that it can then overwrite that file. There's read folder for apps that can view
+
+
+96
+00:10:31,720 --> 00:10:36,600
+folders. So like a gallery app or something like that. And then the first three are all
+
+
+97
+00:10:36,600 --> 00:10:42,840
+kind of single player permissions. The last one starts to get interesting, which is exchange
+
+
+98
+00:10:42,840 --> 00:10:50,880
+messages with friends. Seems a bit left field. So we have a protocol in Pyrgos, which is
+
+
+99
+00:10:50,880 --> 00:10:57,640
+a very simple chat protocol. It's peer to peer. It's eventually consistent and end to
+
+
+100
+00:10:57,640 --> 00:11:05,640
+end encrypted. And all this does is allow an app to send messages to people you're already
+
+
+101
+00:11:05,640 --> 00:11:13,800
+friends with who have the same app installed or who you want to install that app. And so
+
+
+102
+00:11:13,800 --> 00:11:20,640
+you can imagine asynchronous things like multiplayer games like chess or whatever, something like
+
+
+103
+00:11:20,640 --> 00:11:26,560
+that. It's not really real time yet. One day we'd love to have a permission which is real
+
+
+104
+00:11:26,560 --> 00:11:33,480
+time stream to my friends over a libp2p stream. And then you could do things like network
+
+
+105
+00:11:33,480 --> 00:11:42,600
+doom. There are a couple of parameters which apps get. If you're opening a file or a directory,
+
+
+106
+00:11:42,600 --> 00:11:48,280
+you get the path and whether or not it's writable. And just the theme, whether it's a dark theme
+
+
+107
+00:11:48,280 --> 00:11:55,760
+or not, which can be useful. So this REST API, basically the REST API is in that service
+
+
+108
+00:11:55,760 --> 00:12:10,240
+worker. So the service worker in the OS process 2, that's the thing that intercepts the API
+
+
+109
+00:12:10,240 --> 00:12:14,360
+requests from the app and then translates them to post messages which are sent to the
+
+
+110
+00:12:14,360 --> 00:12:21,880
+main tab and then handled there. The other thing I forgot to mention here is the subdomain
+
+
+111
+00:12:21,880 --> 00:12:32,360
+is run in a separate operating system level process to guard against side channel attacks.
+
+
+112
+00:12:32,360 --> 00:12:39,320
+So the REST API. So anything under the data path, if you have that permission, that's
+
+
+113
+00:12:39,320 --> 00:12:49,280
+the app specific folder which you can read and write to. An app without any permissions
+
+
+114
+00:12:49,280 --> 00:12:53,680
+can ask you to save a file to your space. So it's a bit like a browser asking you to
+
+
+115
+00:12:53,680 --> 00:12:58,200
+save a file except it ends up in your peer-got space. That doesn't need a permission because
+
+
+116
+00:12:58,200 --> 00:13:02,920
+the user has to choose a file name and a place for it. And that's just, yeah, you just post
+
+
+117
+00:13:02,920 --> 00:13:11,320
+to save. You can post a HTML form and store the results in a file. And then there's the
+
+
+118
+00:13:11,320 --> 00:13:20,600
+chat API. In terms of the files, so you can just basically get a path to get a file. You
+
+
+119
+00:13:20,600 --> 00:13:27,480
+can do, because Pagos has native thumbnails for files that we can do a thumbnail for,
+
+
+120
+00:13:27,480 --> 00:13:35,240
+you can add a preview equals true query to get a thumbnail. And yeah, post will create
+
+
+121
+00:13:35,240 --> 00:13:41,560
+a file, put will update a file, delete will delete a file, and patch will append. So it's
+
+
+122
+00:13:41,560 --> 00:13:50,240
+all just standard classic REST stuff. The chat API is quite simple. You can basically
+
+
+123
+00:13:50,240 --> 00:13:55,080
+list the chats that this app has created. So you can't see, obviously, chats created
+
+
+124
+00:13:55,080 --> 00:14:03,880
+by other apps. You can create a chat. You can get the messages by index. A chat is basically
+
+
+125
+00:14:03,880 --> 00:14:13,240
+your view of it is an append only log of messages. So everything has an index. And you can obviously
+
+
+126
+00:14:13,240 --> 00:14:39,840
+send messages. Right. I'm going to try some demos. Right. So let's just see. Where are
+
+
+127
+00:14:39,840 --> 00:14:53,320
+we? So there's, let's see, there's a PDF viewer. So viewing this PDF is totally sandboxed from
+
+
+128
+00:14:53,320 --> 00:15:06,960
+the rest of the process. You can view spreadsheets. So here's an Excel spreadsheet. We can view
+
+
+129
+00:15:06,960 --> 00:15:13,560
+it. Oh, sorry. That's the hex view. Less useful. We need to disable that. Yeah. Edit that in
+
+
+130
+00:15:13,560 --> 00:15:22,600
+lucky sheet. So there we go. So we can't edit Microsoft Office directly. We have to save
+
+
+131
+00:15:22,600 --> 00:15:29,760
+it to a more open format. Thanks, Microsoft. Which is a sheet file here. So you can edit
+
+
+132
+00:15:29,760 --> 00:15:45,960
+those. There's a document viewer. It's in Microsoft Office. So here's a document. Again,
+
+
+133
+00:15:45,960 --> 00:15:51,960
+totally sandboxed. So that's probably actually a good, probably one of the safest ways to
+
+
+134
+00:15:51,960 --> 00:16:02,400
+view Word docs if you're worried about macros and all that nonsense. Let's see. We have
+
+
+135
+00:16:02,400 --> 00:16:26,960
+a Winamp app or clone. See if the sound works. And so the other cool thing with apps is they're,
+
+
+136
+00:16:26,960 --> 00:16:31,840
+I mean, they're just folders in PairGlass basically. So apps don't have to be public.
+
+
+137
+00:16:31,840 --> 00:16:36,360
+So you can have a private app that only you know about, or you can share it with your
+
+
+138
+00:16:36,360 --> 00:16:43,080
+friends and so on. So it's kind of an additional permissioning system to the web. Let's see
+
+
+139
+00:16:43,080 --> 00:17:01,720
+what else we got. There's a text editor. With syntax highlighting. These are all still single
+
+
+140
+00:17:01,720 --> 00:17:10,280
+player stuff. So the website viewer, I mentioned that. So this is just a folder with some HTML.
+
+
+141
+00:17:10,280 --> 00:17:20,960
+I'm going to view it. There it is rendered as a webpage. I can open that in the text
+
+
+142
+00:17:20,960 --> 00:17:41,080
+editor, the other app, and add something. And then reopen it. There it is. Hey-ya. And
+
+
+143
+00:17:41,080 --> 00:17:48,440
+the thing I mentioned about browsing Markdown natively. So here's a folder with some Markdown.
+
+
+144
+00:17:48,440 --> 00:17:59,000
+So index.md. Let's view that. So that's rendered the Markdown. It's got links to other files,
+
+
+145
+00:17:59,000 --> 00:18:06,640
+which again, just files in PairGlass. So what is that? That's a to-do thing. This is a presentation.
+
+
+146
+00:18:06,640 --> 00:18:10,800
+So that's a PDF file. So you can click on that link and it will open that in whatever
+
+
+147
+00:18:10,800 --> 00:18:21,480
+app we have installed for it. The images are again, you can view them full size. This is
+
+
+148
+00:18:21,480 --> 00:18:30,560
+a sub-directories Markdown document with some stuff. Go back. If I want to edit it, I can
+
+
+149
+00:18:30,560 --> 00:18:56,440
+just edit it here in place. And then just close it. And there we are. Five. So that's
+
+
+150
+00:18:56,440 --> 00:19:07,000
+the Markdown browser. In terms of apps themselves, this is the source code, shall we say, of
+
+
+151
+00:19:07,000 --> 00:19:13,960
+some of the apps. Here's another one, actually. Let's show this one. Let's go in here. So
+
+
+152
+00:19:13,960 --> 00:19:23,920
+if you want to run an app in place, this is Doom. So we just go run app down here. This
+
+
+153
+00:19:23,920 --> 00:19:32,960
+is the manifest here. Let me show you the manifest first. So yeah, this is very simple.
+
+
+154
+00:19:32,960 --> 00:19:39,640
+Some metadata, display names, and the only important one here is the fact that it's launchable.
+
+
+155
+00:19:39,640 --> 00:20:00,080
+So this is running Doom in an emulator, which one of our team members wrote.
+
+
+156
+00:20:01,000 --> 00:20:09,000
+This is the shareware version, so there's no copyright issues here. The cheat still works, so that's cool.
+
+
+157
+00:20:09,000 --> 00:20:16,000
+And it's totally playable, as you can see. Anyway, that's enough of that.
+
+
+158
+00:20:16,000 --> 00:20:31,000
+And yeah, okay, what else is there? Let's go to the images. So there's a bunch of images here.
+
+
+159
+00:20:31,000 --> 00:20:51,000
+I'm going to try editing this one in PaintZ. Doesn't look like that got the image, not sure why.
+
+
+160
+00:20:51,000 --> 00:21:05,000
+I think PaintZ might... There we go, okay. So let's try something. Hi. Where's the save book in this app?
+
+
+161
+00:21:05,000 --> 00:21:24,000
+There it is. Coolio. So now if we open this in the Note Viewer, there it is. Hi.
+
+
+162
+00:21:24,000 --> 00:21:33,000
+Yeah, I'm definitely an artist. One of the other things I guess I didn't show in the Web Viewer is videos.
+
+
+163
+00:21:33,000 --> 00:21:42,000
+You can play videos just like in any other website. One of the cool things I'll talk more about in a talk later today
+
+
+164
+00:21:42,000 --> 00:21:48,000
+is fast seeking within large files. So this allows you to do seeking within videos.
+
+
+165
+00:21:48,000 --> 00:22:01,000
+So this is not a huge video, it's 120 meg, but it's big enough. And so we can skip ahead and seek forward relatively quickly.
+
+
+166
+00:22:01,000 --> 00:22:12,000
+And you can go backwards as well. And the seeking there is O of 1 in IO, in round trips to the server,
+
+
+167
+00:22:12,000 --> 00:22:32,000
+independent of the file size. Which is interesting. Right. What haven't I done? So I guess we saw...
+
+
+168
+00:22:32,000 --> 00:22:43,000
+So if you want to create an app, it's super easy. Just go down here, go New App, pick a name, choose the permissions you want.
+
+
+169
+00:22:43,000 --> 00:22:55,000
+Okidoki. And it will create a little template app for you. What do I call it? Fred. Where's Fred gone?
+
+
+170
+00:22:55,000 --> 00:23:02,000
+What's going on there? There we go. So Fred's there. So we've got our manifest, which...
+
+
+171
+00:23:02,000 --> 00:23:10,000
+What did I ask for? I asked for store app data, so that's there. Some other defaults.
+
+
+172
+00:23:10,000 --> 00:23:22,000
+And basically an assets folder with an index HTML. I'm not sure what's actually in this HTML. Let's run it and see.
+
+
+173
+00:23:22,000 --> 00:23:29,000
+Fred. Ok. Cool. Makes sense.
+
+
+174
+00:23:29,000 --> 00:23:36,000
+Another app we have is a calendar. So this is one of the more useful ones, potentially.
+
+
+175
+00:23:36,000 --> 00:23:41,000
+So the model here is you can have multiple calendars. Each calendar is a folder.
+
+
+176
+00:23:41,000 --> 00:23:51,000
+And events are standard iCal files within that folder. There's a little hierarchy for the date, but that's about it.
+
+
+177
+00:23:51,000 --> 00:23:56,000
+And so that gives you... You can use the native access control to share access to individual events.
+
+
+178
+00:23:56,000 --> 00:24:02,000
+So we've got an event here, which is the IPFS thing closing party.
+
+
+179
+00:24:02,000 --> 00:24:08,000
+And we can share that via a secret link with anyone.
+
+
+180
+00:24:08,000 --> 00:24:22,000
+And if I go to anyone, aka an incognito tab, and paste that...
+
+
+181
+00:24:22,000 --> 00:24:27,000
+So there we go. We've got a link we can share with anyone to view the event.
+
+
+182
+00:24:27,000 --> 00:24:43,000
+You can also share entire calendars. That just shares the folder that the calendar is in.
+
+
+183
+00:24:43,000 --> 00:24:49,000
+Cool. That's probably enough on the demo side. Let's go back to full screen. Yep.
+
+
+184
+00:24:49,000 --> 00:24:56,000
+So Safari. Unfortunately custom apps don't work. There are two... Well, two-ish reasons for this.
+
+
+185
+00:24:56,000 --> 00:25:01,000
+One is service workers and routable streams inside an iframe doesn't work in Safari.
+
+
+186
+00:25:01,000 --> 00:25:07,000
+It works in all other browsers. I don't think there's a good reason for that. I think they just haven't done it.
+
+
+187
+00:25:07,000 --> 00:25:13,000
+If you know a Safari developer, then please put us in touch.
+
+
+188
+00:25:13,000 --> 00:25:23,000
+The other one is local host subdomains don't work on Safari. I know PL is pushing on that independently, so that's cool.
+
+
+189
+00:25:23,000 --> 00:25:28,000
+But yeah, it's almost there. But it works in all the other browsers.
+
+
+190
+00:25:28,000 --> 00:25:34,000
+So yeah, get building. There's a book.peargos.org with an app section you can have a look at.
+
+
+191
+00:25:34,000 --> 00:25:39,000
+All those example apps I showed are in a repo here in Peargos example apps.
+
+
+192
+00:25:39,000 --> 00:25:45,000
+And I showed you, yeah, you can get started and create an app super easily.
+
+
+193
+00:25:45,000 --> 00:25:49,000
+Any questions?
+
+
+194
+00:25:49,000 --> 00:25:54,000
+Come on, if it's hot. One minute. Bingo.
+
+
+195
+00:26:04,000 --> 00:26:15,000
+I have a question about building an app and keeping the code isolated if I were to try to sell an application inside of Peargos.
+
+
+196
+00:26:15,000 --> 00:26:20,000
+Is that possible today and be profitable but also secretive of my source?
+
+
+197
+00:26:20,000 --> 00:26:25,000
+Yeah, so you control the access to the app. There's no in-band charging or anything like that.
+
+
+198
+00:26:25,000 --> 00:26:29,000
+But if you have your own charging mechanism, you can give people access to it.
+
+
+199
+00:26:29,000 --> 00:26:33,000
+And grant or remove permissions based on some other. Okay, cool.
+
+
+200
+00:26:33,000 --> 00:26:36,000
+Once they've installed it, they've got a copy of it, but you can still get updates.
+
+
+201
+00:26:36,000 --> 00:26:38,000
+Yeah, they have the source at that point, right?
+
+
+202
+00:26:38,000 --> 00:26:40,000
+You can stop them getting updates after that.
+
+
+203
+00:26:40,000 --> 00:26:47,000
+Okay, cool. Thanks.

@@ -1,0 +1,1568 @@
+1
+00:00:00,000 --> 00:00:15,040
+Cool. Okay. Thank you. My name is Asmir. For those who don't know me, I am an engineer
+
+
+2
+00:00:15,040 --> 00:00:24,600
+at Number Zero, mainly working on the IRO project. Yeah, I'm a mostly numbers kind of
+
+
+3
+00:00:24,600 --> 00:00:29,520
+ops type of guy. I like to stray from the main path and just do, like, a lot of different
+
+
+4
+00:00:29,520 --> 00:00:36,920
+things, but I try to always come back to the numbers because that's what I asked for. At
+
+
+5
+00:00:36,920 --> 00:00:41,520
+Number Zero, we're building IRO, and we're trying to do our own IPFS implementation that
+
+
+6
+00:00:41,520 --> 00:00:49,640
+kind of closes the gap between Web 2 and Web 3. We were at camp, and we then presented
+
+
+7
+00:00:49,640 --> 00:00:55,440
+some numbers which people found interesting, and today I just wanted to expand on that
+
+
+8
+00:00:55,440 --> 00:01:00,560
+a little bit and present what we did, how we did it, and, yeah, maybe we can share some
+
+
+9
+00:01:00,560 --> 00:01:09,360
+experiences. Yeah, so I don't know if anybody recognizes this image. I highly recommend
+
+
+10
+00:01:09,360 --> 00:01:14,800
+the talk behind this. This came out because I tried to find an image for a slide, and
+
+
+11
+00:01:14,800 --> 00:01:20,400
+I wanted to do a what, how, why about the presentation, and Wetman is a really funny
+
+
+12
+00:01:20,400 --> 00:01:25,680
+talk that I like to listen every now and then and have a good laugh, so I highly recommend
+
+
+13
+00:01:25,680 --> 00:01:34,200
+it. Anyways, the what. So, yeah, I like being pragmatic about the stuff I do, and so most
+
+
+14
+00:01:34,200 --> 00:01:38,680
+of my work incidentally also has to be pragmatic because we want to move fast and we are a
+
+
+15
+00:01:38,680 --> 00:01:43,440
+small team, and I just keep building and building more and more tools to measure more stuff
+
+
+16
+00:01:43,440 --> 00:01:49,600
+and produce more numbers. Over the past year, there were a lot of things that we built,
+
+
+17
+00:01:49,600 --> 00:01:55,600
+and I just want to show them and maybe present the impact it had on our work, how it shaped
+
+
+18
+00:01:55,600 --> 00:02:02,960
+the course of our work, and make a small summary and distill some takeaways, some learnings,
+
+
+19
+00:02:02,960 --> 00:02:11,320
+gotchas, I don't know, painful moments, something like that. So, yeah, the how. I'll explain
+
+
+20
+00:02:11,320 --> 00:02:17,680
+these images. This is an old kind of computer or server that I had laying around the floor.
+
+
+21
+00:02:17,680 --> 00:02:22,600
+Now it's cleaned up, and this is where our infrastructure for metrics lived for quite
+
+
+22
+00:02:22,600 --> 00:02:28,240
+a while, actually. I now moved it into a nicer cabinet, but it's still the same stuff. I
+
+
+23
+00:02:28,240 --> 00:02:34,240
+got a lot more gear that's on my table that isn't in the rack, which it should be. Anyway,
+
+
+24
+00:02:34,240 --> 00:02:39,400
+so we started about a year ago. We knew we wanted to do numbers from the start and just
+
+
+25
+00:02:39,400 --> 00:02:46,600
+like optimise bit by bit and do very focused precision level adjustments to what we do.
+
+
+26
+00:02:46,600 --> 00:02:50,240
+We wanted to do smaller pieces instead of the full blown IPFS implementation. We wanted
+
+
+27
+00:02:50,240 --> 00:02:56,180
+to take out the individual bits and do them one by one and slowly iterate on those instead
+
+
+28
+00:02:56,180 --> 00:03:01,960
+of trying to do the whole balloon, because there's a lot of stuff to do. So the hard
+
+
+29
+00:03:01,960 --> 00:03:07,200
+part for me is this was basically the dark metrics ages at number zero, because we had
+
+
+30
+00:03:07,200 --> 00:03:12,680
+no infrastructure, we had no code, no dashboards, no nothing, except there were furious engineers
+
+
+31
+00:03:12,680 --> 00:03:18,400
+trying to produce as much code as possible and they wanted numbers yesterday. So yeah,
+
+
+32
+00:03:18,400 --> 00:03:24,520
+I had to survive that. And the why for the presentation, I don't really have a super
+
+
+33
+00:03:24,520 --> 00:03:29,400
+strong reason, it's just that I like to share engineering banter and just share and learn
+
+
+34
+00:03:29,400 --> 00:03:37,160
+from everybody's experiences, and I hope to do the same for you two here. Q&A is formally
+
+
+35
+00:03:37,160 --> 00:03:42,600
+at the end, but you can grill me on the spot, like this is meant to be very casual and you
+
+
+36
+00:03:42,600 --> 00:03:50,920
+can just raise your hand and ask questions throughout the presentation. Cool?
+
+
+37
+00:03:50,920 --> 00:03:56,320
+So the timeline. I used Ali to generate this image, it's a Capybara traveling through time
+
+
+38
+00:03:56,320 --> 00:04:02,400
+from the Big Bang. No strong explanation, I just don't know why it has wheels, I apparently
+
+
+39
+00:04:02,400 --> 00:04:11,080
+need wheels to travel through time. So yeah, let's go to the timeline and I'll just start
+
+
+40
+00:04:11,080 --> 00:04:18,000
+showing. So commit number nine was implementing metrics. I really had to rush this one and
+
+
+41
+00:04:18,000 --> 00:04:23,640
+just show some numbers so we can start iterating. It was fairly simple, like this was collect
+
+
+42
+00:04:23,640 --> 00:04:29,600
+simple counters, I don't know, numbers of requests, bytes served, bytes received, I
+
+
+43
+00:04:29,600 --> 00:04:33,360
+don't know, just to get something going. And it was exposed as a single Prometheus
+
+
+44
+00:04:33,360 --> 00:04:39,120
+endpoint like most people start out. Obviously that's a little bit hard to consume for them
+
+
+45
+00:04:39,120 --> 00:04:45,040
+so I had to build more. Yeah, those that are interested in the Rust
+
+
+46
+00:04:45,040 --> 00:04:51,920
+specifics, I started with Tokio's metrics crate and it was nice, but the whole community
+
+
+47
+00:04:51,920 --> 00:04:59,520
+otherwise was using Prometheus client and different tooling, so for compatibility reasons
+
+
+48
+00:04:59,520 --> 00:05:05,560
+with libpdb specifically because we wanted to dive deep into that, I shifted the library
+
+
+49
+00:05:05,560 --> 00:05:10,920
+that we use underneath. It also allowed me to hack a little bit more so we did more things
+
+
+50
+00:05:10,920 --> 00:05:16,320
+to make it easier for us. Yeah, the second bit that I had to do is just
+
+
+51
+00:05:16,320 --> 00:05:20,680
+prop up some infrastructure and you saw the box that hosted our infrastructure for quite
+
+
+52
+00:05:20,680 --> 00:05:26,840
+a while. I wanted to avoid lock in because we didn't really know what tooling we were
+
+
+53
+00:05:26,840 --> 00:05:31,960
+going to use and how far we would need to scale or not scale and we just wanted to be
+
+
+54
+00:05:31,960 --> 00:05:39,880
+as fluid as possible with that. So I basically took a very simple Prometheus stack. I took
+
+
+55
+00:05:39,880 --> 00:05:48,080
+timescale DB which is basically Postgres with Centwix to get the counter data in and what
+
+
+56
+00:05:48,080 --> 00:05:53,200
+I did to kind of like help the devs out a little bit is convert all their code to kind
+
+
+57
+00:05:53,200 --> 00:05:59,480
+of like be pushing data out to push gateway instead of like scraping as you usually do
+
+
+58
+00:05:59,480 --> 00:06:08,560
+with Prometheus. This had some bad, well, not bad, but it had some properties like the
+
+
+59
+00:06:08,560 --> 00:06:15,520
+push gateway continually keeps the last value that you sent it and if a node dies or otherwise
+
+
+60
+00:06:15,520 --> 00:06:20,680
+doesn't report any more data unless you scrub your push gateways regularly, it just reports
+
+
+61
+00:06:20,680 --> 00:06:27,160
+the last value you've ever seen. And if it drops off, you don't know that it dropped
+
+
+62
+00:06:27,160 --> 00:06:31,760
+off because you see like a constant line and if you don't monitor closely, you lose track
+
+
+63
+00:06:31,760 --> 00:06:37,440
+of it. And I set up a Gopher Fano dashboard so we can just see that that was our portal
+
+
+64
+00:06:37,440 --> 00:06:47,320
+into Metrix. Let's see. Yeah, so the first tool that I built just to keep things going
+
+
+65
+00:06:47,320 --> 00:06:52,720
+is a small finger utility. It basically hit a few well-known endpoints that we had set
+
+
+66
+00:06:52,720 --> 00:06:58,120
+up on our deployments just so they would generate traffic and people could see their own thing
+
+
+67
+00:06:58,120 --> 00:07:02,480
+working, doing something because otherwise the only method of testing was somebody had
+
+
+68
+00:07:02,480 --> 00:07:08,760
+to manually go and try to fetch stuff or see stuff and just make our lives easier. It wasn't
+
+
+69
+00:07:08,760 --> 00:07:12,800
+really a super helpful tool. It just kept things going and it was useful in the first
+
+
+70
+00:07:12,800 --> 00:07:18,120
+days just to see if everything got broken down or stuck or whatever.
+
+
+71
+00:07:18,120 --> 00:07:22,000
+So moving on from there, this was actually our first proper tool that actually brought
+
+
+72
+00:07:22,000 --> 00:07:29,120
+a lot of insights into our work. Back at camp, Thibault from Cloudflare actually presented
+
+
+73
+00:07:29,120 --> 00:07:35,040
+a very similar tool which was also similarly named. And I was really glad to hear about
+
+
+74
+00:07:35,040 --> 00:07:40,960
+that because that meant whatever I built here wasn't really a totally off idea. It had some
+
+
+75
+00:07:40,960 --> 00:07:49,240
+sense to it and was useful beyond our own walled garden. So what I did here is we deployed
+
+
+76
+00:07:49,240 --> 00:07:55,760
+across a number of regions and we wanted to build a few test cases to have a playground
+
+
+77
+00:07:55,760 --> 00:08:01,720
+where we could do apples to apples comparisons to other implementations. The easiest ways
+
+
+78
+00:08:01,720 --> 00:08:07,800
+for us to do it is just use gateways as an entry platform for all and have a tool that
+
+
+79
+00:08:07,800 --> 00:08:13,920
+kind of hammers those with specific requests and test cases. I had a few boxes that would
+
+
+80
+00:08:13,920 --> 00:08:19,560
+spin up random data and push them to the network and see how fast they would resolve, what's
+
+
+81
+00:08:19,560 --> 00:08:24,960
+the latency, time to first byte, time to, I don't know, download the whole thing. There
+
+
+82
+00:08:24,960 --> 00:08:30,720
+were cases where you would do a repeat request so you can test the caching properties that
+
+
+83
+00:08:30,720 --> 00:08:38,280
+it had and so on. This turned out to be really good because I deployed it about the time
+
+
+84
+00:08:38,280 --> 00:08:43,960
+we had our first working version of Iroh at that point, or at least we thought we had
+
+
+85
+00:08:43,960 --> 00:08:50,960
+that with it. The first numbers that came in, they were horrible for us. We were doing,
+
+
+86
+00:08:50,960 --> 00:08:56,840
+I don't know, 5, 10, 15% of all resolutions at all, not looking at the numbers of the
+
+
+87
+00:08:56,840 --> 00:09:04,200
+time or latency it took to do things. This actually motivated the whole team to go all
+
+
+88
+00:09:04,200 --> 00:09:11,480
+hands on deck and see what the hell was wrong with it. So at that specific time we were
+
+
+89
+00:09:11,480 --> 00:09:16,400
+just starting out with our BitSwap implementation and BitSwap is a finicky thing. The spec is
+
+
+90
+00:09:16,400 --> 00:09:20,960
+super light and it seems super easy to do. In reality it's probably the hardest thing
+
+
+91
+00:09:20,960 --> 00:09:28,960
+you'll have to implement regarding the whole IPFS network thing, at least initially. We
+
+
+92
+00:09:28,960 --> 00:09:34,480
+had a lot of trouble seeing why it didn't work. You can see that it doesn't work, but
+
+
+93
+00:09:34,480 --> 00:09:40,440
+it's really hard because, again, superficially it's very easy. And then we started digging
+
+
+94
+00:09:40,440 --> 00:09:47,800
+into it to see. So we had to backtrack a couple of times and we went and compared against
+
+
+95
+00:09:47,800 --> 00:09:52,720
+Kubo and its implementation, what it did, and obviously had a lot more implemented at
+
+
+96
+00:09:52,720 --> 00:09:57,000
+that point. So we started to backtrack and just keep adding more and more of the surrounding
+
+
+97
+00:09:57,000 --> 00:10:03,480
+stuff to BitSwap until it started kind of working. We did a lot of refinements and we
+
+
+98
+00:10:03,480 --> 00:10:11,080
+got up to par with the rest of the gateways and eventually we managed to be like the top
+
+
+99
+00:10:11,080 --> 00:10:16,720
+three in terms of numbers, ability to resolve and everything else. So things were rosy.
+
+
+100
+00:10:16,720 --> 00:10:24,680
+We were really happy. This was maybe like a month or two before we had to go to camp.
+
+
+101
+00:10:24,680 --> 00:10:29,400
+Remember the rosy moment because it wasn't that rosy.
+
+
+102
+00:10:29,400 --> 00:10:35,200
+So this is the second tool that came in. It came in about halfway when we were working
+
+
+103
+00:10:35,200 --> 00:10:40,480
+through the gateway checker stuff that we discovered. Internally we called it the test
+
+
+104
+00:10:40,480 --> 00:10:47,560
+stream, but basically George from PL was kind enough to hook us with a substream of the
+
+
+105
+00:10:47,560 --> 00:10:54,560
+gateway requests on a certain region and basically forward us the requests as they came in. So
+
+
+106
+00:10:54,560 --> 00:10:59,600
+we can do some real world testing in the whole thing.
+
+
+107
+00:10:59,600 --> 00:11:05,600
+And I basically took that stream, made a simple utility that would replicate the requests
+
+
+108
+00:11:05,600 --> 00:11:13,920
+across a number of machines that we had standing. I compared to like IRO from the main branch,
+
+
+109
+00:11:13,920 --> 00:11:20,600
+IRO from a dev box that we used to continuously test, Kubo for a couple of versions, and we
+
+
+110
+00:11:20,600 --> 00:11:25,800
+basically just iterated on those. The first thing that popped out to us is we
+
+
+111
+00:11:25,800 --> 00:11:32,680
+were back at the beginning because our numbers sucked again. Turns out the real world is
+
+
+112
+00:11:32,680 --> 00:11:39,160
+very different from artificially set up tests and it's really hard to try and predict what
+
+
+113
+00:11:39,160 --> 00:11:44,560
+you're going to encounter on the real network versus whatever we have locally set up. A
+
+
+114
+00:11:44,560 --> 00:11:48,960
+few machines here and there and you try to transfer data. That usually works out kind
+
+
+115
+00:11:48,960 --> 00:11:55,000
+of well, but if you start joining the actual network and serving actual data over the gateways,
+
+
+116
+00:11:55,000 --> 00:12:00,920
+it's going to be hard. It took us quite some time and a huge effort
+
+
+117
+00:12:00,920 --> 00:12:05,520
+from the whole team to start figuring out all the issues. We had issues with UNIXFS
+
+
+118
+00:12:05,520 --> 00:12:14,680
+pathing and we had issues with consuming data from all the different NFTs that were being
+
+
+119
+00:12:14,680 --> 00:12:19,320
+served. I think they didn't provide their records to the network. You only had the root
+
+
+120
+00:12:19,320 --> 00:12:29,000
+provided. So we had to work on actually fetching the data out. And we slowly built that stuff
+
+
+121
+00:12:29,000 --> 00:12:36,480
+up. And we came to solid numbers on the whole thing. And again, we built it up. We're going
+
+
+122
+00:12:36,480 --> 00:12:42,160
+to draw back again. But it was one of the tools that actually showed
+
+
+123
+00:12:42,160 --> 00:12:50,080
+us the value of continuously testing and testing with real stuff. In the same time, we were
+
+
+124
+00:12:50,080 --> 00:12:55,320
+doing a lot of benchmarking, like benchmarking the ad performance, get performance, and so
+
+
+125
+00:12:55,320 --> 00:13:02,560
+on. And the camp numbers that we showed and numbers that we might share here, in some
+
+
+126
+00:13:02,560 --> 00:13:07,540
+we are better than Kubo, in some we are worse than Kubo. And I can pretty certainly say
+
+
+127
+00:13:07,540 --> 00:13:13,360
+that those numbers don't always reflect the reality. Kubo beat us out functionally on
+
+
+128
+00:13:13,360 --> 00:13:18,720
+a lot of things, even though we had better numbers on raw ad and get performance. We
+
+
+129
+00:13:18,720 --> 00:13:23,800
+managed to get back on our feet and actually do a pretty good job on resolving stuff and
+
+
+130
+00:13:23,800 --> 00:13:30,520
+doing stuff. But real world testing is king. Until you put it like testing production,
+
+
+131
+00:13:30,520 --> 00:13:36,320
+basically. There's no substitute for that. You'll have to burn yourself on that.
+
+
+132
+00:13:36,320 --> 00:13:41,040
+And the performance benchmarking we did, there was a lot of fun with that. I initially took
+
+
+133
+00:13:41,040 --> 00:13:47,080
+a cloud box and basically ran the code side by side and different tests. And you get some
+
+
+134
+00:13:47,080 --> 00:13:53,280
+numbers. If you repeat the same test throughout the day ten times, you'll get different numbers.
+
+
+135
+00:13:53,280 --> 00:13:58,680
+Not all of them are different. Wildly different numbers. So what happens? Well, it turns out
+
+
+136
+00:13:58,680 --> 00:14:03,040
+cloud providers have virtualized and abstracted so many layers that you never really know
+
+
+137
+00:14:03,040 --> 00:14:11,160
+where it runs or how well it will run. The first issue for us was this was very inconsistent
+
+
+138
+00:14:11,160 --> 00:14:18,880
+on cloud providers. So we used a provisioned I.O. machine or whatever. Which was nicer,
+
+
+139
+00:14:18,880 --> 00:14:22,960
+but it still wasn't really that consistent because sometimes you get a slightly faster
+
+
+140
+00:14:22,960 --> 00:14:27,280
+machine for whatever reason. Even the same configurations of machines never really perform
+
+
+141
+00:14:27,280 --> 00:14:34,320
+the same across our testing. Same kernel, same system, everything else.
+
+
+142
+00:14:34,320 --> 00:14:39,120
+So what we decided to do is build our own boxes. You can't really substitute having
+
+
+143
+00:14:39,120 --> 00:14:42,600
+your own hardware, a controlled environment, fixed dependencies, everything else and then
+
+
+144
+00:14:42,600 --> 00:14:47,680
+just running your stuff to test against. So I highly recommend whoever is doing any kind
+
+
+145
+00:14:47,680 --> 00:14:52,280
+of sort of benchmarking, unless it's a fleeting benchmark locally to see relative to yourself
+
+
+146
+00:14:52,280 --> 00:14:57,880
+how you're doing today. If you want concrete numbers over time, fixed boxes, dedicated
+
+
+147
+00:14:57,880 --> 00:15:04,640
+boxes. Yeah. During this time, we had a lot of issues.
+
+
+148
+00:15:04,640 --> 00:15:10,880
+We discovered that even when everything was rosy and things were working, after three
+
+
+149
+00:15:10,880 --> 00:15:18,560
+days, seven days, 15 days, things would lock up. And we were having abnormally large, like,
+
+
+150
+00:15:18,560 --> 00:15:27,120
+download or upload numbers. And it was odd. It took us time to figure out things that
+
+
+151
+00:15:27,120 --> 00:15:30,800
+were happening under the hood. One of the issues we actually never really resolved because
+
+
+152
+00:15:30,800 --> 00:15:35,960
+we just decided to move on from that and do a different thing.
+
+
+153
+00:15:35,960 --> 00:15:41,080
+But we had to instrument everything. Like, logs didn't really help because there was
+
+
+154
+00:15:41,080 --> 00:15:44,520
+so much volume of data and everything else coming through that you couldn't really,
+
+
+155
+00:15:44,520 --> 00:15:48,680
+like, humanly filter it to a sensible amount. Like, even if you filter it down to a set
+
+
+156
+00:15:48,680 --> 00:15:54,000
+of logs, you don't really understand them if you look at them that way.
+
+
+157
+00:15:54,000 --> 00:15:58,480
+So metrics. Just numbers. More numbers. And just aggregate more and more numbers until
+
+
+158
+00:15:58,480 --> 00:16:05,160
+you start making sense of it. For our BitSwap implementation, we literally
+
+
+159
+00:16:05,160 --> 00:16:10,920
+instrumented every for loop, every if, every event that was sent out, everything to get
+
+
+160
+00:16:10,920 --> 00:16:16,920
+a little bit more sense. So we had a lot of run loops and a lot of, like, branching predictors
+
+
+161
+00:16:16,920 --> 00:16:23,040
+and a lot of calendars for events and just trying to connect, like, when this event happens,
+
+
+162
+00:16:23,040 --> 00:16:27,920
+what happens there? And it's terribly hard because it's a very soft system and you're
+
+
+163
+00:16:27,920 --> 00:16:32,840
+talking to a number of nodes. So we decided eventually to kind of, like, try to isolate
+
+
+164
+00:16:32,840 --> 00:16:40,760
+that out and test out some things. I'll touch on test round a little bit later.
+
+
+165
+00:16:40,760 --> 00:16:49,200
+But yeah. We had a lot of trouble in this period. But it helped us a lot and got us
+
+
+166
+00:16:49,200 --> 00:16:53,880
+ready for camp. And we actually managed to deliver a functioning product at that time
+
+
+167
+00:16:53,880 --> 00:17:00,800
+which had good perf characteristics and we moved on. We used this tool later and it actually
+
+
+168
+00:17:00,800 --> 00:17:04,720
+helped us to get to the point where we were saying we were going to do something else.
+
+
+169
+00:17:04,720 --> 00:17:12,160
+And basically it was, like, changing tides. We decided at Iroh to just go back to zero
+
+
+170
+00:17:12,160 --> 00:17:16,720
+and revisit all the little bits that we were doing and just take control of our full stack
+
+
+171
+00:17:16,720 --> 00:17:24,520
+and build it from the ground up. Test stream showed, like, after all the, like, different
+
+
+172
+00:17:24,520 --> 00:17:29,520
+fixes and improvements and optimizations, we were having decent results. But eventually
+
+
+173
+00:17:29,520 --> 00:17:34,440
+things started breaking. Or for some certain use cases, we were having suboptimal results
+
+
+174
+00:17:34,440 --> 00:17:39,160
+even though we should be having probably good results.
+
+
+175
+00:17:39,160 --> 00:17:45,080
+One of the things that really put us off was we found out that Rust and Go, even though
+
+
+176
+00:17:45,080 --> 00:17:50,200
+they should talk together perfectly, they don't. And it was really hard to maintain
+
+
+177
+00:17:50,200 --> 00:17:54,320
+connections between Rust and Go clients. And that essentially meant we were kind of cut
+
+
+178
+00:17:54,320 --> 00:17:59,480
+off from the public network in a real sense. Like, sometimes it worked, but usually it
+
+
+179
+00:17:59,480 --> 00:18:05,360
+didn't. And that's when we knew we had to take control of our own stack and just start
+
+
+180
+00:18:05,360 --> 00:18:09,760
+doing really, really iterative design on very small bits.
+
+
+181
+00:18:09,760 --> 00:18:15,720
+Anyways, our priorities changed in terms of where we want to put effort in. And I had
+
+
+182
+00:18:15,720 --> 00:18:21,440
+to build more tooling. So I built a new repo. It's called Chuck. And the reason it's called
+
+
+183
+00:18:21,440 --> 00:18:26,680
+Chuck is because I just chuck stuff in there. It's a lot of, like, stuff to where I have
+
+
+184
+00:18:26,680 --> 00:18:31,840
+to play around, a little bit of scripts to help me out and do stuff.
+
+
+185
+00:18:31,840 --> 00:18:38,200
+The priority itself, the repository itself is really not that important by itself. But
+
+
+186
+00:18:38,200 --> 00:18:46,880
+it was the birthplace of NetSim. And NetSim is basically our homebrewed version of TestGround.
+
+
+187
+00:18:46,880 --> 00:18:52,120
+We did a couple of runs with TestGround. Those unfamiliar, it's a way to simulate a larger
+
+
+188
+00:18:52,120 --> 00:18:58,400
+set of network connected machines and just let them play out with a little bit of coordination
+
+
+189
+00:18:58,400 --> 00:19:03,360
+and metrics collection added onto it. It was a little bit heavyweight for our use
+
+
+190
+00:19:03,360 --> 00:19:10,160
+case. We didn't really need Docker eyes or Kubernetes environments spinning up thousands
+
+
+191
+00:19:10,160 --> 00:19:14,560
+of nodes and so on. We wanted to test connectivity. Two machines was initially enough for us and
+
+
+192
+00:19:14,560 --> 00:19:19,880
+maybe five later just to make sure the basics work and then we could talk about measuring
+
+
+193
+00:19:19,880 --> 00:19:27,360
+the whole network. By the way, thank you, ProBlab. Those are good numbers to have.
+
+
+194
+00:19:27,360 --> 00:19:33,120
+So we decided to do our own. And NetSim is a small tool based on Linux namespaces. It
+
+
+195
+00:19:33,120 --> 00:19:40,600
+uses Stanford's Mininet to prop up the network locally and it allows you to set up a number
+
+
+196
+00:19:40,600 --> 00:19:47,320
+of nodes with isolated spaces to run processes and then you just let it play out. It's weightless
+
+
+197
+00:19:47,320 --> 00:19:54,480
+overhead. We could really quickly iterate on it. Our dev loop on TestGround was fairly
+
+
+198
+00:19:54,480 --> 00:19:59,520
+slow. Building continuously takes time and we wanted to move fast. So this was a lot
+
+
+199
+00:19:59,520 --> 00:20:19,520
+easier.
+
+
+200
+00:20:00,000 --> 00:20:04,560
+also we didn't really need all the bells and whistles and coordination that TestGround provided.
+
+
+201
+00:20:04,560 --> 00:20:10,160
+So this was very easy to just keep spamming more and more different test cases,
+
+
+202
+00:20:10,160 --> 00:20:14,560
+scenarios and actually get fairly raw performance out of the box that we were
+
+
+203
+00:20:14,560 --> 00:20:20,880
+testing on in general. It was also running on a dedicated test box and what
+
+
+204
+00:20:20,880 --> 00:20:25,080
+we wanted to use it is to measure it against Web2 technology because that's
+
+
+205
+00:20:25,080 --> 00:20:29,360
+where we're trying to go. Kube is great functionally to test against but
+
+
+206
+00:20:29,360 --> 00:20:33,440
+it's not our performance like benchmark. We wanted to get to performance numbers
+
+
+207
+00:20:33,440 --> 00:20:41,120
+that are in the Web2 realm to make it useful and possible to regular folks.
+
+
+208
+00:20:41,120 --> 00:20:49,360
+So I built a small tool, small web server that serves content and we fetch it via
+
+
+209
+00:20:49,360 --> 00:20:54,400
+curl on the other end. The reason I did this is I wanted to make it apples to
+
+
+210
+00:20:54,400 --> 00:20:58,760
+apples and whenever I say apples to apples it means there's a lot of bias in
+
+
+211
+00:20:58,760 --> 00:21:04,160
+the decision-making process and bias is inherent to all these measurements.
+
+
+212
+00:21:04,160 --> 00:21:07,240
+Whenever we do measurements I know they're going to be biased one way or the
+
+
+213
+00:21:07,240 --> 00:21:12,800
+other. I think it's important to be just aware of them and make sure it's a
+
+
+214
+00:21:12,800 --> 00:21:18,440
+fair comparison because you can optimize web servers and curl responses and
+
+
+215
+00:21:18,440 --> 00:21:23,600
+everything else for your whole life and try to get more performance and
+
+
+216
+00:21:23,600 --> 00:21:30,840
+optimizing Web2 was not really our play. We were in the like IPFS space. So I
+
+
+217
+00:21:30,840 --> 00:21:37,560
+just wanted to give it a fair playground to test against. The end result of that
+
+
+218
+00:21:37,560 --> 00:21:43,280
+is that we decided to own our own metrics and basically go public with
+
+
+219
+00:21:43,280 --> 00:21:48,080
+numbers. There's a very small subset of the numbers live at perf.iro.computer.
+
+
+220
+00:21:48,080 --> 00:21:53,360
+On camp we promised we're gonna like keep doing numbers, numbers,
+
+
+221
+00:21:53,360 --> 00:21:58,240
+numbers because people like that and now we're just gonna like put them out there
+
+
+222
+00:21:58,240 --> 00:22:02,720
+so people can do and incrementally see what we did by each commit and by each
+
+
+223
+00:22:02,720 --> 00:22:09,000
+day how stuff performed and if it falls we own it and we figure out why it fell
+
+
+224
+00:22:09,000 --> 00:22:16,040
+if it grows that great even better. So yeah you can follow along numbers that
+
+
+225
+00:22:16,040 --> 00:22:21,400
+we now have out there and yeah I took heavy inspiration from perf.raslang
+
+
+226
+00:22:21,400 --> 00:22:24,640
+because they also have their own counters and like on bad days it's bad
+
+
+227
+00:22:24,640 --> 00:22:30,480
+on good days it's great. So you can follow along. Besides this I recommend
+
+
+228
+00:22:30,480 --> 00:22:36,520
+having like a discourse place where you can chat with other people and just have
+
+
+229
+00:22:36,520 --> 00:22:40,880
+them chime in. We have a perf channel on our discord that some people have joined
+
+
+230
+00:22:40,880 --> 00:22:45,920
+and it's been really useful to have like people from a completely different place
+
+
+231
+00:22:45,920 --> 00:22:49,760
+just come in and see something and just drop you a line or a hint or something
+
+
+232
+00:22:49,760 --> 00:22:54,120
+and it really helps out like getting a different perspective on things we were
+
+
+233
+00:22:54,120 --> 00:22:59,160
+doing and it's really helped us through us throughout the old iterative process
+
+
+234
+00:22:59,160 --> 00:23:06,320
+that we had so I fully recommend having a place to talk with people. Yeah that's
+
+
+235
+00:23:06,320 --> 00:23:10,960
+for the most part it. Here are the takeaways that I kind of like to count
+
+
+236
+00:23:10,960 --> 00:23:16,480
+for myself here but I hope you take some too. It's basically make sure that stuff
+
+
+237
+00:23:16,480 --> 00:23:21,000
+people build is continuously benchmarked because if you don't really test and
+
+
+238
+00:23:21,000 --> 00:23:27,440
+benchmark it people let it slip and slide somewhere else. Biases are always
+
+
+239
+00:23:27,440 --> 00:23:32,080
+present in whatever numbers you give there. If you're on cloud you're
+
+
+240
+00:23:32,080 --> 00:23:36,320
+obviously biased towards some sort of like configuration. If you're locally
+
+
+241
+00:23:36,320 --> 00:23:41,320
+then maybe my own box that dedicated to testing is flawed because it's one
+
+
+242
+00:23:41,320 --> 00:23:44,720
+platform and the other platform performs very differently for the same
+
+
+243
+00:23:44,720 --> 00:23:49,280
+good or whatever. It's really hard to cut out all the biases but if you do have
+
+
+244
+00:23:49,280 --> 00:23:53,080
+them try to be aware and just like adjust for them and make sure that it's
+
+
+245
+00:23:53,080 --> 00:23:57,040
+fair so if you're testing against something make sure they try to like
+
+
+246
+00:23:57,040 --> 00:24:03,480
+even the playground. Yeah test against real stuff. Synthetic
+
+
+247
+00:24:03,480 --> 00:24:08,360
+benchmarks lie a lot. So perf numbers whenever you generate them like micro
+
+
+248
+00:24:08,360 --> 00:24:12,480
+benchmarking that's good for your day-to-day development but on the grand
+
+
+249
+00:24:12,480 --> 00:24:19,000
+scale of like things working or performing well production testing. Yeah
+
+
+250
+00:24:19,000 --> 00:24:23,320
+use dedicated hardware. More metrics are greater for development. They're not
+
+
+251
+00:24:23,320 --> 00:24:27,720
+necessarily the best tool in the world for better decision-making. I tend to
+
+
+252
+00:24:27,720 --> 00:24:32,800
+distill metrics to a small number of those that we deem important like top
+
+
+253
+00:24:32,800 --> 00:24:37,760
+level performance indicators whatever to like kind of steer a ship but day to day
+
+
+254
+00:24:37,760 --> 00:24:43,120
+more metrics better always. And if you can do one thing like automate everything
+
+
+255
+00:24:43,120 --> 00:24:46,960
+and make it repeatable because only then you can like iteratively test on
+
+
+256
+00:24:46,960 --> 00:24:51,520
+something. If it's not repeatable that test is like a one-off just like
+
+
+257
+00:24:51,520 --> 00:24:59,800
+curiosity. Yeah that's about it. Here's a big thank you on the screen and if
+
+
+258
+00:24:59,800 --> 00:25:03,200
+there's questions or anything I'm happy to answer. Other than that here's my
+
+
+259
+00:25:03,200 --> 00:25:07,920
+some contact info how you can reach out and yeah.
+
+
+260
+00:25:27,360 --> 00:25:30,920
+It seemed like a big fork in the road was trying to replicate behavior seeing
+
+
+261
+00:25:30,920 --> 00:25:35,960
+in Kubo that didn't match I guess a spec or like a lightly specified. Yes yeah
+
+
+262
+00:25:35,960 --> 00:25:40,760
+that was a very big part. Can you dig into like what you were working from and
+
+
+263
+00:25:40,760 --> 00:25:48,360
+then how that went? Oh sure so I'll touch in two bits. One was because
+
+
+264
+00:25:48,360 --> 00:25:52,920
+personally I was working on doing the first pass on our own gateway and the
+
+
+265
+00:25:52,920 --> 00:26:02,640
+second one was doing the whole thing that bit swap. Bit swaps spec is fairly
+
+
+266
+00:26:02,640 --> 00:26:13,040
+concise and very idealistic. Turns out that as soon as you'd like want to be
+
+
+267
+00:26:13,040 --> 00:26:17,640
+part of the network it's not that it's not part of the spec it's just that the
+
+
+268
+00:26:17,640 --> 00:26:21,520
+spec says what it has to do but the spec doesn't tell you like what everybody
+
+
+269
+00:26:21,520 --> 00:26:27,360
+else is going to be doing on the network. So sending out requests and receiving
+
+
+270
+00:26:27,360 --> 00:26:31,640
+responses that's great but once you start adding more nodes people figured
+
+
+271
+00:26:31,640 --> 00:26:35,840
+out that that was overwhelming them so they started like limiting how much
+
+
+272
+00:26:35,840 --> 00:26:41,880
+messages you send out or receive back. There's issues because once you
+
+
+273
+00:26:41,880 --> 00:26:44,720
+want to receive all the bits of messages you have to parse them you don't really
+
+
+274
+00:26:44,720 --> 00:26:49,200
+know the contents of it or who sent it or why and then you have to like
+
+
+275
+00:26:49,200 --> 00:26:52,920
+go through them analyze them see if you want to read them or discard them or
+
+
+276
+00:26:52,920 --> 00:26:56,880
+whatever which introduces a lot of like volume issues you start getting a lot of
+
+
+277
+00:26:56,880 --> 00:27:02,040
+data in whether you like it or not. So people start really limiting stuff
+
+
+278
+00:27:02,040 --> 00:27:10,960
+around we did on our end too and there were things like where just
+
+
+279
+00:27:10,960 --> 00:27:22,160
+what was there were more issues so out of spec.
+
+
+280
+00:27:32,800 --> 00:27:38,240
+I can't remember specific details can I get back to you just just being me like
+
+
+281
+00:27:38,240 --> 00:27:41,480
+there was a lot like I can just share you a whole dump of the
+
+
+282
+00:27:41,480 --> 00:27:47,840
+discussions on that. Again the business spec is not the issue that it was out of
+
+
+283
+00:27:47,840 --> 00:27:52,000
+spec like the implementation versus the spec it's that the spec is very simple
+
+
+284
+00:27:52,000 --> 00:27:55,840
+and covers very little but the real world is very different in terms of like
+
+
+285
+00:27:55,840 --> 00:28:01,000
+what you get. Eventually you want like a lot of state management in there you
+
+
+286
+00:28:01,000 --> 00:28:06,680
+want to remember which peers streamed what so you can optimize. You have to
+
+
+287
+00:28:06,680 --> 00:28:10,640
+manage them a number of peers because otherwise you get overloaded and there's
+
+
+288
+00:28:10,640 --> 00:28:14,280
+a lot of little funky things that you have to do to maintain stable bitswap
+
+
+289
+00:28:14,280 --> 00:28:20,600
+like discussions with other nodes without just like nuking your own
+
+
+290
+00:28:20,600 --> 00:28:27,400
+machine even though it's by spec. The gateway was a little bit different story
+
+
+291
+00:28:27,400 --> 00:28:31,680
+when I started writing it there was no spec but fortunately just around the
+
+
+292
+00:28:31,680 --> 00:28:36,600
+time where I've written mine by copying some of the Kubo stuff over to Rust the
+
+
+293
+00:28:36,600 --> 00:28:40,040
+spec came out and I was fortunate enough to be very close to the spec and it
+
+
+294
+00:28:40,040 --> 00:28:45,600
+helped me iron out the like last bits so I think the gateways so far are quite
+
+
+295
+00:28:45,600 --> 00:28:51,960
+up to spec for example compared to everything else. Yeah hope it helped a
+
+
+296
+00:28:51,960 --> 00:28:56,360
+little bit but feel free to catch me around later and we can chat more
+
+
+297
+00:28:56,360 --> 00:28:58,760
+about it.
+
+
+298
+00:28:58,760 --> 00:29:10,720
+Anybody else? I have a quick question on the dashboard that you were showing.
+
+
+299
+00:29:10,720 --> 00:29:17,600
+What are the numbers like it's gigabits per second one to one one to ten
+
+
+300
+00:29:17,600 --> 00:29:39,200
+are these just network node numbers or is it yeah okay okay so it's not node
+
+
+301
+00:29:39,200 --> 00:29:45,920
+numbers as in node one to node ten is one to ten right okay and it's the same
+
+
+302
+00:29:45,920 --> 00:29:54,600
+everywhere okay interesting. So this is a very simple snapshot. I'm going to expand on these numbers quite a bit over the next few weeks or quarter or whatever.
+
+
+303
+00:29:54,600 --> 00:30:02,000
+Okay and and the latency are like link latencies?
+
+
+304
+00:30:02,000 --> 00:30:16,320
+Yeah, we're trying to get the loss numbers to like between the cross links of those serving and those receiving.
+
+
+305
+00:30:16,320 --> 00:30:31,920
+Okay. This is just for like comparison sake to see the impact. They don't really serve a super high purpose right now but we want to intend to model some specific real world use cases that we know about in terms of like user perceived latency numbers or loss numbers and basically try to replicate or emulate such networks which are a lot more complex than like
+
+
+306
+00:30:31,920 --> 00:30:34,960
+just doing one to one transports with a little bit of latency.
+
+
+307
+00:30:34,960 --> 00:30:38,000
+Right, okay. Excellent, thank you.
+
+
+308
+00:30:38,000 --> 00:30:40,000
+Thank you.
+
+
+309
+00:30:40,000 --> 00:30:46,960
+Really quick question. What was the reason to have like locally dedicated hardware as like in comparison to just...
+
+
+310
+00:30:46,960 --> 00:31:00,960
+You can rent boxes like dedicated boxes. We do some boxes on Hetzner too and just run numbers but if you want to benchmark stuff you need to use dedicated hardware not virtualized hardware.
+
+
+311
+00:31:00,960 --> 00:31:02,960
+Gotcha.
+
+
+312
+00:31:02,960 --> 00:31:06,960
+Cool.
+
+
+313
+00:31:06,960 --> 00:31:18,960
+Okay and if there are no more questions then yeah let's thank the speaker again and yeah carry on with Guillaume.
+
+
+314
+00:31:18,960 --> 00:31:30,960
+Thank you very much.

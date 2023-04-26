@@ -1,0 +1,1893 @@
+1
+00:00:00,000 --> 00:00:03,000
+HELIO & PERFORMANCE
+
+
+2
+00:00:03,000 --> 00:00:05,000
+OK, Helio & Performance
+
+
+3
+00:00:05,000 --> 00:00:08,000
+How to wring the most out of your deployment
+
+
+4
+00:00:08,000 --> 00:00:13,000
+This is going to be a fairly demo-like talk
+
+
+5
+00:00:13,000 --> 00:00:18,000
+If it gets dry, there's all these little sweets on the table, you just throw them at me or something
+
+
+6
+00:00:18,000 --> 00:00:21,000
+Keep it interesting, you know
+
+
+7
+00:00:21,000 --> 00:00:24,000
+OK, so it's me again
+
+
+8
+00:00:24,000 --> 00:00:29,000
+You'll see I've moved from being the JSI Professor maintainer to being the Helio maintainer
+
+
+9
+00:00:29,000 --> 00:00:32,000
+Things move fast
+
+
+10
+00:00:32,000 --> 00:00:35,000
+JavaScript is slow, right? It's super slow
+
+
+11
+00:00:35,000 --> 00:00:39,000
+I mean, it can be, if you use it badly
+
+
+12
+00:00:39,000 --> 00:00:45,000
+There are things it's really bad at, like CPU intensive tasks, awful, or worse
+
+
+13
+00:00:45,000 --> 00:00:48,000
+Don't do it, if you can help it
+
+
+14
+00:00:48,000 --> 00:00:51,000
+Async, also terrible
+
+
+15
+00:00:51,000 --> 00:00:56,000
+Async is not free
+
+
+16
+00:00:56,000 --> 00:00:59,000
+We have to remember this
+
+
+17
+00:00:59,000 --> 00:01:02,000
+This is a picture of the browser event loop
+
+
+18
+00:01:02,000 --> 00:01:08,000
+I'm not going to go into it in very much detail, there are loads of really good resources out there
+
+
+19
+00:01:08,000 --> 00:01:14,000
+The really important thing to notice is when you're calling browser APIs and you see it says promises
+
+
+20
+00:01:14,000 --> 00:01:19,000
+And there's a little line, a tiny little line, oh by the way I'm going to add something to the microtask queue
+
+
+21
+00:01:19,000 --> 00:01:25,000
+So every time you invoke a promise, an item gets added to the microtask queue
+
+
+22
+00:01:25,000 --> 00:01:27,000
+This is incredibly expensive
+
+
+23
+00:01:27,000 --> 00:01:30,000
+When you're doing stuff in a very hot loop
+
+
+24
+00:01:30,000 --> 00:01:34,000
+You really don't want to do it unless you absolutely have to
+
+
+25
+00:01:34,000 --> 00:01:39,000
+And I think we, like promises have a lovely API, just like await a thing, that's great
+
+
+26
+00:01:39,000 --> 00:01:42,000
+But then actually it can be really really bad
+
+
+27
+00:01:42,000 --> 00:01:45,000
+So how bad, so a quick demo of how bad it is
+
+
+28
+00:01:45,000 --> 00:01:50,000
+Where's my thing gone, there it is, ok, ah it's again
+
+
+29
+00:01:50,000 --> 00:01:55,000
+So what have we got, we've got itpipe
+
+
+30
+00:01:55,000 --> 00:01:58,000
+So it uses a lot in JS, everything
+
+
+31
+00:01:58,000 --> 00:02:01,000
+It basically is for making pipelines of operations
+
+
+32
+00:02:01,000 --> 00:02:07,000
+It all just takes an async iterable and just turns it into a list
+
+
+33
+00:02:07,000 --> 00:02:10,000
+So these modules have recently been refactored quite a lot
+
+
+34
+00:02:10,000 --> 00:02:13,000
+So I say it takes an async iterable, it takes an async iterable or it takes an iterable
+
+
+35
+00:02:13,000 --> 00:02:17,000
+If it takes an async iterable it returns a promise of the things
+
+
+36
+00:02:17,000 --> 00:02:19,000
+And if it takes an iterable it returns the things
+
+
+37
+00:02:19,000 --> 00:02:22,000
+So now these things are actually promise aware
+
+
+38
+00:02:22,000 --> 00:02:25,000
+Which is pretty handy
+
+
+39
+00:02:25,000 --> 00:02:28,000
+So we've got a synchronous pipeline here
+
+
+40
+00:02:28,000 --> 00:02:33,000
+So all we're doing is, we're having a list of numbers, five numbers
+
+
+41
+00:02:33,000 --> 00:02:39,000
+We're just going to iterate over the source, iterate over this list, increment them and yield them
+
+
+42
+00:02:39,000 --> 00:02:43,000
+The output of the first function is passed into the next function
+
+
+43
+00:02:43,000 --> 00:02:47,000
+And so on and so on, and at the end we just collect them all together
+
+
+44
+00:02:47,000 --> 00:02:52,000
+So we've got a list of five numbers and we've got five transforms
+
+
+45
+00:02:52,000 --> 00:02:56,000
+Five transform functions and then a sync at the end where we just collect them all
+
+
+46
+00:02:56,000 --> 00:02:59,000
+That's the sync one, and then the async version is exactly the same
+
+
+47
+00:02:59,000 --> 00:03:04,000
+Exactly the same, the only difference is we've just stuck the async keyword on
+
+
+48
+00:03:04,000 --> 00:03:07,000
+Which we do a lot, oh yeah async, no problem
+
+
+49
+00:03:07,000 --> 00:03:11,000
+So you've got the async keyword on there, we await the constant of the list
+
+
+50
+00:03:11,000 --> 00:03:16,000
+Note that the list input is still a synchronous list, it's just an array of numbers
+
+
+51
+00:03:16,000 --> 00:03:21,000
+So we do the do all the way and then just collect it at the end and then await the result
+
+
+52
+00:03:21,000 --> 00:03:28,000
+We don't have to await the result here because the whole thing is synchronous
+
+
+53
+00:03:28,000 --> 00:03:34,000
+Node Perf1
+
+
+54
+00:03:34,000 --> 00:03:38,000
+So we run the benchmark, bang, and you can see the difference
+
+
+55
+00:03:38,000 --> 00:03:46,000
+So the number of operations per second is 132,000 operations per second in the synchronous pipeline
+
+
+56
+00:03:46,000 --> 00:03:50,000
+And then 81,000 operations in the async pipeline
+
+
+57
+00:03:50,000 --> 00:03:53,000
+So it's an order of magnitude slower
+
+
+58
+00:03:53,000 --> 00:03:57,000
+And all we did was put the async keyword on things and await
+
+
+59
+00:03:57,000 --> 00:04:02,000
+So async is not free, definitely not free
+
+
+60
+00:04:02,000 --> 00:04:06,000
+Storage, storage matters
+
+
+61
+00:04:06,000 --> 00:04:10,000
+How am I doing for time by the way?
+
+
+62
+00:04:10,000 --> 00:04:13,000
+12 minutes, ok right I'm going to have to start speaking really quickly
+
+
+63
+00:04:13,000 --> 00:04:16,000
+Ok, ok, well it'll be nice if it gets back on track
+
+
+64
+00:04:16,000 --> 00:04:18,000
+Anyway, storage matters
+
+
+65
+00:04:18,000 --> 00:04:23,000
+CPU is boring in JavaScript, but I.O. kills everything
+
+
+66
+00:04:23,000 --> 00:04:27,000
+Like it doesn't, a lot of the time it doesn't matter if your algorithm is the fastest or not
+
+
+67
+00:04:27,000 --> 00:04:34,000
+Because every time you hit the network or the file system or whatever it just blows it all out of the water
+
+
+68
+00:04:34,000 --> 00:04:40,000
+An enormous bottleneck, so you have to think really carefully about the block stores that you use in your application
+
+
+69
+00:04:40,000 --> 00:04:44,000
+This is something that actually bit us a while ago
+
+
+70
+00:04:44,000 --> 00:04:49,000
+One of the users opened this bug that the S3 performance was really slow
+
+
+71
+00:04:49,000 --> 00:04:53,000
+And there's this tiny little, tiny little thing in the Amazon documentation
+
+
+72
+00:04:53,000 --> 00:05:00,000
+It says your application can achieve at least 3,500 operations
+
+
+73
+00:05:00,000 --> 00:05:05,000
+Or whatever, per second per partition prefix
+
+
+74
+00:05:05,000 --> 00:05:11,000
+And a partition prefix is basically a forward slash in the bucket path
+
+
+75
+00:05:11,000 --> 00:05:17,000
+What it doesn't say there is that if you don't have any forward slashes in your bucket path then it's one partition
+
+
+76
+00:05:17,000 --> 00:05:24,000
+Which means that your entire bucket can achieve at the maximum 3,500 operations per second
+
+
+77
+00:05:24,000 --> 00:05:27,000
+Which is awful if you're scaling
+
+
+78
+00:05:27,000 --> 00:05:30,000
+Really bad!
+
+
+79
+00:05:30,000 --> 00:05:35,000
+And then also, if you create 10 prefixes you can do 55,000 reads per second
+
+
+80
+00:05:35,000 --> 00:05:41,000
+Which obviously if you see that it was 5,500 and suddenly it's 55,000 with 10 prefixes
+
+
+81
+00:05:41,000 --> 00:05:44,000
+What's 5,500 times 10?
+
+
+82
+00:05:44,000 --> 00:05:47,000
+It's like, oh okay, right, that's a fairly linear thing
+
+
+83
+00:05:47,000 --> 00:05:50,000
+I wish you told us about that in bigger writing
+
+
+84
+00:05:50,000 --> 00:05:57,000
+So now the S3 block store has learned from this and applies a default sharding strategy
+
+
+85
+00:05:57,000 --> 00:06:05,000
+Of just taking the last two letters of the path, reversing them and sticking them on the front
+
+
+86
+00:06:05,000 --> 00:06:11,000
+You can shard, obviously there is a limit per prefix
+
+
+87
+00:06:11,000 --> 00:06:15,000
+So if this prefix isn't long enough for your application
+
+
+88
+00:06:15,000 --> 00:06:18,000
+You can override these settings when you create your block store
+
+
+89
+00:06:18,000 --> 00:06:23,000
+You should measure everything before making decisions
+
+
+90
+00:06:23,000 --> 00:06:26,000
+Other data stores are available
+
+
+91
+00:06:26,000 --> 00:06:31,000
+So we have these two modules, block store core and data store core
+
+
+92
+00:06:31,000 --> 00:06:35,000
+And they include implementations of a whole bunch of different types of block store and data store
+
+
+93
+00:06:35,000 --> 00:06:38,000
+And they're not always stores, they don't always keep the information
+
+
+94
+00:06:38,000 --> 00:06:42,000
+Things like mount data store I think is very interesting
+
+
+95
+00:06:42,000 --> 00:06:46,000
+Perhaps something that has massively unrealized potential for performance
+
+
+96
+00:06:46,000 --> 00:06:54,000
+All your data and blocks, in particular the data store, they're all accessed by keys
+
+
+97
+00:06:54,000 --> 00:06:59,000
+And the keys have a very predictable structure
+
+
+98
+00:06:59,000 --> 00:07:06,000
+So that means that you can say with absolute certainty that certain classes of data are stored with certain keys
+
+
+99
+00:07:06,000 --> 00:07:13,000
+So you could treat, for example, peer store data as ephemeral
+
+
+100
+00:07:13,000 --> 00:07:16,000
+Because the network changes a lot, you join, you leave
+
+
+101
+00:07:16,000 --> 00:07:20,000
+If your peer ID changes, suddenly you have different peers that are close to you
+
+
+102
+00:07:20,000 --> 00:07:23,000
+So maybe you don't actually care that much about the peer store data
+
+
+103
+00:07:23,000 --> 00:07:29,000
+So if you had a mount data store and you just used a memory data store for the peers prefix
+
+
+104
+00:07:29,000 --> 00:07:32,000
+Then all of your peer data would just live in memory
+
+
+105
+00:07:32,000 --> 00:07:36,000
+And then when you shut the node down and start it up again, you haven't persisted disks
+
+
+106
+00:07:36,000 --> 00:07:41,000
+But you also haven't, aside from the async tax that I just went through
+
+
+107
+00:07:41,000 --> 00:07:47,000
+You haven't hit the disk at any point or hit a network or a database or anything to actually store this information
+
+
+108
+00:07:47,000 --> 00:07:53,000
+So it could, like if you see a lot of peer churn, this kind of thing could make your application massively faster
+
+
+109
+00:07:53,000 --> 00:07:59,000
+The same way with some blocks, if you want to ensure that some blocks are very fast to fetch and others you want to store cheaply
+
+
+110
+00:07:59,000 --> 00:08:03,000
+You could put them on S3 or you could put them on Glacier Storage or whatever
+
+
+111
+00:08:03,000 --> 00:08:07,000
+Go nuts, like this is a toolkit, you can build this
+
+
+112
+00:08:07,000 --> 00:08:13,000
+Tid data store is another one, so the way this one works is it wraps a whole bunch of different data stores
+
+
+113
+00:08:13,000 --> 00:08:18,000
+And if you write, it will write to all of them and if you read, it will read from whichever one is fastest
+
+
+114
+00:08:18,000 --> 00:08:23,000
+So maybe you would have, you know, like Web3 Storage for example
+
+
+115
+00:08:23,000 --> 00:08:26,000
+Races a bunch of gateways against each other to fetch a block
+
+
+116
+00:08:26,000 --> 00:08:29,000
+You could use something like this, and there's the abstraction for you
+
+
+117
+00:08:29,000 --> 00:08:33,000
+And then like, you know, they would just pull it from whichever one is quicker
+
+
+118
+00:08:33,000 --> 00:08:36,000
+Maybe you could create your own, like the hot content block store
+
+
+119
+00:08:36,000 --> 00:08:41,000
+Like, I know this CID is going to be massive, it's going to blow up, it's my new album, it's incredible
+
+
+120
+00:08:41,000 --> 00:08:45,000
+So I'm going to write a data store that stores that CID in memory
+
+
+121
+00:08:45,000 --> 00:08:50,000
+Like the blocks that make that CID up, stores them in memory, so they're super fast to retrieve
+
+
+122
+00:08:50,000 --> 00:08:55,000
+And everything else can go to the, you know, the slow storage
+
+
+123
+00:08:55,000 --> 00:08:57,000
+It's up to you
+
+
+124
+00:08:57,000 --> 00:09:01,000
+Content reading, so content reading is really slow in general
+
+
+125
+00:09:01,000 --> 00:09:04,000
+Like there's just no way around it, because it involves network requests
+
+
+126
+00:09:04,000 --> 00:09:08,000
+So if you're searching for content, you have to hit the network
+
+
+127
+00:09:08,000 --> 00:09:12,000
+And hitting the network is slow, regardless of the language
+
+
+128
+00:09:12,000 --> 00:09:15,000
+So one thing you can do is you can configure delegates
+
+
+129
+00:09:15,000 --> 00:09:20,000
+So these are different implementations of content reading
+
+
+130
+00:09:20,000 --> 00:09:24,000
+And like JSLickP2P will try them all
+
+
+131
+00:09:24,000 --> 00:09:28,000
+So some of them are fast, they're streaming
+
+
+132
+00:09:28,000 --> 00:09:31,000
+IPNI, of which there are some talks about this week
+
+
+133
+00:09:31,000 --> 00:09:33,000
+You should totally go and check them out
+
+
+134
+00:09:33,000 --> 00:09:36,000
+It's novel because it has a streaming API
+
+
+135
+00:09:36,000 --> 00:09:39,000
+So the ones that don't have a streaming API
+
+
+136
+00:09:39,000 --> 00:09:44,000
+They return a JSON object that has a list of providers for a given CID
+
+
+137
+00:09:44,000 --> 00:09:46,000
+But there's the whole list
+
+
+138
+00:09:46,000 --> 00:09:48,000
+And once you get to the end of the list, there are no more
+
+
+139
+00:09:48,000 --> 00:09:50,000
+And the list is wrapped in a JSON object
+
+
+140
+00:09:50,000 --> 00:09:53,000
+Which means that the slowest provider to arrive
+
+
+141
+00:09:53,000 --> 00:09:56,000
+You get it at the same time as the fastest provider to arrive
+
+
+142
+00:09:56,000 --> 00:10:00,000
+So generally you want to go for the ones that have streaming APIs
+
+
+143
+00:10:00,000 --> 00:10:04,000
+So IPNI has a streaming API, whether or not it's streaming on the back end, I don't know
+
+
+144
+00:10:04,000 --> 00:10:07,000
+But it has the capability for this
+
+
+145
+00:10:07,000 --> 00:10:09,000
+The non-streaming ones reframe
+
+
+146
+00:10:09,000 --> 00:10:11,000
+And then the old school delegated content reading
+
+
+147
+00:10:11,000 --> 00:10:16,000
+Which just hits the KubeRPC API
+
+
+148
+00:10:16,000 --> 00:10:18,000
+Pinion garbage collection
+
+
+149
+00:10:18,000 --> 00:10:20,000
+So we care about this
+
+
+150
+00:10:20,000 --> 00:10:25,000
+This is more like an internal thing about how Helia works
+
+
+151
+00:10:25,000 --> 00:10:28,000
+But in the olden times, in JSRPFS
+
+
+152
+00:10:28,000 --> 00:10:31,000
+We switched from using a DAG
+
+
+153
+00:10:31,000 --> 00:10:34,000
+So the list of pins that you had on a given node
+
+
+154
+00:10:34,000 --> 00:10:35,000
+Used to be stored in a DAG
+
+
+155
+00:10:35,000 --> 00:10:37,000
+And you used to have to manipulate that DAG
+
+
+156
+00:10:37,000 --> 00:10:39,000
+Which involved hashing things and all that kind of stuff
+
+
+157
+00:10:39,000 --> 00:10:40,000
+Which is CPU intensive
+
+
+158
+00:10:40,000 --> 00:10:42,000
+And if you remember from this very first slide
+
+
+159
+00:10:42,000 --> 00:10:44,000
+CPU is awful, don't do it!
+
+
+160
+00:10:44,000 --> 00:10:46,000
+So what this one does instead
+
+
+161
+00:10:46,000 --> 00:10:48,000
+Is it stores all the pins in the datastore
+
+
+162
+00:10:48,000 --> 00:10:50,000
+And the datastore is very fast, particularly in JS
+
+
+163
+00:10:50,000 --> 00:10:52,000
+And so what this graph is showing is
+
+
+164
+00:10:52,000 --> 00:10:54,000
+As the number of pins that you have
+
+
+165
+00:10:54,000 --> 00:10:56,000
+The time it takes to add a pin goes up and up and up
+
+
+166
+00:10:56,000 --> 00:11:00,000
+That massive spike is caused by the DAG that we had
+
+
+167
+00:11:00,000 --> 00:11:01,000
+Going to another level
+
+
+168
+00:11:01,000 --> 00:11:04,000
+So we'd filled one level of the DAG
+
+
+169
+00:11:04,000 --> 00:11:06,000
+And then we started a new one
+
+
+170
+00:11:06,000 --> 00:11:08,000
+And then suddenly the number of calculations that you have to do
+
+
+171
+00:11:08,000 --> 00:11:11,000
+To recalculate the root CID and that kind of thing
+
+
+172
+00:11:11,000 --> 00:11:12,000
+Massively goes up
+
+
+173
+00:11:12,000 --> 00:11:15,000
+Which is why you see that enormous jump there
+
+
+174
+00:11:15,000 --> 00:11:16,000
+And then the red line at the bottom
+
+
+175
+00:11:16,000 --> 00:11:18,000
+Which you can barely even see is the datastore
+
+
+176
+00:11:18,000 --> 00:11:19,000
+The datastore performance
+
+
+177
+00:11:19,000 --> 00:11:21,000
+Which is massively better
+
+
+178
+00:11:21,000 --> 00:11:23,000
+And this is the time it takes to add a pin
+
+
+179
+00:11:23,000 --> 00:11:26,000
+So you've got the old JS implementation on the top
+
+
+180
+00:11:26,000 --> 00:11:29,000
+You've got Go in the middle, so that was Kubo
+
+
+181
+00:11:29,000 --> 00:11:31,000
+And then the new one
+
+
+182
+00:11:31,000 --> 00:11:32,000
+New one
+
+
+183
+00:11:32,000 --> 00:11:33,000
+Is the red line at the bottom
+
+
+184
+00:11:33,000 --> 00:11:35,000
+Like massively faster
+
+
+185
+00:11:35,000 --> 00:11:38,000
+And this is the number of pins that you're storing
+
+
+186
+00:11:38,000 --> 00:11:41,000
+And the time it takes to store the next pin
+
+
+187
+00:11:41,000 --> 00:11:43,000
+So this is 100,000 pins in the datastore
+
+
+188
+00:11:43,000 --> 00:11:45,000
+And it's kind of flat
+
+
+189
+00:11:45,000 --> 00:11:48,000
+Which is what you want out of a refactor like this
+
+
+190
+00:11:48,000 --> 00:11:50,000
+So it's much more scalable
+
+
+191
+00:11:50,000 --> 00:11:53,000
+And that was just the
+
+
+192
+00:11:53,000 --> 00:11:54,000
+I'm going to go back one
+
+
+193
+00:11:54,000 --> 00:11:55,000
+So that was just the
+
+
+194
+00:11:55,000 --> 00:11:57,000
+That was putting pins into the datastore
+
+
+195
+00:11:57,000 --> 00:11:58,000
+But it doesn't tackle garbage collection
+
+
+196
+00:11:58,000 --> 00:12:00,000
+Which historically has always been super slow
+
+
+197
+00:12:00,000 --> 00:12:04,000
+Until, until now
+
+
+198
+00:12:04,000 --> 00:12:08,000
+So Helia runs reference counting
+
+
+199
+00:12:08,000 --> 00:12:10,000
+For its pins
+
+
+200
+00:12:10,000 --> 00:12:12,000
+So it's a very simple idea
+
+
+201
+00:12:12,000 --> 00:12:14,000
+That's the PR that it landed in
+
+
+202
+00:12:14,000 --> 00:12:15,000
+Super simple idea
+
+
+203
+00:12:15,000 --> 00:12:16,000
+You
+
+
+204
+00:12:16,000 --> 00:12:18,000
+It has a benchmark suite as well
+
+
+205
+00:12:18,000 --> 00:12:19,000
+Which is what I'm going to talk about next
+
+
+206
+00:12:19,000 --> 00:12:20,000
+But yeah, it's a super simple idea
+
+
+207
+00:12:20,000 --> 00:12:22,000
+Every time you pin a DAG
+
+
+208
+00:12:22,000 --> 00:12:23,000
+You walk the DAG
+
+
+209
+00:12:23,000 --> 00:12:25,000
+To ensure that all the blocks are present
+
+
+210
+00:12:25,000 --> 00:12:26,000
+Every time you encounter a block
+
+
+211
+00:12:26,000 --> 00:12:28,000
+You keep a count of the number of times
+
+
+212
+00:12:28,000 --> 00:12:30,000
+You've seen that block in all of the DAGs
+
+
+213
+00:12:30,000 --> 00:12:32,000
+You increment it
+
+
+214
+00:12:32,000 --> 00:12:35,000
+And then when you unpin
+
+
+215
+00:12:35,000 --> 00:12:36,000
+When you unpin a DAG
+
+
+216
+00:12:36,000 --> 00:12:37,000
+You walk the DAG again
+
+
+217
+00:12:37,000 --> 00:12:39,000
+And you decrement that
+
+
+218
+00:12:39,000 --> 00:12:40,000
+Every time you
+
+
+219
+00:12:40,000 --> 00:12:42,000
+Every time you
+
+
+220
+00:12:42,000 --> 00:12:43,000
+Every time you encounter one
+
+
+221
+00:12:43,000 --> 00:12:46,000
+And then when it comes to running garbage collection
+
+
+222
+00:12:46,000 --> 00:12:48,000
+You just look at the counts
+
+
+223
+00:12:48,000 --> 00:12:49,000
+And you're like, does anything have a count?
+
+
+224
+00:12:49,000 --> 00:12:50,000
+Okay, you're safe
+
+
+225
+00:12:50,000 --> 00:12:53,000
+If not, you're gone
+
+
+226
+00:12:53,000 --> 00:12:54,000
+Which just makes it much quicker
+
+
+227
+00:12:54,000 --> 00:12:55,000
+Because then you're
+
+
+228
+00:12:55,000 --> 00:12:57,000
+You're basically deleting the blocks
+
+
+229
+00:12:57,000 --> 00:12:59,000
+As fast as you can pull the pin counts
+
+
+230
+00:12:59,000 --> 00:13:00,000
+Out of the database
+
+
+231
+00:13:00,000 --> 00:13:02,000
+Which is a lot faster than
+
+
+232
+00:13:02,000 --> 00:13:03,000
+Walking a massive DAG
+
+
+233
+00:13:03,000 --> 00:13:05,000
+So what would previously happen is
+
+
+234
+00:13:05,000 --> 00:13:07,000
+You would walk every DAG of every pin
+
+
+235
+00:13:07,000 --> 00:13:09,000
+And you would say, right, these blocks are safe
+
+
+236
+00:13:09,000 --> 00:13:10,000
+And then you would walk every block
+
+
+237
+00:13:10,000 --> 00:13:13,000
+And say, is it in that set of blocks?
+
+
+238
+00:13:13,000 --> 00:13:14,000
+If not, then delete it
+
+
+239
+00:13:14,000 --> 00:13:16,000
+Which is enormously expensive
+
+
+240
+00:13:16,000 --> 00:13:18,000
+Whereas if you're just pulling stuff out of the datastore
+
+
+241
+00:13:18,000 --> 00:13:19,000
+It's much quicker
+
+
+242
+00:13:19,000 --> 00:13:21,000
+So here's what happens
+
+
+243
+00:13:21,000 --> 00:13:24,000
+So this is the number of blocks
+
+
+244
+00:13:24,000 --> 00:13:26,000
+That have been pinned along the bottom
+
+
+245
+00:13:26,000 --> 00:13:28,000
+And the number of milliseconds it takes
+
+
+246
+00:13:28,000 --> 00:13:29,000
+To do garbage collection
+
+
+247
+00:13:29,000 --> 00:13:31,000
+And so cubo is the red
+
+
+248
+00:13:31,000 --> 00:13:32,000
+And helia is the blue
+
+
+249
+00:13:32,000 --> 00:13:34,000
+And you can see that helia is much faster
+
+
+250
+00:13:34,000 --> 00:13:37,000
+And as it gets further and further away
+
+
+251
+00:13:37,000 --> 00:13:39,000
+It gets bigger and bigger
+
+
+252
+00:13:39,000 --> 00:13:41,000
+I mean, this is what you want
+
+
+253
+00:13:41,000 --> 00:13:43,000
+Totally what you want
+
+
+254
+00:13:43,000 --> 00:13:45,000
+Got some other useful stats out of it
+
+
+255
+00:13:45,000 --> 00:13:47,000
+So this is how you
+
+
+256
+00:13:47,000 --> 00:13:49,000
+When you're unpinning things
+
+
+257
+00:13:49,000 --> 00:13:50,000
+With helia it's super quick
+
+
+258
+00:13:50,000 --> 00:13:52,000
+Because you're just doing some database stuff
+
+
+259
+00:13:52,000 --> 00:13:55,000
+You're not really doing a lot else
+
+
+260
+00:13:55,000 --> 00:13:57,000
+Cubo does a lot more work
+
+
+261
+00:13:57,000 --> 00:14:00,000
+When you're adding blocks to the block store
+
+
+262
+00:14:00,000 --> 00:14:03,000
+I mean, adding pins
+
+
+263
+00:14:03,000 --> 00:14:05,000
+This is the good one, right?
+
+
+264
+00:14:05,000 --> 00:14:09,000
+Adding pins is just flat
+
+
+265
+00:14:09,000 --> 00:14:12,000
+Much faster, much, much faster
+
+
+266
+00:14:12,000 --> 00:14:13,000
+And also this is what happens when you
+
+
+267
+00:14:13,000 --> 00:14:15,000
+Instead of just blindly copying
+
+
+268
+00:14:15,000 --> 00:14:17,000
+The algorithms that cubo has works for cubo
+
+
+269
+00:14:17,000 --> 00:14:19,000
+And it works for Go
+
+
+270
+00:14:19,000 --> 00:14:20,000
+And it doesn't work for JS
+
+
+271
+00:14:20,000 --> 00:14:22,000
+Because JS is terrible at CPU
+
+
+272
+00:14:22,000 --> 00:14:25,000
+Whereas this approach doesn't use CPU
+
+
+273
+00:14:25,000 --> 00:14:27,000
+And so consequently it's much faster
+
+
+274
+00:14:27,000 --> 00:14:29,000
+So you write algorithms
+
+
+275
+00:14:29,000 --> 00:14:31,000
+That are sympathetic to the environment
+
+
+276
+00:14:31,000 --> 00:14:32,000
+That you're deploying them in
+
+
+277
+00:14:32,000 --> 00:14:34,000
+Not because of the algorithms
+
+
+278
+00:14:37,000 --> 00:14:39,000
+Last section, DAGs and bit swaps
+
+
+279
+00:14:39,000 --> 00:14:41,000
+So bit swap is slow, it's really slow
+
+
+280
+00:14:41,000 --> 00:14:46,000
+I mean, Ian's talk in the keynote
+
+
+281
+00:14:46,000 --> 00:14:48,000
+He alluded to
+
+
+282
+00:14:48,000 --> 00:14:50,000
+If you have sensible data structures
+
+
+283
+00:14:50,000 --> 00:14:51,000
+It's not necessarily slow
+
+
+284
+00:14:51,000 --> 00:14:53,000
+Which is completely true
+
+
+285
+00:14:53,000 --> 00:14:55,000
+So what is a DAG?
+
+
+286
+00:14:55,000 --> 00:14:57,000
+I'm just going to go over what a DAG is
+
+
+287
+00:14:57,000 --> 00:14:59,000
+I was going to use the DAG explorer
+
+
+288
+00:14:59,000 --> 00:15:01,000
+But it's really sad at the moment
+
+
+289
+00:15:01,000 --> 00:15:03,000
+It doesn't work, which is a shame
+
+
+290
+00:15:03,000 --> 00:15:04,000
+Because it's really lovely
+
+
+291
+00:15:04,000 --> 00:15:06,000
+If someone would like to PR effects to this
+
+
+292
+00:15:06,000 --> 00:15:08,000
+Maybe with helia, that would be cool
+
+
+293
+00:15:08,000 --> 00:15:12,000
+Anyway, so I robbed this from some IPRD documentation
+
+
+294
+00:15:12,000 --> 00:15:13,000
+So what is a DAG?
+
+
+295
+00:15:13,000 --> 00:15:14,000
+It's a graph
+
+
+296
+00:15:14,000 --> 00:15:16,000
+It's a directed acyclic graph
+
+
+297
+00:15:16,000 --> 00:15:19,000
+Which has an interesting property
+
+
+298
+00:15:19,000 --> 00:15:20,000
+In the way we do them
+
+
+299
+00:15:20,000 --> 00:15:22,000
+At least you don't know what's
+
+
+300
+00:15:24,000 --> 00:15:27,000
+If you have to load another layer of the DAG
+
+
+301
+00:15:27,000 --> 00:15:28,000
+You don't know what's there
+
+
+302
+00:15:28,000 --> 00:15:29,000
+Until you've loaded it
+
+
+303
+00:15:29,000 --> 00:15:30,000
+Which takes a long time
+
+
+304
+00:15:32,000 --> 00:15:33,000
+Which is slow
+
+
+305
+00:15:33,000 --> 00:15:35,000
+And that's what we don't want
+
+
+306
+00:15:35,000 --> 00:15:37,000
+So what that means, essentially
+
+
+307
+00:15:37,000 --> 00:15:38,000
+The interesting fact is
+
+
+308
+00:15:38,000 --> 00:15:40,000
+Every time you go down a level
+
+
+309
+00:15:40,000 --> 00:15:42,000
+You're incurring a performance penalty
+
+
+310
+00:15:43,000 --> 00:15:45,000
+So maybe don't do that
+
+
+311
+00:15:46,000 --> 00:15:48,000
+So again, here's some benchmarks
+
+
+312
+00:15:48,000 --> 00:15:50,000
+These ones are quite interesting
+
+
+313
+00:15:50,000 --> 00:15:51,000
+There's a pull request
+
+
+314
+00:15:51,000 --> 00:15:53,000
+It's not fully formed yet
+
+
+315
+00:15:53,000 --> 00:15:55,000
+But please do check it out
+
+
+316
+00:15:55,000 --> 00:15:56,000
+Anyway, so
+
+
+317
+00:15:56,000 --> 00:15:58,000
+What I did here was I changed
+
+
+318
+00:15:58,000 --> 00:16:00,000
+I was changing the
+
+
+319
+00:16:00,000 --> 00:16:01,000
+This is our bench line, sorry
+
+
+320
+00:16:01,000 --> 00:16:03,000
+This is the kubo defaults
+
+
+321
+00:16:03,000 --> 00:16:05,000
+Which jsipfs inherited
+
+
+322
+00:16:05,000 --> 00:16:07,000
+And you can see the
+
+
+323
+00:16:07,000 --> 00:16:09,000
+The size of the DAG along the bottom
+
+
+324
+00:16:09,000 --> 00:16:10,000
+And the time it takes to transfer
+
+
+325
+00:16:10,000 --> 00:16:11,000
+Between two nodes
+
+
+326
+00:16:11,000 --> 00:16:13,000
+And they're all kind of like
+
+
+327
+00:16:13,000 --> 00:16:14,000
+Yeah, it's interesting
+
+
+328
+00:16:14,000 --> 00:16:17,000
+So Helio is actually somewhere up here
+
+
+329
+00:16:17,000 --> 00:16:20,000
+Which means there's some low hanging fruit
+
+
+330
+00:16:20,000 --> 00:16:21,000
+I'm sure in bitswap
+
+
+331
+00:16:24,000 --> 00:16:26,000
+And what I did here is I increased the block size
+
+
+332
+00:16:26,000 --> 00:16:28,000
+So instead of having 256 kibibytes
+
+
+333
+00:16:28,000 --> 00:16:30,000
+It's now 1 mibibyte
+
+
+334
+00:16:31,000 --> 00:16:33,000
+And you can see the numbers on the left
+
+
+335
+00:16:33,000 --> 00:16:37,000
+So the top here is 150,000 milliseconds
+
+
+336
+00:16:38,000 --> 00:16:40,000
+And then the top goes down to 100,000
+
+
+337
+00:16:40,000 --> 00:16:41,000
+So there's significant speedup
+
+
+338
+00:16:41,000 --> 00:16:43,000
+Just by making the block size bigger
+
+
+339
+00:16:43,000 --> 00:16:44,000
+Now the interesting
+
+
+340
+00:16:44,000 --> 00:16:45,000
+One of the interesting things about this
+
+
+341
+00:16:45,000 --> 00:16:48,000
+Is Filecoin uses 1 megabyte block sizes
+
+
+342
+00:16:49,000 --> 00:16:51,000
+And there's already
+
+
+343
+00:16:51,000 --> 00:16:53,000
+I mean look how fast kubo
+
+
+344
+00:16:55,000 --> 00:16:56,000
+So kubo is here
+
+
+345
+00:16:56,000 --> 00:16:57,000
+The kubo2kubo
+
+
+346
+00:16:57,000 --> 00:17:00,000
+To transfer 1 gig in 256 kibibytes
+
+
+347
+00:17:00,000 --> 00:17:02,000
+And now it's all the way down here
+
+
+348
+00:17:02,000 --> 00:17:05,000
+So like these things really matter
+
+
+349
+00:17:05,000 --> 00:17:06,000
+And you should totally benchmark
+
+
+350
+00:17:06,000 --> 00:17:09,000
+The kind of data structures that you're creating
+
+
+351
+00:17:10,000 --> 00:17:11,000
+As just some stats
+
+
+352
+00:17:11,000 --> 00:17:13,000
+So Helio with 256 kibibytes
+
+
+353
+00:17:13,000 --> 00:17:16,000
+Goes from 10 seconds to 7
+
+
+354
+00:17:16,000 --> 00:17:18,000
+To transfer 100 megs
+
+
+355
+00:17:18,000 --> 00:17:21,000
+Kubo goes from 8 seconds to 2 seconds
+
+
+356
+00:17:21,000 --> 00:17:23,000
+Which is, you know, massive
+
+
+357
+00:17:23,000 --> 00:17:25,000
+So when people say that
+
+
+358
+00:17:25,000 --> 00:17:26,000
+Bitswap is slow
+
+
+359
+00:17:26,000 --> 00:17:27,000
+Maybe it's not
+
+
+360
+00:17:27,000 --> 00:17:30,000
+Maybe it's the data structure that's wrong
+
+
+361
+00:17:30,000 --> 00:17:33,000
+These things can definitely be optimized
+
+
+362
+00:17:34,000 --> 00:17:35,000
+That's it
+
+
+363
+00:17:35,000 --> 00:17:38,000
+So the important thing is to think about stuff
+
+
+364
+00:17:38,000 --> 00:17:39,000
+Don't take anything for granted
+
+
+365
+00:17:39,000 --> 00:17:40,000
+We need to measure things
+
+
+366
+00:17:40,000 --> 00:17:42,000
+And think about our data structures
+
+
+367
+00:17:42,000 --> 00:17:45,000
+And no nice abstraction is free
+
+
+368
+00:17:45,000 --> 00:17:47,000
+Definitely not in JavaScript
+
+
+369
+00:17:47,000 --> 00:17:50,000
+We should definitely make things better and faster
+
+
+370
+00:17:50,000 --> 00:18:00,000
+Thank you
+
+
+371
+00:18:01,000 --> 00:18:03,000
+That one needed more emojis
+
+
+372
+00:18:08,000 --> 00:18:09,000
+I meant to ask after the last talk
+
+
+373
+00:18:09,000 --> 00:18:12,000
+But is there a certain channel that you hang out in
+
+
+374
+00:18:12,000 --> 00:18:14,000
+Where people can find you on Slack or anything like that?
+
+
+375
+00:18:14,000 --> 00:18:16,000
+You can just add me anywhere
+
+
+376
+00:18:16,000 --> 00:18:20,000
+So I've been trying to be more on the IPJS channel
+
+
+377
+00:18:20,000 --> 00:18:21,000
+Cool
+
+
+378
+00:18:21,000 --> 00:18:23,000
+But yeah, you can just add me anywhere
+
+
+379
+00:18:23,000 --> 00:18:48,000
+Good, good

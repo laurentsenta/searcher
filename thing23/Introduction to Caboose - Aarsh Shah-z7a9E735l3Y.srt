@@ -1,0 +1,1808 @@
+1
+00:00:00,000 --> 00:00:02,000
+and a few other things. Thank you.
+
+
+2
+00:00:06,680 --> 00:00:11,320
+Hello, everyone. Good afternoon. My name is Arsh Shah.
+
+
+3
+00:00:11,320 --> 00:00:16,280
+Three years at PL and this is my first talk in the conference.
+
+
+4
+00:00:16,280 --> 00:00:19,460
+I'm a bit scared to a room of big people, but you've got to
+
+
+5
+00:00:19,460 --> 00:00:21,460
+start somewhere. We'll see how it goes.
+
+
+6
+00:00:23,540 --> 00:00:26,260
+So today I'm going to talk about project kaboos. We started
+
+
+7
+00:00:26,260 --> 00:00:30,340
+this project a month ago. It's been a month and a half of
+
+
+8
+00:00:30,340 --> 00:00:32,340
+active development, so there's not a lot, but there's still
+
+
+9
+00:00:32,340 --> 00:00:34,840
+some that I want to talk about and hopefully get feedback on
+
+
+10
+00:00:34,840 --> 00:00:40,840
+how we can improve it. So what is kaboos? It is a library
+
+
+11
+00:00:40,840 --> 00:00:43,840
+that can be used as a retrieval client for server applications
+
+
+12
+00:00:43,840 --> 00:00:48,840
+that want to retrieve content from the satin DCDN network.
+
+
+13
+00:00:48,840 --> 00:00:52,840
+Alex Kinsler here already talked about what satin is. It's a
+
+
+14
+00:00:52,840 --> 00:00:56,840
+pretty cool tool that allows you to do a lot of things. It
+
+
+15
+00:00:56,840 --> 00:00:58,840
+allows you to do a lot of things into retrieving content from
+
+
+16
+00:00:58,840 --> 00:01:02,840
+that network and kaboos does the heavy lifting for you to enable
+
+
+17
+00:01:02,840 --> 00:01:06,840
+speedy and reliable downloads from the satin network. It
+
+
+18
+00:01:06,840 --> 00:01:10,840
+allows fetching both blocks and cars, so it supports both the
+
+
+19
+00:01:10,840 --> 00:01:16,840
+graph as a car API and block fetch API from satin. And it
+
+
+20
+00:01:16,840 --> 00:01:19,840
+can also, as we'll see, be used as a pretty cool satin network
+
+
+21
+00:01:19,840 --> 00:01:23,840
+for a lot of things. So I think that's it.
+
+
+22
+00:01:23,840 --> 00:01:26,840
+So I think that's it. I think that's everything that makes it
+
+
+23
+00:01:26,840 --> 00:01:30,840
+very easy to understand what kaboos is.
+
+
+24
+00:01:30,840 --> 00:01:34,840
+Sorry. Just learning the tricks of the trade. But, yeah. So
+
+
+25
+00:01:34,840 --> 00:01:38,840
+say you have, like, a normal application, right, and you want
+
+
+26
+00:01:38,840 --> 00:01:42,840
+to retrieve content from satin. What is all the stuff that you
+
+
+27
+00:01:42,840 --> 00:01:46,840
+need to do? First of all, you need to
+
+
+28
+00:01:46,840 --> 00:01:50,840
+get a list of L1s, a list of satin nodes that you want to
+
+
+29
+00:01:50,840 --> 00:01:54,840
+talk to from the satin orchestrator service. After that,
+
+
+30
+00:01:54,840 --> 00:01:58,840
+you start sending fetch requests to them because you still don't
+
+
+31
+00:01:58,840 --> 00:02:02,840
+know anything about who's the good guy, who's the bad guy,
+
+
+32
+00:02:02,840 --> 00:02:06,840
+et cetera, who's fast, who's slow, who's slow, who's fast,
+
+
+33
+00:02:06,840 --> 00:02:10,840
+who's slow, who's fast, who's slow, who's fast, who's fast,
+
+
+34
+00:02:10,840 --> 00:02:14,840
+who's slow, who's fast, who's fast, who's fast, who's fast,
+
+
+35
+00:02:14,840 --> 00:02:18,840
+who's fast, who's fast, who's fast, who's fast, who's fast,
+
+
+36
+00:02:18,840 --> 00:02:21,840
+who's not. So you fetch your blocks, you fetch your cards.
+
+
+37
+00:02:21,840 --> 00:02:24,840
+Maybe you need to submit some sort of signed token or signed
+
+
+38
+00:02:24,840 --> 00:02:27,840
+Ukin, so that satin can later then bill you for the amount of
+
+
+39
+00:02:27,840 --> 00:02:30,840
+retrieval that you've done from the network. So you also need
+
+
+40
+00:02:30,840 --> 00:02:33,840
+to generate and sign those tokens. After you fetch the
+
+
+41
+00:02:33,840 --> 00:02:36,840
+content, you measure, like, observe latency, observe
+
+
+42
+00:02:36,840 --> 00:02:39,840
+throughput, observe correctness, and then start ranking the
+
+
+43
+00:02:39,840 --> 00:02:42,840
+nodes based on those parameters. You need to put those nodes
+
+
+44
+00:02:42,840 --> 00:02:46,440
+on some sort of consistent hashing ring for cache affinity.
+
+
+45
+00:02:46,440 --> 00:02:47,320
+So think of it this way,
+
+
+46
+00:02:47,320 --> 00:02:50,200
+like if you talk to different Saturn nodes every time
+
+
+47
+00:02:50,200 --> 00:02:51,120
+for the same content,
+
+
+48
+00:02:51,120 --> 00:02:52,700
+you're not gonna get the benefit of caching
+
+
+49
+00:02:52,700 --> 00:02:54,080
+that Saturn provides.
+
+
+50
+00:02:54,080 --> 00:02:58,240
+So you need some sort of cache affinity as well.
+
+
+51
+00:02:58,240 --> 00:03:00,240
+You probably want to build some measurements
+
+
+52
+00:03:00,240 --> 00:03:03,480
+and metrics around how your retrievals from Saturn are doing
+
+
+53
+00:03:03,480 --> 00:03:05,840
+so later you can then go complain to the Saturn guys
+
+
+54
+00:03:05,840 --> 00:03:07,000
+if things are not working out
+
+
+55
+00:03:07,000 --> 00:03:09,800
+and you already have proof in the form of dashboards.
+
+
+56
+00:03:09,800 --> 00:03:12,540
+And then you need to submit retrieval logs
+
+
+57
+00:03:12,540 --> 00:03:14,320
+to the Saturn network back
+
+
+58
+00:03:15,200 --> 00:03:17,360
+so that Saturn can use those logs to detect
+
+
+59
+00:03:17,360 --> 00:03:19,800
+like fraudulent Saturn nodes,
+
+
+60
+00:03:19,800 --> 00:03:22,600
+pay them out if they're acting fair, et cetera.
+
+
+61
+00:03:22,600 --> 00:03:25,380
+So as you can see, like it's a bunch of work, right?
+
+
+62
+00:03:25,380 --> 00:03:27,640
+And you probably don't want to build this every time
+
+
+63
+00:03:27,640 --> 00:03:28,480
+into an application
+
+
+64
+00:03:28,480 --> 00:03:30,000
+if you want to download content from Saturn.
+
+
+65
+00:03:30,000 --> 00:03:33,600
+So anyone wants to take a guess on what the solution is?
+
+
+66
+00:03:33,600 --> 00:03:35,960
+Yeah, it's Caboose.
+
+
+67
+00:03:35,960 --> 00:03:38,600
+So yeah, I mean, Caboose is the library
+
+
+68
+00:03:38,600 --> 00:03:40,640
+that does all this for you
+
+
+69
+00:03:40,640 --> 00:03:42,500
+and you can just have a good night's rest.
+
+
+70
+00:03:42,500 --> 00:03:43,680
+You big Z.
+
+
+71
+00:03:43,680 --> 00:03:45,360
+The idea is Caboose is a library
+
+
+72
+00:03:45,360 --> 00:03:48,400
+that will fetch content from Saturn.
+
+
+73
+00:03:48,400 --> 00:03:52,240
+It has an internal reputation and ranking algorithm
+
+
+74
+00:03:52,240 --> 00:03:54,200
+that considers a whole bunch of parameters
+
+
+75
+00:03:54,200 --> 00:03:58,120
+such as P95 latency, correctness, throughput, et cetera
+
+
+76
+00:03:58,120 --> 00:04:00,160
+to rank the nodes internally.
+
+
+77
+00:04:00,160 --> 00:04:02,660
+It can generate these signed UCANs for you down the line.
+
+
+78
+00:04:02,660 --> 00:04:04,520
+It doesn't do so so far because there's no need
+
+
+79
+00:04:04,520 --> 00:04:05,960
+but it can do so if needed.
+
+
+80
+00:04:05,960 --> 00:04:08,920
+It submits this Prometheus matrix.
+
+
+81
+00:04:08,920 --> 00:04:10,760
+It does all the consistent hashing for you.
+
+
+82
+00:04:10,760 --> 00:04:13,120
+It submits retrieval logs to Saturn for you.
+
+
+83
+00:04:13,120 --> 00:04:16,240
+So the idea is for it to be like a plug and play library
+
+
+84
+00:04:16,240 --> 00:04:20,600
+so that it's very easy to retrieve content from Saturn.
+
+
+85
+00:04:22,800 --> 00:04:23,640
+Yeah.
+
+
+86
+00:04:24,480 --> 00:04:27,200
+So that's the idea of Caboose.
+
+
+87
+00:04:27,200 --> 00:04:31,800
+Now, yeah, where are we today?
+
+
+88
+00:04:33,120 --> 00:04:35,200
+Like I said, we started work in late February
+
+
+89
+00:04:35,200 --> 00:04:37,480
+so we have a Golang beta implementation
+
+
+90
+00:04:37,480 --> 00:04:39,700
+so you can run Caboose on servers.
+
+
+91
+00:04:39,700 --> 00:04:43,720
+The Bifrost gateway is already using it for Project Rhea
+
+
+92
+00:04:43,720 --> 00:04:45,560
+to retrieve content from Saturn.
+
+
+93
+00:04:45,560 --> 00:04:47,360
+So we actually have Caboose running inside
+
+
+94
+00:04:47,360 --> 00:04:51,920
+like Bifrost gateway instances right now as we speak.
+
+
+95
+00:04:51,920 --> 00:04:54,980
+You can find it on GitHub, Filecoin, Saturn, Caboose.
+
+
+96
+00:04:58,400 --> 00:05:00,340
+Yeah, I mean, I was told that you shouldn't have
+
+
+97
+00:05:00,340 --> 00:05:03,400
+too much text on slides so sorry about this.
+
+
+98
+00:05:03,400 --> 00:05:05,220
+I need to up my meme game is what I've learned
+
+
+99
+00:05:05,220 --> 00:05:06,600
+from this conference.
+
+
+100
+00:05:06,600 --> 00:05:10,400
+But for now, yeah, for now,
+
+
+101
+00:05:10,400 --> 00:05:13,720
+assume there's a couple of cute, I don't know, cats in there
+
+
+102
+00:05:13,720 --> 00:05:17,860
+and yeah, so what does the beta implementation do?
+
+
+103
+00:05:19,020 --> 00:05:22,240
+You have like, it does all the consistent hashing of L1s,
+
+
+104
+00:05:22,240 --> 00:05:25,220
+the ranking for L1 based on observed retrieval latency
+
+
+105
+00:05:25,220 --> 00:05:26,520
+and correctness.
+
+
+106
+00:05:26,520 --> 00:05:29,240
+It gives some form of failure recovery and backup
+
+
+107
+00:05:29,240 --> 00:05:32,480
+by like doing fetch attempts to multiple L1 nodes
+
+
+108
+00:05:32,480 --> 00:05:33,900
+that it knows about.
+
+
+109
+00:05:33,900 --> 00:05:36,940
+Comprehensive matrix collection,
+
+
+110
+00:05:36,940 --> 00:05:39,720
+both card and block fetches, sorry.
+
+
+111
+00:05:40,640 --> 00:05:42,680
+Yeah, I mean, this is stuff that I already talked about,
+
+
+112
+00:05:42,680 --> 00:05:44,920
+but these are the features we have right now.
+
+
+113
+00:05:46,120 --> 00:05:51,120
+The thing is like building this client on top of
+
+
+114
+00:05:51,320 --> 00:05:54,080
+a distributed system where nodes come and go,
+
+
+115
+00:05:54,080 --> 00:05:57,920
+nodes are reliable, nodes might be slow,
+
+
+116
+00:05:57,920 --> 00:05:59,320
+is not exactly trivial.
+
+
+117
+00:05:59,320 --> 00:06:01,160
+There's like a lot of like,
+
+
+118
+00:06:01,160 --> 00:06:03,480
+we're constantly tuning the ranking algorithm
+
+
+119
+00:06:03,480 --> 00:06:06,760
+to get like optimal performance out of it.
+
+
+120
+00:06:08,040 --> 00:06:09,640
+Like consistent hashing, et cetera,
+
+
+121
+00:06:09,640 --> 00:06:11,720
+works well when there's reliably,
+
+
+122
+00:06:11,720 --> 00:06:13,480
+like there's low churn in the network.
+
+
+123
+00:06:13,480 --> 00:06:15,500
+But if there's like high churn in the network,
+
+
+124
+00:06:15,500 --> 00:06:18,000
+some of those nodes are not as performant
+
+
+125
+00:06:18,000 --> 00:06:19,360
+as other nodes, et cetera.
+
+
+126
+00:06:19,360 --> 00:06:21,540
+There's no like perfect algorithm out there today
+
+
+127
+00:06:21,540 --> 00:06:24,880
+that can like nail this down for you.
+
+
+128
+00:06:24,880 --> 00:06:28,040
+So with that caveat, like I'm just giving
+
+
+129
+00:06:28,040 --> 00:06:30,700
+a high level overview of what we have today
+
+
+130
+00:06:30,700 --> 00:06:32,040
+and then just show some numbers
+
+
+131
+00:06:32,040 --> 00:06:34,640
+on how it's going.
+
+
+132
+00:06:34,640 --> 00:06:38,040
+And if you feel like part of what I'm saying is incorrect,
+
+
+133
+00:06:38,040 --> 00:06:39,640
+like feel free to like give feedback later
+
+
+134
+00:06:39,640 --> 00:06:40,560
+on how we can improve it.
+
+
+135
+00:06:40,560 --> 00:06:42,080
+And if there is an algorithm out there
+
+
+136
+00:06:42,080 --> 00:06:43,940
+that can do this for us.
+
+
+137
+00:06:44,840 --> 00:06:47,360
+Yeah, so the way it works today is
+
+
+138
+00:06:47,360 --> 00:06:50,300
+we group nodes into different tiers.
+
+
+139
+00:06:50,300 --> 00:06:52,960
+Each tier is its own consistent hashing ring.
+
+
+140
+00:06:52,960 --> 00:06:54,960
+Yeah, so imagine like tier one, tier two,
+
+
+141
+00:06:54,960 --> 00:06:56,480
+tier three of nodes, and each tier
+
+
+142
+00:06:56,480 --> 00:07:00,000
+is a consistent hashing ring of certain nodes in that tier.
+
+
+143
+00:07:00,000 --> 00:07:03,600
+We define tiers based on observed latency.
+
+
+144
+00:07:03,600 --> 00:07:06,800
+So like a tier, one tier is P95 less than 20,
+
+
+145
+00:07:06,800 --> 00:07:09,300
+another is P95 less than 50, et cetera.
+
+
+146
+00:07:11,360 --> 00:07:13,040
+We always, in order to retrieve,
+
+
+147
+00:07:13,040 --> 00:07:14,960
+we always try nodes from higher tiers
+
+
+148
+00:07:14,960 --> 00:07:17,480
+before falling back to lower tiers.
+
+
+149
+00:07:17,480 --> 00:07:19,080
+We also have a parking tier,
+
+
+150
+00:07:19,080 --> 00:07:21,240
+which is where we like put certain nodes
+
+
+151
+00:07:21,240 --> 00:07:22,660
+that we still don't know much about.
+
+
+152
+00:07:22,660 --> 00:07:23,720
+We haven't talked to them much.
+
+
+153
+00:07:23,720 --> 00:07:27,280
+We don't know about their throughput, latency, et cetera.
+
+
+154
+00:07:27,280 --> 00:07:29,180
+And we do these performance measurements
+
+
+155
+00:07:29,180 --> 00:07:31,800
+for the tiers based on like a rolling window
+
+
+156
+00:07:31,800 --> 00:07:34,920
+of one hour to only consider like recent performance
+
+
+157
+00:07:34,920 --> 00:07:37,000
+so that the P95 values don't get skewed.
+
+
+158
+00:07:37,000 --> 00:07:38,440
+You know, if you've done well yesterday,
+
+
+159
+00:07:38,440 --> 00:07:39,360
+but you're not doing well today,
+
+
+160
+00:07:39,360 --> 00:07:41,000
+we don't wanna talk to you today.
+
+
+161
+00:07:42,760 --> 00:07:45,440
+And the way, as of today,
+
+
+162
+00:07:45,440 --> 00:07:49,240
+the way we promote these parking tier nodes
+
+
+163
+00:07:49,240 --> 00:07:52,440
+to like the higher tiers is by sending 20%
+
+
+164
+00:07:52,440 --> 00:07:54,040
+of production traffic to these nodes
+
+
+165
+00:07:54,040 --> 00:07:55,680
+to see how they are performing.
+
+
+166
+00:07:55,680 --> 00:07:57,680
+The problem with that is that that means
+
+
+167
+00:07:57,680 --> 00:07:59,840
+that 20% of your production traffic
+
+
+168
+00:07:59,840 --> 00:08:02,400
+is going to nodes you don't know much about,
+
+
+169
+00:08:02,400 --> 00:08:03,880
+which hurts performance.
+
+
+170
+00:08:03,880 --> 00:08:06,520
+So what we are doing to do in the next iteration,
+
+
+171
+00:08:08,320 --> 00:08:09,680
+I know Will wants this ASAP.
+
+
+172
+00:08:09,680 --> 00:08:10,600
+We'll just have some patience.
+
+
+173
+00:08:10,600 --> 00:08:11,420
+We'll get it done ASAP.
+
+
+174
+00:08:11,420 --> 00:08:15,200
+So it's like we're gonna mirror X percent of,
+
+
+175
+00:08:15,200 --> 00:08:17,680
+we are going to mirror X percent of production traffic
+
+
+176
+00:08:17,680 --> 00:08:19,760
+to these parking tier nodes.
+
+
+177
+00:08:19,760 --> 00:08:21,040
+So they're not on the critical path
+
+
+178
+00:08:21,040 --> 00:08:22,640
+to serving like by-frost traffic,
+
+
+179
+00:08:22,640 --> 00:08:25,120
+but as we gradually find out more about them,
+
+
+180
+00:08:25,120 --> 00:08:26,760
+we can either kick them out
+
+
+181
+00:08:26,760 --> 00:08:31,140
+or we can promote them to the tier they really belong to.
+
+
+182
+00:08:32,840 --> 00:08:34,240
+Earlier, we tried this thing
+
+
+183
+00:08:34,240 --> 00:08:36,360
+of like just having one consistent hashing ring
+
+
+184
+00:08:36,360 --> 00:08:39,120
+without any tiers and just putting all nodes on it
+
+
+185
+00:08:39,120 --> 00:08:41,360
+and then assigning them a weight.
+
+
+186
+00:08:41,360 --> 00:08:43,120
+The thing is it's very hard to figure out
+
+
+187
+00:08:43,120 --> 00:08:44,920
+like what weighing algorithm to use,
+
+
+188
+00:08:44,920 --> 00:08:46,120
+how to change those weights.
+
+
+189
+00:08:46,120 --> 00:08:47,920
+And if you don't get it right,
+
+
+190
+00:08:47,920 --> 00:08:49,620
+it causes a lot of pool churn
+
+
+191
+00:08:49,620 --> 00:08:52,400
+because these nodes then move around a lot on the ring,
+
+
+192
+00:08:52,400 --> 00:08:55,780
+which then means that it hits your cache affinity
+
+
+193
+00:08:55,780 --> 00:08:56,960
+because for the same content,
+
+
+194
+00:08:56,960 --> 00:08:58,320
+if a node gets moved around the ring,
+
+
+195
+00:08:58,320 --> 00:08:59,840
+you end up talking to a different node
+
+
+196
+00:08:59,840 --> 00:09:02,060
+because you didn't get your weighing algorithm right,
+
+
+197
+00:09:02,060 --> 00:09:04,640
+which means that the cache hit rates again go down.
+
+
+198
+00:09:04,640 --> 00:09:08,060
+And we're seeing like better numbers with this algorithm.
+
+
+199
+00:09:09,160 --> 00:09:10,840
+The problem here is still like
+
+
+200
+00:09:10,840 --> 00:09:12,120
+we haven't figured out a good way.
+
+
+201
+00:09:12,120 --> 00:09:14,480
+There's no inherent load balancing here.
+
+
+202
+00:09:14,480 --> 00:09:18,000
+You know, so if you only have a bunch of good nodes,
+
+
+203
+00:09:18,000 --> 00:09:20,580
+all your requests will just go to those good nodes.
+
+
+204
+00:09:20,580 --> 00:09:21,960
+And from by-frost point of view,
+
+
+205
+00:09:21,960 --> 00:09:22,840
+it probably makes sense
+
+
+206
+00:09:22,840 --> 00:09:25,280
+because we want as low latency as possible,
+
+
+207
+00:09:25,280 --> 00:09:27,800
+but from certain point of view,
+
+
+208
+00:09:27,800 --> 00:09:30,280
+it could end up blowing the bunch of nodes
+
+
+209
+00:09:30,280 --> 00:09:32,000
+that are highly performant
+
+
+210
+00:09:32,000 --> 00:09:34,440
+or end up skewing request flow to only those nodes,
+
+
+211
+00:09:34,440 --> 00:09:37,400
+which means that they then get paid more than other nodes.
+
+
+212
+00:09:37,400 --> 00:09:38,840
+So like there is an healthy tension
+
+
+213
+00:09:38,840 --> 00:09:41,440
+between certain wanting some sort of load balancing
+
+
+214
+00:09:41,440 --> 00:09:43,800
+and fairness in terms of traffic
+
+
+215
+00:09:43,800 --> 00:09:47,000
+and by-frost wanting as low latency as possible.
+
+
+216
+00:09:47,000 --> 00:09:50,240
+And this is a story that we're still going to work on.
+
+
+217
+00:09:50,240 --> 00:09:51,960
+You know, if we have a bunch of node operators
+
+
+218
+00:09:51,960 --> 00:09:53,080
+complaining to us saying,
+
+
+219
+00:09:53,080 --> 00:09:55,400
+I'm getting bombed just because I'm good,
+
+
+220
+00:09:55,400 --> 00:09:56,760
+we'll have to look into it.
+
+
+221
+00:09:59,080 --> 00:10:03,560
+Yeah, so just like I said,
+
+
+222
+00:10:03,560 --> 00:10:06,520
+you know, it also acts as a good network measurement tool
+
+
+223
+00:10:06,520 --> 00:10:08,800
+because now suddenly I'm sending this fire hose
+
+
+224
+00:10:08,800 --> 00:10:10,800
+of by-frost traffic to the certain network
+
+
+225
+00:10:10,800 --> 00:10:12,760
+and I'm collecting a bunch of metrics
+
+
+226
+00:10:12,760 --> 00:10:15,120
+and observing how these nodes are behaving.
+
+
+227
+00:10:15,120 --> 00:10:18,040
+So like for example, this is the per-peer TTFB today
+
+
+228
+00:10:18,040 --> 00:10:20,780
+for a block fetch for L1 cache hits.
+
+
+229
+00:10:20,780 --> 00:10:24,480
+P95 is 90 milliseconds, sorry, P50 is 90 milliseconds,
+
+
+230
+00:10:24,480 --> 00:10:25,680
+P95 is 386.
+
+
+231
+00:10:25,680 --> 00:10:27,800
+It's still not great, but we are working on number one,
+
+
+232
+00:10:27,800 --> 00:10:30,800
+improving the ranking algo.
+
+
+233
+00:10:30,800 --> 00:10:32,800
+And number two, we also working on certain side
+
+
+234
+00:10:32,800 --> 00:10:34,680
+to figure out what the bottlenecks are
+
+
+235
+00:10:34,680 --> 00:10:35,920
+and how we can fix them.
+
+
+236
+00:10:38,360 --> 00:10:40,860
+These are like, for example, the peer latency distribution
+
+
+237
+00:10:40,860 --> 00:10:42,440
+from New York by-frost instance,
+
+
+238
+00:10:42,440 --> 00:10:44,440
+and I mean the peer latency distribution
+
+
+239
+00:10:44,440 --> 00:10:46,320
+for certain instances
+
+
+240
+00:10:46,320 --> 00:10:48,740
+as observed by the New York by-frost instance.
+
+
+241
+00:10:48,740 --> 00:10:50,740
+As you can see, we do have like,
+
+
+242
+00:10:52,000 --> 00:10:54,080
+we do have like 28 nodes, for example,
+
+
+243
+00:10:54,080 --> 00:10:56,560
+whose P95 is less than 200.
+
+
+244
+00:10:56,560 --> 00:10:59,120
+We have like 50 nodes whose P90 is less than 200.
+
+
+245
+00:10:59,120 --> 00:11:03,040
+So like gathering data like this then allows us to,
+
+
+246
+00:11:03,040 --> 00:11:05,480
+that number one, tune our ranking algorithm.
+
+
+247
+00:11:05,480 --> 00:11:07,540
+Number two, if there are gaps in Saturn,
+
+
+248
+00:11:08,640 --> 00:11:11,560
+like say there is not enough geographical coverage
+
+
+249
+00:11:11,560 --> 00:11:13,440
+for a particular region in Saturn,
+
+
+250
+00:11:13,440 --> 00:11:19,440
+we can then go and fix that as well.
+
+
+251
+00:11:19,440 --> 00:11:21,840
+Sorry, I think this is like all I have for you.
+
+
+252
+00:11:23,040 --> 00:11:24,760
+If there's something you think didn't make sense,
+
+
+253
+00:11:24,760 --> 00:11:25,760
+like let me know.
+
+
+254
+00:11:25,760 --> 00:11:26,920
+If there's any feedback, let me know.
+
+
+255
+00:11:26,920 --> 00:11:28,120
+Any questions?
+
+
+256
+00:11:28,120 --> 00:11:28,960
+Yeah, thank you.
+
+
+257
+00:11:28,960 --> 00:11:43,960
+Thank you.
+
+
+258
+00:11:51,080 --> 00:11:52,680
+So did I understand correctly
+
+
+259
+00:11:52,680 --> 00:11:56,520
+that this caboose is running inside the by-frost gateway?
+
+
+260
+00:11:56,520 --> 00:11:58,440
+It's not running on the endpoints
+
+
+261
+00:11:58,440 --> 00:12:00,720
+that are actually requesting the data.
+
+
+262
+00:12:00,720 --> 00:12:03,160
+No, it's running, it's used as a library
+
+
+263
+00:12:03,160 --> 00:12:05,120
+by the by-frost gateway instance.
+
+
+264
+00:12:06,160 --> 00:12:09,240
+Yeah, it's a Golang library today
+
+
+265
+00:12:09,240 --> 00:12:11,460
+that runs inside the by-frost binary.
+
+
+266
+00:12:11,460 --> 00:12:13,800
+Okay, and that's the intention.
+
+
+267
+00:12:13,800 --> 00:12:16,440
+Like it's not, if I built a decentralized app
+
+
+268
+00:12:16,440 --> 00:12:20,720
+that runs on consumer hardware,
+
+
+269
+00:12:20,720 --> 00:12:22,680
+where would caboose live?
+
+
+270
+00:12:22,680 --> 00:12:26,300
+Yeah, so look, as of today, we have a Go implementation,
+
+
+271
+00:12:26,300 --> 00:12:29,000
+but if there's a demand saying,
+
+
+272
+00:12:29,000 --> 00:12:31,320
+I want to start running it in browsers,
+
+
+273
+00:12:31,320 --> 00:12:34,080
+I want a Rust implementation, we can definitely build it.
+
+
+274
+00:12:34,080 --> 00:12:36,680
+If there are clients who need a Rust caboose,
+
+
+275
+00:12:36,680 --> 00:12:38,920
+if our clients who need a JavaScript caboose
+
+
+276
+00:12:38,920 --> 00:12:41,360
+so they can run it in the browser, we can build it.
+
+
+277
+00:12:41,360 --> 00:12:43,360
+Okay, but that would mean that you would have
+
+
+278
+00:12:43,360 --> 00:12:46,120
+to duplicate a lot of requests because you're,
+
+
+279
+00:12:48,200 --> 00:12:50,320
+you would issue, for one resource,
+
+
+280
+00:12:50,320 --> 00:12:53,740
+you would issue a request to multiple Saturn nodes, right?
+
+
+281
+00:12:53,740 --> 00:12:57,300
+Not concurrently, like right now we go,
+
+
+282
+00:12:57,300 --> 00:13:00,260
+like I issue a request, if it fails, I go to another node.
+
+
+283
+00:13:01,780 --> 00:13:02,740
+Okay, I see.
+
+
+284
+00:13:02,740 --> 00:13:05,320
+And then a second question is,
+
+
+285
+00:13:05,320 --> 00:13:07,500
+so you showed the latencies.
+
+
+286
+00:13:07,500 --> 00:13:10,000
+If you can go back one slide.
+
+
+287
+00:13:10,000 --> 00:13:11,380
+And that's from, I assume,
+
+
+288
+00:13:11,380 --> 00:13:14,660
+a pretty well-connected by-frost node.
+
+
+289
+00:13:14,660 --> 00:13:16,900
+It's a BFrost staging New York instance.
+
+
+290
+00:13:16,900 --> 00:13:20,980
+Yeah, I would have expected millisecond latencies
+
+
+291
+00:13:20,980 --> 00:13:22,740
+and not like 100 milliseconds.
+
+
+292
+00:13:22,740 --> 00:13:24,540
+What's going on there?
+
+
+293
+00:13:24,540 --> 00:13:25,380
+Can you repeat?
+
+
+294
+00:13:25,380 --> 00:13:27,900
+I would have expected on the order of milliseconds
+
+
+295
+00:13:27,900 --> 00:13:29,900
+and not 100 milliseconds.
+
+
+296
+00:13:29,900 --> 00:13:31,060
+Do you have any explanation for that?
+
+
+297
+00:13:31,060 --> 00:13:34,860
+Yeah, the explanation is, there are two.
+
+
+298
+00:13:34,860 --> 00:13:37,260
+One is, I think we probably need to do more work
+
+
+299
+00:13:37,260 --> 00:13:39,380
+on the ranking algorithm in caboose
+
+
+300
+00:13:39,380 --> 00:13:43,420
+to ensure that we like talking to the lowest latency nodes
+
+
+301
+00:13:43,420 --> 00:13:44,260
+and recording these.
+
+
+302
+00:13:44,260 --> 00:13:47,780
+So, and second is like, there is a possibility
+
+
+303
+00:13:47,780 --> 00:13:51,460
+that we still don't have the required network coverage
+
+
+304
+00:13:51,460 --> 00:13:53,900
+in Saturn to have like low numbers here.
+
+
+305
+00:13:53,900 --> 00:13:55,940
+Like maybe there's no Saturn instance
+
+
+306
+00:13:55,940 --> 00:13:58,660
+that close enough to the New York instance,
+
+
+307
+00:13:58,660 --> 00:14:00,340
+but we're digging into it right now.
+
+
+308
+00:14:00,340 --> 00:14:02,220
+Like if I give the same talk after a month,
+
+
+309
+00:14:02,220 --> 00:14:03,380
+you'll see better numbers here
+
+
+310
+00:14:03,380 --> 00:14:06,380
+because this is what we are aggressively working on right now.
+
+
+311
+00:14:10,620 --> 00:14:12,260
+You already know everything, man.
+
+
+312
+00:14:12,260 --> 00:14:13,100
+Like.
+
+
+313
+00:14:13,100 --> 00:14:13,940
+Yeah.
+
+
+314
+00:14:13,940 --> 00:14:14,780
+Yeah.
+
+
+315
+00:14:14,780 --> 00:14:15,600
+Yeah.
+
+
+316
+00:14:15,600 --> 00:14:16,440
+Yeah.
+
+
+317
+00:14:16,440 --> 00:14:17,280
+Yeah.
+
+
+318
+00:14:17,280 --> 00:14:20,860
+So the only other point I was gonna make on that graph is,
+
+
+319
+00:14:20,860 --> 00:14:23,980
+so this is just observe time to first byte.
+
+
+320
+00:14:23,980 --> 00:14:26,740
+So this is not how far away is that,
+
+
+321
+00:14:26,740 --> 00:14:28,420
+but when we're making HTTP requests,
+
+
+322
+00:14:28,420 --> 00:14:31,060
+how long does it take to get the response?
+
+
+323
+00:14:31,060 --> 00:14:35,100
+And so that may be a combination of several factors,
+
+
+324
+00:14:35,100 --> 00:14:38,860
+not just the actual latency to the Saturn nodes.
+
+
+325
+00:14:38,860 --> 00:14:43,740
+So, I think there's also things looking into the NGINX
+
+
+326
+00:14:43,740 --> 00:14:46,140
+running on those nodes to see if that is introducing latency
+
+
+327
+00:14:46,140 --> 00:14:51,140
+that leads to these being higher than you might expect.
+
+
+328
+00:15:01,300 --> 00:15:03,220
+I'm just curious if I were,
+
+
+329
+00:15:03,220 --> 00:15:05,020
+so to follow up on Martin's request,
+
+
+330
+00:15:05,020 --> 00:15:07,700
+if I were running a JavaScript client
+
+
+331
+00:15:07,700 --> 00:15:11,660
+to get to do some sort of like trustless request
+
+
+332
+00:15:11,660 --> 00:15:15,020
+against Saturn, am I correct that I wouldn't need Kaboose
+
+
+333
+00:15:15,020 --> 00:15:17,380
+because they have their own sort of like orchestration
+
+
+334
+00:15:17,380 --> 00:15:18,220
+or something?
+
+
+335
+00:15:19,900 --> 00:15:21,740
+So I wouldn't necessarily need to replicate
+
+
+336
+00:15:21,740 --> 00:15:24,820
+Kaboose in JavaScript, I think, I'm not sure.
+
+
+337
+00:15:25,780 --> 00:15:27,420
+Does anyone know the answer to that question?
+
+
+338
+00:15:27,420 --> 00:15:28,260
+Yeah.
+
+
+339
+00:15:29,380 --> 00:15:31,260
+Yeah, so look, the thing is like,
+
+
+340
+00:15:32,260 --> 00:15:36,100
+the Saturn orchestration does have its own ranking logic,
+
+
+341
+00:15:36,100 --> 00:15:40,180
+but like if you look up, if you do a DNS lookup on Saturn,
+
+
+342
+00:15:40,180 --> 00:15:41,780
+you're just gonna get back one pop.
+
+
+343
+00:15:41,780 --> 00:15:44,540
+And you say you talk to that pop and that request fails,
+
+
+344
+00:15:44,540 --> 00:15:46,300
+then what do you do?
+
+
+345
+00:15:46,300 --> 00:15:48,260
+It could be that nodes that are getting tested
+
+
+346
+00:15:48,260 --> 00:15:51,020
+by the orchestrator are behaving well with the orchestrator,
+
+
+347
+00:15:51,020 --> 00:15:52,980
+but they're not gonna behave with your client
+
+
+348
+00:15:52,980 --> 00:15:55,220
+well with your client, for example.
+
+
+349
+00:15:55,220 --> 00:15:58,500
+So in my mind, like, and this is just my personal opinion,
+
+
+350
+00:15:58,500 --> 00:16:00,940
+I think like building something like Kaboose
+
+
+351
+00:16:00,940 --> 00:16:04,020
+into the browser that can do all this heavy lifting
+
+
+352
+00:16:04,020 --> 00:16:07,100
+will be a more reliable way for faster downloads from Saturn.
+
+
+353
+00:16:09,620 --> 00:16:12,020
+But we've gotta see, yeah.
+
+
+354
+00:16:12,020 --> 00:16:15,460
+Okay, to pick, sorry, Hannah, were you done?
+
+
+355
+00:16:15,460 --> 00:16:16,300
+I'm done, yeah.
+
+
+356
+00:16:16,300 --> 00:16:19,740
+Okay, to piggyback off that question, thanks, Hannah.
+
+
+357
+00:16:19,740 --> 00:16:21,820
+Do these peers speak WebTransport?
+
+
+358
+00:16:23,860 --> 00:16:25,980
+No, no, they have TLS certificates,
+
+
+359
+00:16:25,980 --> 00:16:28,340
+so you can use HTTPS from the browser to talk to them.
+
+
+360
+00:16:28,340 --> 00:16:29,780
+Ah, got it, okay, cool.
+
+
+361
+00:16:34,340 --> 00:16:36,100
+All right, thank you.
+
+
+362
+00:16:36,100 --> 00:16:41,100
+Thank you.

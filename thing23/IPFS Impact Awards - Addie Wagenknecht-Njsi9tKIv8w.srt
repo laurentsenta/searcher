@@ -1,0 +1,583 @@
+1
+00:00:00,000 --> 00:00:10,900
+Hey everyone, I'm Addy Wagenicht, I'm one of the co-leads of Archaeological Association
+
+
+2
+00:00:10,900 --> 00:00:16,720
+and I'm also in the Network Goods Network funding team for Protocol Labs.
+
+
+3
+00:00:16,720 --> 00:00:20,680
+So I'm here to talk briefly about the IPFS fund.
+
+
+4
+00:00:20,680 --> 00:00:25,520
+For those of you that aren't familiar, for the last two years the IPFS fund has been
+
+
+5
+00:00:25,520 --> 00:00:31,920
+actively working to drive transformation of the IPFS infrastructure, kind of from the
+
+
+6
+00:00:31,920 --> 00:00:37,160
+reliance of primary implementations to implementations that meet the needs of the growing and scaling
+
+
+7
+00:00:37,160 --> 00:00:38,400
+community.
+
+
+8
+00:00:38,400 --> 00:00:44,320
+So artists, people in InfoSec, developers, people developing in IoT space, Raspberry
+
+
+9
+00:00:44,320 --> 00:00:46,360
+Pi, that sort of stuff.
+
+
+10
+00:00:46,360 --> 00:00:51,480
+The fund looks basically to catalyze and accelerate the development of IPFS implementation and
+
+
+11
+00:00:51,480 --> 00:00:56,000
+ensure high impact teams working with IPFS build and grow.
+
+
+12
+00:00:56,000 --> 00:01:01,760
+So we are like a really high risk, high return for developers, artists, InfoSec infrastructure,
+
+
+13
+00:01:01,760 --> 00:01:04,640
+so on and so forth.
+
+
+14
+00:01:04,640 --> 00:01:10,960
+We've already committed a significant amount of money and tokens to raising and building
+
+
+15
+00:01:10,960 --> 00:01:12,640
+out the IPFS community.
+
+
+16
+00:01:12,640 --> 00:01:17,280
+And we're looking for additional funding for the following years, so if any of you are
+
+
+17
+00:01:17,280 --> 00:01:23,880
+bored and rich, feel free to reach out to me or say hi.
+
+
+18
+00:01:23,880 --> 00:01:28,400
+Our cohort, with a special thanks to Dietrich, Mosh, Juan, and Molly for their inputs and
+
+
+19
+00:01:28,400 --> 00:01:33,840
+expertise, this is sort of where we were focusing for our initial build out, was like large
+
+
+20
+00:01:33,840 --> 00:01:37,600
+infrastructure, new infrastructure, building out communities.
+
+
+21
+00:01:37,600 --> 00:01:43,600
+So we have things like Chromium integration, peer-to-peer secure storage, integration of
+
+
+22
+00:01:43,600 --> 00:01:52,120
+IPFS to Unreal and Unity, Go implementation, Rust, and so on and so forth.
+
+
+23
+00:01:52,120 --> 00:01:58,640
+And then just to look at kind of deciphering or looking at kind of a larger project, one
+
+
+24
+00:01:58,640 --> 00:01:59,640
+is 3S.
+
+
+25
+00:01:59,640 --> 00:02:02,560
+I don't think they're here right now, but if you're not familiar with them, they're
+
+
+26
+00:02:02,560 --> 00:02:05,860
+a game development studio.
+
+
+27
+00:02:05,860 --> 00:02:08,960
+They built basically an Unreal Unity plugin.
+
+
+28
+00:02:08,960 --> 00:02:15,120
+So the cool thing about this is that you can generate pack files with the pack loader automation,
+
+
+29
+00:02:15,120 --> 00:02:19,900
+run them, mount them dynamically in runtime, which means you can basically organize any
+
+
+30
+00:02:19,900 --> 00:02:21,840
+of your games by assets.
+
+
+31
+00:02:21,840 --> 00:02:27,120
+Like folder types, it allows you to make a super centralized distribution build.
+
+
+32
+00:02:27,120 --> 00:02:31,460
+And with IPFS, obviously, you can share content just by sharing the CIDs, so there's a massive
+
+
+33
+00:02:31,460 --> 00:02:39,200
+potential for gaming to be built interoperably in the sense that you can have a full stack
+
+
+34
+00:02:39,200 --> 00:02:45,400
+of say buildings or morphing characters stored as JSON data on IPFS.
+
+
+35
+00:02:45,400 --> 00:02:52,920
+So this is something that really allows people to share basically by the render target allows
+
+
+36
+00:02:52,920 --> 00:02:57,720
+people to share things like textures or complex models, so on and so forth, between games
+
+
+37
+00:02:57,720 --> 00:02:58,720
+that are being developed.
+
+
+38
+00:02:58,720 --> 00:03:03,040
+And this is a really major thing for people that have worked in game development, as we
+
+
+39
+00:03:03,040 --> 00:03:06,080
+all kind of know this is one of the hard things to solve, and they've been trying to solve
+
+
+40
+00:03:06,080 --> 00:03:07,160
+that.
+
+
+41
+00:03:07,160 --> 00:03:11,280
+And so when they built this plugin, they were building this because they needed the infrastructure
+
+
+42
+00:03:11,280 --> 00:03:14,100
+for their own game development, and it didn't exist.
+
+
+43
+00:03:14,100 --> 00:03:18,000
+And so IPFS Fund, along with Dietrich and Mosh, Juan, Molly, we were sort of looking
+
+
+44
+00:03:18,000 --> 00:03:22,720
+at ways to increase adoption, and we thought this was a really interesting way to go about
+
+
+45
+00:03:22,720 --> 00:03:23,720
+that.
+
+
+46
+00:03:23,720 --> 00:03:28,160
+IPFS is obviously something that's really important in the gaming future of gaming,
+
+
+47
+00:03:28,160 --> 00:03:34,840
+and so they built this plugin because they needed it for their own game development,
+
+
+48
+00:03:34,840 --> 00:03:40,920
+and in the last two months alone, they've had about 15,000 installations.
+
+
+49
+00:03:40,920 --> 00:03:45,520
+And then just a little bit about our team before we start going into awards.
+
+
+50
+00:03:45,520 --> 00:03:51,200
+Archaeological is basically leading the IPFS Fund, OPEX, financial, legal needs, and the
+
+
+51
+00:03:51,200 --> 00:03:56,560
+concept of Archaeological was basically built out so that there's no central point of ownership.
+
+
+52
+00:03:56,560 --> 00:04:01,840
+So it's sort of like a DAO, but it's actually recognized by governments and financial institutions,
+
+
+53
+00:04:01,840 --> 00:04:06,800
+and so it makes it easier for us to navigate those complex hierarchies and systems.
+
+
+54
+00:04:06,800 --> 00:04:12,780
+Because we have no one that controls the ownership, we basically look to deploy optimized tooling
+
+
+55
+00:04:12,780 --> 00:04:15,320
+and infrastructure for funding with strong feedback loops.
+
+
+56
+00:04:15,320 --> 00:04:21,320
+So Dietrich and Mosh, Juan and Molly, have been really the drivers of the IPFS Fund,
+
+
+57
+00:04:21,320 --> 00:04:23,360
+helping us make those decisions.
+
+
+58
+00:04:23,360 --> 00:04:27,720
+And then the core team is myself, Evan, Mauro, who have been tweaking and structuring the
+
+
+59
+00:04:27,720 --> 00:04:32,000
+mechanics for the last year, dealing with things like banking collapses and exchange
+
+
+60
+00:04:32,000 --> 00:04:33,920
+collapses.
+
+
+61
+00:04:33,920 --> 00:04:37,280
+And so our background is like a mix of research, open hardware.
+
+
+62
+00:04:37,280 --> 00:04:42,080
+I was in open hardware for about 10 years, developing out a lot of open hardware systems,
+
+
+63
+00:04:42,080 --> 00:04:46,280
+protocols, anything that you need around Raspberry Pi or Arduino, I'm happy to build that out
+
+
+64
+00:04:46,280 --> 00:04:47,280
+for you.
+
+
+65
+00:04:47,280 --> 00:04:53,440
+Evan's obviously been leading out research, and Mauro was the head of CEO for blockchain
+
+
+66
+00:04:53,440 --> 00:04:58,720
+at Crypto Bitcoin Swiss.
+
+
+67
+00:04:58,720 --> 00:05:02,560
+And then before we announce the winners, this is something that we've all been sort of working
+
+
+68
+00:05:02,560 --> 00:05:03,560
+on on the side.
+
+
+69
+00:05:03,560 --> 00:05:08,340
+It's a little bit of alpha before we get into the rest of this.
+
+
+70
+00:05:08,340 --> 00:05:13,360
+So one of the things I've been wanting to work on is solving, essentially, in 2023,
+
+
+71
+00:05:13,360 --> 00:05:18,680
+blockchain mechanisms for proactive real-time distribution of funding allocation.
+
+
+72
+00:05:18,680 --> 00:05:23,640
+Having worked in open hardware and open source, one of the major issues is retroactive funding,
+
+
+73
+00:05:23,640 --> 00:05:27,400
+because you still need a runway to basically build out your ideas, and no one wants to
+
+
+74
+00:05:27,400 --> 00:05:32,360
+necessarily fund open source, although there are some, like, key angels in there.
+
+
+75
+00:05:32,360 --> 00:05:36,120
+So I was looking at ways that we could have people who are already doing things with their
+
+
+76
+00:05:36,120 --> 00:05:37,120
+tokens.
+
+
+77
+00:05:37,120 --> 00:05:41,720
+Phil, for example, is what we're looking and using right now with GILF.
+
+
+78
+00:05:41,720 --> 00:05:47,760
+This allows you to allocate some of the return you get on staking or different pooling mechanisms
+
+
+79
+00:05:47,760 --> 00:05:53,080
+into public goods in things like IPFS and the Filecoin FEM community.
+
+
+80
+00:05:53,080 --> 00:05:55,240
+And so I started working on this.
+
+
+81
+00:05:55,240 --> 00:05:58,000
+It's on the Hyperspace testnet.
+
+
+82
+00:05:58,000 --> 00:06:03,400
+If anyone wants to, like, hammer break a smart contract, I would love to put you on the multisig
+
+
+83
+00:06:03,400 --> 00:06:07,760
+and just send you some faucet fill and see if we can break it together.
+
+
+84
+00:06:07,760 --> 00:06:11,300
+But we're looking at sort of making this so it proactively funds all of your projects
+
+
+85
+00:06:11,300 --> 00:06:15,560
+and allows you to get distributions automatically, transparently on chain, because I think that's
+
+
+86
+00:06:15,560 --> 00:06:17,120
+the future of funding.
+
+
+87
+00:06:17,120 --> 00:06:22,320
+I'm also working on things like governance mechanisms with quadratic voting and introducing
+
+
+88
+00:06:22,320 --> 00:06:27,120
+impact certificates and impact evaluators on chain so that all of that can be transparently
+
+
+89
+00:06:27,120 --> 00:06:30,680
+tracked, and there's a lot less bureaucracy and red tape and delays and all that stuff
+
+
+90
+00:06:30,680 --> 00:06:33,360
+that isn't sexy and no one wants to talk about.
+
+
+91
+00:06:33,360 --> 00:06:38,580
+So that's all stuff that I've been working on for this year and hopefully for next year.
+
+
+92
+00:06:38,580 --> 00:06:41,520
+This is a little screenshot of it on testnet.
+
+
+93
+00:06:41,520 --> 00:06:45,360
+Once again, if you want to test it, I'm thrilled to have you do that.
+
+
+94
+00:06:45,360 --> 00:06:47,980
+Bonus points if you break it.
+
+
+95
+00:06:47,980 --> 00:06:51,720
+And then I want to switch really quickly, because I think I'm already out of time, on
+
+
+96
+00:06:51,720 --> 00:06:53,920
+the IPFS community impact awards.
+
+
+97
+00:06:53,920 --> 00:06:57,960
+I don't know if, Dietrich, you want to come up here and jazz it up also with me, but these
+
+
+98
+00:06:57,960 --> 00:07:00,560
+are awards that are every six months.
+
+
+99
+00:07:00,560 --> 00:07:04,640
+They're projects that are crowdsourced by the community and voted.
+
+
+100
+00:07:04,640 --> 00:07:10,480
+So we want to say congratulations to the 28 winners.
+
+
+101
+00:07:10,480 --> 00:07:17,200
+Really, special thanks to all the people that submitted projects.
+
+
+102
+00:07:17,200 --> 00:07:23,560
+So this fund only goes to projects that are submitted, so thank you for finding the projects
+
+
+103
+00:07:23,560 --> 00:07:25,680
+that matter to you and adding them.
+
+
+104
+00:07:25,680 --> 00:07:30,280
+These were not curated by this team or Protocol Labs or the fund.
+
+
+105
+00:07:30,280 --> 00:07:32,960
+These were projects submitted by you.
+
+
+106
+00:07:32,960 --> 00:07:35,360
+Some of these projects are you.
+
+
+107
+00:07:35,360 --> 00:07:38,000
+So thank you for submitting.
+
+
+108
+00:07:38,000 --> 00:07:40,280
+Thank you also to everybody who voted.
+
+
+109
+00:07:40,280 --> 00:07:41,800
+We're going to be doing this regularly.
+
+
+110
+00:07:41,800 --> 00:07:45,400
+Yeah, we'll release them every six months, and we'll do it.
+
+
+111
+00:07:45,400 --> 00:07:50,600
+I'll try to really spray the news across every channel we've got, so just check out Discord,
+
+
+112
+00:07:50,600 --> 00:07:53,240
+Slack, Telegram, Twitter, whatever you've got.
+
+
+113
+00:07:53,240 --> 00:07:57,080
+We'll let you know about the voting and submissions, because the more of you that contribute, the
+
+
+114
+00:07:57,080 --> 00:07:59,840
+more exciting this will get.
+
+
+115
+00:07:59,840 --> 00:08:01,880
+So thanks, everybody, and congratulations.
+
+
+116
+00:08:01,880 --> 00:08:05,960
+And thank you for working on this and building the things that you build, because it gives
+
+
+117
+00:08:05,960 --> 00:08:34,240
+us something to reward so you can do more of it.

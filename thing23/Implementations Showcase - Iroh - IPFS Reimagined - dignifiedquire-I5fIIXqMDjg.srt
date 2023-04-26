@@ -1,0 +1,223 @@
+1
+00:00:00,000 --> 00:00:09,440
+All right. Hey, everyone. I'm excited to be on this stage at an amazing time for IPFS.
+
+
+2
+00:00:09,440 --> 00:00:16,200
+For those who don't know me, I'm Digg. I work at number zero on this cool thing they call
+
+
+3
+00:00:16,200 --> 00:00:24,080
+IRO. A lot has happened since last I talked about it. So let's take a quick look. After
+
+
+4
+00:00:24,080 --> 00:00:30,080
+IPFS camp, you might have noticed, we had to look at the challenges and opportunities we had
+
+
+5
+00:00:30,080 --> 00:00:38,120
+with the dead existing version of IRO. This led us to refocusing on these four core values
+
+
+6
+00:00:38,120 --> 00:00:45,120
+with IRO. Reliability, performance, efficiency, and peer-to-peer. In our opinion, these are
+
+
+7
+00:00:45,120 --> 00:00:51,080
+non-negotiable when shipping an IPFS implementation. And so we went and rewrote IRO from the ground
+
+
+8
+00:00:51,080 --> 00:00:59,480
+up. Looking at our roadmap, you can see we're tracking four high-level parts. Data structures,
+
+
+9
+00:00:59,480 --> 00:01:05,160
+data transfer, connectivity, and content routing. For both data structures and data transfer,
+
+
+10
+00:01:05,160 --> 00:01:10,760
+we are now actually in the test and improve phase. So we actually get to test, do our
+
+
+11
+00:01:10,760 --> 00:01:16,400
+theories apply to the real world. The last few months, we have also spent a lot of time
+
+
+12
+00:01:16,400 --> 00:01:21,560
+working on connectivity. So we'll be starting to test our results soon. But for content
+
+
+13
+00:01:21,560 --> 00:01:27,560
+routing, we have a good overall understanding only so far, with some initial research done.
+
+
+14
+00:01:27,560 --> 00:01:36,280
+But implementation had to wait a little. We weren't lazy, so we've shipped three releases
+
+
+15
+00:01:36,280 --> 00:01:41,320
+since our refocus, including the current 0.4.1. And they both present the headway that we've
+
+
+16
+00:01:41,320 --> 00:01:46,880
+actually made into our roadmap, as well as forming the foundation that our partners have
+
+
+17
+00:01:46,880 --> 00:01:54,360
+started to build and rely on. Because we want IRO to solve real problems every step of the
+
+
+18
+00:01:54,360 --> 00:01:58,720
+way, we have worked with the amazing Delta Chat team to deliver an integrated backup transfer
+
+
+19
+00:01:58,720 --> 00:02:03,760
+solution, which you can see here. With this, IRO allows users of Delta Chat to move their
+
+
+20
+00:02:03,760 --> 00:02:08,760
+data from one device to another in a verified, encrypted, and fast way, content-addressed,
+
+
+21
+00:02:08,760 --> 00:02:14,920
+as you all expected. And we're excited to announce that this is actually live today
+
+
+22
+00:02:14,920 --> 00:02:18,920
+in the latest releases of Delta Chat, meaning it ships to hundreds of thousands of devices
+
+
+23
+00:02:18,920 --> 00:02:35,640
+covering all major mobile and desktop platforms. So let's talk about performance. This is how
+
+
+24
+00:02:35,640 --> 00:02:43,600
+it has to go, right? So a long time ago, folks realized how critical it is to measure what
+
+
+25
+00:02:43,600 --> 00:02:48,000
+you want to improve. So we've actually been true to our word and built a continuous measurement
+
+
+26
+00:02:48,000 --> 00:02:56,240
+platform for IRO, at least, at perf.iro.computer. Shout out, Asmir. This records the performance
+
+
+27
+00:02:56,240 --> 00:03:00,640
+of every commit we merge and gives us and all of you an easy way to track and follow
+
+
+28
+00:03:00,640 --> 00:03:07,440
+the performance of IRO as it develops. Today, we use a small but growing set of benchmarks,
+
+
+29
+00:03:07,440 --> 00:03:15,360
+which include network tests with simulated NATs and latencies and packet loss. We don't
+
+
+30
+00:03:15,360 --> 00:03:21,240
+only use automated benchmarks, but also try real-world-oriented tests, like transferring
+
+
+31
+00:03:21,240 --> 00:03:25,920
+the source code of Linux kernel on your local machine. You do that every day, right? Which,
+
+
+32
+00:03:25,920 --> 00:03:31,640
+for IRO, takes now 23 seconds on the current development machine and puts us actually into
+
+
+33
+00:03:31,640 --> 00:03:40,240
+a realm where we want to be in. But the real comparisons that we need to draw are comparing
+
+
+34
+00:03:40,240 --> 00:03:45,080
+to Web 2.0 technologies. And so we're pretty proud that IRO now actually approaches transfer
+
+
+35
+00:03:45,080 --> 00:03:50,320
+speeds similar to those of curl when transferring data on a local machine. This means not only
+
+
+36
+00:03:50,320 --> 00:03:54,560
+are we transferring the data, but also verifying every step along the way, giving users more
+
+
+37
+00:03:54,560 --> 00:04:00,640
+than they had before without compromising. So what's next for us? We're going to work
+
+
+38
+00:04:00,640 --> 00:04:05,980
+through our roadmap, focusing on deploying IRO for real users every step of the way,
+
+
+39
+00:04:05,980 --> 00:04:10,520
+so we can be sure to deliver new superpowers into the hands of all the great humans out
+
+
+40
+00:04:10,520 --> 00:04:18,280
+there. This was very brief, so if you want to know anything more about these pieces,
+
+
+41
+00:04:18,280 --> 00:04:23,320
+almost a full team of number zeroes around, find us on the hallway or come to one of these
+
+
+42
+00:04:23,320 --> 00:04:29,520
+cool talks. I'm going to talk about the details of reimagining IPFS later today. Floris is
+
+
+43
+00:04:29,520 --> 00:04:34,320
+going to talk about the integration of IRO into DeltaJet. Azmir about measuring all the
+
+
+44
+00:04:34,320 --> 00:04:40,840
+things. And Rudiger was going to talk about moving actual bytes with BAU and Blake 3 without
+
+
+45
+00:04:40,840 --> 00:04:55,480
+block limits. Thanks.

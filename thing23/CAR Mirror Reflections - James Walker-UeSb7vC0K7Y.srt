@@ -1,0 +1,898 @@
+1
+00:00:00,000 --> 00:00:11,680
+Hi guys, I'm James. I work at Fission, which is important because Fission is awesome. But
+
+
+2
+00:00:11,680 --> 00:00:16,940
+also it's going to give a little context to why CarMirror and what we're trying to do
+
+
+3
+00:00:16,940 --> 00:00:23,300
+with CarMirror. Before I get rolling though, I want to give a very quick acknowledgement.
+
+
+4
+00:00:23,300 --> 00:00:29,040
+I didn't do any of this. So I do primarily engineering management at Fission, which means
+
+
+5
+00:00:29,040 --> 00:00:34,040
+I build nothing. So special shout out to Justin, who wrote most of the code, has been running
+
+
+6
+00:00:34,040 --> 00:00:39,800
+this project. And of course, Brooklyn, who is here to make sure I don't say things wrong,
+
+
+7
+00:00:39,800 --> 00:00:44,960
+who of course designed the spec. Okay, how many people know what we're trying to do at
+
+
+8
+00:00:44,960 --> 00:00:52,600
+Fission? Fission people at least should have their hands up. All right, so at Fission,
+
+
+9
+00:00:52,600 --> 00:00:57,680
+our high-level goal, so we have a lot of talks this week about some of the lower-level protocols
+
+
+10
+00:00:57,680 --> 00:01:01,560
+and things we're working on, but it's all in support of this larger vision where we're
+
+
+11
+00:01:01,560 --> 00:01:08,240
+trying to redefine how apps are built. And particularly, we want things like user-owned
+
+
+12
+00:01:08,240 --> 00:01:13,640
+and user-controlled data. So what that means is we have an architecture right now that
+
+
+13
+00:01:13,640 --> 00:01:20,240
+looks a little bit like this. So a user has maybe a couple of devices, a phone, a laptop.
+
+
+14
+00:01:20,240 --> 00:01:25,700
+They have their collection of files. So think like a Dropbox folder or something like that.
+
+
+15
+00:01:25,700 --> 00:01:31,920
+They have their files. They want to be able to sync them between devices, right? So currently,
+
+
+16
+00:01:31,920 --> 00:01:37,880
+that routes through some servers that rerun, and then all of that backed by IPFS. So their
+
+
+17
+00:01:37,880 --> 00:01:43,240
+content's actually available broadly on the IPFS network. Of course, because we're Fission,
+
+
+18
+00:01:43,240 --> 00:01:49,180
+these files are actually stored as a WinFS directory. So if you're interested in actually
+
+
+19
+00:01:49,180 --> 00:01:56,600
+having private files on IPFS, see the talks to learn more about WinFS.
+
+
+20
+00:01:56,600 --> 00:02:01,680
+But one of the things, so in the apps that we build, they're primarily, or to start at
+
+
+21
+00:02:01,680 --> 00:02:07,200
+least, they are web-based apps, which means we're operating in a browser. We also have
+
+
+22
+00:02:07,200 --> 00:02:12,400
+an app publishing platform that you can use from things like GitHub Actions. All of this
+
+
+23
+00:02:12,400 --> 00:02:21,280
+means we are doing IPFS in hard mode. So almost none of the people using our apps are directly
+
+
+24
+00:02:21,280 --> 00:02:28,360
+network dialable, right? So in our best case scenario, we are relying on hole punching,
+
+
+25
+00:02:28,360 --> 00:02:33,960
+which continues to advance, but not quite a perfect scenario. We also, of course, particularly
+
+
+26
+00:02:33,960 --> 00:02:40,880
+on mobile devices, we have potential network traffic interruptions, all kinds of limitations
+
+
+27
+00:02:40,880 --> 00:02:46,040
+there. And if you're trying to do something in a GitHub Action, you are time constrained,
+
+
+28
+00:02:46,040 --> 00:02:52,760
+right? You have a short-lived thing that is spinning up, trying to push some files, trying
+
+
+29
+00:02:52,760 --> 00:02:57,720
+to send some data, and then getting killed off at the end.
+
+
+30
+00:02:57,720 --> 00:03:06,200
+None of these are the way that Kubo likes to work, or in JSIPFS's case, in the browser.
+
+
+31
+00:03:06,200 --> 00:03:14,180
+We are already, in the browser JSIPFS, we're doing bit swap over web sockets. We are dialing
+
+
+32
+00:03:14,180 --> 00:03:22,200
+into our servers and sending data via bit swap. Makes sense so far? Cool. So that sort
+
+
+33
+00:03:22,200 --> 00:03:28,420
+of sets the stage. Basically, all that means, we've had a hard time moving the bytes across
+
+
+34
+00:03:28,420 --> 00:03:34,280
+that dotted line, right? So, you know, once it gets to our servers and out into the IPFS
+
+
+35
+00:03:34,280 --> 00:03:38,880
+network, things get a little bit better. We have big, more powerful, more reliable servers
+
+
+36
+00:03:38,880 --> 00:03:44,000
+that can send the bytes around. But it's that sort of last mile, if you want to call it,
+
+
+37
+00:03:44,000 --> 00:03:49,040
+right? Getting it from our users' devices to their other devices and other things on
+
+
+38
+00:03:49,040 --> 00:03:54,280
+the network. Right? A couple more things about the context
+
+
+39
+00:03:54,280 --> 00:04:01,200
+we're sort of operating in. So, with WinFS file systems, we do have deeply nested DAGs
+
+
+40
+00:04:01,200 --> 00:04:05,560
+that get incremental updates. So this is user's data. So every time they take a picture of
+
+
+41
+00:04:05,560 --> 00:04:10,800
+their cat and add it to their file system, that is a new entry. It is a mutable file
+
+
+42
+00:04:10,800 --> 00:04:19,280
+system that we then want to sync across the network. Right? Yeah. We want to do sync bidirectionally.
+
+
+43
+00:04:19,280 --> 00:04:25,800
+So if we have an update on one device, we want to make sure that that update is reflected
+
+
+44
+00:04:25,800 --> 00:04:33,800
+on their other devices. Yeah. We have, again, like, our sort of baseline is always can we
+
+
+45
+00:04:33,800 --> 00:04:43,080
+do this in a user's mobile browser? And in that environment, right, we want to minimize
+
+
+46
+00:04:43,080 --> 00:04:47,640
+the number of network round trips and the latency. So a big thing with BitSwap, right,
+
+
+47
+00:04:47,640 --> 00:04:53,760
+is there's a lot of network chatter back and forth as we're fetching blocks and trying
+
+
+48
+00:04:53,760 --> 00:05:00,720
+to add them to the local block store. Right? We'd also like to ideally minimize the data
+
+
+49
+00:05:00,720 --> 00:05:06,640
+transfer as best we can. Right? So we don't want to send, again, particularly from a mobile
+
+
+50
+00:05:06,640 --> 00:05:11,800
+device, but in general, we don't want to send an entire car file, for example, of the user's
+
+
+51
+00:05:11,800 --> 00:05:17,840
+whole file system. Right? Chances are their other devices probably already have some subset
+
+
+52
+00:05:17,840 --> 00:05:22,480
+of the data. Right? Because it's being updated incrementally over time. You know, the phone
+
+
+53
+00:05:22,480 --> 00:05:26,520
+has most of it, but probably not the most recent stuff that's happened on their other
+
+
+54
+00:05:26,520 --> 00:05:32,560
+devices. So we don't want to have to send the entire thing every time.
+
+
+55
+00:05:32,560 --> 00:05:38,920
+So what is CarMirror? So I'm going to go pretty briefly through the spec itself. Largely because
+
+
+56
+00:05:38,920 --> 00:05:44,560
+the aforementioned Brooklyn gave this talk at IPFS thing last summer. And she dives a
+
+
+57
+00:05:44,560 --> 00:05:50,260
+lot more into the details of the spec and how the protocol works. I would encourage
+
+
+58
+00:05:50,260 --> 00:05:57,200
+you to type in the YouTube URL really quickly before I go to the next slide and watch that.
+
+
+59
+00:05:57,200 --> 00:06:04,040
+All right. So CarMirror, again, the main goal is to balance the round trips. Right? So minimize
+
+
+60
+00:06:04,040 --> 00:06:10,320
+the network latency while also not sending duplicate blocks. Right? So we want to send
+
+
+61
+00:06:10,320 --> 00:06:19,720
+just the data that's needed for the new device in a minimal number of steps.
+
+
+62
+00:06:19,720 --> 00:06:26,320
+One of the, I think, unique concessions or like a concession that we've made, again,
+
+
+63
+00:06:26,320 --> 00:06:31,840
+looking back at our current sort of network diagram, we do have servers here. So we do
+
+
+64
+00:06:31,840 --> 00:06:37,520
+have a trusted endpoint that we can point this at. So that's an important thing. Right?
+
+
+65
+00:06:37,520 --> 00:06:43,040
+Like we've limited our scope. This is not a general purpose transfer protocol, although
+
+
+66
+00:06:43,040 --> 00:06:48,620
+we have some ideas for that. But in the initial CarMirror implementation, we are relying on
+
+
+67
+00:06:48,620 --> 00:06:57,080
+the trusted dialable endpoint. So the transfers themselves consist of three
+
+
+68
+00:06:57,080 --> 00:07:03,120
+things. So the first is the Bloom filter. Everybody familiar with Bloom filters? A little
+
+
+69
+00:07:03,120 --> 00:07:10,760
+bit? Yeah? So as we know, it's a probabilistic data structure. We use the Bloom filters to
+
+
+70
+00:07:10,760 --> 00:07:16,320
+send hints about data we already know about. Right? So rather than sending a full list
+
+
+71
+00:07:16,320 --> 00:07:23,040
+of SIDs saying, you know, I have all of these SIDs already. You don't need to send me those.
+
+
+72
+00:07:23,040 --> 00:07:30,800
+We send a Bloom filter representation and save 92, 93% data storage. So it's a small,
+
+
+73
+00:07:30,800 --> 00:07:33,920
+concise representation of the things that we have.
+
+
+74
+00:07:33,920 --> 00:07:40,160
+Now, it is probabilistic. So we can have false positives. Right? We can, the other side can
+
+
+75
+00:07:40,160 --> 00:07:47,280
+say, oh, I think you have this. And we don't, actually. So that's why the protocol works
+
+
+76
+00:07:47,280 --> 00:07:55,200
+in rounds. So we will send a Bloom filter, a CID root, or roots, potentially, of the
+
+
+77
+00:07:55,200 --> 00:08:01,440
+structure that we want. And then we will receive we will send or receive Car files of the actual
+
+
+78
+00:08:01,440 --> 00:08:09,520
+blocks. And the last thing is CarMirror works in two
+
+
+79
+00:08:09,520 --> 00:08:14,880
+modes. There's both a push and a pull mode. So again, in our general sort of operation,
+
+
+80
+00:08:14,880 --> 00:08:21,400
+we have a user on a device who will want to pull in their latest data. Right? Sort of
+
+
+81
+00:08:21,400 --> 00:08:27,800
+like a Git model. So pull in their latest data. Make whatever updates. Do whatever operations
+
+
+82
+00:08:27,800 --> 00:08:35,840
+they want. And then push that back, potentially. All right. So very high level.
+
+
+83
+00:08:35,840 --> 00:08:47,400
+Quickly, this is the general diagram of how pull works. So one important note. It is a
+
+
+84
+00:08:47,400 --> 00:08:55,600
+stateless protocol happening over HTTP. So on our first round of pulling, we may not
+
+
+85
+00:08:55,600 --> 00:09:04,160
+have we may not know anything about what the other side does or doesn't have. So we request
+
+
+86
+00:09:04,160 --> 00:09:12,760
+a CID root. The Bloom here on the first pass is optional. So the purple on the left is
+
+
+87
+00:09:12,760 --> 00:09:17,040
+the requester side. Green on the right is the responder. So the requester makes a request
+
+
+88
+00:09:17,040 --> 00:09:24,880
+and says, I want this SID. I want this graph. This DAG. The responder will walk its local
+
+
+89
+00:09:24,880 --> 00:09:32,080
+graph building up a response Car file saying here are the blocks that you've asked for
+
+
+90
+00:09:32,080 --> 00:09:38,600
+and send those back over the wire. The local store on the requester will update. Say, okay,
+
+
+91
+00:09:38,600 --> 00:09:42,560
+now I've got these blocks and check to see if there are further rounds necessary. There's
+
+
+92
+00:09:42,560 --> 00:09:50,640
+still more data that they need. The push side is basically the same thing in reverse, more
+
+
+93
+00:09:50,640 --> 00:09:58,640
+or less. Right? So if I am pushing things, I am going to generate the Car file with its
+
+
+94
+00:09:58,640 --> 00:10:07,120
+matching Bloom filter, send that across the wire. The responder side receives those blocks,
+
+
+95
+00:10:07,120 --> 00:10:13,920
+add them to the local store, updates its Bloom with now the new SIDs that it is aware of
+
+
+96
+00:10:13,920 --> 00:10:18,160
+and sends that back. And again, in both of these cases, this will happen in a couple
+
+
+97
+00:10:18,160 --> 00:10:28,400
+rounds until the transfer is complete. So quick overview of sort of where we are.
+
+
+98
+00:10:28,400 --> 00:10:38,360
+So we have the spec that has sort of defines the operation as specs do. We have a GoCarmir
+
+
+99
+00:10:38,360 --> 00:10:45,080
+library which does the sort of core implementation, the Bloom calculations, et cetera. And then
+
+
+100
+00:10:45,080 --> 00:10:52,400
+we've implemented this as a Kubo plugin so that you can add it to your Kubo installation
+
+
+101
+00:10:52,400 --> 00:11:04,040
+and run this, which I'm gonna do. Who doesn't love a live demo? All right. Let's do a little
+
+
+102
+00:11:04,040 --> 00:11:15,680
+bit of font size here so we can see. Okay. So I am going to do it live, as they say.
+
+
+103
+00:11:15,680 --> 00:11:25,520
+So we've got IPTB fresh. So we've done a couple wrappers around the IPTB testbed library,
+
+
+104
+00:11:25,520 --> 00:11:31,280
+basically so that we can run multiple Kubo instances. So you can see I've just launched
+
+
+105
+00:11:31,280 --> 00:11:37,800
+two instances here running. So we're gonna go over here and say... Just see some log
+
+
+106
+00:11:37,800 --> 00:11:49,280
+output. All right. So those are our two Kubo nodes. You can see part of our wrapper scripts
+
+
+107
+00:11:49,280 --> 00:11:53,280
+have also turned on some debugging. So you can see the Carmir plugin is actually enabled
+
+
+108
+00:11:53,280 --> 00:12:04,040
+in both of those. All right. So just so we can see what's happening. So this little helper
+
+
+109
+00:12:04,040 --> 00:12:12,320
+script. So we've actually spun up HTTP endpoints on both instances at points on local host.
+
+
+110
+00:12:12,320 --> 00:12:20,960
+And now we get to do the fun part. Are we ready? Oh, wait. You guys ready for the fun
+
+
+111
+00:12:20,960 --> 00:12:29,600
+part? This is the part where I can go horribly wrong. So let's see. Okay. So using a tool
+
+
+112
+00:12:29,600 --> 00:12:36,560
+called random files written by this guy, Juan Benet, generated a directory full of random
+
+
+113
+00:12:36,560 --> 00:12:43,560
+data. So we can just have a look at this. This is 2.4 megabytes. So not huge. But also
+
+
+114
+00:12:43,560 --> 00:12:53,680
+we're doing this live on a time constraint. Okay. So if I... IPFS. I want to add... So
+
+
+115
+00:12:53,680 --> 00:12:58,240
+I'm just gonna load these into one of the Kubo nodes. Right? So in this scenario, the
+
+
+116
+00:12:58,240 --> 00:13:06,440
+bottom right is gonna be node one. We'll consider it our server in the cloud. Node zero in the
+
+
+117
+00:13:06,440 --> 00:13:12,880
+top right is our client. All right. There we go. So we've added just simple IPFS add
+
+
+118
+00:13:12,880 --> 00:13:22,120
+command. These blocks are now in the bottom right. But if I just do this here... So if
+
+
+119
+00:13:22,120 --> 00:13:33,360
+I try to get that offline, right? So we won't let bit swap or any discovery happen. And
+
+
+120
+00:13:33,360 --> 00:13:39,520
+I don't actually want to grab these. Right? So you can see IPFS zero, right? So top right
+
+
+121
+00:13:39,520 --> 00:13:46,080
+doesn't have this. Sid doesn't know about it, which makes sense because this is a new
+
+
+122
+00:13:46,080 --> 00:13:55,840
+node. Okay. So we are going to now pull... Right? From... So dash A is the address we're
+
+
+123
+00:13:55,840 --> 00:14:06,320
+pulling from. And dash C is the Sid. Okay. Moment of truth. Drum roll, please. Amazing.
+
+
+124
+00:14:06,320 --> 00:14:12,880
+You guys do anything I say? So we can see some activity now happening back and forth.
+
+
+125
+00:14:12,880 --> 00:14:19,040
+So go through a couple rounds. Right? So you can see there's some block store walking,
+
+
+126
+00:14:19,040 --> 00:14:30,800
+bloom filter calculating. And it completed successfully. Phew. Now... Okay. So just to
+
+
+127
+00:14:30,800 --> 00:14:39,920
+verify... Let's see. We'll go... IPFS zero now should have this Sid. Again, offline.
+
+
+128
+00:14:39,920 --> 00:14:46,440
+All right. Whew. All right. So we've successfully transferred the full thing. So this is what
+
+
+129
+00:14:46,440 --> 00:14:53,560
+we refer to as a cold start. Right? So IPFS zero didn't have any of these files. Right?
+
+
+130
+00:14:53,560 --> 00:14:58,880
+And it didn't actually know what was going to be in. All it knew was it wanted this particular
+
+
+131
+00:14:58,880 --> 00:15:04,200
+Sid. So in Fission's use case, if we're talking about something like a user's file system,
+
+
+132
+00:15:04,200 --> 00:15:11,440
+we use currently DNS and DNS link to store the hash of the current root of a user's file
+
+
+133
+00:15:11,440 --> 00:15:17,280
+system. Right? So we know we're able to get that as a starting data. I know I want this.
+
+
+134
+00:15:17,280 --> 00:15:22,200
+I don't know how much of it you have. I don't know anything about what's in it. So that's
+
+
+135
+00:15:22,200 --> 00:15:28,320
+our cold start scenario. All right. So if I generate some more files into this... And
+
+
+136
+00:15:28,320 --> 00:15:35,400
+we'll dial this down just a little bit. Add a couple files. Right? So now on my client
+
+
+137
+00:15:35,400 --> 00:15:42,400
+device, I've made some updates. It's probably a cat picture. And I'm going to add this back
+
+
+138
+00:15:42,400 --> 00:15:50,960
+into... So this time I'm going to actually add it into the node zero. Right? So I fetched
+
+
+139
+00:15:50,960 --> 00:15:57,760
+a bunch of data. I'm adding some new data. I get a new root Sid for that file system.
+
+
+140
+00:15:57,760 --> 00:16:08,480
+And I should be able to push this back up. So I'm going to copy that new Sid. Right?
+
+
+141
+00:16:08,480 --> 00:16:16,920
+So CarMirror from node zero is going to push up to node one this new Sid. And we'll see
+
+
+142
+00:16:16,920 --> 00:16:25,120
+a bunch of stuff. Holy cow. So much faster. Right?
+
+
+143
+00:16:25,120 --> 00:16:30,400
+So what's happened here is now I already have some of the blocks. And I have some context
+
+
+144
+00:16:30,400 --> 00:16:38,320
+about the blocks that the other end has. Right? So I don't need to send all of that data back.
+
+
+145
+00:16:38,320 --> 00:16:46,280
+Right? So now this directory full of files is up to a whopping 2.5 megs. But I don't
+
+
+146
+00:16:46,280 --> 00:16:50,920
+need to send that full 2.5 megs back. Right? I have the context. I know it probably only
+
+
+147
+00:16:50,920 --> 00:16:58,800
+needs this new stuff. So I can batch that up and send it. And we go much, much faster.
+
+
+148
+00:16:58,800 --> 00:17:08,080
+Just to give a little more detail. So if I look at the stats output, obviously some refining
+
+
+149
+00:17:08,080 --> 00:17:15,640
+possible here in terms of what's interesting. But we do sort of instrument all of this activity.
+
+
+150
+00:17:15,640 --> 00:17:22,440
+I don't want to insert an emoji here. So if we look through here, I think some of the
+
+
+151
+00:17:22,440 --> 00:17:33,520
+important ones. So right now the protocol happens... Oh, boy. In batches. There we go.
+
+
+152
+00:17:33,520 --> 00:17:40,120
+So you can see we had... This would be the second run down here where it says begin batch.
+
+
+153
+00:17:40,120 --> 00:17:48,320
+Right? So we had two batches in that quick send back. The other batch was probably a
+
+
+154
+00:17:48,320 --> 00:17:57,120
+little bit more than that. Yeah. It looks like it was three. There we go. So three rounds
+
+
+155
+00:17:57,120 --> 00:18:11,760
+for the first one. And only two going back. All right. Cool. Back to the presentation.
+
+
+156
+00:18:11,760 --> 00:18:17,520
+So just real quickly to wrap up. So next thing. So like I said, we've got some instrumentation.
+
+
+157
+00:18:17,520 --> 00:18:24,560
+We're working on putting together better benchmarks. There is a fair bit of potential tuning in
+
+
+158
+00:18:24,560 --> 00:18:29,840
+CarMirror. Right? Both around the size of the bloom filters we have. One of the other
+
+
+159
+00:18:29,840 --> 00:18:36,620
+things is in the sort of cold start scenario. Right? Because we don't know necessarily what's
+
+
+160
+00:18:36,620 --> 00:18:43,400
+on the other end, we don't send the full DAG on the first try. Right? Because that may
+
+
+161
+00:18:43,400 --> 00:18:47,480
+be duplicate. Right? So there's some tuning in there. Like, well, how much if I don't
+
+
+162
+00:18:47,480 --> 00:18:53,120
+know, how much do I send at the start? Again, trying to find that balance between duplicate
+
+
+163
+00:18:53,120 --> 00:19:02,120
+data sent and the rounds. Next up in the next up category is TS or JS
+
+
+164
+00:19:02,120 --> 00:19:07,920
+CarMirror. Again, our primary sort of target is in browser. We started with Go so that
+
+
+165
+00:19:07,920 --> 00:19:13,640
+we could add it to Kubo and other Go-based implementations. Next up is the JavaScript
+
+
+166
+00:19:13,640 --> 00:19:24,040
+end and then we'll deploy and profit. Other future things for CarMirror. So we've
+
+
+167
+00:19:24,040 --> 00:19:30,000
+specified but not yet implemented. So the code that I just showed you was in what we
+
+
+168
+00:19:30,000 --> 00:19:35,320
+call batch mode. So that's straight, like, traditional HTTP request response. I send
+
+
+169
+00:19:35,320 --> 00:19:43,800
+you a Bloom filter, car file, potentially. And I wait until you send me back. And then
+
+
+170
+00:19:43,800 --> 00:19:48,840
+we repeat our rounds. The spec actually outlines a streaming version of that. Right? Where
+
+
+171
+00:19:48,840 --> 00:19:55,440
+this would just be a single connection over WebSockets or what have you that does... Yeah.
+
+
+172
+00:19:55,440 --> 00:20:12,920
+Just streaming back and forth. Also, still in a bit of a...
+
+
+173
+00:20:00,000 --> 00:20:08,000
+of research, I think, is the safe way to say this, would be the carpool full spec. So the full GrandVision.
+
+
+174
+00:20:08,000 --> 00:20:14,280
+So CarMirror right now is this one-to-one point-to-point, which actually works really well for what we're trying to do.
+
+
+175
+00:20:15,000 --> 00:20:24,680
+But of course, does mean that you are looking at a specific predefined endpoint. Right? So also, much like Bao, no discovery here. Right?
+
+
+176
+00:20:24,680 --> 00:20:31,600
+Discovery would be at a different layer. So in CarMirror, we know, right? So a fission, we know where our endpoints are most days.
+
+
+177
+00:20:32,280 --> 00:20:37,640
+And so we're able to point directly at those carpool would break this away from that one-on-one.
+
+
+178
+00:20:39,040 --> 00:20:46,680
+The other future thing we've talked a lot about as a company, we are shifting to Rust as our sort of primary language.
+
+
+179
+00:20:46,680 --> 00:20:54,680
+So a Rust implementation is likely in the future, particularly if some of you all help build it.
+
+
+180
+00:20:54,680 --> 00:21:16,680
+And that's that.

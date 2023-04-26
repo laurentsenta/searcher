@@ -1,0 +1,1728 @@
+1
+00:00:00,000 --> 00:00:10,000
+Hi everyone, my name is Robin, I work for Protocol Labs on standards and governance.
+
+
+2
+00:00:10,000 --> 00:00:15,360
+Before I start I want to give a shout out to the AV team who just fixed laptop slides
+
+
+3
+00:00:15,360 --> 00:00:20,720
+issues in no time, so thanks, that was really great.
+
+
+4
+00:00:20,720 --> 00:00:29,280
+So hi everyone, quick question, who here knows what the web is?
+
+
+5
+00:00:29,280 --> 00:00:36,560
+No one, great, DJig has an idea, well great, you came to the right talk, obviously.
+
+
+6
+00:00:36,560 --> 00:00:43,200
+So we'll get to that at some point a little bit later in a few slides, but before that
+
+
+7
+00:00:43,200 --> 00:00:49,040
+is anyone here, slightly more serious question, familiar with the political movement known
+
+
+8
+00:00:49,040 --> 00:00:55,920
+as technocracy and the goal of creating a North American technet in the early 20th century?
+
+
+9
+00:00:55,920 --> 00:00:59,120
+No you don't, well great, let's do a little bit of history.
+
+
+10
+00:00:59,120 --> 00:01:04,720
+So there was this movement in the 1930s, so it's not a great time for political movements
+
+
+11
+00:01:04,720 --> 00:01:12,400
+in general, it was predominantly North American, though it had ramifications elsewhere, and
+
+
+12
+00:01:12,400 --> 00:01:19,000
+basically their idea was to replace democracy with technocracy, it's a society ruled by
+
+
+13
+00:01:19,000 --> 00:01:24,080
+technological elitism, it's a very rationalist program.
+
+
+14
+00:01:24,080 --> 00:01:29,040
+The idea was that democracy, people make stupid decisions because they're just like people,
+
+
+15
+00:01:29,040 --> 00:01:35,440
+whereas if you put proper engineers in charge, then they'll figure things out and do it right.
+
+
+16
+00:01:35,440 --> 00:01:43,520
+It's basically thought of, the way they conceptualized it, is really a science of social engineering,
+
+
+17
+00:01:43,520 --> 00:01:50,960
+you really get to this scientific organization of society, and it looks exactly like what
+
+
+18
+00:01:50,960 --> 00:01:54,880
+it sounds like, if you look at the diagram all the way to the right there, that's how
+
+
+19
+00:01:54,880 --> 00:02:02,160
+you organize the entirety of society, you have this big continental board that's running
+
+
+20
+00:02:02,160 --> 00:02:06,160
+everything from Canada to somewhere in the middle of Mexico, I'm not sure why they drew
+
+
+21
+00:02:06,160 --> 00:02:12,320
+the line there, and it's got four directorates of sorts, and then there's a whole bunch of
+
+
+22
+00:02:12,320 --> 00:02:17,480
+area directors, one of them is recreations, which I think that must be a hilarious guy
+
+
+23
+00:02:17,480 --> 00:02:24,720
+running recreations for the entirety of North America, that's a job, right?
+
+
+24
+00:02:24,720 --> 00:02:31,520
+But really their idea was that the price system has flaws and doesn't really run society well,
+
+
+25
+00:02:31,520 --> 00:02:36,680
+which is correct, and politicians have flaws and don't run society well, which is also
+
+
+26
+00:02:36,680 --> 00:02:44,160
+correct, business people have flaws and don't run society well, which I also agree with,
+
+
+27
+00:02:44,160 --> 00:02:48,600
+and then we're going to have engineers run everything, because engineers are perfect,
+
+
+28
+00:02:48,600 --> 00:02:52,640
+and they really think through things rationally.
+
+
+29
+00:02:52,640 --> 00:02:58,840
+Some people can have that opinion, but superficially it's true that these folks really don't look
+
+
+30
+00:02:58,840 --> 00:03:07,040
+good, they had uniforms, again in the 1930s, but it's interesting to look at their values
+
+
+31
+00:03:07,040 --> 00:03:09,020
+and their belief system.
+
+
+32
+00:03:09,020 --> 00:03:13,340
+One thing that's very clear is that they undervalue complexity, they really think that the more
+
+
+33
+00:03:13,340 --> 00:03:19,340
+you can normalize things and standardize them, the better things will work at every level
+
+
+34
+00:03:19,340 --> 00:03:20,340
+of society.
+
+
+35
+00:03:20,340 --> 00:03:27,000
+They really believed in a universal ranking of values so that you can organize all of
+
+
+36
+00:03:27,000 --> 00:03:35,040
+the information of the entire society, of an entire continent, and run it rationally.
+
+
+37
+00:03:35,040 --> 00:03:39,800
+They also believed, and this is an interesting thing, that people wanted well-being more
+
+
+38
+00:03:39,800 --> 00:03:45,040
+than they wanted agency, and so basically if you're well-fed, you don't necessarily
+
+
+39
+00:03:45,040 --> 00:03:51,000
+care what you eat, or you're not going to be interested in cooking or discovering new
+
+
+40
+00:03:51,000 --> 00:03:57,480
+things so long as you have enough to eat, which we'll return to that idea.
+
+
+41
+00:03:57,480 --> 00:04:00,840
+It's easy to make fun of them at a distance.
+
+
+42
+00:04:00,840 --> 00:04:04,840
+Their favorite color was grey, that was the normalized color of everything.
+
+
+43
+00:04:04,840 --> 00:04:09,560
+They had this motorcade to promote the movement that drove from, I think, somewhere in California
+
+
+44
+00:04:09,560 --> 00:04:15,480
+all the way up to Vancouver, and they painted every car grey, they bought a school bus,
+
+
+45
+00:04:15,480 --> 00:04:19,680
+the American yellow school buses, and they painted it grey, they had grey uniforms with
+
+
+46
+00:04:19,680 --> 00:04:20,680
+grey shoes.
+
+
+47
+00:04:20,680 --> 00:04:27,000
+It's a whole vibe, and basically they branded themselves in a way that if someone wrote
+
+
+48
+00:04:27,000 --> 00:04:33,320
+a young adult novel with those guys in it, you'd go like, come on, that's a little
+
+
+49
+00:04:33,320 --> 00:04:34,840
+bit on the nose, right?
+
+
+50
+00:04:34,840 --> 00:04:36,440
+Those villains, really?
+
+
+51
+00:04:36,440 --> 00:04:40,320
+They're a bit exaggerated.
+
+
+52
+00:04:40,320 --> 00:04:47,240
+But I really think we should be a bit careful before we make fun of that movement, because
+
+
+53
+00:04:47,240 --> 00:04:53,160
+under the vision and under the weird and bad branding, sometimes ideas can survive in other
+
+
+54
+00:04:53,160 --> 00:04:56,760
+shapes and can keep permeating the world.
+
+
+55
+00:04:56,760 --> 00:05:01,440
+If these people are so obviously, I mean, I see everyone smiling and going like, wow,
+
+
+56
+00:05:01,440 --> 00:05:03,260
+what the hell were those guys thinking?
+
+
+57
+00:05:03,260 --> 00:05:08,400
+If they're so obviously evil and laughable, then why is it that we've chosen to live
+
+
+58
+00:05:08,400 --> 00:05:09,640
+in that world?
+
+
+59
+00:05:09,640 --> 00:05:15,740
+Why is it that we've built society and organized everything in a way that is entirely according
+
+
+60
+00:05:15,740 --> 00:05:17,680
+to technocratic principles?
+
+
+61
+00:05:17,680 --> 00:05:23,200
+This is how we've organized the web, the internet, pretty much the entirety of the
+
+
+62
+00:05:23,200 --> 00:05:25,320
+digital world runs this way.
+
+
+63
+00:05:25,320 --> 00:05:26,320
+This is the world we're in.
+
+
+64
+00:05:26,320 --> 00:05:29,640
+This is the world we built.
+
+
+65
+00:05:29,640 --> 00:05:37,320
+So many of us have been around a while, and many of us have seen this coming a while.
+
+
+66
+00:05:37,320 --> 00:05:38,840
+And we're not without power, right?
+
+
+67
+00:05:38,840 --> 00:05:44,120
+There are lots of people in this room who can make things, talk to people, influence
+
+
+68
+00:05:44,120 --> 00:05:45,120
+things.
+
+
+69
+00:05:45,120 --> 00:05:47,400
+And yet, why could we not stop it?
+
+
+70
+00:05:47,400 --> 00:05:48,400
+Why did this happen?
+
+
+71
+00:05:48,400 --> 00:05:49,400
+We saw it coming.
+
+
+72
+00:05:49,400 --> 00:05:51,800
+It's here.
+
+
+73
+00:05:51,800 --> 00:05:54,240
+This isn't what we set out to build.
+
+
+74
+00:05:54,240 --> 00:05:55,480
+And so I don't know.
+
+
+75
+00:05:55,480 --> 00:05:57,880
+We wanted to empower people.
+
+
+76
+00:05:57,880 --> 00:06:05,040
+We instead, they all became corralled into these choice architectures at massive scales.
+
+
+77
+00:06:05,040 --> 00:06:06,880
+We wanted to get rid of gatekeepers.
+
+
+78
+00:06:06,880 --> 00:06:10,400
+I remember the early days of the web, we were like, no more gatekeepers.
+
+
+79
+00:06:10,400 --> 00:06:11,720
+Fuck the gatekeepers.
+
+
+80
+00:06:11,720 --> 00:06:16,120
+And instead of having 10,000 gatekeepers, which we thought was too much, which we thought
+
+
+81
+00:06:16,120 --> 00:06:20,960
+was a problem, we now have two or three, which is way worse.
+
+
+82
+00:06:20,960 --> 00:06:22,480
+That is not progress.
+
+
+83
+00:06:22,480 --> 00:06:25,280
+We have much stronger gatekeepers.
+
+
+84
+00:06:25,280 --> 00:06:28,960
+So why did we fail?
+
+
+85
+00:06:28,960 --> 00:06:33,880
+And I think at least part of my theory, the way I'm trying to explain that to myself and
+
+
+86
+00:06:33,880 --> 00:06:39,960
+also trying to figure out how to solve it, is that we weren't clear enough on what we
+
+
+87
+00:06:39,960 --> 00:06:41,760
+wanted to do, where we wanted to go.
+
+
+88
+00:06:41,760 --> 00:06:47,080
+It was sort of an exciting movement, but without a clear objective.
+
+
+89
+00:06:47,080 --> 00:06:53,280
+And also, we sort of had somewhat naive ideas of good and evil and how to make good in the
+
+
+90
+00:06:53,280 --> 00:06:54,280
+world.
+
+
+91
+00:06:54,280 --> 00:06:57,760
+And I think, you know, technocracy is not inherently evil.
+
+
+92
+00:06:57,760 --> 00:07:00,240
+I think it's wrong, but I don't think it's evil.
+
+
+93
+00:07:00,240 --> 00:07:04,400
+Like, you know, if you look at that, like they were thinking of like universal basic
+
+
+94
+00:07:04,400 --> 00:07:07,320
+income in the 30s.
+
+
+95
+00:07:07,320 --> 00:07:09,120
+That is a pretty advanced thing.
+
+
+96
+00:07:09,120 --> 00:07:11,360
+And it's in many ways pro-social.
+
+
+97
+00:07:11,360 --> 00:07:16,000
+I have no idea why they picked a big evil looking robot to defend that.
+
+
+98
+00:07:16,000 --> 00:07:21,320
+But, you know, again, bad branding, but underlying ideas.
+
+
+99
+00:07:21,320 --> 00:07:27,880
+And the thing is, like, they really wanted to bring prosperity to everyone.
+
+
+100
+00:07:27,880 --> 00:07:31,320
+They just thought that people weren't very good at knowing what's good for themselves
+
+
+101
+00:07:31,320 --> 00:07:35,600
+and that engineers would do it better because engineers have data and data, of course, means
+
+
+102
+00:07:35,600 --> 00:07:38,560
+good decisions, right?
+
+
+103
+00:07:38,560 --> 00:07:43,080
+And so, I mean, that is the idea.
+
+
+104
+00:07:43,080 --> 00:07:49,840
+And so, you know, they wanted good, but they believed in a very hierarchical rationalist
+
+
+105
+00:07:49,840 --> 00:07:54,520
+ordering, you know, unique ordering, data driven ordering of society.
+
+
+106
+00:07:54,520 --> 00:07:58,680
+And that is the world that we're in in the digital environment.
+
+
+107
+00:07:58,680 --> 00:08:04,920
+And so, I think it's time to take a deep breath, not just now, but like collectively and over
+
+
+108
+00:08:04,920 --> 00:08:11,000
+the coming times and really try to understand what it is that we're trying to do with this
+
+
+109
+00:08:11,000 --> 00:08:13,520
+web, with this digital environment.
+
+
+110
+00:08:13,520 --> 00:08:17,680
+And not just like fixing small things in small corners, but like really having a clearer
+
+
+111
+00:08:17,680 --> 00:08:22,400
+view of where we want to go so that we can be more effective in getting there.
+
+
+112
+00:08:22,400 --> 00:08:28,600
+And I do think there's cohesion in what people want, especially in this community.
+
+
+113
+00:08:28,600 --> 00:08:38,240
+So, you know, we got it wrong, but if we figure out where we're going, can we really fix it?
+
+
+114
+00:08:38,240 --> 00:08:39,520
+Or is it too late?
+
+
+115
+00:08:39,520 --> 00:08:44,520
+Or, you know, is this now a time where we just like maybe give up and just like figure
+
+
+116
+00:08:44,520 --> 00:08:47,800
+out that this is how it's going to be and we can make the best of it?
+
+
+117
+00:08:47,800 --> 00:08:54,160
+There's a lot of people, notably in web standards and in browsers, who keep repeating to me
+
+
+118
+00:08:54,160 --> 00:08:58,760
+that I don't know if you've read this book from Tim Wu, The Master Switch, where basically
+
+
+119
+00:08:58,760 --> 00:09:04,280
+he explains that pretty much every information based industry since, I forget where he starts,
+
+
+120
+00:09:04,280 --> 00:09:06,760
+but a while ago, turns into a monopoly.
+
+
+121
+00:09:06,760 --> 00:09:10,560
+Since the telegraph, thank you.
+
+
+122
+00:09:10,560 --> 00:09:11,560
+Eventually turns into a monopoly.
+
+
+123
+00:09:11,560 --> 00:09:16,360
+And so this is what's going to happen to us, and therefore the best we can do is to try
+
+
+124
+00:09:16,360 --> 00:09:21,040
+to have a gentle giant, some kind of benevolent dictator, benevolent monopoly over the web
+
+
+125
+00:09:21,040 --> 00:09:25,480
+and the internet and the entirety of the digital sphere.
+
+
+126
+00:09:25,480 --> 00:09:26,760
+That's not what Tim Wu thinks.
+
+
+127
+00:09:26,760 --> 00:09:31,000
+He's working in antitrust these days, so presumably he doesn't believe that's the conclusion,
+
+
+128
+00:09:31,000 --> 00:09:34,240
+but a lot of people think that it's hopeless and that's the only thing we can do.
+
+
+129
+00:09:34,240 --> 00:09:37,600
+But I think it's actually fixable for two reasons.
+
+
+130
+00:09:37,600 --> 00:09:40,560
+I think it's fixable because we must fix it.
+
+
+131
+00:09:40,560 --> 00:09:47,200
+If we live in an entirely technocratic society, we will be living in a society that's too
+
+
+132
+00:09:47,200 --> 00:09:53,920
+simplistic and too naive for the kind of collective action problems that we need to fix in a planetary
+
+
+133
+00:09:53,920 --> 00:09:55,440
+polycrisis.
+
+
+134
+00:09:55,440 --> 00:09:57,880
+And also I think that we actually can fix it.
+
+
+135
+00:09:57,880 --> 00:10:04,160
+In the 90s, in the early 2000s, we lacked quite a few primitives in terms of technology
+
+
+136
+00:10:04,160 --> 00:10:09,040
+and in terms of understanding how digital governance can succeed.
+
+
+137
+00:10:09,040 --> 00:10:13,600
+We had examples like Wikipedia, Mozilla, open source, blogs, RSS, all of that happened at
+
+
+138
+00:10:13,600 --> 00:10:15,680
+once and we're like, oh, okay, we got this sorted out.
+
+
+139
+00:10:15,680 --> 00:10:17,840
+There's tons of good stuff happening.
+
+
+140
+00:10:17,840 --> 00:10:20,880
+Clearly we understand how this works.
+
+
+141
+00:10:20,880 --> 00:10:21,880
+But we didn't.
+
+
+142
+00:10:21,880 --> 00:10:26,360
+Not everything works and we didn't have the understanding of why the things that were
+
+
+143
+00:10:26,360 --> 00:10:29,720
+successful were successful and why some of them weren't.
+
+
+144
+00:10:29,720 --> 00:10:35,240
+But today we have better social and better technical tools emerging and they can work
+
+
+145
+00:10:35,240 --> 00:10:36,240
+together.
+
+
+146
+00:10:36,240 --> 00:10:42,440
+So, okay, maybe we can get to the question of what the web thing is.
+
+
+147
+00:10:42,440 --> 00:10:47,800
+Now, you know, it's kind of weird, but this is something that we actually never figured
+
+
+148
+00:10:47,800 --> 00:10:50,080
+out.
+
+
+149
+00:10:50,080 --> 00:10:53,600
+Several groups actually tried to write down the definition of the web.
+
+
+150
+00:10:53,600 --> 00:10:58,800
+I know in W3C, several iterations of groups were like, yeah, we should actually tell people
+
+
+151
+00:10:58,800 --> 00:10:59,800
+what the web is.
+
+
+152
+00:10:59,800 --> 00:11:04,480
+We keep talking about it and we have it in the acronym and stuff, but we don't have a
+
+
+153
+00:11:04,480 --> 00:11:05,520
+definition.
+
+
+154
+00:11:05,520 --> 00:11:07,080
+And they always failed.
+
+
+155
+00:11:07,080 --> 00:11:11,920
+And the reason people fail is that it's actually a bit confusing if you try to do it in a sort
+
+
+156
+00:11:11,920 --> 00:11:17,360
+of like too immediate manner, because the tech keeps changing.
+
+
+157
+00:11:17,360 --> 00:11:23,120
+The way we did the web 20 years ago and the way we're doing the web today are very different.
+
+
+158
+00:11:23,120 --> 00:11:28,480
+If you compare HTTP 0.9 to HTTP 3, those are worlds apart.
+
+
+159
+00:11:28,480 --> 00:11:32,360
+There's some semantics that have been connected between the two, but you go from something
+
+
+160
+00:11:32,360 --> 00:11:38,120
+that doesn't even have headers and can only transmit HTML to something that is binary,
+
+
+161
+00:11:38,120 --> 00:11:42,160
+UDP, yada, yada, has a world of complexity.
+
+
+162
+00:11:42,160 --> 00:11:44,800
+HTML has changed completely over.
+
+
+163
+00:11:44,800 --> 00:11:51,320
+XML was so horrible that we now have JSX everywhere.
+
+
+164
+00:11:51,320 --> 00:11:52,840
+The whole thing keeps being reinvented.
+
+
+165
+00:11:52,840 --> 00:11:57,280
+There was a time when Firefox ran on RDF, if you'll believe that, at least the extension
+
+
+166
+00:11:57,280 --> 00:11:58,280
+system.
+
+
+167
+00:11:58,280 --> 00:12:03,720
+So, you know, you can't pick a list of technologies and say these things are the web.
+
+
+168
+00:12:03,720 --> 00:12:08,600
+And also some web stuff is used in non-web contexts and some non-web things are used
+
+
+169
+00:12:08,600 --> 00:12:09,600
+on the web.
+
+
+170
+00:12:09,600 --> 00:12:13,200
+So it's a bit difficult.
+
+
+171
+00:12:13,200 --> 00:12:17,060
+Some have suggested that we should just say that the web is browsers.
+
+
+172
+00:12:17,060 --> 00:12:18,660
+It's what runs in browsers.
+
+
+173
+00:12:18,660 --> 00:12:21,920
+But that means that the web is like IE6 and Chrome.
+
+
+174
+00:12:21,920 --> 00:12:23,560
+Is that how we're going to define this thing?
+
+
+175
+00:12:23,560 --> 00:12:26,200
+I think we can do a little bit better.
+
+
+176
+00:12:26,200 --> 00:12:29,720
+One way of thinking slightly beyond browsers, I think there's a good idea of browsers because
+
+
+177
+00:12:29,720 --> 00:12:32,880
+the technical term for browsers is user agents.
+
+
+178
+00:12:32,880 --> 00:12:37,720
+And it's software that is there to work on behalf of the user and represent the user
+
+
+179
+00:12:37,720 --> 00:12:38,720
+in the world.
+
+
+180
+00:12:38,720 --> 00:12:40,180
+And I think that's a good first step.
+
+
+181
+00:12:40,180 --> 00:12:41,720
+It gives us a clue.
+
+
+182
+00:12:41,720 --> 00:12:43,320
+We've had user agents from day one.
+
+
+183
+00:12:43,320 --> 00:12:45,360
+We've had user agents ever since.
+
+
+184
+00:12:45,360 --> 00:12:50,600
+And I actually think that that is how we get to a definition of the web.
+
+
+185
+00:12:50,600 --> 00:12:56,200
+The web is the set of network technologies that work to increase user agency.
+
+
+186
+00:12:56,200 --> 00:12:59,560
+It packs quite a few things in a single sentence.
+
+
+187
+00:12:59,560 --> 00:13:05,200
+But I think from that, we can actually expand and define what it is we want to do and how
+
+
+188
+00:13:05,200 --> 00:13:07,560
+we want to get there.
+
+
+189
+00:13:07,560 --> 00:13:08,560
+So the web is about agency.
+
+
+190
+00:13:08,560 --> 00:13:13,040
+And you can see that this is sort of true and has been true from the start.
+
+
+191
+00:13:13,040 --> 00:13:18,280
+Even hypertext, the idea of hypertext itself, is sort of like helping break people out of
+
+
+192
+00:13:18,280 --> 00:13:20,120
+the linearity of text.
+
+
+193
+00:13:20,120 --> 00:13:22,960
+You're reading something and at some point, you can go somewhere else.
+
+
+194
+00:13:22,960 --> 00:13:27,400
+And really, in the initial idea of hypertext, it wouldn't have to be an author-provided
+
+
+195
+00:13:27,400 --> 00:13:28,400
+link.
+
+
+196
+00:13:28,400 --> 00:13:32,240
+You could click on the word and go somewhere else that was related to that word.
+
+
+197
+00:13:32,240 --> 00:13:35,840
+There were much richer ideas of hypertext initially.
+
+
+198
+00:13:35,840 --> 00:13:36,960
+CSS, same thing.
+
+
+199
+00:13:36,960 --> 00:13:41,920
+It was meant to have user style sheets so that you could override the bad taste of people
+
+
+200
+00:13:41,920 --> 00:13:44,240
+who make websites.
+
+
+201
+00:13:44,240 --> 00:13:51,480
+And in a sense, this is something that can be used to evaluate tech.
+
+
+202
+00:13:51,480 --> 00:13:56,680
+You can look at a piece of new technology and you can think, is this thing increasing
+
+
+203
+00:13:56,680 --> 00:14:00,000
+the agency of people or not?
+
+
+204
+00:14:00,000 --> 00:14:02,680
+A lot of the time, you're going to find that the answer is not.
+
+
+205
+00:14:02,680 --> 00:14:07,720
+The answer is likely to be, oh, it's going to save you some time.
+
+
+206
+00:14:07,720 --> 00:14:10,280
+But what are you trading off in exchange for that time?
+
+
+207
+00:14:10,280 --> 00:14:14,400
+For instance, if you had technology that cooked for you, that sounds fine.
+
+
+208
+00:14:14,400 --> 00:14:18,560
+Maybe you don't want to cook or you don't want to cook every meal, so you want some
+
+
+209
+00:14:18,560 --> 00:14:20,920
+piece of technology to do it for you.
+
+
+210
+00:14:20,920 --> 00:14:25,320
+But when you do that, what are you trading off in exchange for it?
+
+
+211
+00:14:25,320 --> 00:14:27,880
+Well, maybe you're trading off control over what you're eating.
+
+
+212
+00:14:27,880 --> 00:14:29,560
+And initially, it's going to be fine.
+
+
+213
+00:14:29,560 --> 00:14:34,040
+But over time, as all of your neighbors adopt the same technology, you're no longer going
+
+
+214
+00:14:34,040 --> 00:14:35,960
+to have a grocery store in your area.
+
+
+215
+00:14:35,960 --> 00:14:40,480
+You're no longer going to have access to things that enable you to cook for yourself when
+
+
+216
+00:14:40,480 --> 00:14:42,600
+you want to or if you want to.
+
+
+217
+00:14:42,600 --> 00:14:46,320
+And eventually, the quality is going to go down as the market is captured.
+
+
+218
+00:14:46,320 --> 00:14:51,560
+And you're going to eat shittier and shittier things just because there's now no alternative
+
+
+219
+00:14:51,560 --> 00:14:52,560
+to it.
+
+
+220
+00:14:52,560 --> 00:14:56,160
+This is exactly how those time-saving technologies have worked.
+
+
+221
+00:14:56,160 --> 00:15:02,240
+And so time-saving is not in and of itself an improvement to agency.
+
+
+222
+00:15:02,240 --> 00:15:06,280
+You need things that enable people to do more.
+
+
+223
+00:15:06,280 --> 00:15:09,000
+And so in a sense, it's not that browsers are bad.
+
+
+224
+00:15:09,000 --> 00:15:11,280
+It's that they're not browser enough.
+
+
+225
+00:15:11,280 --> 00:15:13,800
+They're not user agents enough.
+
+
+226
+00:15:13,800 --> 00:15:16,360
+OK, we have a definition.
+
+
+227
+00:15:16,360 --> 00:15:17,960
+That's a start.
+
+
+228
+00:15:17,960 --> 00:15:25,840
+And I'm realizing that I put my timer to 25 hours instead of 25 minutes.
+
+
+229
+00:15:25,840 --> 00:15:26,840
+Is that good, Dietrich?
+
+
+230
+00:15:26,840 --> 00:15:27,840
+Yeah.
+
+
+231
+00:15:27,840 --> 00:15:28,840
+OK.
+
+
+232
+00:15:28,840 --> 00:15:33,560
+Are you in for another 24 hours and change?
+
+
+233
+00:15:33,560 --> 00:15:35,200
+Yeah, great.
+
+
+234
+00:15:35,200 --> 00:15:38,160
+So we have a definition, but does it mean anything concrete?
+
+
+235
+00:15:38,160 --> 00:15:42,320
+Can it help decide how we build things?
+
+
+236
+00:15:42,320 --> 00:15:47,680
+So first, I think it's important to tie this to real practical philosophy.
+
+
+237
+00:15:47,680 --> 00:15:54,360
+And there's something called the capabilities approach that Amartya Sen and Martha Nussbaum
+
+
+238
+00:15:54,360 --> 00:15:57,200
+have been working on.
+
+
+239
+00:15:57,200 --> 00:16:04,160
+And it's useful to tie these things to philosophy because it means we don't have to make everything
+
+
+240
+00:16:04,160 --> 00:16:05,160
+up.
+
+
+241
+00:16:05,160 --> 00:16:09,360
+We can refer to pre-existing work that has solved some of these problems.
+
+
+242
+00:16:09,360 --> 00:16:14,440
+And this approach was designed to help with human development.
+
+
+243
+00:16:14,440 --> 00:16:21,400
+The idea is that, especially in the 70s and 80s, people were like, oh, the third world.
+
+
+244
+00:16:21,400 --> 00:16:22,400
+That's kind of terrible.
+
+
+245
+00:16:22,400 --> 00:16:25,600
+Like we colonized and imperialized them and underdeveloped them.
+
+
+246
+00:16:25,600 --> 00:16:27,520
+And maybe we should help people there.
+
+
+247
+00:16:27,520 --> 00:16:30,040
+And so what folks did is they came there.
+
+
+248
+00:16:30,040 --> 00:16:31,040
+They dropped food.
+
+
+249
+00:16:31,040 --> 00:16:33,240
+Because you need food.
+
+
+250
+00:16:33,240 --> 00:16:34,800
+Here's food.
+
+
+251
+00:16:34,800 --> 00:16:39,720
+And of course, if you just dump food in the market, you're destroying the local capacity
+
+
+252
+00:16:39,720 --> 00:16:40,720
+for farming.
+
+
+253
+00:16:40,720 --> 00:16:44,400
+You're destroying the local capacity for markets.
+
+
+254
+00:16:44,400 --> 00:16:50,120
+All the things that can help people grow out of poverty, you're actually destroying them.
+
+
+255
+00:16:50,120 --> 00:16:52,840
+And that means you have to keep bringing food.
+
+
+256
+00:16:52,840 --> 00:16:55,440
+These folks started figuring out, we need a different way.
+
+
+257
+00:16:55,440 --> 00:17:02,960
+We need a different mental approach of thinking about how to enable people to do things for
+
+
+258
+00:17:02,960 --> 00:17:03,960
+themselves.
+
+
+259
+00:17:03,960 --> 00:17:08,840
+And really, the idea of the capabilities approach is it's meant to be very concrete, to not
+
+
+260
+00:17:08,840 --> 00:17:15,080
+work on vaporware freedom, but actual freedoms designed to be measurable.
+
+
+261
+00:17:15,080 --> 00:17:18,960
+It's about what you're able to do and what you're able to be.
+
+
+262
+00:17:18,960 --> 00:17:24,840
+And even though it's focused on individual agency, it's not an individualistic approach.
+
+
+263
+00:17:24,840 --> 00:17:30,480
+Because one key idea is that individual agency is really grounded in collective action.
+
+
+264
+00:17:30,480 --> 00:17:34,480
+The reason that you're able to do something as a person and that you have more capabilities
+
+
+265
+00:17:34,480 --> 00:17:38,200
+as a person is because you live in a society that supports you in doing that.
+
+
+266
+00:17:38,200 --> 00:17:45,200
+And the idea is that from there, you can build a virtuous circle of having more agency for
+
+
+267
+00:17:45,200 --> 00:17:48,760
+people who can use that agency to improve the collective.
+
+
+268
+00:17:48,760 --> 00:17:52,240
+That in turn improves agency for people.
+
+
+269
+00:17:52,240 --> 00:17:54,240
+And so philosophy is fun.
+
+
+270
+00:17:54,240 --> 00:17:57,680
+I mean, at least I think so.
+
+
+271
+00:17:57,680 --> 00:18:02,000
+Refining the web project is interesting, but what does this look like in practice?
+
+
+272
+00:18:02,000 --> 00:18:03,400
+So I don't have demos yet.
+
+
+273
+00:18:03,400 --> 00:18:06,240
+I hope that next year we can come back with a demo.
+
+
+274
+00:18:06,240 --> 00:18:10,880
+Maybe Fabrice will be showing a few things, or at least screenshots.
+
+
+275
+00:18:10,880 --> 00:18:17,160
+But a core practical aspect is that in the traditional web, the power is with the server.
+
+
+276
+00:18:17,160 --> 00:18:21,800
+And so the best you can hope for in a client-server architecture is benevolent dictatorship.
+
+
+277
+00:18:21,800 --> 00:18:26,480
+It's always a dictatorship, and you can hope that it's benevolent because the server has
+
+
+278
+00:18:26,480 --> 00:18:27,480
+the power.
+
+
+279
+00:18:27,480 --> 00:18:31,120
+And that is basically the offering of technocracy.
+
+
+280
+00:18:31,120 --> 00:18:35,480
+That is a software architecture that is designed for technocracy.
+
+
+281
+00:18:35,480 --> 00:18:41,240
+And so we need to move intelligence and composability over to the client so that people can have
+
+
+282
+00:18:41,240 --> 00:18:45,160
+greater power, and that works in the user agent.
+
+
+283
+00:18:45,160 --> 00:18:51,440
+And so just a few high-level ideas, not developed yet, but high-level ideas of what we can do.
+
+
+284
+00:18:51,440 --> 00:18:55,960
+First, we should be turning search and social into protocols.
+
+
+285
+00:18:55,960 --> 00:19:01,200
+It's browsing on the web, searching, finding stuff on social, relying on curated feeds.
+
+
+286
+00:19:01,200 --> 00:19:05,800
+They're all just ways of discovering content, and this should be happening on people's own
+
+
+287
+00:19:05,800 --> 00:19:07,320
+agents.
+
+
+288
+00:19:07,320 --> 00:19:09,280
+Search and social are really the same thing.
+
+
+289
+00:19:09,280 --> 00:19:15,480
+They're just like algorithmic media that's either push or pull, but it's sort of weird
+
+
+290
+00:19:15,480 --> 00:19:19,360
+that we don't have a unified interface to these things because they're all one way of
+
+
+291
+00:19:19,360 --> 00:19:20,560
+finding content.
+
+
+292
+00:19:20,560 --> 00:19:26,160
+And you can imagine that that content should be like little tiles of pages, and that you
+
+
+293
+00:19:26,160 --> 00:19:30,520
+might have a feed that's search results and a feed that's social and a feed that's your
+
+
+294
+00:19:30,520 --> 00:19:36,440
+own local curated feed, and you can drag from one to the other, put the content there, and
+
+
+295
+00:19:36,440 --> 00:19:39,120
+maybe that shares it to social because your feed is public.
+
+
+296
+00:19:39,120 --> 00:19:46,080
+All of these things actually work really well with content-addressable web data.
+
+
+297
+00:19:46,080 --> 00:19:51,440
+If you put your web pages on IPFS, you can easily move them around locally because they're
+
+
+298
+00:19:51,440 --> 00:19:53,240
+content-addressed, it doesn't matter.
+
+
+299
+00:19:53,240 --> 00:19:54,760
+Republish them, reshare them.
+
+
+300
+00:19:54,760 --> 00:20:18,240
+Bruce Kai is doing things in that direction, and I think we can move forward.
+
+
+301
+00:20:00,000 --> 00:20:30,000
+quite a few ideas there. Same thing, if we move more control to the client, we can move a lot of the recommendation engine to the client. You can just run some wasm locally. If you make sure that it can't hit the network, then it can't betray your privacy. And you can just have each of these feeds, give it, here's a bag of pages, rank them for me, put them in an order that I will like. You don't like the recommendation engine, just swap it for another one. And this can really help solve issues in
+
+
+302
+00:20:30,000 --> 00:21:00,000
+algorithmic monoculture, having the way in which Spotify has been shown to unify music tastes across a lot of people. And then you can also apply your same preferences to search and to social and to curated feeds. You can bring your own content moderation. This means that you have your own client-side system that can do block party across everything. And you can also see the world through other people's eyes by using their recommendations. So there's quite a few things we can do with this.
+
+
+303
+00:21:00,000 --> 00:21:30,000
+And also another thing that's core to agency is finding new ways of building apps. Apps themselves, monolithic apps, have been a bad idea for a long time. People don't actually want to use apps. They want to get things done. And they want to plug pieces of apps together. And so porting monolithic apps to the web is actually not helping anyone much. No one goes, yeah, I love this monolithic app. If only it could be inside a tab to make it even more
+
+
+304
+00:21:30,000 --> 00:22:00,000
+usable. It's actually less usable than it already is. That is not the way to do web apps. What we want is use the web approach of how do I enable agency? Well, people have tasks that they want to do. They have activities that they want to do. You can use things like web activities, web intents. These are new APIs. Not new anymore. Novel APIs that haven't been used much but that allow people to express an intent or at least via one app to express an intent that triggers another one that is how do I
+
+
+305
+00:22:00,000 --> 00:22:30,000
+do this? And then you can have it handled. You can say edit this picture and your own picture editor comes up and returns the edited picture to the original thing. So you basically can have links of activities that turn into app-like things. And so we make apps more like the web rather than the other way around. Because it turns out people like links. And also, again, bringing this to the client side means you can compose things much more easily. Because you can't really compose remote things unless you're really in love with, like, you know, soap and
+
+
+306
+00:22:30,000 --> 00:22:39,000
+toothpaste and that kind of stuff. And I know that's Dietrich's love of his life. But for the rest of us, it's probably not the right thing.
+
+
+307
+00:22:39,000 --> 00:22:51,000
+Another thing, and this one is unpopular. People generally hate it. I really think we should have protocols for advertising that make advertising user-centric. Why? And how does this help user agency?
+
+
+308
+00:22:51,000 --> 00:23:08,000
+Well, society allocates $600 billion a year to various services using advertising. I don't think this is something that we should not control as a society. And a lot of this is essential to the functioning of democracy.
+
+
+309
+00:23:08,000 --> 00:23:21,000
+So I think we should really have a say in that. That's ballpark the US military budget. And so this can be used to pay for search. It can be used to pay for browsers.
+
+
+310
+00:23:21,000 --> 00:23:38,000
+Right now, browsers don't have a business model other than selling eyeballs to search and enforcing search dominance. So we can really use this to improve privacy in advertising and limit ad size and give people control over the ads they get.
+
+
+311
+00:23:38,000 --> 00:23:51,000
+And that's actually how the remote control was invented. It was a way of shutting down the sound on annoying TV ads. You had to point this kind of light thing at the corner of the TV and it would switch off the sound.
+
+
+312
+00:23:51,000 --> 00:24:10,000
+Has anyone heard of LLMs and AI? Okay, yeah, some people have been paying attention. So I'm not going to build a better AI on the spot here, but just to give an example of how thinking from user agency and thinking from these web principles can help us improve things,
+
+
+313
+00:24:10,000 --> 00:24:26,000
+I really think that having a singleton worldwide oracle addressing all of our information needs is really the most boring and technocratic idea that I can think of in terms of how do you want to make synthetic intelligence happen.
+
+
+314
+00:24:26,000 --> 00:24:41,000
+And if you want to think about how would we go about, forgetting whether it's technically feasible today, but how would we go about building similar systems of synthetic intelligence for people with user agency in mind,
+
+
+315
+00:24:41,000 --> 00:24:56,000
+well, you would want everyone to have their own, not access to a big centralized one. And you would want their own to pay attention to your utterances, what you write, what you do, learn from that, not share it with anyone else.
+
+
+316
+00:24:56,000 --> 00:25:18,000
+Because there's no such thing as individual intelligence, we are all smart to the extent that we have a good epistemic network that we can rely on. You would want those personal, symbiotic, basically, AIs to peer-to-peer connect to your friends and ask questions of their personal AIs when they can't figure something out or just to get advice from others.
+
+
+317
+00:25:18,000 --> 00:25:31,000
+That's one way, I'm not saying that I'm going to build it tomorrow morning, even though it's kind of tempting to hack on these things, but it's one way of thinking of how we could change and challenge these technologies to make them more web-like and more human-like.
+
+
+318
+00:25:31,000 --> 00:25:50,000
+Now, is this just a simple matter of programming? Can we just like swap the way out of this? It's a bit difficult. There's entrenched power, very, very deeply entrenched technocracy. And we'll get to reasons why I think this can work, but first I'd like to look at three quick obstacles.
+
+
+319
+00:25:50,000 --> 00:26:06,000
+The first is that we tend to think about capture resistance in a way that I think is unhelpful. There's this sort of like wishful hope that if we find the perfect decentralized architecture, then we'll be fine, everyone will be free. That's not how it works.
+
+
+320
+00:26:06,000 --> 00:26:28,000
+The people who don't want the world to be decentralized work every day, day and night to recapture things. And so I think a better frame to approach this with is really through a cybersecurity frame where attackers will come at you all the time and you have to constantly think of new ways of updating your defenses and protecting the system.
+
+
+321
+00:26:28,000 --> 00:26:38,000
+You really want to have capture resistance as a constant practice, constantly updating things. There's no perfect architecture. There's only like continuous ways of pushing back.
+
+
+322
+00:26:38,000 --> 00:27:01,000
+Another thing is that any technology that mediates human interactions directly or indirectly is actually creating a form of institution. It's a system of rules that coordinates human behavior and the resources that we manage together. And the communities working on institutions and the communities working on technology don't currently communicate enough.
+
+
+323
+00:27:01,000 --> 00:27:16,000
+There's some, but not enough. Tech people generally don't realize that they're building institutions, and institution analysis people often don't know enough about the actual possibilities of tech. It's changing, but not fast enough.
+
+
+324
+00:27:16,000 --> 00:27:32,000
+And so that's the study of Eleanor Ostrom, and she spent decades on this. And if you ask tech people about forms of governance, they'll be like, well, there's dictatorship, some vague voting thing-ish, and then just punt to the territorial state.
+
+
+325
+00:27:32,000 --> 00:27:43,000
+I can guarantee that she spent those decades working on a little bit more than that. And that's just one researcher. And so we need to bridge these communities more.
+
+
+326
+00:27:43,000 --> 00:27:59,000
+Also, one thing that is difficult is that UI is actually hard. And there's been a lot of progress in cryptographic primitives. There's been a lot of progress in protocol design. The infrastructure is better.
+
+
+327
+00:27:59,000 --> 00:28:13,000
+But if we port bad UI that's not helpful for user agency to new tech, we're not going to get better things. So if your wallet is an app store, then you have an app store on decentralized tech, which is not great.
+
+
+328
+00:28:13,000 --> 00:28:23,000
+People don't change defaults. So if you use defaults to capture a market the way that search does in browsers, then you're not making things better, no matter what infrastructure it runs on.
+
+
+329
+00:28:23,000 --> 00:28:38,000
+So we have an idea of what we want. And how can we make this fix? What areas give me hope that we can move this forward?
+
+
+330
+00:28:38,000 --> 00:28:53,000
+One area is the growth of cooperative computing. This is basically how to solve collective action problems using computing. There's a lot of progress on that, using other people's computers, going cloudless.
+
+
+331
+00:28:53,000 --> 00:29:06,000
+Lots of consensus-based infrastructure, new ways of using peer-to-peer. So I really think that this is key to enabling us to build better, more powerful infrastructures that are more user agency friendly.
+
+
+332
+00:29:06,000 --> 00:29:22,000
+There's a lot of work on governance. It's insane the amount of work on governance, governance innovation. We tend to think of that, we've been doing governance for 25 centuries, probably way more, but we don't have traces of what happened before much.
+
+
+333
+00:29:22,000 --> 00:29:36,000
+But there's still innovation going there, in the same way that cryptography has been going on for centuries and we're still innovating. This is just a list of projects from just one area, MetaGov, which I particularly like.
+
+
+334
+00:29:36,000 --> 00:29:52,000
+There's really a lot of innovation happening there. It's quite helpful. And why am I talking about this at an IPFS conference? Well, it turns out that the principles that IPFS operates on work really well with the web.
+
+
+335
+00:29:52,000 --> 00:30:11,000
+Content addressing, the kind of robustness that we get, it really enables this self-certified model that we can use to push the web forward. So there's a great potential. As Dietrich was saying, it's hard to merge the two, but using IPFS as a new primitive on the web is quite powerful.
+
+
+336
+00:30:11,000 --> 00:30:26,000
+And of course, the rest of this track and the rest of this conference is so wonderful that I wanted to use a different color to make it brighter. But really, seriously, there's a lot going on here that shows how these two worlds can intersect.
+
+
+337
+00:30:26,000 --> 00:30:43,000
+Next time, I really hope to use all of that to bring a demo of these ideas more concretely implemented. And with that in mind, I think it's time to micropunk the funk out of everything and move forward with web liberation.
+
+
+338
+00:30:43,000 --> 00:31:05,000
+Thank you very much.
+
+
+339
+00:31:05,000 --> 00:31:13,000
+Okay, great. What's next? How do we do it? Actions to take.
+
+
+340
+00:31:13,000 --> 00:31:36,000
+That's not a short question. I really think that this tile primitive of using IPFS with strong security constraint to show web content that cannot phone home, that can only work on the client, and then can be composed using intents is promising.
+
+
+341
+00:31:36,000 --> 00:31:48,000
+We'll have to hack on it to make sure that it works. But I really think that there's a there there. And so in my mind, the next step is to iterate and hack on that. I know Fabrice has been doing work on it. You're probably showing some of that, right?
+
+
+342
+00:31:48,000 --> 00:31:55,000
+Yeah, so he's going to be showing some of that. But yeah, I want to keep hacking on that and all the infrastructure that goes with.
+
+
+343
+00:31:55,000 --> 00:31:59,000
+Hashtag, how do we follow up? Where do we stop to...
+
+
+344
+00:31:59,000 --> 00:32:14,000
+Here. I mean, let's let so browsers and platforms, Slack channel, I'm on the internet. You can find me on the on the mastodon thing on the on the Twitter thing, virgin.com.
+
+
+345
+00:32:14,000 --> 00:32:31,000
+But like, come talk to me. Let's figure out. I have very little to share. I have like a huge draft document if you want to read some unreadable 15,000 words. But like any idea you have in this space, absolutely happy to collaborate.
+
+
+346
+00:32:31,000 --> 00:32:47,000
+Thank you very much.

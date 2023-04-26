@@ -1,0 +1,1258 @@
+1
+00:00:00,000 --> 00:00:08,560
+Hello, I'm Ian Preston. I'm going to talk to you about the state of the art of private
+
+
+2
+00:00:08,560 --> 00:00:19,240
+data on IPFS. So most services at the moment online choose one of either privacy or speed.
+
+
+3
+00:00:19,240 --> 00:00:24,080
+Is it possible to have both? We believe the answer is yes, and that's our guiding principle
+
+
+4
+00:00:24,080 --> 00:00:30,920
+in Pyrgos. What is Pyrgos? It's a global private file system that I've given loads of talks
+
+
+5
+00:00:30,920 --> 00:00:38,600
+in the past, but that's the TLDR. The human readable paths map via IPFS and through signatures
+
+
+6
+00:00:38,600 --> 00:00:44,200
+to private data. So the first part of this talk I'm going to tell you about some of the
+
+
+7
+00:00:44,200 --> 00:00:50,240
+privacy features, so the capability-based access control. BATs, which are part of that,
+
+
+8
+00:00:50,240 --> 00:00:59,640
+which are a low-level block-level access control. Cryptree Plus and Application Sandbox. And
+
+
+9
+00:00:59,640 --> 00:01:02,880
+then I'm going to tell you about the speed, some of the speed improvements we've done,
+
+
+10
+00:01:02,880 --> 00:01:10,480
+some of the cool stuff. Concurrent GC, fast-seeking and arbitrarily large files, and Direct S3
+
+
+11
+00:01:10,480 --> 00:01:16,880
+access. So let's start with capabilities. What is a CAP? So it's pure information. It's
+
+
+12
+00:01:16,880 --> 00:01:23,880
+not identity-based, so if you have this information through whatever means, you can use that capability.
+
+
+13
+00:01:23,880 --> 00:01:29,600
+There are three kinds of capabilities, mirror, read, and write. So the mirror capability
+
+
+14
+00:01:29,600 --> 00:01:37,800
+doesn't actually let you read anyone's data. It lets you duplicate or retrieve the encrypted
+
+
+15
+00:01:37,800 --> 00:01:43,200
+data. So that's a ciphertext-level access control. So a mirror capability has a bunch
+
+
+16
+00:01:43,200 --> 00:01:48,480
+of things in it. There's an owner and a writer, which are both public keys. There's a map
+
+
+17
+00:01:48,480 --> 00:01:54,600
+key, which is just a label, but it's 32 random bytes. And the BAT, which we'll talk more
+
+
+18
+00:01:54,600 --> 00:02:01,760
+about later, which is also 32 random bytes. So if you have a mirror key and you add a
+
+
+19
+00:02:01,760 --> 00:02:10,160
+symmetric key, that turns it into a read capability. And if you add one more symmetric key, then
+
+
+20
+00:02:10,160 --> 00:02:17,000
+it turns it into a write capability. So capabilities can be revoked, basically by key rotation.
+
+
+21
+00:02:17,000 --> 00:02:21,600
+Because it's pure information, they can work in things like secret links. So you can share
+
+
+22
+00:02:21,600 --> 00:02:26,280
+them with anyone via a URL. So I'm going to take you through the process
+
+
+23
+00:02:26,280 --> 00:02:31,040
+of, say I've given you a read capability to a file. What do you have to do to actually
+
+
+24
+00:02:31,040 --> 00:02:37,920
+order the steps that happen to get the actual file contents? So in Pyrgos, there's a PKI,
+
+
+25
+00:02:37,920 --> 00:02:46,680
+which is basically a global mapping from username to signed claims of username, host peer ID,
+
+
+26
+00:02:46,680 --> 00:02:50,760
+and your identity public key. So two public keys, basically. One for your host, one for
+
+
+27
+00:02:50,760 --> 00:02:59,200
+your identity. And normally you mirror that, so you can do private lookups locally. And
+
+
+28
+00:02:59,200 --> 00:03:06,200
+so you build a reverse index from identity to peer ID.
+
+
+29
+00:03:06,200 --> 00:03:10,440
+Once you've got the peer ID of the capability you're trying to retrieve, you do a peer-to-peer
+
+
+30
+00:03:10,440 --> 00:03:16,760
+HTTP request to get what we call a mutable pointer for that writer. So all that is is
+
+
+31
+00:03:16,760 --> 00:03:23,080
+a signed thing. That thing is at the bottom here. You can see it has the previous root
+
+
+32
+00:03:23,080 --> 00:03:30,920
+CID, which that thing pointed to, if there was one, and the current CID, and a sequence
+
+
+33
+00:03:30,920 --> 00:03:36,880
+number, which is monotonically increasing. So once you've got this mutable pointer, you
+
+
+34
+00:03:36,880 --> 00:03:42,240
+verify the signature and the sequence, if you've ever seen it before, and then take
+
+
+35
+00:03:42,240 --> 00:03:52,280
+out the root CID. With the root CID, you do a second peer-to-peer HTTP request to the
+
+
+36
+00:03:52,280 --> 00:03:56,240
+peer ID, the owner. You don't have to do it this way. This is just the fastest way. You
+
+
+37
+00:03:56,240 --> 00:04:03,120
+can do it totally locally using block-by-block lookups in the DHT, but that's obviously slower.
+
+
+38
+00:04:03,120 --> 00:04:08,040
+But if the host is offline, then you can fall back to that.
+
+
+39
+00:04:08,040 --> 00:04:15,280
+So you do a champ.get. So champ is just a compressed hash-ray mapped prefix try. It's
+
+
+40
+00:04:15,280 --> 00:04:21,680
+a Merkle structure. You supply the root, the map key you're trying to look up, and the
+
+
+41
+00:04:21,680 --> 00:04:29,920
+bat. And that returns basically just a list of blocks. You then locally repeat the champ
+
+
+42
+00:04:29,920 --> 00:04:36,720
+lookup locally using those return blocks. So there's no trust relationship here. And
+
+
+43
+00:04:36,720 --> 00:04:44,480
+then you've finally got the thing that that map key maps to, the value. And then you can
+
+
+44
+00:04:44,480 --> 00:04:49,520
+decrypt that with the read key from the capability. And that gives you then the metadata for the
+
+
+45
+00:04:49,520 --> 00:04:57,280
+file. So things like file name, modification time, MIME type. And within that metadata,
+
+
+46
+00:04:57,280 --> 00:05:02,960
+there are also, if the file is less than 4K, you've actually already got the data. It's
+
+
+47
+00:05:02,960 --> 00:05:09,320
+inlined, which is a small optimization we do. But if it's more than 4K, then there'll
+
+
+48
+00:05:09,320 --> 00:05:13,480
+be some links to the blocks.
+
+
+49
+00:05:13,480 --> 00:05:18,600
+So files, they're split into five megabyte chunks. Each chunk will have its own capability
+
+
+50
+00:05:18,600 --> 00:05:25,480
+and crypt tree node. So if you want to get the blocks for a chunk, there's at most five.
+
+
+51
+00:05:25,480 --> 00:05:30,720
+We go up to one megabyte blocks. And you just, you retrieve those using the CIDs and the
+
+
+52
+00:05:30,720 --> 00:05:37,080
+bats, which are in the metadata you just retrieved. And then concatenate them and decrypt it.
+
+
+53
+00:05:37,080 --> 00:05:42,680
+And that gives you then the first up to five megabytes of the file.
+
+
+54
+00:05:42,680 --> 00:05:50,400
+So to calculate the subsequent capabilities for the file, basically you just do some hashing.
+
+
+55
+00:05:50,400 --> 00:05:57,280
+So the map key, the label that you're looking up, you hash that with a secret that is in
+
+
+56
+00:05:57,280 --> 00:06:01,820
+the metadata that you decrypted. And that gives you the next map key. And the same thing
+
+
+57
+00:06:01,820 --> 00:06:06,840
+applies to the bats. We'll spell that out later. And then you just repeat the previous
+
+
+58
+00:06:06,840 --> 00:06:13,320
+steps, 5 to 10, these guys. So the champ get, and then get the blocks. So that's how you
+
+
+59
+00:06:13,320 --> 00:06:14,320
+get a file.
+
+
+60
+00:06:14,320 --> 00:06:20,800
+But I keep talking about these bat things. What are bats? So it stands for block access
+
+
+61
+00:06:20,800 --> 00:06:25,960
+token. So I've said there, there are 32 random bytes. But the sort of guiding principle here
+
+
+62
+00:06:25,960 --> 00:06:32,580
+is you shouldn't be putting encrypted data in the public DHT. Because you open yourself
+
+
+63
+00:06:32,580 --> 00:06:37,640
+up to attacks where someone can just store everything that's in the DHT and try and decrypt
+
+
+64
+00:06:37,640 --> 00:06:41,840
+it later or do offline attacks. Or maybe the encryption is broken at some point or something
+
+
+65
+00:06:41,840 --> 00:06:43,320
+like that.
+
+
+66
+00:06:43,320 --> 00:06:52,440
+So you want to have some kind of access control. So with the bats, we've created this post-quantum
+
+
+67
+00:06:52,440 --> 00:07:01,160
+ciphertext level access control. The idea is there are two bats per block. And if you
+
+
+68
+00:07:01,160 --> 00:07:07,400
+want to retrieve a block, then as well as sending the CID, you send an auth token. So
+
+
+69
+00:07:07,400 --> 00:07:12,040
+the auth token is an S3 v4 signature. It has nothing to do with S3. It's just the same
+
+
+70
+00:07:12,040 --> 00:07:18,960
+signature algorithm, which ends up being 18,000 bytes, which you send with the CID. So it's
+
+
+71
+00:07:18,960 --> 00:07:23,920
+a small overhead in terms of bandwidth.
+
+
+72
+00:07:23,920 --> 00:07:29,120
+And that signature critically is tied to the requesting peer ID. So you can broadcast this
+
+
+73
+00:07:29,120 --> 00:07:33,460
+auth token to the DHT and it doesn't matter. No one can replay it. And it's also limited
+
+
+74
+00:07:33,460 --> 00:07:37,680
+in time as well, so something like five minutes.
+
+
+75
+00:07:37,680 --> 00:07:43,680
+So the recipient will verify the signature, obviously against the requesting peer ID,
+
+
+76
+00:07:43,680 --> 00:07:51,180
+and the bat. Now, one of the properties we wanted to maintain for IPFS here is the kind
+
+
+77
+00:07:51,180 --> 00:07:55,520
+of auto-scaling property. So if there's some content in IPFS and it's popular, lots of
+
+
+78
+00:07:55,520 --> 00:08:00,680
+people request it, they can then help to serve up the same content. So you get this supply
+
+
+79
+00:08:00,680 --> 00:08:05,280
+scaling with the demand. The other way around. Yeah, supply scaling with the demand kind
+
+
+80
+00:08:05,280 --> 00:08:09,880
+of thing. And we wanted to maintain that.
+
+
+81
+00:08:09,880 --> 00:08:19,560
+So the way we do that is one of the bats is in the block itself. So that means if you've
+
+
+82
+00:08:19,560 --> 00:08:23,760
+retrieved the block, you automatically have the bat. It's in the block. If you want to
+
+
+83
+00:08:23,760 --> 00:08:28,800
+rotate access, you change the bat, that changes the CID. It's a new block. So that way you
+
+
+84
+00:08:28,800 --> 00:08:34,920
+get that auto-scaling property can be maintained and anyone who's authorized to request it
+
+
+85
+00:08:34,920 --> 00:08:39,760
+can then continue to apply the same authorization.
+
+
+86
+00:08:39,760 --> 00:08:45,440
+So the inline bats. So the question is where do we put them? So we only have two kinds
+
+
+87
+00:08:45,440 --> 00:08:56,480
+of blocks. It's all DAG C-BOR, which is C-BOR or raw. So C-BOR, you can actually have different
+
+
+88
+00:08:56,480 --> 00:09:00,960
+top-level objects. You could have a list, but we don't actually care about those. All
+
+
+89
+00:09:00,960 --> 00:09:05,400
+of the relevant objects that we care about have a map at the top level. So if it's a
+
+
+90
+00:09:05,400 --> 00:09:11,880
+map, it's easy. You just pick a key. We picked bats. And then that maps to an inline C-BOR
+
+
+91
+00:09:11,880 --> 00:09:18,440
+list of two bats. Raw blocks are a little bit more difficult because there isn't really
+
+
+92
+00:09:18,440 --> 00:09:26,000
+any structure in a raw block. There is actually a little bit. There is a beginning. So what
+
+
+93
+00:09:26,000 --> 00:09:32,680
+we decided on here was there's an 8-byte magic prefix to basically say this is an access-controlled
+
+
+94
+00:09:32,680 --> 00:09:39,480
+block. And then after that, we just have the C-BOR list of the two bats after it, which
+
+
+95
+00:09:39,480 --> 00:09:47,000
+ends up being 8 bytes and 77 bytes. So in our case, the blocks we're trying to access
+
+
+96
+00:09:47,000 --> 00:09:57,640
+control, their minimum size is 8K, and they go up to 1 meg. So it's not a huge overhead.
+
+
+97
+00:09:57,640 --> 00:10:05,200
+So now, what is Cryptree Plus? So it's Cryptree plus bats that I've just mentioned plus improving
+
+
+98
+00:10:05,200 --> 00:10:10,280
+the design from a post-quantum perspective and protecting as much metadata as possible.
+
+
+99
+00:10:10,280 --> 00:10:14,200
+So I've said the Cryptree nodes are stored as values in a champ under the corresponding
+
+
+100
+00:10:14,200 --> 00:10:21,000
+key. Your data host or storer, I mean, there might be more than one, but they can't link
+
+
+101
+00:10:21,000 --> 00:10:26,560
+the different chunks of the same file. So they can't see your file size. We also pad
+
+
+102
+00:10:26,560 --> 00:10:31,480
+the files to a multiple of 4K within that chunk size. So that gives you whatever it
+
+
+103
+00:10:31,480 --> 00:10:41,360
+is, 5 meg divided by 4K, 1,280 possible sizes in the whole world for a chunk. And at the
+
+
+104
+00:10:41,360 --> 00:10:49,000
+same time, you can't tell the difference between a directory and a file because they look the
+
+
+105
+00:10:49,000 --> 00:10:56,720
+same. So yeah, in terms of other things, the metadata privacy protects in Cryptree, Cryptree
+
+
+106
+00:10:56,720 --> 00:11:01,520
+plus. So yeah, I've said file sizes, whether something is a file or directory, the file
+
+
+107
+00:11:01,520 --> 00:11:07,280
+or folder names, the lengths of the names of the files or folders, the folder topology,
+
+
+108
+00:11:07,280 --> 00:11:12,840
+the social graph is not visible, who or how many have access to a file is also not visible.
+
+
+109
+00:11:12,840 --> 00:11:17,240
+Basically that comes down to it because the capabilities are pure information. We can't
+
+
+110
+00:11:17,240 --> 00:11:24,320
+tell how many people you have told that information to, even with the in-band sharing mechanism.
+
+
+111
+00:11:24,320 --> 00:11:30,760
+So Cryptree node, this is the format, how it looks like on the block level. So there
+
+
+112
+00:11:30,760 --> 00:11:36,160
+are a bunch of, the bats I mentioned are there. They have to be readable by the server because
+
+
+113
+00:11:36,160 --> 00:11:43,000
+the server is enforcing that level of access control. And then there are three encrypted,
+
+
+114
+00:11:43,000 --> 00:11:49,520
+padded and encrypted sections. There's a link to a second symmetric key. So there are two
+
+
+115
+00:11:49,520 --> 00:11:54,240
+keys for each thing. I'll show you in a second. If you've granted write access to something
+
+
+116
+00:11:54,240 --> 00:12:01,440
+there's also a symmetric link to the key pair, which you need to authorize those writes.
+
+
+117
+00:12:01,440 --> 00:12:07,040
+And there's a relative capability to the subsequent chunk. That's only actually really needed for
+
+
+118
+00:12:07,040 --> 00:12:18,200
+directories as I mentioned for the file thing. There's a parent section, which has an optional
+
+
+119
+00:12:18,200 --> 00:12:22,440
+parent link that's there, unless it's your root directory, basically that's always there.
+
+
+120
+00:12:22,440 --> 00:12:26,640
+And then there's the file properties, which is a kind of extensible thing where you can
+
+
+121
+00:12:26,640 --> 00:12:39,300
+just put stuff. So that has the file name, MIME type, file size, modification time, thumbnails.
+
+
+122
+00:12:39,300 --> 00:12:43,720
+And then finally there's the children or data. So if it's a directory, it's children. If
+
+
+123
+00:12:43,720 --> 00:12:49,400
+it's file, it's data. You don't know until you decrypt it. And that could be inlined,
+
+
+124
+00:12:49,400 --> 00:12:55,720
+as I mentioned, if it's less than 4K, a small file or a medium-sized directory. Otherwise
+
+
+125
+00:12:55,720 --> 00:13:00,860
+it's got a list of CIDs and corresponding bats.
+
+
+126
+00:13:00,860 --> 00:13:05,680
+So this is how the read crypt tree looks like. So there are two symmetric keys for each file
+
+
+127
+00:13:05,680 --> 00:13:10,280
+or directory. If you have a symmetric key, the idea is you can follow those arrows by
+
+
+128
+00:13:10,280 --> 00:13:17,220
+decrypting links in the metadata you retrieve. You'll notice there's these backlinks going
+
+
+129
+00:13:17,220 --> 00:13:27,480
+back up the tree from the file. So everything has a well-defined path.
+
+
+130
+00:13:27,480 --> 00:13:33,500
+And the write crypt tree is a lot simpler. There's only one symmetric key per thing.
+
+
+131
+00:13:33,500 --> 00:13:36,960
+And most of the time that's not even there because it's only there if you need to grant
+
+
+132
+00:13:36,960 --> 00:13:40,800
+write access to something.
+
+
+133
+00:13:40,800 --> 00:13:47,000
+So in terms of a directory, what is a directory? So semantically it's a list of children.
+
+
+134
+00:13:47,000 --> 00:13:54,880
+So theoretically that should be a list of capabilities. But we want to be able to revoke
+
+
+135
+00:13:54,880 --> 00:14:00,480
+access quite fast. And if we have to change the entire subtree when we're revoking access
+
+
+136
+00:14:00,480 --> 00:14:06,720
+to something, then that's expensive. So we use a relative capability, which makes that
+
+
+137
+00:14:06,720 --> 00:14:09,000
+more efficient.
+
+
+138
+00:14:09,000 --> 00:14:16,240
+And the other thing we care about is find by path, get by path. If you have a directory
+
+
+139
+00:14:16,240 --> 00:14:20,800
+and you have to retrieve all the things to find their name to go to the next level, that's
+
+
+140
+00:14:20,800 --> 00:14:27,400
+obviously slow. So we duplicate the name in the parent directory. So you end up with named
+
+
+141
+00:14:27,400 --> 00:14:32,120
+relative capabilities or this thing at the bottom. So a directory is a list of things
+
+
+142
+00:14:32,120 --> 00:14:40,600
+which have name, an optional writer, a map key, a bat, and a read key.
+
+
+143
+00:14:40,600 --> 00:14:45,840
+The application sandbox we have in Pyrgos is one of the most recent developments. So
+
+
+144
+00:14:45,840 --> 00:14:53,040
+the idea here is you can run untrusted code over private data. So an app shouldn't be
+
+
+145
+00:14:53,040 --> 00:14:59,880
+able to exfiltrate data or steal it. An app can't read anything that it's not been granted
+
+
+146
+00:14:59,880 --> 00:15:11,000
+access to. And it works in existing browsers without add-ons. Also works offline sometimes.
+
+
+147
+00:15:11,000 --> 00:15:19,200
+What is an application? It's just a folder of basically of HTML5 assets in Pyrgos. So
+
+
+148
+00:15:19,200 --> 00:15:22,800
+because it's just a folder in Pyrgos, the author controls the visibility. You can have
+
+
+149
+00:15:22,800 --> 00:15:27,600
+private apps. You can share it with your friends. You can make it public. We've got a basic
+
+
+150
+00:15:27,600 --> 00:15:31,480
+set of permissions you can give to apps. I gave a talk on this earlier, so I'm just going
+
+
+151
+00:15:31,480 --> 00:15:36,280
+to summarize it here. But if you want more details, go watch that.
+
+
+152
+00:15:36,280 --> 00:15:42,920
+Yeah, super easy publishing, drag and drop. We've got a bunch of example apps. You can
+
+
+153
+00:15:42,920 --> 00:15:51,960
+find these. There's an example-apps repo in Pyrgos on GitHub. Markdown, there's multiplayer
+
+
+154
+00:15:51,960 --> 00:16:00,560
+games, image editors, music players, office viewers and editors, spreadsheets, lots of
+
+
+155
+00:16:00,560 --> 00:16:07,320
+stuff. So the sandbox itself, how does this work?
+
+
+156
+00:16:07,320 --> 00:16:13,400
+It's quite difficult to stop exfiltration in browsers. So the idea is you've got the
+
+
+157
+00:16:13,400 --> 00:16:19,600
+main Pyrgos tab, which you log into. Now, this could be on localhost or some domain.
+
+
+158
+00:16:19,600 --> 00:16:28,560
+It works on both. And you then tell you, say you want to launch an app. We then load a
+
+
+159
+00:16:28,560 --> 00:16:37,040
+hash-based subdomain, which again also works on localhost. And what the server does for
+
+
+160
+00:16:37,040 --> 00:16:43,120
+that subdomain is it serves up a fixed static file for all subdomains. It's the same thing.
+
+
+161
+00:16:43,120 --> 00:16:47,000
+And all that does is set up a service worker, which then communicates with the main tab
+
+
+162
+00:16:47,000 --> 00:16:56,880
+via post messages. And then sets another sub-iframe on its own domain to load the app. And the
+
+
+163
+00:16:56,880 --> 00:17:01,360
+app can then, it's a page basically, it can render its assets.
+
+
+164
+00:17:01,360 --> 00:17:08,440
+So you've got the app permission enforcer is in the trusted context on the other side.
+
+
+165
+00:17:08,440 --> 00:17:16,080
+And the CSP, there's a couple of things here. The CSP firewall locks down the app so that
+
+
+166
+00:17:16,080 --> 00:17:20,960
+even if it escapes its own little iframe, it can't make any external requests to the
+
+
+167
+00:17:20,960 --> 00:17:29,920
+web. So it shouldn't be able to exfiltrate data. And the other thing is the subdomain
+
+
+168
+00:17:29,920 --> 00:17:35,880
+context and the main context are run in different operating system processes to protect against
+
+
+169
+00:17:35,880 --> 00:17:41,920
+side channel attacks. But enough of that privacy. Let's talk about
+
+
+170
+00:17:41,920 --> 00:17:50,640
+speed. So concurrent GC has historically been a problem. So if you run Kuber with a one
+
+
+171
+00:17:50,640 --> 00:18:00,040
+terabyte block store in S3, a GC takes about 24 hours whilst holding a global write lock.
+
+
+172
+00:18:00,040 --> 00:18:08,240
+So that's obviously a problem. So we wrote our own GC while still using Kuber, but running
+
+
+173
+00:18:08,240 --> 00:18:16,840
+the GC externally. Version one of the GC on the same block store took two hours. And it's
+
+
+174
+00:18:16,840 --> 00:18:22,720
+fully concurrent with no locks. Version two takes seven minutes. So I'm going to tell
+
+
+175
+00:18:22,720 --> 00:18:27,280
+you how we did that. So first you have to understand how write
+
+
+176
+00:18:27,280 --> 00:18:32,800
+is happening in Pyrgos. Whenever you're doing some modification, there's four steps. You
+
+
+177
+00:18:32,800 --> 00:18:37,520
+start a transaction with a server, which is it just returns you a transaction ID. And
+
+
+178
+00:18:37,520 --> 00:18:42,840
+then you write your blocks. Doesn't matter what they are. But every block write is tagged
+
+
+179
+00:18:42,840 --> 00:18:50,000
+with a transaction ID. And the server just temporarily stores those pairs in a database,
+
+
+180
+00:18:50,000 --> 00:18:53,640
+basically. When you've done whatever it is you're going to do, you commit the new routes
+
+
+181
+00:18:53,640 --> 00:18:57,800
+to the mutual pointers, the thing I mentioned at the start. So you sign your update and
+
+
+182
+00:18:57,800 --> 00:19:02,200
+push it. And then you close the transaction. And that removes all those things from the
+
+
+183
+00:19:02,200 --> 00:19:10,440
+database. So with that in mind, the GC algorithm is also quite simple. It's basically a mark
+
+
+184
+00:19:10,440 --> 00:19:16,480
+and sweep. So it lists the block store, it lists the GC routes, lists the uncommitted
+
+
+185
+00:19:16,480 --> 00:19:24,520
+writes, the ones I just mentioned. Those three steps are very fast, even with S3. Listing
+
+
+186
+00:19:24,520 --> 00:19:30,520
+can take, even on a terabyte, can take ten seconds. But that doesn't really matter.
+
+
+187
+00:19:30,520 --> 00:19:37,640
+The mark phase was historically the slowest phase. And delete, well, I guess it depends
+
+
+188
+00:19:37,640 --> 00:19:42,120
+how much garbage you have. The delete phase will scale with how many things you have to
+
+
+189
+00:19:42,120 --> 00:19:49,280
+delete, obviously. But yeah, so we've done the mark reachable and the delete also in
+
+
+190
+00:19:49,280 --> 00:19:58,080
+parallel. And that was what got us down to the two-hour mark. And the magic for the final
+
+
+191
+00:19:58,080 --> 00:20:12,960
+version was basically...
+
+
+192
+00:20:00,000 --> 00:20:04,000
+to store a lookup from CID to the list of links in that block.
+
+
+193
+00:20:04,000 --> 00:20:11,000
+We store the size as well because we also do other stuff with keeping track of how much space a user uses.
+
+
+194
+00:20:11,000 --> 00:20:18,000
+But with just the links, you can do that mark and sweep without touching S3 at all, basically.
+
+
+195
+00:20:18,000 --> 00:20:24,000
+Which is very cool. And the overhead in terms of size of this database, this extra database,
+
+
+196
+00:20:24,000 --> 00:20:32,000
+is very small, 0.05% of the total block store size. And you avoid having to retrieve and pass
+
+
+197
+00:20:32,000 --> 00:20:41,000
+all the blocks when you're doing your mark phase. So yeah, basically everyone should have this kind of metadata store
+
+
+198
+00:20:41,000 --> 00:20:45,000
+if you're doing anything to do with DAG traversal.
+
+
+199
+00:20:45,000 --> 00:20:50,000
+And the final cool optimization we have, I can demo it if we will have time, I think,
+
+
+200
+00:20:50,000 --> 00:20:56,000
+is fast file seeking. So if you have a large file, I've mentioned how you retrieve a capability.
+
+
+201
+00:20:56,000 --> 00:21:02,000
+And once you've got the first chunk, or the first metadata of the first chunk,
+
+
+202
+00:21:02,000 --> 00:21:09,000
+you can then, just from hashing locally, retrieve, generate a capability to a later section of the file.
+
+
+203
+00:21:09,000 --> 00:21:13,000
+You know the size because that's in the metadata of the first chunk.
+
+
+204
+00:21:13,000 --> 00:21:20,000
+And so then you can then do a bunch of hashing locally, and then do a single champ get.
+
+
+205
+00:21:20,000 --> 00:21:29,000
+So one round trip to retrieve the encrypted metadata. And then up to five block gets for the fragments.
+
+
+206
+00:21:29,000 --> 00:21:34,000
+So this means you can jump forward very, very quickly.
+
+
+207
+00:21:34,000 --> 00:21:40,000
+Which if you're doing something like streaming a movie, can be very useful.
+
+
+208
+00:21:40,000 --> 00:21:45,000
+The final cool optimization is to do with S3 block stores.
+
+
+209
+00:21:45,000 --> 00:21:50,000
+So normally the block store is an implementation detail of a server. It's not exposed in any way.
+
+
+210
+00:21:50,000 --> 00:21:57,000
+And this is the normal mode of operation. So the client always talks through your server,
+
+
+211
+00:21:57,000 --> 00:22:01,000
+and all the bandwidth and requests go through that, and that then talks to S3.
+
+
+212
+00:22:01,000 --> 00:22:06,000
+But that's, if you have a lot of data, that's 100% of your bandwidth.
+
+
+213
+00:22:06,000 --> 00:22:14,000
+So what we've done is to allow direct S3 block store reads where the client talks directly.
+
+
+214
+00:22:14,000 --> 00:22:19,000
+Now you can actually make it public. That might not make sense depending on your pricing model for S3.
+
+
+215
+00:22:19,000 --> 00:22:23,000
+So we are on the side of caution and still require authorization.
+
+
+216
+00:22:23,000 --> 00:22:29,000
+So you still do a request to your server, but then the server just returns a pre-auth URL to S3.
+
+
+217
+00:22:29,000 --> 00:22:38,000
+So then you can do the download directly. So that offloads something like 99% of the bandwidth.
+
+
+218
+00:22:38,000 --> 00:22:43,000
+But the cool part is doing it for uploads. So this is a... bear in mind this server is multi-tenant.
+
+
+219
+00:22:43,000 --> 00:22:48,000
+You can have as many users as you like. They're all using the same bucket in S3.
+
+
+220
+00:22:48,000 --> 00:22:55,000
+But because the block store is content addressed, there's no possibility for conflict.
+
+
+221
+00:22:55,000 --> 00:23:01,000
+And so when you author writes with your server, the pre-signed URL...
+
+
+222
+00:23:01,000 --> 00:23:05,000
+Well, so the path in S3 is the hash, basically.
+
+
+223
+00:23:05,000 --> 00:23:12,000
+But you can get S3 to verify the SHA-256 of the thing that you're uploading,
+
+
+224
+00:23:12,000 --> 00:23:15,000
+which happens to be the only hash we use.
+
+
+225
+00:23:15,000 --> 00:23:21,000
+So you can do direct uploads to S3, which is awesome.
+
+
+226
+00:23:21,000 --> 00:23:42,000
+So now I'm going to do a super quick demo of the file seeking thing.
+
+
+227
+00:23:42,000 --> 00:23:53,000
+So if we can find... let me just make this bigger. If we can find a video...
+
+
+228
+00:23:53,000 --> 00:24:00,000
+And my sound is off, I think, so it won't have any sound. But you can see it's playing.
+
+
+229
+00:24:00,000 --> 00:24:05,000
+And you can see the browser's buffered up to here kind of thing.
+
+
+230
+00:24:05,000 --> 00:24:11,000
+But if I want to seek some way later... there you go. That's pretty fast.
+
+
+231
+00:24:11,000 --> 00:24:16,000
+I can also go backwards. How does backwards work?
+
+
+232
+00:24:16,000 --> 00:24:22,000
+Obviously you can't reverse a hash. All we do there is we just keep the first capability around.
+
+
+233
+00:24:22,000 --> 00:24:25,000
+So we're always hashing forwards.
+
+
+234
+00:24:25,000 --> 00:24:32,000
+We could do something slightly smarter, but that seems to be enough.
+
+
+235
+00:24:32,000 --> 00:24:36,000
+Coolio. Yeah, so you can self-host.
+
+
+236
+00:24:36,000 --> 00:24:42,000
+You can sign up on pedagos.net or write apps.
+
+
+237
+00:24:42,000 --> 00:24:46,000
+Yeah. Any questions?
+
+
+238
+00:24:46,000 --> 00:24:53,000
+So earlier when you were talking about the bats, you mentioned specifically that it was post-quantum
+
+
+239
+00:24:53,000 --> 00:24:59,000
+and that it couldn't be... that an attacker who wanted to just hold on to encrypted data on the network
+
+
+240
+00:24:59,000 --> 00:25:02,000
+couldn't decrypt it later.
+
+
+241
+00:25:02,000 --> 00:25:06,000
+I wasn't sure I totally understood what made it post-quantum.
+
+
+242
+00:25:06,000 --> 00:25:09,000
+So it's post... so where is it?
+
+
+243
+00:25:09,000 --> 00:25:16,000
+So the reason it's post-quantum is the S3V4 signatures, they depend on HMAC SHA-256,
+
+
+244
+00:25:16,000 --> 00:25:19,000
+which is already post-quantum.
+
+
+245
+00:25:19,000 --> 00:25:23,000
+So there's no asymmetric encryption or asymmetric signatures in there.
+
+
+246
+00:25:23,000 --> 00:25:29,000
+So that's the auth scheme to retrieve a block, so that means that no one can retrieve the block in the first place.
+
+
+247
+00:25:29,000 --> 00:25:33,000
+How does Cryptree plus relate to systems like WNFS?
+
+
+248
+00:25:33,000 --> 00:25:36,000
+You'll have to ask them about that.
+
+
+249
+00:25:36,000 --> 00:25:42,000
+So the original Cryptree came from a group called Voila in 2008.
+
+
+250
+00:25:42,000 --> 00:25:46,000
+They had quite a cool system, and ours is very similar to theirs, but as I say,
+
+
+251
+00:25:46,000 --> 00:25:54,000
+we've made a bunch of improvements, mainly around the metadata side and the post-quantum side.
+
+
+252
+00:25:54,000 --> 00:25:59,000
+Thank you very much. Cheers.

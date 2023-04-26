@@ -1,0 +1,388 @@
+1
+00:00:00,000 --> 00:00:09,560
+Hi everyone, today I'm going to talk about the Auth SDK, or as some of you know it, it's
+
+
+2
+00:00:09,560 --> 00:00:16,760
+called WebNader before we renamed it this week. This talk builds on the previous talks
+
+
+3
+00:00:16,760 --> 00:00:25,920
+of the Vision folks, like Philip did a talk on WinFS this morning, this SDK builds around
+
+
+4
+00:00:25,920 --> 00:00:37,880
+that. The current version of the SDK has a prototype of WinFS and UCan, and this presentation
+
+
+5
+00:00:37,880 --> 00:00:46,000
+is talking about RS-WinFS and introducing some new ideas.
+
+
+6
+00:00:46,000 --> 00:00:54,360
+So what is the Auth SDK? It's a toolkit that allows you to create web applications, that
+
+
+7
+00:00:54,360 --> 00:01:03,560
+allow you to build an offline app without a backend, which is distributed. It uses all
+
+
+8
+00:01:03,560 --> 00:01:14,440
+the protocols designed by Vision, the main one is WinFS. Auth SDK app is entirely built
+
+
+9
+00:01:14,440 --> 00:01:27,200
+around a user's file system. The second one is the UCan, without that we don't have a
+
+
+10
+00:01:27,200 --> 00:01:37,080
+decentralized authorization. Thirdly, an important non-Vision protocol is DIDs, DeaDentifiers.
+
+
+11
+00:01:37,080 --> 00:01:50,560
+In the future this will also include things like IPVM and probably NNS as well.
+
+
+12
+00:01:50,560 --> 00:01:58,680
+So a bit more about the file system. It includes at least three partitions, these are bound
+
+
+13
+00:01:58,680 --> 00:02:05,480
+together in the root tree, which is a Cboard DAG. So you have public data, encrypted data,
+
+
+14
+00:02:05,480 --> 00:02:14,320
+and also a compatibility layer, UnixFS, which allows us to upload apps in the public file
+
+
+15
+00:02:14,320 --> 00:02:21,920
+system and then viewing those apps in the IPVS gateway. So the user is in full control
+
+
+16
+00:02:21,920 --> 00:02:31,000
+of their file system. This includes multiple private files and directories, which are sets
+
+
+17
+00:02:31,000 --> 00:02:38,680
+of AS keys and name filters. This is the private forest Philip was talking earlier today, or
+
+
+18
+00:02:38,680 --> 00:02:50,680
+dark forest as he called it. So this hides the encrypted IPLD blocks in a sort of hamped
+
+
+19
+00:02:50,680 --> 00:03:05,080
+DAG. And that gives us an immutable top-level SID. And then we have three crucial parts
+
+
+20
+00:03:05,080 --> 00:03:16,080
+in total, that's the IPLD blocks, the top-level SID, the pointer, and the private credentials.
+
+
+21
+00:03:16,080 --> 00:03:26,200
+So this shows an example of how those three important pieces could flow around the ecosystem.
+
+
+22
+00:03:26,200 --> 00:03:31,440
+So on the left, we have a file system and an app on a phone, and the same on the right,
+
+
+23
+00:03:31,440 --> 00:03:37,720
+but on a laptop. And in the middle, there's the protocols, or some of them at least, and
+
+
+24
+00:03:37,720 --> 00:03:44,360
+some of the vision infrastructure. So when we make a change in the file system on the
+
+
+25
+00:03:44,360 --> 00:03:52,480
+app, we push the IPLD blocks to the IPFS node from vision, and then we update the SID and
+
+
+26
+00:03:52,480 --> 00:04:03,560
+DNS. And then when the laptop is like a new device, it doesn't have the credentials yet
+
+
+27
+00:04:03,560 --> 00:04:11,520
+to encrypt those private nodes. So then we have to like establish a secure session, and
+
+
+28
+00:04:11,520 --> 00:04:24,040
+that's done using AWAKE and YouCan. And we can also announce the changes using WebSockets
+
+
+29
+00:04:24,040 --> 00:04:35,160
+to other active apps. But in order to access the DNS and IPFS nodes, we need some sort
+
+
+30
+00:04:35,160 --> 00:04:44,960
+of identity or an account. And that's done by registering the agent DID from the device
+
+
+31
+00:04:44,960 --> 00:04:54,440
+you're on, and that will become the root DID or account DID. And then we also need a username,
+
+
+32
+00:04:54,440 --> 00:05:04,680
+which is basically the identifier used for DNS, the subdomain for vision.name subdomain.
+
+
+33
+00:05:04,680 --> 00:05:11,040
+In the current SDK, there's only one type of an account, and that's our first class
+
+
+34
+00:05:11,040 --> 00:05:19,800
+vision account, which has like full rights. You can create apps with that. But in the
+
+
+35
+00:05:19,800 --> 00:05:26,320
+future, there will also be like an app account, which is tied to one specific app in the vision
+
+
+36
+00:05:26,320 --> 00:05:40,320
+ecosystem. DIDs are generated using the WebCrypto API, which is either RSA or AdWords curve.
+
+
+37
+00:05:40,320 --> 00:05:48,120
+The vision server also has a DID. So every time like we contact the vision server, for
+
+
+38
+00:05:48,120 --> 00:05:55,560
+example, when registering a new account, we create a YouCan, and the audience is the DID
+
+
+39
+00:05:55,560 --> 00:06:03,720
+of the vision server. And then when the registration is successful, we get a YouCan proof from
+
+
+40
+00:06:03,720 --> 00:06:14,080
+the server, which is also the proof of line that we have a vision account.
+
+
+41
+00:06:14,080 --> 00:06:21,800
+This is another example why we need a global namespace when doing private file sharing.
+
+
+42
+00:06:21,800 --> 00:06:31,360
+So we have Alice on the left and Bob. Alice is the share of a file, and Bob is the receiver.
+
+
+43
+00:06:31,360 --> 00:06:44,000
+So what happens here is Alice looks up the file system from Bob and then lists all the
+
+
+44
+00:06:44,000 --> 00:06:51,000
+share keys, which is another type of key, not the one used for signing YouCans, but
+
+
+45
+00:06:51,000 --> 00:06:58,960
+for making exchanges. And then we create the share in the sender of the share, and then
+
+
+46
+00:06:58,960 --> 00:07:06,080
+the file system is updated, like before, updating DNS and the IPLD blocks. Then the receiver
+
+
+47
+00:07:06,080 --> 00:07:12,520
+of the share looks up the new information, and he also gets a share ID or counter from
+
+
+48
+00:07:12,520 --> 00:07:21,440
+the sender of the share using a URL or some other form of gossip. And then using three
+
+
+49
+00:07:21,440 --> 00:07:34,580
+and four together, we can decrypt the share and using the share key on that device.
+
+
+50
+00:07:34,580 --> 00:07:42,840
+So all of that together is organized into components and layers in the SDK. These are
+
+
+51
+00:07:42,840 --> 00:07:52,360
+some of them. We made it possible to customize all of them, so it's easier for testing and
+
+
+52
+00:07:52,360 --> 00:08:01,520
+adopting to other ecosystems. So for example, you can change how and where the IPLD blocks
+
+
+53
+00:08:01,520 --> 00:08:14,360
+are stored, how to look up DNS workarounds, where to store keys, and so on.
+
+
+54
+00:08:14,360 --> 00:08:20,020
+So yeah, all of those things fit in components and layers. There's other interesting ones
+
+
+55
+00:08:20,020 --> 00:08:27,760
+like the capability component that allows us to ask other apps for capabilities using
+
+
+56
+00:08:27,760 --> 00:08:39,120
+UCANs. And all those components together form a program, which is what runs in the browser
+
+
+57
+00:08:39,120 --> 00:08:48,320
+then. Then you also have plugins, which are predefined compositions, basically, and they
+
+
+58
+00:08:48,320 --> 00:08:57,120
+can also have functions that create a program separately from the original SDK implementation.
+
+
+59
+00:08:57,120 --> 00:09:04,760
+So, for example, we have WalletOdds that creates a phishing account automatically instead of
+
+
+60
+00:09:04,760 --> 00:09:12,060
+filling in a form like you usually do in an app, but it connects to MetaMask and then
+
+
+61
+00:09:12,060 --> 00:09:22,120
+uses another component to get the root private ref from WinFS, encrypts that using MetaMask,
+
+
+62
+00:09:22,120 --> 00:09:31,360
+and then puts it in the public file system so you can load it on your other devices.
+
+
+63
+00:09:31,360 --> 00:09:38,840
+So yeah, that's it. That's the result. We get a simple way to create apps without the
+
+
+64
+00:09:38,840 --> 00:09:46,600
+backends. So for example, here we create a program. We have a user session, and then
+
+
+65
+00:09:46,600 --> 00:10:09,840
+we write to the file system. I'll try to do a live demo. So this is the photos on the
+
+
+66
+00:10:09,840 --> 00:10:29,920
+public file system and a separate private file system. Then you can see here that it
+
+
+67
+00:10:29,920 --> 00:10:40,840
+makes an update to the phishing server using a UCAN, which is the long token here. It's
+
+
+68
+00:10:40,840 --> 00:10:54,000
+quite long because of RSA. Then you could decrypt or decode the UCAN using the UCAN
+
+
+69
+00:10:54,000 --> 00:11:01,520
+website. Then this is an example from the DNS. When you do a registration, it puts the
+
+
+70
+00:11:01,520 --> 00:11:13,600
+DID key in DNS. The DNS link is the top level SID of the file system. Then you also have
+
+
+71
+00:11:13,600 --> 00:11:21,560
+the DID of the phishing server. This is an example of an older file system. The current
+
+
+72
+00:11:21,560 --> 00:11:30,760
+SDK has a prototype of NFS, and this is how it looks. This is DAGPB instead of C-BOR.
+
+
+73
+00:11:30,760 --> 00:11:40,640
+But it shows you the public and private file systems and the UnixFS compatibility layer.
+
+
+74
+00:11:40,640 --> 00:12:10,240
+I'll show you device linking. So this is the templates, which has a pre-configured
+
+
+75
+00:12:10,240 --> 00:12:18,000
+UI. You can use this to start immediately instead of using the SDK directly and implement
+
+
+76
+00:12:18,000 --> 00:12:26,640
+everything manually. That's it. That's the device link. Now our devices are linked, and
+
+
+77
+00:12:26,640 --> 00:12:41,960
+we can load the folders on our phone as well, if the connection is fast enough at least.
+
+
+78
+00:12:41,960 --> 00:12:57,480
+But yeah, that was it.

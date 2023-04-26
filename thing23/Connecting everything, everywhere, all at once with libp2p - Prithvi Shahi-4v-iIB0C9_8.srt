@@ -1,0 +1,1013 @@
+1
+00:00:00,000 --> 00:00:12,320
+Welcome everyone to connecting everything, everywhere, all at once with libp2p. As you
+
+
+2
+00:00:12,320 --> 00:00:18,000
+can see on this slide, I think we beat the record of most people involved in a single
+
+
+3
+00:00:18,000 --> 00:00:25,100
+talk. Was there any other? So I'm standing here, right? But this has really been a big
+
+
+4
+00:00:25,100 --> 00:00:32,400
+team effort, that's what I'm trying to say. Okay, cool. Before we talk about connecting
+
+
+5
+00:00:32,400 --> 00:00:39,080
+things, let's first talk about libp2p. I assume most people here are familiar with libp2p,
+
+
+6
+00:00:39,080 --> 00:00:43,680
+so I'll just walk through this really quickly. It's a peer-to-peer networking library. There's
+
+
+7
+00:00:43,680 --> 00:00:48,360
+one specification, and then that specification is written, implemented in many different
+
+
+8
+00:00:48,360 --> 00:00:56,640
+languages, like Go, JS, Rust, Nim, C++, Java, and so on. It implements a bunch of low-level
+
+
+9
+00:00:56,640 --> 00:01:04,000
+features like transport protocols, encryptions, authentication around transport protocols,
+
+
+10
+00:01:04,000 --> 00:01:08,480
+mechanisms like hole-punching, and then once we have this base layer, we can then build
+
+
+11
+00:01:08,480 --> 00:01:14,000
+higher-level protocols on top, like for example, AcademiaDHT or GossipSub, or protocols like
+
+
+12
+00:01:14,000 --> 00:01:21,800
+BitSwap. And the big wish, or the big statement, is all you need to build peer-to-peer applications.
+
+
+13
+00:01:21,800 --> 00:01:28,200
+Okay, when we talk about connectivity, what I usually do is I pull up this very colourful
+
+
+14
+00:01:28,200 --> 00:01:34,840
+table of protocols that you need to connect things, and then I got the feedback that this
+
+
+15
+00:01:34,840 --> 00:01:42,720
+is not very entertaining, so then I rewrote my slides. And what we're going to do instead
+
+
+16
+00:01:42,720 --> 00:01:46,280
+is we're going to talk about a movie, and then I'm going to be really sneaky and then
+
+
+17
+00:01:46,280 --> 00:01:53,800
+talk about Libidipi. Okay? So, Hugh here has watched the movie Everything Everywhere All
+
+
+18
+00:01:53,800 --> 00:02:02,920
+at Once, won a couple of Oscars and things like that. Okay. Cool. Okay. So, what I think
+
+
+19
+00:02:02,920 --> 00:02:10,280
+is that, well, what's the movie about? It's about a bunch of people travelling through
+
+
+20
+00:02:10,280 --> 00:02:15,480
+the universe, right? And what I think, what my suspicion is, is that they're actually
+
+
+21
+00:02:15,480 --> 00:02:25,080
+using Libidipi under the hood. And today I'm going to prove very thoroughly that they're
+
+
+22
+00:02:25,080 --> 00:02:34,560
+using Libidipi under the hood. Okay. So, how am I going to prove this? Well, I'm going
+
+
+23
+00:02:34,560 --> 00:02:40,800
+to showcase a small application called Libidipi Chat. There are not enough chat applications
+
+
+24
+00:02:40,800 --> 00:02:46,640
+out there yet, so we definitely need a new one. And it's this Libidipi Chat application,
+
+
+25
+00:02:46,640 --> 00:02:51,720
+a peer-to-peer chat application, and through this, we're going to demonstrate that in the
+
+
+26
+00:02:51,720 --> 00:02:56,680
+movie Everything Everywhere All at Once, they have actually been connecting everything,
+
+
+27
+00:02:56,680 --> 00:03:03,720
+which are browsers, non-browsers, phones, laptops, and so on, everywhere in public networks,
+
+
+28
+00:03:03,720 --> 00:03:11,160
+on public networks, all at once, using Libidipi. Cool. Folks ready for this? Now comes the
+
+
+29
+00:03:11,160 --> 00:03:19,680
+sneaky part, right? From now on, we just have grey slides. Okay. All right. So, we want
+
+
+30
+00:03:19,680 --> 00:03:24,760
+a chat application, right? And we want this to be distributed. So, the first thing that
+
+
+31
+00:03:24,760 --> 00:03:28,600
+we're going to do is we're going to spin up a Rust Libidipi server somewhere, right? It's
+
+
+32
+00:03:28,600 --> 00:03:35,000
+publicly reachable, easy scenario. And then, given that it's quite alone out there by itself,
+
+
+33
+00:03:35,000 --> 00:03:39,800
+we're going to also spawn another server, which is called Libidipi. They're talking
+
+
+34
+00:03:39,800 --> 00:03:44,520
+with each other, not very hard to connect to servers. They have full connectivity. You
+
+
+35
+00:03:44,520 --> 00:03:50,400
+have access to UDP and TCP sockets, so not a lot of trouble here. Okay. So, let's add
+
+
+36
+00:03:50,400 --> 00:03:57,640
+some complexity. And now, we actually want to chat with those two servers from my laptop
+
+
+37
+00:03:57,640 --> 00:04:03,880
+there. Okay? So, what we're going to do, use for that, is we're going to use QUIC to connect
+
+
+38
+00:04:03,880 --> 00:04:10,160
+from my laptop to one of those Rust Libidipi servers, to the Rust Libidipi server and later
+
+
+39
+00:04:10,160 --> 00:04:16,560
+on also to the Go server. QUIC in Libidipi has been there forever. Small caveat, it has
+
+
+40
+00:04:16,560 --> 00:04:21,200
+been there forever in Go Libidipi. We shipped it recently in Rust Libidipi, and there's
+
+
+41
+00:04:21,200 --> 00:04:27,000
+more work in the other implementations. And what it allows us to do is connect a non-browser
+
+
+42
+00:04:27,000 --> 00:04:31,840
+to a non-browser. Why am I saying non-browser? Well, anything where you have access to UDP
+
+
+43
+00:04:31,840 --> 00:04:38,840
+and TCP sockets. I'm happy to go into details about that later on. All right. So, obviously,
+
+
+44
+00:04:38,840 --> 00:04:46,040
+I'm going to demo all of this. So, what I have here is, yeah, my laptop. And then, I'm
+
+
+45
+00:04:46,040 --> 00:04:53,800
+going to start the Go node. And ha-ha, ta-da, the Rust peer actually sent us a message.
+
+
+46
+00:04:53,800 --> 00:05:01,120
+And what we can do here is send a message back. Right? Cool. That was my talk. Thank
+
+
+47
+00:05:01,120 --> 00:05:19,040
+you very much for coming. Yeah, thanks whoever is in the chat application already. Okay.
+
+
+48
+00:05:19,040 --> 00:05:26,080
+So we have been hacked, but it doesn't matter. We can move on. So now we have the laptop
+
+
+49
+00:05:26,080 --> 00:05:29,640
+connected to the Rust Libidipi node, right? And you're kind of like, this is not really
+
+
+50
+00:05:29,640 --> 00:05:35,440
+cool. Like, connecting a laptop to a server, great. I'll add a little bit more to this,
+
+
+51
+00:05:35,440 --> 00:05:41,880
+which is another laptop. And like this. And what we can do actually with QUIC and also
+
+
+52
+00:05:41,880 --> 00:05:47,360
+on TCP is connect two laptops with each other, right? Even though they're both behind NATs
+
+
+53
+00:05:47,360 --> 00:05:52,600
+and firewalls. So we can do a technique called hole punching to then interconnect the two.
+
+
+54
+00:05:52,600 --> 00:05:56,480
+And this I'm just not going to showcase today because we're focusing on other things, but
+
+
+55
+00:05:56,480 --> 00:06:02,920
+there are other talks previously, which we showcased this one. Okay. Cool. All right.
+
+
+56
+00:06:02,920 --> 00:06:09,640
+Now all of that complexity, let's introduce a very big one, namely a browser. And on that
+
+
+57
+00:06:09,640 --> 00:06:15,440
+browser we're going to run JS Libidipi. And now given that the talk is called connect
+
+
+58
+00:06:15,440 --> 00:06:21,640
+everything everywhere all at once, we actually want to connect this JS Libidipi node. Okay.
+
+
+59
+00:06:21,640 --> 00:06:28,320
+So what we're going to do first is connect the JS Libidipi node running in a browser
+
+
+60
+00:06:28,320 --> 00:06:35,440
+to the Rust Libidipi node. And we have one small problem. The Rust Libidipi node, we
+
+
+61
+00:06:35,440 --> 00:06:39,600
+have been lazy to set this up properly with a TLS certificate. So the Rust Libidipi node
+
+
+62
+00:06:39,600 --> 00:06:44,400
+doesn't have a proper domain and it doesn't have a signed certificate. So the browser
+
+
+63
+00:06:44,400 --> 00:06:48,680
+would usually never allow a connection to the Rust Libidipi node. It would always need
+
+
+64
+00:06:48,680 --> 00:06:53,080
+a signed certificate within the browser's trust chain. But what we can actually do with
+
+
+65
+00:06:53,080 --> 00:06:59,360
+the Libidipi WebRTC direct protocol that builds on top of the browser's WebRTC stack is connect
+
+
+66
+00:06:59,360 --> 00:07:04,440
+to this public server, this Rust Libidipi node, even though that Rust Libidipi doesn't
+
+
+67
+00:07:04,440 --> 00:07:10,640
+have a signed certificate. Now, in case you say like this is super insecure, like we built
+
+
+68
+00:07:10,640 --> 00:07:15,320
+encryption and authentication and so on on top of that, as like everything in Libidipi
+
+
+69
+00:07:15,320 --> 00:07:25,560
+is always encrypted and authenticated. Okay, cool. So let's do that. So for that, I have
+
+
+70
+00:07:25,560 --> 00:07:33,880
+this cool application here, the universal connectivity chat app. And hopefully, ta-da,
+
+
+71
+00:07:33,880 --> 00:07:41,040
+this is now running JSLibidipi in my browser. And what we can see here on this line, kind
+
+
+72
+00:07:41,040 --> 00:07:45,160
+of hard for everyone, but what it says there is WebRTC direct. So what we actually did
+
+
+73
+00:07:45,160 --> 00:07:50,360
+is this laptop was JSLibidipi connected to the Rust Libidipi server, even though that
+
+
+74
+00:07:50,360 --> 00:07:57,320
+server doesn't have a signed certificate or a certificate within the trust chain of the
+
+
+75
+00:07:57,320 --> 00:08:06,360
+browser. Okay, cool. Well, this is easy. I can then go to the chat, and then I should
+
+
+76
+00:08:06,360 --> 00:08:15,760
+probably do it like this. And then thank you, whoever this is. I can chat with this anonymous
+
+
+77
+00:08:15,760 --> 00:08:22,240
+person that is probably sitting somewhere over there. And I can say, hi, Go node, because
+
+
+78
+00:08:22,240 --> 00:08:30,200
+no one else knows the URL yet. And this should then, yeah, ta-da, show up also on my Go node.
+
+
+79
+00:08:30,200 --> 00:08:34,960
+So actually, as you can see, my JS node is somehow connected to the Go node earlier,
+
+
+80
+00:08:34,960 --> 00:08:42,840
+that's also running on my laptop. Okay, all right. So we have a WebRTC direct connection
+
+
+81
+00:08:42,840 --> 00:08:48,240
+now. Obviously, the arrow to the Go Libidipi node is missing over there. So let's do that
+
+
+82
+00:08:48,240 --> 00:08:54,080
+one as well. And for that, we can use the Shiny Web Transport Protocol, building on
+
+
+83
+00:08:54,080 --> 00:09:04,360
+the Shiny Web Transport Protocol from the JSLibidipi browser to the Go Libidipi node.
+
+
+84
+00:09:04,360 --> 00:09:11,080
+And again, Web Transport allows us to make a connection to a remote node, even though
+
+
+85
+00:09:11,080 --> 00:09:18,520
+that remote node is not within the trust chain of my browser. Okay, cool. So if I go back
+
+
+86
+00:09:18,520 --> 00:09:25,000
+to my chat application, I can actually see here that it already did that. It connected
+
+
+87
+00:09:25,000 --> 00:09:34,560
+to the Go node. What you can see here, I'll make this bigger. We connected over UDP, QUIC,
+
+
+88
+00:09:34,560 --> 00:09:43,800
+and Web Transport running on top of QUIC from my browser to the Go node out there. Okay,
+
+
+89
+00:09:43,800 --> 00:09:52,320
+cool. What are we going to do next? Now let's add even more complexity to this. And let's
+
+
+90
+00:09:52,320 --> 00:09:58,180
+add yet another node to this. And let's add yet another JS node to it. And this is again
+
+
+91
+00:09:58,180 --> 00:10:03,280
+running in the browser. And now you again are missing a link right between JSLibidipi
+
+
+92
+00:10:03,280 --> 00:10:07,920
+and JSLibidipi. Wouldn't it be cool if the two browsers could actually connect to each
+
+
+93
+00:10:07,920 --> 00:10:14,640
+other? All right. So for that, we have the Libidipi WebRTC protocol, again, building
+
+
+94
+00:10:14,640 --> 00:10:22,160
+on the browser's WebRTC stack. And this allows us to connect the two browsers with each other.
+
+
+95
+00:10:22,160 --> 00:10:31,380
+And in the idea case, even open between them. And I'm going to showcase this as well. Hopefully
+
+
+96
+00:10:31,380 --> 00:10:41,440
+in this case. So again, and then the node, it will connect to the Bootstrap node. To
+
+
+97
+00:10:41,440 --> 00:10:47,200
+both of them, actually. And eventually, it will also, ta-da, connect to the browser.
+
+
+98
+00:10:47,200 --> 00:10:57,240
+So the third connection. And now what I can do here is hello, browser. And that should
+
+
+99
+00:10:57,240 --> 00:11:08,260
+now show up in the chat. Cool. So we connected to two browsers. And at this point, we have
+
+
+100
+00:11:08,260 --> 00:11:14,520
+connected everything within our whole chat application across all the many nodes. Cool.
+
+
+101
+00:11:14,520 --> 00:11:18,960
+And now, given that no one has seen this chat application ever before and no one has ever
+
+
+102
+00:11:18,960 --> 00:11:26,180
+used it, you can now all use it. So grab your phones, your laptops, and so on. And you can
+
+
+103
+00:11:26,180 --> 00:11:31,960
+go to this URL or go directly not through the QR code and then actually use the new
+
+
+104
+00:11:31,960 --> 00:11:39,000
+best chat application ever. Right now, we don't small disclaimer, we have a tiny bug
+
+
+105
+00:11:39,000 --> 00:11:45,400
+on Firefox. So you'll have some trouble with Firefox. But if you use Chrome or if you use
+
+
+106
+00:11:45,400 --> 00:11:50,940
+Firefox in, I would say, a week, we'll actually have that resolved as well. Yeah. And now
+
+
+107
+00:11:50,940 --> 00:11:58,800
+you can use that as a chat application from now on throughout your entire life. Cool.
+
+
+108
+00:11:58,800 --> 00:12:06,460
+What is next? Well, as I mentioned, we have this small bug fix, right? In our Liberty
+
+
+109
+00:12:06,460 --> 00:12:15,520
+WebRTC stack for Firefox. We want to get WebRTC direct. So from a browser to a public server
+
+
+110
+00:12:15,520 --> 00:12:25,320
+node into GoLiberty. We want Firefox itself supports the web transport protocol. Every
+
+
+111
+00:12:25,320 --> 00:12:29,440
+browser out there can connect, actually, or the majority of browsers can connect to GoLiberty
+
+
+112
+00:12:29,440 --> 00:12:36,600
+nodes. Eventually, we want to add web transport support to RustLiberty, even though we still
+
+
+113
+00:12:36,600 --> 00:12:41,320
+have to work a lot on our quick stack in RustLiberty. So that's not happening anytime soon. And
+
+
+114
+00:12:41,320 --> 00:12:46,720
+then also eventually we want to have WebRTC browser to private. So to add even more complexity
+
+
+115
+00:12:46,720 --> 00:12:51,640
+to this huge matrix, we want to be able to connect from a browser to a GoLiberty node,
+
+
+116
+00:12:51,640 --> 00:12:57,480
+even though that GoLiberty node is behind a NAT or firewall. Cool. Then obviously we
+
+
+117
+00:12:57,480 --> 00:13:03,920
+want to add emoji support. Then after we shipped emoji support, we'll ship the feature on how
+
+
+118
+00:13:03,920 --> 00:13:11,720
+to travel through universes. And then lastly, we'll add ZigglypityP to this entire thing.
+
+
+119
+00:13:11,720 --> 00:13:18,420
+And then really have everything connected everywhere all the time. Cool. This work is
+
+
+120
+00:13:18,420 --> 00:13:24,840
+all in public, and we actually already have a next-door contributor contributing to this
+
+
+121
+00:13:24,840 --> 00:13:30,720
+universal connectivity app. So I'm very sure that this chat app is really taking off at
+
+
+122
+00:13:30,720 --> 00:13:36,720
+this point. And yeah, he actually joined multiple community calls at this point, and he ported
+
+
+123
+00:13:36,720 --> 00:13:44,760
+all his patches to our stack, which is wonderful. Where can you learn more? Well, you all have
+
+
+124
+00:13:44,760 --> 00:13:49,400
+this. You all scanned the QR code, right? So you have that. Then if you want to know
+
+
+125
+00:13:49,400 --> 00:13:56,880
+what you're actually running on your phone there, this is public on lib2p.universalconnectivity.
+
+
+126
+00:13:56,880 --> 00:14:02,720
+Then on connectivity.lib2p.io, you find all the details about all the different transports.
+
+
+127
+00:14:02,720 --> 00:14:10,200
+A lot nicer displayed than my earlier matrix in gray. And then lastly, all the protocols
+
+
+128
+00:14:10,200 --> 00:14:17,320
+that I talked about today are fully specified, and you find them on lib2p.specs. Cool. That's
+
+
+129
+00:14:17,320 --> 00:14:32,680
+all from my end. Thanks for joining, and yeah, happy chatting on the new chat app.
+
+
+130
+00:14:32,680 --> 00:14:40,120
+Happy to take questions. So Max, if I was an auditor, was there any
+
+
+131
+00:14:40,120 --> 00:14:47,360
+... Sorry, is there anything you were covering over in this demo or in the Universal Connectivity
+
+
+132
+00:14:47,360 --> 00:14:50,320
+app? Is there any magic that we're... Yeah, anything we're covering over, or is this all
+
+
+133
+00:14:50,320 --> 00:14:55,160
+legit? Ah, you don't trust this? I'm just poking
+
+
+134
+00:14:55,160 --> 00:15:03,840
+it. Okay. Yeah, so at this point, well, obviously we have smaller bugs, right, in the UI and
+
+
+135
+00:15:03,840 --> 00:15:08,680
+so on, around how this actually works. But at this point, you actually have pure Rust
+
+
+136
+00:15:08,680 --> 00:15:13,840
+lib2p, connecting to go lib2p and js-lib2p, all at least in master or released.
+
+
+137
+00:15:13,840 --> 00:15:20,280
+Cool. If I can ask one more, you've talked about web transport and webRTC. I guess, why
+
+
+138
+00:15:20,280 --> 00:15:24,080
+would I use one over the other, and are there any caveats?
+
+
+139
+00:15:24,080 --> 00:15:31,320
+So whenever you can, use web transport, because web transport builds on a lot newer QuickStack,
+
+
+140
+00:15:31,320 --> 00:15:35,520
+and thus gives you a lot more performance. Just, for example, connection establishment
+
+
+141
+00:15:35,520 --> 00:15:41,480
+way faster, or proper stream multiplexing and so on. But then, as a fallback, you can
+
+
+142
+00:15:41,480 --> 00:15:47,120
+use webRTC direct, which allows you the same capabilities, but on the older webRTC stack.
+
+
+143
+00:15:47,120 --> 00:15:52,120
+What browsers support web transport? Yeah, web transport, I think at this point,
+
+
+144
+00:15:52,120 --> 00:15:58,680
+Chrome or Chromium, and then Firefox and Nightly. Yeah.
+
+
+145
+00:15:58,680 --> 00:16:05,640
+Quick question about other transports, like BLE or other near-field connectivity. Can
+
+
+146
+00:16:05,640 --> 00:16:11,320
+you give us an update on where those are? I don't think we have had any updates on this,
+
+
+147
+00:16:11,320 --> 00:16:16,840
+in the sense that most focus has always been on the Internet Protocol stack. There's always
+
+
+148
+00:16:16,840 --> 00:16:21,920
+been community members popping up with Bluetooth and things like that, but I don't think we
+
+
+149
+00:16:21,920 --> 00:16:28,640
+have made any bigger progress on anything that is not running on IP within the larger
+
+
+150
+00:16:28,640 --> 00:16:36,600
+lippity implementations. I have a question.
+
+
+151
+00:16:36,600 --> 00:16:41,820
+I think it's on. Okay. I have a question around webRTC. I think
+
+
+152
+00:16:41,820 --> 00:16:48,960
+I remember seeing, reading, whatever, that signaling servers are sometimes involved with
+
+
+153
+00:16:48,960 --> 00:16:52,320
+webRTC connections. They're what, sorry?
+
+
+154
+00:16:52,320 --> 00:16:54,320
+Signaling servers. Yeah. They're needed?
+
+
+155
+00:16:54,320 --> 00:16:59,400
+Yes. So even in your case, you need some signaling service. So is there in this diagram, essentially,
+
+
+156
+00:16:59,400 --> 00:17:04,720
+is there something else, or does one of the P2P nodes do the signaling? How does that
+
+
+157
+00:17:04,720 --> 00:17:08,640
+part work? Yeah. Okay, cool. Let's dive into this. So
+
+
+158
+00:17:08,640 --> 00:17:15,720
+in the case of webRTC direct, we can actually get around without stun and turn. So we don't
+
+
+159
+00:17:15,720 --> 00:17:19,760
+need any signaling and we don't need stun. This is really cool, and this allows us to
+
+
+160
+00:17:19,760 --> 00:17:24,360
+establish a connection. Otherwise, you have a chicken and egg problem, right? Where's
+
+
+161
+00:17:24,360 --> 00:17:28,720
+your peer-to-peer part if you all depend on the same signaling server, right? And without
+
+
+162
+00:17:28,720 --> 00:17:31,920
+a signaling server, how do you establish the first peer-to-peer application, right?
+
+
+163
+00:17:31,920 --> 00:17:35,560
+But the cool thing about webRTC is that it actually allows us to make that very first
+
+
+164
+00:17:35,560 --> 00:17:40,920
+connection to a public node. And then from there, we can use this public node. We don't
+
+
+165
+00:17:40,920 --> 00:17:48,040
+need to use turn. We can instead use pure lib2p. Lib2p has a relay protocol. And instead
+
+
+166
+00:17:48,040 --> 00:17:52,720
+of using the official turn, we can use that relay protocol instead.
+
+
+167
+00:17:52,720 --> 00:17:58,960
+Now a small caveat. So signaling is peer-to-peer, but the webRTC browser stack still needs stun
+
+
+168
+00:17:58,960 --> 00:18:05,160
+servers, right? So right now, you could either provide your own stun server or use one of
+
+
+169
+00:18:05,160 --> 00:18:09,760
+the bigger ones out there. But the important part is that if the two of us want to connect
+
+
+170
+00:18:09,760 --> 00:18:14,920
+over webRTC, we don't need to use the same stun server. So you might just use any other
+
+
+171
+00:18:14,920 --> 00:18:18,320
+server. So it doesn't introduce any centralized infrastructure in that moment.
+
+
+172
+00:18:18,320 --> 00:18:26,440
+Okay. So essentially, you would have the signaling service, but effectively, they're not...
+
+
+173
+00:18:26,440 --> 00:18:31,400
+They can be any lib2p node out there. And actually, so for example, in the IPFS network,
+
+
+174
+00:18:31,400 --> 00:18:36,320
+we have every public node act as a limited relay server. This is not a problem for the
+
+
+175
+00:18:36,320 --> 00:18:39,760
+public IPFS nodes because it's very limited and very restricted in the sense of what you
+
+
+176
+00:18:39,760 --> 00:18:47,320
+can do. But this enables anyone not public to use those servers to transfer very small
+
+
+177
+00:18:47,320 --> 00:18:52,120
+signaling bytes, basically. And we can make use of that without, again, having centralized
+
+
+178
+00:18:52,120 --> 00:19:00,360
+infrastructure. All right. Cool.
+
+
+179
+00:19:00,360 --> 00:19:07,680
+If two browsers connect over web transport and they want to get a message... They connect
+
+
+180
+00:19:07,680 --> 00:19:12,840
+to a server over web transport and they want to get a message to each other, that would
+
+
+181
+00:19:12,840 --> 00:19:16,240
+presume that there's a relay going through the server?
+
+
+182
+00:19:16,240 --> 00:19:21,440
+Or you use a gossip protocol. Like in this demo, we're actually also using gossip sub,
+
+
+183
+00:19:21,440 --> 00:19:26,760
+which is a publish subscribe protocol. And in this case, they both connect to the rest
+
+
+184
+00:19:26,760 --> 00:19:30,600
+of the lib2p node. And this way, in case they don't have a direct connection to each other,
+
+
+185
+00:19:30,600 --> 00:19:34,560
+like in the case where WebRTC, for example, doesn't succeed, they can either make a relayed
+
+
+186
+00:19:34,560 --> 00:19:39,800
+connection or they can actually gossip the messages across. Does that make sense?
+
+
+187
+00:19:39,800 --> 00:19:40,800
+Okay. Thanks.
+
+
+188
+00:19:40,800 --> 00:19:53,560
+It adds a lot of complexity. Sorry.
+
+
+189
+00:19:53,560 --> 00:19:56,840
+So Max, you said gossip sub is used in this particular example. How is peer discovery
+
+
+190
+00:19:56,840 --> 00:19:57,840
+happening?
+
+
+191
+00:19:57,840 --> 00:20:25,000
+Peer discovery right now? Ah, okay. All right.
+
+
+192
+00:20:00,000 --> 00:20:01,000
+So this RustLibDB node is running the Kademlia protocol and as soon as one of them joins it, it will do a random walk, it's called, and will discover other peers. So for example, it will basically ask GoLibDB, hey, do you know anyone else out there? And in this case, it doesn't know anyone else. But in case the GoLibDB node here connects, the GoLibDB node will ask the RustLibDB node, hey, do you know anyone else out here? And the RustLibDB server will actually tell the GoLibDB laptop
+
+
+193
+00:20:30,000 --> 00:21:00,000
+that there's also a GoLibDB server. And this way, they slowly discover each other. And this is, for example, if you open the app, it will slowly more peers will actually pop up. And the more people here open the app in their browser, your browsers will actually discover the network and this way discover the other browsers and then try to do a WebRTC direct connection, right, do the hole punching, and in case that doesn't succeed, either relay or gossip the messages. Cool?
+
+
+194
+00:21:00,000 --> 00:21:01,000
+Okay.
+
+
+195
+00:21:07,000 --> 00:21:21,000
+This sounds fine for servers and desktop browsers, but it sounds very, like, heavy for mobile radio. Like, this sounds like it would just burn battery on mobile browsers.
+
+
+196
+00:21:21,000 --> 00:21:31,000
+So I don't think, like, if you build a larger application with this, I don't think you should connect to everyone within the network. I don't think that makes sense, neither from a server nor from a browser.
+
+
+197
+00:21:32,000 --> 00:21:47,000
+Within your protocols, you need to be somehow smart who to connect to. But, for example, in the case of GossipSub, you can kind of like delegate the further gossiping as a browser to a server node where the server node has more connections and can actually have your message travel through the network.
+
+
+198
+00:21:47,000 --> 00:22:04,000
+Okay. I mean, this is a common thing with P2P chat applications. There's a few of them where they're very bad for mobile experience because of the battery issue. So there's nothing here that would solve that magically, I guess. It's left as an exercise to the implementer.
+
+
+199
+00:22:04,000 --> 00:22:23,000
+I'm pretty sure this chat application is not yet ideal, and I don't think I have figured out the battery drain feature, but I would argue that you could figure this out with, like, being more advanced around, for example, gossiping to the first hop and then have that first hop gossip further. But, yeah, this is hard. This is a hard space.
+
+
+200
+00:22:23,000 --> 00:22:46,000
+Just a quick answer to that. You can think of Loop2P as just adding some flavoring around the connectivity to make it transport independent. It should work like any normal HTTP system. So think of your browser on mobile making a request. You can configure Loop2P applications to behave exactly the same way and that way not cause that battery drain issue.
+
+
+201
+00:22:46,000 --> 00:23:00,000
+I think this might be about, in, say, GossipSub, creating a lightweight client that then wouldn't maintain that many open connections or would only connect to a specific relay or things like that. And that's the way of tuning that particular problem.
+
+
+202
+00:23:00,000 --> 00:23:18,000
+I also think in mobile specifically is where BLE and other kind of near-field communication things will be super, super useful because there's a classic problem of you have a phone, you have your laptop, you don't have a Wi-Fi network, you want to move some information from your phone to your laptop.
+
+
+203
+00:23:18,000 --> 00:23:34,000
+And now these days, Apple and Google do this really, really well with their protocols, but peer-to-peer hasn't caught up to that and we need to close that gap. Then you would actually be able to do this really nice magic link wormhole moving your information.

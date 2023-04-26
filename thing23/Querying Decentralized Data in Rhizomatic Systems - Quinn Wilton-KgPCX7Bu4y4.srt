@@ -1,0 +1,2693 @@
+1
+00:00:00,000 --> 00:00:10,560
+Hi everyone. ARIA is a 1958 composition by John Cage. The work consists of 20 pages of
+
+
+2
+00:00:10,560 --> 00:00:16,880
+abstract lines, colors, and disjoint lyrics, spread across languages like Armenian, French,
+
+
+3
+00:00:16,880 --> 00:00:22,160
+and Russian. The notation is as absurd as it is subjective, and the result is a piece
+
+
+4
+00:00:22,160 --> 00:00:27,480
+of music which no two performers will ever interpret in the same way. Included with the
+
+
+5
+00:00:27,480 --> 00:00:32,080
+sheet music are these instructions, and for every aspect of the song they specify, they
+
+
+6
+00:00:32,080 --> 00:00:36,880
+intentionally leave just as many open and freely determined by the singer. With music
+
+
+7
+00:00:36,880 --> 00:00:41,920
+like this, Cage pioneered an approach that he called indeterminacy, which he defined
+
+
+8
+00:00:41,920 --> 00:00:46,720
+as the ability of a piece to be performed in substantially different ways. For him,
+
+
+9
+00:00:46,720 --> 00:00:50,160
+this often meant presenting the performer with the rules governing the creation of a
+
+
+10
+00:00:50,160 --> 00:00:56,000
+score, and then allowing the performer the freedom to execute those rules in a multiplicity-producing
+
+
+11
+00:00:56,000 --> 00:01:02,560
+act of creativity. This approach shows up again in 1958, with a piece titled Variations
+
+
+12
+00:01:02,560 --> 00:01:07,920
+1, dedicated to a fellow musician named David Tudor. This was the first of a series of works
+
+
+13
+00:01:07,920 --> 00:01:13,040
+centered around the use of transparent sheets. By overlaying these sheets together and interpreting
+
+
+14
+00:01:13,040 --> 00:01:17,960
+the result according to the provided rules, new variants of the same piece could be constructed
+
+
+15
+00:01:17,960 --> 00:01:23,320
+and performed by the musician. The space of possible music was still limited, though,
+
+
+16
+00:01:23,320 --> 00:01:27,000
+and a fixed number of valid configurations meant that only a relatively limited number
+
+
+17
+00:01:27,000 --> 00:01:34,760
+of performances was possible. Cage responded to this limitation in 1961, with Variations
+
+
+18
+00:01:34,760 --> 00:01:39,880
+2. This time the transparent sheets could be arranged in any manner whatsoever, with
+
+
+19
+00:01:39,880 --> 00:01:45,080
+the new set of rules generating an infinite number of possible realizations of the score.
+
+
+20
+00:01:45,080 --> 00:01:49,640
+James Pritchett wrote that Variations 2 was a piece of music in which any series of actions
+
+
+21
+00:01:49,640 --> 00:01:55,360
+in any order and combination whatsoever would lead to music. Cage's avant-garde approach
+
+
+22
+00:01:55,360 --> 00:02:01,160
+was wildly influential, and in 1959 Silvano Busotti composed five piano pieces for David
+
+
+23
+00:02:01,160 --> 00:02:08,480
+Tudor. Busotti was responding to a movement known as atonal serialism, a strict formalism
+
+
+24
+00:02:08,480 --> 00:02:14,080
+which severed musical elements from any continuous and meaningful context, instead seeking style
+
+
+25
+00:02:14,080 --> 00:02:20,440
+through mathematical purity. With Busotti's aserialism, he aimed to infuse the avant-garde
+
+
+26
+00:02:20,440 --> 00:02:26,080
+world with the intimacy and subjectivity which serialism had sought to avoid through impersonal
+
+
+27
+00:02:26,080 --> 00:02:32,800
+rationality. And David Tudor was the instrument he intended to use to do so. Rather than being
+
+
+28
+00:02:32,800 --> 00:02:37,480
+a dedication, the title of this piece referred to David Tudor as the instrument for which
+
+
+29
+00:02:37,480 --> 00:02:43,520
+the piece was composed. Tudor was a talented improviser, and through him Busotti hoped
+
+
+30
+00:02:43,520 --> 00:02:48,240
+to bring about a type of music characterized by the joint participation of performer and
+
+
+31
+00:02:48,240 --> 00:02:54,600
+composer in an effective inner subjective event. I'm Quinn, and I'm here to talk about
+
+
+32
+00:02:54,600 --> 00:02:58,720
+rhizomatic systems, decentralized data, and a local first database I've been working on
+
+
+33
+00:02:58,720 --> 00:03:03,560
+named Rhizome. I'm an applied researcher at Vision, where I've been experimenting with
+
+
+34
+00:03:03,560 --> 00:03:08,480
+new ways of building distributed systems. In my free time, I spend my nights tracing
+
+
+35
+00:03:08,480 --> 00:03:12,320
+through the history of programming languages, trying to piece together the contexts that
+
+
+36
+00:03:12,320 --> 00:03:16,320
+led to their development and how the ideas behind them have shifted and morphed over
+
+
+37
+00:03:16,320 --> 00:03:21,160
+time. I have a confession, though. In putting together this talk, I eventually realized
+
+
+38
+00:03:21,160 --> 00:03:26,320
+that I'd need to define rhizomatic. And I tried. I really did. I read so many books,
+
+
+39
+00:03:26,320 --> 00:03:30,840
+and I scoured so many papers looking for a clear and concise definition of the word.
+
+
+40
+00:03:30,840 --> 00:03:35,840
+And I don't know if one exists. Deleuze and Katari introduced the word rhizome in A Thousand
+
+
+41
+00:03:35,840 --> 00:03:40,720
+Plateaus. They don't define it either, though. They let its meaning unfold over the course
+
+
+42
+00:03:40,720 --> 00:03:46,960
+of almost 600 pages. That piano score by Busodi appears without explanation in the book. And
+
+
+43
+00:03:46,960 --> 00:03:51,400
+I think part of the reason why is the way it hybridizes two different mediums, painting
+
+
+44
+00:03:51,400 --> 00:03:56,040
+and music, into something that isn't quite described by either. So I'm going to try to
+
+
+45
+00:03:56,040 --> 00:04:00,040
+do the same thing with this talk. I'm going to discuss a lot of things, and most of them
+
+
+46
+00:04:00,040 --> 00:04:04,560
+are going to seem unrelated. But I hope that in their entirety, you'll begin to understand,
+
+
+47
+00:04:04,560 --> 00:04:09,320
+if only just a little bit, why I chose to name a local first database rhizome and what
+
+
+48
+00:04:09,320 --> 00:04:14,320
+we're hoping to accomplish with it. But first, I'd be remiss not to attempt to define the
+
+
+49
+00:04:14,320 --> 00:04:20,400
+word. And so I'll start with the best definition I've been able to find. The rhizome is a model
+
+
+50
+00:04:20,400 --> 00:04:25,700
+of thought that defies the very idea of a model. It is an endless, haphazard multiplicity
+
+
+51
+00:04:25,700 --> 00:04:30,720
+of connections, not dominated by a single center or place, but rather decentralized
+
+
+52
+00:04:30,720 --> 00:04:37,080
+in plural. It is thought characterized by a radical openness to an outside. In this
+
+
+53
+00:04:37,080 --> 00:04:42,480
+way, to be rhizomatic is to be non-hierarchical, to be dynamic, to eschew totalizing ideas
+
+
+54
+00:04:42,480 --> 00:04:48,840
+and schemas, and to fully embrace heterogeneous connection. It was connections that Vannevar
+
+
+55
+00:04:48,840 --> 00:04:54,520
+Bush was concerned about in 1945, when As We May Think was published. With World War
+
+
+56
+00:04:54,520 --> 00:04:58,960
+II coming to a close, and with it, his involvement with the Manhattan Project, Vannevar Bush
+
+
+57
+00:04:58,960 --> 00:05:03,440
+turned his attention toward knowledge itself. And in nine pages that must have rivaled the
+
+
+58
+00:05:03,440 --> 00:05:11,160
+science fiction of the time, he painted the soundtrack of a future that must have rivaled
+
+
+59
+00:05:11,160 --> 00:05:17,080
+the science fiction of the time. Wow, sorry. It was a future inhabited by voters that could
+
+
+60
+00:05:17,080 --> 00:05:22,040
+synthesize human speech, mechanical stenographers called vocoders that could transcribe it,
+
+
+61
+00:05:22,040 --> 00:05:27,240
+and cameras so tiny and so reliable that we'd begin chronicling everything. With so much
+
+
+62
+00:05:27,240 --> 00:05:32,200
+information available to us, though, Bush foresaw a problem. How could anyone ever sift
+
+
+63
+00:05:32,200 --> 00:05:37,960
+through such astronomical quantities of data? Existing solutions, like automated telephone
+
+
+64
+00:05:37,960 --> 00:05:43,120
+exchanges, selected records in an essentially hierarchical manner by traversing down a tree
+
+
+65
+00:05:43,120 --> 00:05:48,560
+of relays using the digits of a phone number. And I'm reminded of a letter sent by the Library
+
+
+66
+00:05:48,560 --> 00:05:56,600
+of Congress to one Dr. Norbert Wiener in 1949. My dear Dr. Wiener, it begins, the publication
+
+
+67
+00:05:56,600 --> 00:06:00,240
+of your book on cybernetics has caused the editorial staff, which is in charge of the
+
+
+68
+00:06:00,240 --> 00:06:06,240
+revision of the Dewey Decimal Classification, considerable difficulty. Generally speaking,
+
+
+69
+00:06:06,240 --> 00:06:10,680
+a book can only be assigned one number, and consequently we cannot take care of the many
+
+
+70
+00:06:10,680 --> 00:06:16,540
+aspects that certain works cover. The problem must be simplified. Is your book such as to
+
+
+71
+00:06:16,540 --> 00:06:21,440
+place it in psychology? Does it belong in the field of electronic computation devices?
+
+
+72
+00:06:21,440 --> 00:06:27,200
+Or does it belong in mathematics? If we were not somewhat desperate about this particular
+
+
+73
+00:06:27,200 --> 00:06:32,920
+problem, I should hesitate to bother you with it. As Vannevar Bush said four years earlier,
+
+
+74
+00:06:32,920 --> 00:06:37,440
+the human mind does not work that way. It operates by association. It jumps from one
+
+
+75
+00:06:37,440 --> 00:06:41,760
+item to another, following complex trails of connections between disparate ideas and
+
+
+76
+00:06:41,760 --> 00:06:46,920
+memories. If we were to augment our mind with machines, then, Bush thought we must mechanize
+
+
+77
+00:06:46,920 --> 00:06:52,760
+this process of following associative trails. And in his way, in his mind, the way to do
+
+
+78
+00:06:52,760 --> 00:06:57,880
+this was with something he called the memex. It's almost quaint the way it was illustrated
+
+
+79
+00:06:57,880 --> 00:07:03,000
+at the time. A desk filled with microfilm containing all the world's information, and
+
+
+80
+00:07:03,000 --> 00:07:07,720
+with mechanical levers meant for exploring the connections between it all. But I think
+
+
+81
+00:07:07,720 --> 00:07:12,240
+looking at the ads this visionary piece of writing was printed alongside gives some valuable
+
+
+82
+00:07:12,240 --> 00:07:17,960
+context. This was a world where men feared the touch of metal from their garters, where
+
+
+83
+00:07:17,960 --> 00:07:23,520
+Sir Walter Raleigh was no longer a fashion icon, where we had yet to discover a cure
+
+
+84
+00:07:23,520 --> 00:07:27,520
+for corns, and where people still thought you could make a business out of selling to-do
+
+
+85
+00:07:27,520 --> 00:07:32,360
+apps. Some of this vision came to pass, and it's impossible not to see the memex in
+
+
+86
+00:07:32,360 --> 00:07:38,200
+the Internet that we have today, but aspects of its design were lost along the way. First,
+
+
+87
+00:07:38,200 --> 00:07:43,000
+though, I want to talk about the opening sentence of As We May Think. This has not been a scientist's
+
+
+88
+00:07:43,000 --> 00:07:47,720
+war. It has been a war in which all have had a part. It's obvious that he's referencing
+
+
+89
+00:07:47,720 --> 00:07:53,520
+the atomic bomb here, but it's his allusion to the non-scientists that I find interesting.
+
+
+90
+00:07:53,520 --> 00:07:57,440
+He doesn't expand on this point, but my mind goes to the way the arts were repurposed towards
+
+
+91
+00:07:57,440 --> 00:08:01,960
+the war effort. On one hand, there's the Ghost Army, made up of people from professions like
+
+
+92
+00:08:01,960 --> 00:08:06,520
+acting, architecture, and law, and working in collaboration with Bell Labs to deceive
+
+
+93
+00:08:06,520 --> 00:08:11,800
+the Germans with the improvised soundscapes of mock battles played in the night. But artists
+
+
+94
+00:08:11,800 --> 00:08:16,280
+across the Allied homefront were also pulled onto a virtual battlefield, and one of those
+
+
+95
+00:08:16,280 --> 00:08:22,000
+was Frank Capra, the director behind some of the most recognizable films of the 1930s.
+
+
+96
+00:08:22,000 --> 00:08:26,640
+In 1941, after the attack on Pearl Harbor, Frank began working directly under the Chief
+
+
+97
+00:08:26,640 --> 00:08:30,960
+of Staff for the United States Army, and was tasked with producing propaganda films to
+
+
+98
+00:08:30,960 --> 00:08:36,080
+counter those being used by the Germans. What came out of that was Why We Fight, a series
+
+
+99
+00:08:36,080 --> 00:08:41,660
+of seven films dedicated to revealing the depths of evil incarnate in America's enemies.
+
+
+100
+00:08:41,660 --> 00:08:46,080
+How he did this is interesting, though. With no team behind him, he had very little resources
+
+
+101
+00:08:46,080 --> 00:08:50,680
+at his disposal to produce material of his own, and so he turned the propaganda of the
+
+
+102
+00:08:50,680 --> 00:08:55,760
+Germans against themselves. Acting in direct response to the horrifying Triumph of the
+
+
+103
+00:08:55,760 --> 00:09:02,280
+Will from 1935, Capra recontextualized its own footage into an attack on fascist ideology,
+
+
+104
+00:09:02,280 --> 00:09:07,040
+remixing films like it into something new entirely. So it's fitting that Capra's own
+
+
+105
+00:09:07,040 --> 00:09:12,880
+works went on to experience a similar fate. In 1937, His Lost Horizon was released. The
+
+
+106
+00:09:12,880 --> 00:09:18,280
+film was a financial failure, and critics panned it as an incoherent mess. This wasn't
+
+
+107
+00:09:18,280 --> 00:09:22,200
+Capra's fault, though, and the film had been heavily censored, with critical scenes
+
+
+108
+00:09:22,200 --> 00:09:27,520
+espousing pacifistic and utopian ideals being cut soon after release, and much of that footage
+
+
+109
+00:09:27,520 --> 00:09:33,400
+being lost, some thought forever. It wasn't until nearly 40 years later, in 1975, that
+
+
+110
+00:09:33,400 --> 00:09:38,320
+the film was restored, in a process that was described as doing a gigantic jigsaw puzzle,
+
+
+111
+00:09:38,320 --> 00:09:44,240
+whose pieces were scattered all over the world. This same piece opens with a bold statement,
+
+
+112
+00:09:44,240 --> 00:09:49,800
+if you think you've seen Lost Horizon, you probably haven't. Again, it's fascinating
+
+
+113
+00:09:49,800 --> 00:09:54,040
+to me the way something so new can emerge out of the shuffling and remixing of largely
+
+
+114
+00:09:54,040 --> 00:10:00,200
+what's already there. And Ted Nelson thought so, too. In 1981, in Literary Machines, he
+
+
+115
+00:10:00,200 --> 00:10:04,680
+wrote of the restoration process for Lost Horizon, using it as an example of what he
+
+
+116
+00:10:04,680 --> 00:10:09,680
+considered to be a non-sequential editing process. These paragraphs appear alongside
+
+
+117
+00:10:09,680 --> 00:10:14,720
+a description of zippered lists, a data structure he designed for storing alternative versions
+
+
+118
+00:10:14,720 --> 00:10:19,780
+of documents. The idea was to support the horizontal linking of varyingly ordered sequences
+
+
+119
+00:10:19,780 --> 00:10:24,680
+of items together, such that the connections inherent to most compositions could be made
+
+
+120
+00:10:24,680 --> 00:10:30,920
+explicit within their representations as data. Inspired by Vannevar Bush, these ideas grew
+
+
+121
+00:10:30,920 --> 00:10:35,240
+out of Ted Nelson's fascination with the problem of how to organize the world's information
+
+
+122
+00:10:35,240 --> 00:10:43,160
+into one giant repository, equally accessible to all, a network he called Xanadu. One important
+
+
+123
+00:10:43,160 --> 00:10:47,720
+feature of this vision was the ability to construct multiple pathways through media,
+
+
+124
+00:10:47,720 --> 00:10:51,960
+for readers of different backgrounds and with different needs, so as to facilitate a multiplicity
+
+
+125
+00:10:51,960 --> 00:10:57,760
+amplifying form of publishing and curation. This is an abstract notion, but I've come
+
+
+126
+00:10:57,760 --> 00:11:01,480
+across shadows of the sort of ideas that Ted may have had in mind, and one of my favorites
+
+
+127
+00:11:01,480 --> 00:11:06,560
+is Thomas Petracek's dissertation. His research was on a topic in programming language theory
+
+
+128
+00:11:06,560 --> 00:11:11,960
+called co-effects, concerned with making programming languages context-aware. The theory behind
+
+
+129
+00:11:11,960 --> 00:11:16,480
+his ideas is deeply mathematical, but he also experimented with the presentation of those
+
+
+130
+00:11:16,480 --> 00:11:21,040
+ideas. And in his dissertation, he includes an interactive tutorial that presents the
+
+
+131
+00:11:21,040 --> 00:11:25,800
+user with a number of pathways through his research. In one section, he briefly gives
+
+
+132
+00:11:25,800 --> 00:11:33,160
+an overview of a structure called a comonad, quickly moving past the details. But for readers
+
+
+133
+00:11:33,160 --> 00:11:37,840
+who love theory, the session is expanded, diving into the math required to fully understand
+
+
+134
+00:11:37,840 --> 00:11:42,840
+his application of the ideas and the foundations they build off of. The whole website follows
+
+
+135
+00:11:42,840 --> 00:11:46,240
+this design, and I think it's a brilliant way of demonstrating the type of plurality
+
+
+136
+00:11:46,240 --> 00:11:51,520
+that Ted Nelson was enthused by. The analogy still isn't perfect, though, because while
+
+
+137
+00:11:51,520 --> 00:11:56,280
+Thomas Petracek is making visible different perspectives over his own writing, it's still
+
+
+138
+00:11:56,280 --> 00:12:01,400
+just that, his own writing. And what Ted Nelson wanted was to enable the collaborative synthesis
+
+
+139
+00:12:01,400 --> 00:12:07,200
+of hypermedia, formed out of blocks from across the entire network, not just of writing, but
+
+
+140
+00:12:07,200 --> 00:12:11,880
+of every sort of media and knowledge that could be processed by a computer. To put a
+
+
+141
+00:12:11,880 --> 00:12:16,960
+modern spin on Paul Klee, hypertext is an idea that's gone for a walk, and sometimes
+
+
+142
+00:12:16,960 --> 00:12:23,920
+the best walks involve leaving your neighborhood. Here's a video of Xanadu in use. Really, this
+
+
+143
+00:12:23,920 --> 00:12:28,560
+is an early video, because it doesn't even show off the ability to link to links themselves,
+
+
+144
+00:12:28,560 --> 00:12:32,240
+which was an essential part of the entire endeavor that hasn't really carried through
+
+
+145
+00:12:32,240 --> 00:12:37,760
+to the web that we have today. I don't think this is Ted's fault, though, and the fact
+
+
+146
+00:12:37,760 --> 00:12:43,680
+that Xanadu has such a reputation for seeming so complicated makes sense to me. In one chapter
+
+
+147
+00:12:43,680 --> 00:12:48,240
+where he describes how to organize an interplanetary document store, he opens with a quote from
+
+
+148
+00:12:48,240 --> 00:12:52,760
+a Werner Herzog film. Our kingdom is already twice the size of Spain, and every day we
+
+
+149
+00:12:52,760 --> 00:12:57,760
+drift makes it bigger. This quote is good, but if literary machines had come out a year
+
+
+150
+00:12:57,760 --> 00:13:02,000
+later, I like to imagine that there's another quote he might have used to discuss the scope
+
+
+151
+00:13:02,000 --> 00:13:15,600
+of what it was that he was trying to do with Xanadu. And we have to become humble in front
+
+
+152
+00:13:15,600 --> 00:13:26,200
+of this overwhelming misery and overwhelming fornication, overwhelming growth, and overwhelming
+
+
+153
+00:13:26,200 --> 00:13:34,640
+lack of order. Even the stars up here in the sky look like a mess. There is no harmony
+
+
+154
+00:13:34,640 --> 00:13:40,120
+in the universe. We have to get acquainted to this idea that there is no real harmony
+
+
+155
+00:13:40,120 --> 00:13:47,600
+as we have conceived it. But when I say this, I say this all full of admiration for the
+
+
+156
+00:13:47,600 --> 00:13:54,120
+jungle. It is not that I hate it. I love it. I love it very much, but I love it against
+
+
+157
+00:13:54,120 --> 00:13:59,880
+my better judgment. This is really important, so I'm going to quote one part of that on
+
+
+158
+00:13:59,880 --> 00:14:04,920
+its own. There is no harmony in the universe. We have to get acquainted to this idea that
+
+
+159
+00:14:04,920 --> 00:14:10,800
+there is no real harmony as we have conceived it. This is a scary thought to a lot of people,
+
+
+160
+00:14:10,800 --> 00:14:14,680
+so I can understand why it sometimes feels like the entire history of computing has been
+
+
+161
+00:14:14,680 --> 00:14:19,320
+a history of trying to paint over this fact. But I think it is a fact, and I think our
+
+
+162
+00:14:19,320 --> 00:14:24,080
+tendency to force the world into strict categorizations and hierarchies is a rejection of this natural
+
+
+163
+00:14:24,080 --> 00:14:29,400
+disorder of things that serves to limit not only the resiliency of our systems, but also
+
+
+164
+00:14:29,400 --> 00:14:34,960
+what we're able to accomplish with them. In one of my favorite books of 2021, Shannon
+
+
+165
+00:14:34,960 --> 00:14:38,920
+Madden said that algorithms and interfaces tend to bracket out those messy and disorderly
+
+
+166
+00:14:38,920 --> 00:14:44,440
+concerns that simply do not compute. Christopher Mickeljohn makes a similar point, especially
+
+
+167
+00:14:44,440 --> 00:14:50,520
+as it relates to distributed systems. In 2018, he wrote that striving for distributed systems
+
+
+168
+00:14:50,520 --> 00:14:55,960
+that provide single-system image semantics is fundamentally flawed and at odds with how
+
+
+169
+00:14:55,960 --> 00:15:00,800
+systems operate in the physical world. Here, he's claiming that real-world systems are
+
+
+170
+00:15:00,800 --> 00:15:04,840
+fundamentally eventually consistent. They perpetuate themselves through the exchange
+
+
+171
+00:15:04,840 --> 00:15:09,800
+of information in the form of letters, telephone calls, and writing, and so they must be resilient
+
+
+172
+00:15:09,800 --> 00:15:14,200
+to that information being dropped, delayed, or reordered. To aim for a stronger sense
+
+
+173
+00:15:14,200 --> 00:15:20,180
+of consistency in distributed systems is to go against this nature. He proposes that rather
+
+
+174
+00:15:20,180 --> 00:15:25,280
+than targeting global consistency with some primary node, systems should instead be built
+
+
+175
+00:15:25,280 --> 00:15:30,600
+to treat the local knowledge recorded at each node as being an accurate reflection of that
+
+
+176
+00:15:30,600 --> 00:15:36,040
+node's view of the world. Here, it is that to do otherwise is inherently limiting, but
+
+
+177
+00:15:36,040 --> 00:15:39,760
+claims these designs are common because of the way they simplify the use of existing
+
+
+178
+00:15:39,760 --> 00:15:44,460
+tooling. He then goes on to briefly acknowledge the incompatibility between the designs he's
+
+
+179
+00:15:44,460 --> 00:15:50,480
+criticizing and the constraints of peer-to-peer networks and large-scale edge computation.
+
+
+180
+00:15:50,480 --> 00:15:54,600
+There rather than one globe-spanning network, we end up with a number of smaller, sometimes
+
+
+181
+00:15:54,600 --> 00:15:59,760
+overlapping networks, computing over different slices of the total set of data, with no guarantee
+
+
+182
+00:15:59,760 --> 00:16:05,400
+of ever achieving or even desiring system convergence. Conceptualizing of systems in
+
+
+183
+00:16:05,400 --> 00:16:10,200
+this way fundamentally changes the assumptions we can rely on in building them. Rather than
+
+
+184
+00:16:10,200 --> 00:16:15,260
+designing arborescent networks with static topologies routing through centralized services,
+
+
+185
+00:16:15,260 --> 00:16:20,680
+we end up with non-linear rhizomatic architectures, where nodes are born, form arbitrary connections
+
+
+186
+00:16:20,680 --> 00:16:24,840
+within the network as they live out their sometimes brief lives, and then die in often
+
+
+187
+00:16:24,840 --> 00:16:30,360
+unpredictable ways. An engineering force such a world means giving into the harmony of overwhelming
+
+
+188
+00:16:30,360 --> 00:16:35,520
+and collective murder. With enough engineering effort, our existing tools and techniques
+
+
+189
+00:16:35,520 --> 00:16:41,160
+may allow us to survive in such a world, but if we're to truly thrive and build anti-fragile
+
+
+190
+00:16:41,160 --> 00:16:46,120
+systems that take advantage of the untapped potential available to us, then we need new
+
+
+191
+00:16:46,120 --> 00:16:52,120
+ways of thinking about distributed and decentralized data. That's the idea behind disorderly programming,
+
+
+192
+00:16:52,120 --> 00:16:56,920
+a term that was coined by the team behind the Bloom programming language back in 2011.
+
+
+193
+00:16:56,920 --> 00:17:00,400
+Bloom was an experimental language meant to explore the use of a high-level declarative
+
+
+194
+00:17:00,400 --> 00:17:05,560
+programming language for building distributed systems. Under the hood, its semantics are
+
+
+195
+00:17:05,560 --> 00:17:09,020
+based on a deductive query language named Datalog that's historically been used for
+
+
+196
+00:17:09,020 --> 00:17:14,800
+reasoning about relational query languages. It essentially works by traversing the associations
+
+
+197
+00:17:14,800 --> 00:17:19,580
+that exist between different entities in order to solve for logic variables and answer queries
+
+
+198
+00:17:19,580 --> 00:17:24,720
+about the resulting trails. Bloom was named after Leopold Bloom from Joyce's Ulysses,
+
+
+199
+00:17:24,720 --> 00:17:28,480
+and I like to imagine the language as the personification of the memex, ambling through
+
+
+200
+00:17:28,480 --> 00:17:32,600
+Dublin and following a stream of consciousness flow of associations linking the memories
+
+
+201
+00:17:32,600 --> 00:17:38,640
+scattered throughout the city. But Bloom was preceded by an earlier language, named Daedalus.
+
+
+202
+00:17:38,640 --> 00:17:43,400
+Though also out of Ulysses, the name evokes the great maze builder of antiquity. In the
+
+
+203
+00:17:43,400 --> 00:17:48,880
+idea of the labyrinth, Penelope Daube writes that what you see depends on where you stand.
+
+
+204
+00:17:48,880 --> 00:17:53,320
+And thus at one and at the same time, labyrinths are single and double. They simultaneously
+
+
+205
+00:17:53,320 --> 00:17:58,560
+incorporate order and disorder, clarity and confusion, unity and multiplicity, artistry
+
+
+206
+00:17:58,560 --> 00:18:03,320
+and chaos. They are dynamic from a maze walker's perspective and static from a privileged onlooker's
+
+
+207
+00:18:03,320 --> 00:18:08,480
+point of view. In a distributed system, though, there is no privileged position. The maze
+
+
+208
+00:18:08,480 --> 00:18:14,000
+is always dynamic, always changing, and every node's perspective is one formed out of incomplete
+
+
+209
+00:18:14,000 --> 00:18:21,100
+and local information. But it's this indeterminacy that Datalog can cut right through. The big
+
+
+210
+00:18:21,100 --> 00:18:27,160
+insight that makes this possible is the Kahn principle, consistency as logical monotonicity.
+
+
+211
+00:18:27,160 --> 00:18:30,600
+The Kahn principle gives a correspondence between the family of eventually consistent
+
+
+212
+00:18:30,600 --> 00:18:37,720
+programs with coordination-free execution strategies and monotonic logic, Datalog. Informally,
+
+
+213
+00:18:37,720 --> 00:18:42,280
+not only is any program which can be expressed using a monotonic subset of Datalog guaranteed
+
+
+214
+00:18:42,280 --> 00:18:47,200
+to be eventually consistent in a distributed setting, but there also exists an embedding
+
+
+215
+00:18:47,200 --> 00:18:53,400
+of every eventually consistent program in monotonic Datalog. One simple correspondence
+
+
+216
+00:18:53,400 --> 00:18:58,680
+is able to capture the precise power and semantics of a distributed programming paradigm that
+
+
+217
+00:18:58,680 --> 00:19:03,440
+entirely avoids the use of distributed locks, consensus, and all of the other coordination
+
+
+218
+00:19:03,440 --> 00:19:09,680
+protocols we rely on. It's sort of like Cage's variations, too. By changing the rules, he
+
+
+219
+00:19:09,680 --> 00:19:15,580
+was able to devise a game that wasn't susceptible to order, time, or conflict, and instead always
+
+
+220
+00:19:15,580 --> 00:19:21,560
+allowing music to bloom. It's these ideas that Rhizome builds off of, to expose a query
+
+
+221
+00:19:21,560 --> 00:19:25,640
+language that supports eventually consistent views over disparate data structures, like
+
+
+222
+00:19:25,640 --> 00:19:31,480
+encrypted stores in IPFS. In Rhizome, data is persisted as four tuples, specifying an
+
+
+223
+00:19:31,480 --> 00:19:37,880
+entity, attribute, value, and some collection of causal links. These causal links denote
+
+
+224
+00:19:37,880 --> 00:19:42,880
+the provenance of data, and they reference other tuples using their SIDs. This is a little
+
+
+225
+00:19:42,880 --> 00:19:46,480
+hard to read like this, but because we use SIDs, these dependencies are guaranteed to
+
+
+226
+00:19:46,480 --> 00:19:50,760
+be acyclic, so we can visualise the database in a form we should be a little bit more familiar
+
+
+227
+00:19:50,760 --> 00:19:56,960
+with. A directed acyclic graph. Thanks to the com principle, by using a query language
+
+
+228
+00:19:56,960 --> 00:20:13,040
+inspired by Datalog, we can traverse this graph.
+
+
+229
+00:20:00,320 --> 00:20:00,640
+daddy ******* The industry iemand 3
+
+
+230
+00:20:00,640 --> 00:20:07,220
+plouse many, many mark. all my love has it I love circassia.
+
+
+231
+00:20:07,220 --> 00:20:28,640
+The 2003 drawing from the
+
+
+232
+00:20:28,640 --> 00:20:29,200
+patrimÿÿwagenusalemarrator360 implacamous quote on edge,
+
+
+233
+00:20:29,200 --> 00:20:34,300
+stores, each potentially containing horizontally linked
+
+
+234
+00:20:34,300 --> 00:20:38,140
+tuples containing or spanning multiple stores.
+
+
+235
+00:20:38,140 --> 00:20:40,360
+Due to the convergent nature of CRDTs,
+
+
+236
+00:20:40,360 --> 00:20:42,240
+this means that different readers may subscribe
+
+
+237
+00:20:42,240 --> 00:20:44,080
+to different writers, but in a way that
+
+
+238
+00:20:44,080 --> 00:20:47,640
+guarantees monotonic progress towards some result.
+
+
+239
+00:20:47,640 --> 00:20:49,120
+This is what enables us to provide
+
+
+240
+00:20:49,120 --> 00:20:51,640
+every device on the planet with its own database
+
+
+241
+00:20:51,640 --> 00:20:53,680
+and allowing those devices to collaborate
+
+
+242
+00:20:53,680 --> 00:20:56,160
+in locally meaningful ways.
+
+
+243
+00:20:56,160 --> 00:20:58,520
+In practice, I've been doing this by layering Rhizome
+
+
+244
+00:20:58,520 --> 00:21:01,080
+on top of Fission's web-native file system
+
+
+245
+00:21:01,080 --> 00:21:04,600
+and associating an append-only log of tuples with each device.
+
+
+246
+00:21:04,600 --> 00:21:07,080
+Soon, this will happen directly over mercolized tamps,
+
+
+247
+00:21:07,080 --> 00:21:08,520
+and an interesting research avenue
+
+
+248
+00:21:08,520 --> 00:21:10,600
+would also be to explore the use of Parali trees
+
+
+249
+00:21:10,600 --> 00:21:13,840
+for performing range queries over remote data.
+
+
+250
+00:21:13,840 --> 00:21:15,480
+I haven't implemented it yet, but we also
+
+
+251
+00:21:15,480 --> 00:21:18,160
+have a design for querying over encrypted data, where
+
+
+252
+00:21:18,160 --> 00:21:20,080
+certain readers may only have access
+
+
+253
+00:21:20,080 --> 00:21:22,200
+to certain other writers.
+
+
+254
+00:21:22,200 --> 00:21:25,080
+In this example, the reader doesn't have the decryption key
+
+
+255
+00:21:25,080 --> 00:21:26,480
+for the gray events, and so they're
+
+
+256
+00:21:26,480 --> 00:21:28,480
+unable to satisfy the causal links for any
+
+
+257
+00:21:28,480 --> 00:21:30,280
+of their downstream dependencies,
+
+
+258
+00:21:30,280 --> 00:21:33,640
+and so the resulting set only contains the letter D.
+
+
+259
+00:21:33,640 --> 00:21:35,480
+In a sense, we're treating encrypted data
+
+
+260
+00:21:35,480 --> 00:21:37,920
+as a special case of network partition.
+
+
+261
+00:21:37,920 --> 00:21:40,120
+Rather than some of the data being unreachable due
+
+
+262
+00:21:40,120 --> 00:21:43,080
+to network failure, it's unreachable as a side effect
+
+
+263
+00:21:43,080 --> 00:21:46,760
+of not having been granted the required decryption keys.
+
+
+264
+00:21:46,760 --> 00:21:48,760
+What makes this design special, though,
+
+
+265
+00:21:48,760 --> 00:21:52,320
+is the way the partition can be healed and convergence restored
+
+
+266
+00:21:52,320 --> 00:21:54,360
+if the required keys are ever shared
+
+
+267
+00:21:54,360 --> 00:21:57,120
+with the unprivileged reader.
+
+
+268
+00:21:57,120 --> 00:21:59,360
+There's other reasons a reader may prune the resulting
+
+
+269
+00:21:59,360 --> 00:22:01,160
+data, though, and in this case, they
+
+
+270
+00:22:01,160 --> 00:22:03,120
+may choose to revoke all the blue events
+
+
+271
+00:22:03,120 --> 00:22:05,720
+and end up with a CRTT, which is still
+
+
+272
+00:22:05,720 --> 00:22:08,960
+consistent with respect to all of the other events.
+
+
+273
+00:22:08,960 --> 00:22:10,800
+This is happening entirely at query time,
+
+
+274
+00:22:10,800 --> 00:22:13,060
+though, which means that different readers may impose
+
+
+275
+00:22:13,060 --> 00:22:15,520
+their own constraints over the data.
+
+
+276
+00:22:15,520 --> 00:22:16,920
+Perhaps I don't trust some writer,
+
+
+277
+00:22:16,920 --> 00:22:20,200
+and so I don't want to honor any rights that depend on his.
+
+
+278
+00:22:20,200 --> 00:22:22,360
+Or maybe I subscribe to a fact-checking service
+
+
+279
+00:22:22,360 --> 00:22:25,240
+that annotates news stories with a trustworthiness score
+
+
+280
+00:22:25,240 --> 00:22:27,040
+that I can use to dynamically filter out
+
+
+281
+00:22:27,040 --> 00:22:29,040
+non-reputable stories.
+
+
+282
+00:22:29,040 --> 00:22:31,680
+Or maybe I subscribe to a feed of crowdsourced content
+
+
+283
+00:22:31,680 --> 00:22:34,560
+warnings that I can filter and overlay onto the content
+
+
+284
+00:22:34,560 --> 00:22:36,080
+that I engage with.
+
+
+285
+00:22:36,080 --> 00:22:39,200
+By content addressing all of the data in the system,
+
+
+286
+00:22:39,200 --> 00:22:41,680
+we gain the ability to extend all of that data
+
+
+287
+00:22:41,680 --> 00:22:43,400
+in arbitrary ways.
+
+
+288
+00:22:43,400 --> 00:22:46,440
+Just as Ted Nelson supported attaching links to links,
+
+
+289
+00:22:46,440 --> 00:22:49,680
+we're able to associate facts with facts.
+
+
+290
+00:22:49,680 --> 00:22:51,360
+And with that comes the capability
+
+
+291
+00:22:51,360 --> 00:22:53,840
+of reshaping our understanding of that data
+
+
+292
+00:22:53,840 --> 00:22:57,040
+in very metacircular ways.
+
+
+293
+00:22:57,040 --> 00:22:59,520
+This goes so far as allowing for a total reinterpretation
+
+
+294
+00:22:59,520 --> 00:23:00,480
+of that data.
+
+
+295
+00:23:00,480 --> 00:23:02,080
+In the simplest case, this set can
+
+
+296
+00:23:02,080 --> 00:23:05,020
+be reinterpreted as a counter by viewing additions and removals
+
+
+297
+00:23:05,020 --> 00:23:07,240
+as increments and decrements.
+
+
+298
+00:23:07,240 --> 00:23:10,480
+In this way, agents can repurpose pieces of a graph
+
+
+299
+00:23:10,480 --> 00:23:13,280
+as different types of data, even annotating
+
+
+300
+00:23:13,280 --> 00:23:17,040
+that data with additional fields or metadata for their needs.
+
+
+301
+00:23:17,040 --> 00:23:18,840
+In the case of a collaborative text editor,
+
+
+302
+00:23:18,840 --> 00:23:21,920
+that might mean prioritizing your own rights
+
+
+303
+00:23:21,920 --> 00:23:25,200
+over another user's while still managing conflicts
+
+
+304
+00:23:25,200 --> 00:23:27,760
+and allowing them to do the same.
+
+
+305
+00:23:27,760 --> 00:23:30,240
+As in the case of Busati's composition,
+
+
+306
+00:23:30,240 --> 00:23:32,920
+the interpretation of the data depends just as much
+
+
+307
+00:23:32,920 --> 00:23:36,480
+on the reader as it does the agent who wrote it.
+
+
+308
+00:23:36,480 --> 00:23:38,020
+This is only an idea we're beginning
+
+
+309
+00:23:38,020 --> 00:23:39,800
+to explore now in software.
+
+
+310
+00:23:39,800 --> 00:23:42,200
+With the sorts of bring your own algorithm approaches
+
+
+311
+00:23:42,200 --> 00:23:44,920
+that protocols like Blue Sky are experimenting with.
+
+
+312
+00:23:44,920 --> 00:23:47,360
+But I think it's one of the most exciting possibilities
+
+
+313
+00:23:47,360 --> 00:23:49,840
+available to us in terms of shifting agency back
+
+
+314
+00:23:49,840 --> 00:23:52,240
+into the hands of the people that we're building software
+
+
+315
+00:23:52,240 --> 00:23:53,040
+for.
+
+
+316
+00:23:53,040 --> 00:23:54,920
+And autonomy is one of the driving motivators
+
+
+317
+00:23:54,920 --> 00:23:57,760
+behind Local First Software, a paradigm that was coined
+
+
+318
+00:23:57,760 --> 00:24:00,320
+by Incan Switch in 2019.
+
+
+319
+00:24:00,320 --> 00:24:01,920
+It defines a set of guiding principles
+
+
+320
+00:24:01,920 --> 00:24:04,400
+for building software that prioritize user privacy,
+
+
+321
+00:24:04,400 --> 00:24:06,760
+security, and agency.
+
+
+322
+00:24:06,760 --> 00:24:08,520
+The vision of Local First Software
+
+
+323
+00:24:08,520 --> 00:24:10,840
+is of a world that empowers people to take back
+
+
+324
+00:24:10,840 --> 00:24:13,120
+ownership of their data, freeing it
+
+
+325
+00:24:13,120 --> 00:24:16,200
+from the tyranny of the cloud and of the centralized services
+
+
+326
+00:24:16,200 --> 00:24:17,920
+that comprise it.
+
+
+327
+00:24:17,920 --> 00:24:20,240
+In Local First Software, a user's device
+
+
+328
+00:24:20,240 --> 00:24:22,600
+is the central source of truth, with data all
+
+
+329
+00:24:22,600 --> 00:24:24,720
+being stored locally and with a hard dependency
+
+
+330
+00:24:24,720 --> 00:24:27,040
+on the network being severed.
+
+
+331
+00:24:27,040 --> 00:24:30,000
+Instead, Local First Software embraces eventual consistency
+
+
+332
+00:24:30,000 --> 00:24:33,120
+and emits use of techniques like conflict-free data types
+
+
+333
+00:24:33,120 --> 00:24:36,440
+to synchronize data between devices.
+
+
+334
+00:24:36,440 --> 00:24:38,960
+It's exactly this niche that Rhizome is being built for.
+
+
+335
+00:24:38,960 --> 00:24:40,640
+And we currently have a working prototype
+
+
+336
+00:24:40,640 --> 00:24:43,200
+implemented in Rust that compiles down to WebAssembly
+
+
+337
+00:24:43,200 --> 00:24:45,320
+to run it in a browser or to native code
+
+
+338
+00:24:45,320 --> 00:24:47,520
+for back-end and desktop deployments.
+
+
+339
+00:24:47,520 --> 00:24:49,760
+It's still a work in progress, but we open-sourced
+
+
+340
+00:24:49,760 --> 00:24:51,560
+the repository just a few days ago,
+
+
+341
+00:24:51,560 --> 00:24:53,360
+and my immediate focus is going to be
+
+
+342
+00:24:53,360 --> 00:24:56,480
+on making that early version more usable to anyone else.
+
+
+343
+00:24:56,480 --> 00:24:58,140
+That means adding some docs, examples,
+
+
+344
+00:24:58,140 --> 00:25:01,440
+and opening the door for community contributions.
+
+
+345
+00:25:01,440 --> 00:25:04,040
+After that, the roadmap includes querying over encrypted data,
+
+
+346
+00:25:04,040 --> 00:25:06,200
+building out a standard library of CRDTs,
+
+
+347
+00:25:06,200 --> 00:25:08,320
+and integrating with some common front-end frameworks
+
+
+348
+00:25:08,320 --> 00:25:09,840
+like React.
+
+
+349
+00:25:09,840 --> 00:25:11,240
+I also have some early prototypes
+
+
+350
+00:25:11,240 --> 00:25:13,120
+that demonstrate automatic incremental view
+
+
+351
+00:25:13,120 --> 00:25:15,760
+maintenance for efficiently querying over dynamic streams
+
+
+352
+00:25:15,760 --> 00:25:16,880
+of data.
+
+
+353
+00:25:16,880 --> 00:25:18,600
+If any of this sounds like something
+
+
+354
+00:25:18,600 --> 00:25:20,420
+that you're interested in helping out with,
+
+
+355
+00:25:20,420 --> 00:25:22,240
+please come and find me later.
+
+
+356
+00:25:22,240 --> 00:25:24,580
+I didn't just come up here to talk about Rhizome, though,
+
+
+357
+00:25:24,580 --> 00:25:26,480
+because I think that the ideas we're pursuing
+
+
+358
+00:25:26,480 --> 00:25:28,800
+go beyond Local First Software and permeate
+
+
+359
+00:25:28,800 --> 00:25:31,040
+into how we should be thinking about decentralized
+
+
+360
+00:25:31,040 --> 00:25:33,120
+and distributed systems.
+
+
+361
+00:25:33,120 --> 00:25:35,840
+In 2002, David Weinberger wrote that the internet
+
+
+362
+00:25:35,840 --> 00:25:38,760
+forms the only persistent world that accumulates
+
+
+363
+00:25:38,760 --> 00:25:40,800
+value with every interaction.
+
+
+364
+00:25:40,800 --> 00:25:42,880
+He described it as a world that we build simply
+
+
+365
+00:25:42,880 --> 00:25:44,800
+by using it, where what is of worth
+
+
+366
+00:25:44,800 --> 00:25:48,720
+stays and adds to the web's overall worth.
+
+
+367
+00:25:48,720 --> 00:25:50,400
+I think that may have been true once.
+
+
+368
+00:25:50,400 --> 00:25:52,960
+And I sometimes see traces of that early idealism
+
+
+369
+00:25:52,960 --> 00:25:55,880
+showing through the cracks of what we have today.
+
+
+370
+00:25:55,880 --> 00:25:57,500
+But when I look around now, I see
+
+
+371
+00:25:57,500 --> 00:26:00,600
+a web that's largely one of decay, disempowerment,
+
+
+372
+00:26:00,600 --> 00:26:03,920
+and fragility, where something as profoundly
+
+
+373
+00:26:03,920 --> 00:26:06,440
+simple as a hyperlink can't be relied upon to work
+
+
+374
+00:26:06,440 --> 00:26:09,640
+for longer than a few weeks, where
+
+
+375
+00:26:09,640 --> 00:26:12,960
+whether we're allowed the dignity of 80 characters or 4,000
+
+
+376
+00:26:12,960 --> 00:26:14,560
+is at the discretion of a billionaire
+
+
+377
+00:26:14,560 --> 00:26:17,840
+that we'll never meet, and where our access
+
+
+378
+00:26:17,840 --> 00:26:19,800
+to critical information is gatekept
+
+
+379
+00:26:19,800 --> 00:26:22,600
+behind APIs that can be pulled out from under us
+
+
+380
+00:26:22,600 --> 00:26:25,720
+without warning.
+
+
+381
+00:26:25,720 --> 00:26:29,600
+But when I say this, I say this full of admiration for the web.
+
+
+382
+00:26:29,600 --> 00:26:30,560
+It's not that I hate it.
+
+
+383
+00:26:30,560 --> 00:26:32,280
+I love it very much.
+
+
+384
+00:26:32,280 --> 00:26:34,640
+But I love it against my better judgment,
+
+
+385
+00:26:34,640 --> 00:26:38,440
+because I know just how much richer it can be if only it's
+
+
+386
+00:26:38,440 --> 00:26:40,520
+able to fully respect and embrace
+
+
+387
+00:26:40,520 --> 00:26:43,840
+the collective intelligence of the people it purports to serve
+
+
+388
+00:26:43,840 --> 00:26:47,280
+by trusting in the stigmergic capabilities of those people
+
+
+389
+00:26:47,280 --> 00:26:50,600
+to bring about a spontaneous network beyond anything anyone
+
+
+390
+00:26:50,600 --> 00:26:53,160
+could ever design for themselves.
+
+
+391
+00:26:53,160 --> 00:26:56,400
+Busotti's music wasn't merely a response to serialism,
+
+
+392
+00:26:56,400 --> 00:26:59,440
+but also to a world that oppressed his homosexuality
+
+
+393
+00:26:59,440 --> 00:27:02,560
+in the same decade that it killed Alan Turing for his.
+
+
+394
+00:27:02,560 --> 00:27:04,520
+And Paul Klee's artwork wasn't simply
+
+
+395
+00:27:04,520 --> 00:27:06,480
+an exploration in surrealism.
+
+
+396
+00:27:06,480 --> 00:27:08,640
+It was also an anti-fascist critique of a world
+
+
+397
+00:27:08,640 --> 00:27:10,720
+that he knew could be better.
+
+
+398
+00:27:10,720 --> 00:27:13,080
+I'm not saying that Rhizome solves all the web's problems,
+
+
+399
+00:27:13,080 --> 00:27:15,120
+but I think it chips away at some of them.
+
+
+400
+00:27:15,120 --> 00:27:17,240
+And I think that all of us here in this room
+
+
+401
+00:27:17,240 --> 00:27:20,400
+are uniquely positioned to chip away at some of the others,
+
+
+402
+00:27:20,400 --> 00:27:23,040
+doing our part to reshape the web into a world
+
+
+403
+00:27:23,040 --> 00:27:25,920
+that we're proud to inhabit as our own.
+
+
+404
+00:27:25,920 --> 00:27:28,160
+I'm Quinn, and I'm looking forward to meeting you all
+
+
+405
+00:27:28,160 --> 00:27:29,280
+throughout the week.
+
+
+406
+00:27:29,280 --> 00:27:32,720
+You really blew my mind saying that unencryptable nodes are
+
+
+407
+00:27:32,720 --> 00:27:35,160
+just like a form of things that have been filtered out
+
+
+408
+00:27:35,160 --> 00:27:39,040
+by the subjective decision of the reader.
+
+
+409
+00:27:39,040 --> 00:27:40,480
+I mean, that's just one of them.
+
+
+410
+00:27:40,480 --> 00:27:44,280
+I guess, what APIs, how does that feel to a developer?
+
+
+411
+00:27:44,280 --> 00:27:47,200
+How would you imagine that being easy and cheap
+
+
+412
+00:27:47,200 --> 00:27:48,640
+than being easy to do?
+
+
+413
+00:27:48,640 --> 00:27:52,640
+So I think it's actually fully transparent to them.
+
+
+414
+00:27:52,640 --> 00:27:54,880
+As it currently is when we build distributed systems,
+
+
+415
+00:27:54,880 --> 00:27:57,720
+network partitions are just a fact
+
+
+416
+00:27:57,720 --> 00:27:59,040
+that we need to deal with.
+
+
+417
+00:27:59,040 --> 00:28:03,320
+And those essentially correspond to loss in connectivity
+
+
+418
+00:28:03,320 --> 00:28:04,400
+and time.
+
+
+419
+00:28:04,400 --> 00:28:07,360
+And when we're dealing with loss of the required encryption
+
+
+420
+00:28:07,360 --> 00:28:10,080
+key stats as a piece of data, if you never
+
+
+421
+00:28:10,080 --> 00:28:11,640
+receive that encryption key, that's
+
+
+422
+00:28:11,640 --> 00:28:14,120
+kind of like a network partition that never ends.
+
+
+423
+00:28:14,120 --> 00:28:16,480
+So you're really just building for a case
+
+
+424
+00:28:16,480 --> 00:28:18,720
+that you already needed to support,
+
+
+425
+00:28:18,720 --> 00:28:20,800
+but now you're able to reconceptualize it
+
+
+426
+00:28:20,800 --> 00:28:24,840
+in a way that also relates to user privacy and security.
+
+
+427
+00:28:24,840 --> 00:28:26,200
+Does that answer your question?
+
+
+428
+00:28:26,200 --> 00:28:27,800
+Well, I guess the rest of the question
+
+
+429
+00:28:27,800 --> 00:28:31,880
+was, say I wanted to filter for only videos on.
+
+
+430
+00:28:31,880 --> 00:28:34,520
+I see.
+
+
+431
+00:28:34,520 --> 00:28:37,800
+I see.
+
+
+432
+00:28:37,800 --> 00:28:40,800
+Is your question more about what that looks like as a developer
+
+
+433
+00:28:40,800 --> 00:28:43,200
+or what it looks like as users using
+
+
+434
+00:28:43,200 --> 00:28:45,400
+all these different remixed versions of these apps?
+
+
+435
+00:28:45,400 --> 00:28:49,880
+Is subsetting so powerful that I might use it as a normal thing
+
+
+436
+00:28:49,880 --> 00:28:52,400
+apps do to take advantage of it?
+
+
+437
+00:28:52,400 --> 00:28:53,400
+I see.
+
+
+438
+00:28:53,400 --> 00:28:55,720
+Honestly, I think so.
+
+
+439
+00:28:55,720 --> 00:28:58,200
+Kind of the way that I imagine apps
+
+
+440
+00:28:58,200 --> 00:28:59,960
+built using systems like these working
+
+
+441
+00:28:59,960 --> 00:29:04,680
+is that rather than having these big monolithic apps put out
+
+
+442
+00:29:04,680 --> 00:29:07,800
+by places like Spotify, for example,
+
+
+443
+00:29:07,800 --> 00:29:10,600
+we have smaller libraries and frameworks and so on that
+
+
+444
+00:29:10,600 --> 00:29:12,840
+are allowing us to engage with different types of media
+
+
+445
+00:29:12,840 --> 00:29:15,320
+that we store and systems that we care about
+
+
+446
+00:29:15,320 --> 00:29:18,480
+and perform in common operations over those.
+
+
+447
+00:29:18,480 --> 00:29:21,480
+And what that means is that I kind of
+
+
+448
+00:29:21,480 --> 00:29:23,280
+think that we're going to eventually end up
+
+
+449
+00:29:23,280 --> 00:29:25,280
+in this world where people are kind of building
+
+
+450
+00:29:25,280 --> 00:29:29,040
+the exact apps that they need for what they need them for.
+
+
+451
+00:29:29,040 --> 00:29:32,160
+This is sort of something we see nowadays anyway.
+
+
+452
+00:29:32,160 --> 00:29:36,320
+As developers, we try to build for these really simple,
+
+
+453
+00:29:36,320 --> 00:29:39,200
+statically specified systems that don't really
+
+
+454
+00:29:39,200 --> 00:29:40,760
+align with anyone's needs.
+
+
+455
+00:29:40,760 --> 00:29:43,480
+And then what ends up happening is all of the users
+
+
+456
+00:29:43,480 --> 00:29:45,240
+that we're building the software for end up
+
+
+457
+00:29:45,240 --> 00:29:47,760
+layering on batch scripts and Excel spreadsheets
+
+
+458
+00:29:47,760 --> 00:29:52,240
+and all this junk to try to massage what we're doing that
+
+
+459
+00:29:52,240 --> 00:29:54,240
+doesn't actually serve their needs.
+
+
+460
+00:29:54,240 --> 00:29:56,760
+And so I just kind of think that we need to cut that step out
+
+
+461
+00:29:56,760 --> 00:29:59,200
+and make it possible for all of us
+
+
+462
+00:29:59,200 --> 00:30:01,560
+to work together and kind of define
+
+
+463
+00:30:01,560 --> 00:30:05,040
+what it is that we need from these tools directly.
+
+
+464
+00:30:05,040 --> 00:30:06,640
+One of the problems that you end up
+
+
+465
+00:30:06,640 --> 00:30:09,320
+needing to deal with in this sort of world
+
+
+466
+00:30:09,320 --> 00:30:12,160
+where you don't have static schemas that are being specified
+
+
+467
+00:30:12,160 --> 00:30:17,280
+and shared like what you see in RDF and more solid style spaces
+
+
+468
+00:30:17,280 --> 00:30:19,360
+is something that in some fields you
+
+
+469
+00:30:19,360 --> 00:30:22,600
+see called an ontological crisis, where you have
+
+
+470
+00:30:22,600 --> 00:30:25,160
+these different ontologies that don't necessarily
+
+
+471
+00:30:25,160 --> 00:30:26,040
+align with each other.
+
+
+472
+00:30:26,040 --> 00:30:28,200
+And you need to map values between them.
+
+
+473
+00:30:28,200 --> 00:30:30,360
+And InkinSwitch has another project
+
+
+474
+00:30:30,360 --> 00:30:33,000
+that I'm really excited about called Project Cambria.
+
+
+475
+00:30:33,000 --> 00:30:35,000
+It was more of a proof of concept
+
+
+476
+00:30:35,000 --> 00:30:37,680
+in the JavaScript world for defining schema translations
+
+
+477
+00:30:37,680 --> 00:30:41,560
+between different JSON documents and then automatically
+
+
+478
+00:30:41,560 --> 00:30:43,640
+generating bidirectional lenses between them
+
+
+479
+00:30:43,640 --> 00:30:46,120
+so that you can go from a document of type A
+
+
+480
+00:30:46,120 --> 00:30:48,840
+to a document of type Z by finding
+
+
+481
+00:30:48,840 --> 00:30:51,160
+a path of translators between different schemas
+
+
+482
+00:30:51,160 --> 00:30:53,080
+in this graph of schemas.
+
+
+483
+00:30:53,080 --> 00:30:55,660
+But what you were saying about pushing the predicates
+
+
+484
+00:30:55,660 --> 00:30:57,120
+into the B tree I think is something
+
+
+485
+00:30:57,120 --> 00:30:58,960
+that's super interesting, especially where
+
+
+486
+00:30:58,960 --> 00:31:01,960
+content addressing is concerned.
+
+
+487
+00:31:01,960 --> 00:31:03,760
+I see my colleague Bjerke at the back,
+
+
+488
+00:31:03,760 --> 00:31:05,000
+and Zeeshan's over there too.
+
+
+489
+00:31:05,000 --> 00:31:07,200
+They're going to be talking a bit about IPVM tomorrow,
+
+
+490
+00:31:07,200 --> 00:31:08,200
+I believe.
+
+
+491
+00:31:08,200 --> 00:31:11,080
+And something that I'm really excited to explore
+
+
+492
+00:31:11,080 --> 00:31:15,160
+is the idea of building almost like a virtual machine
+
+
+493
+00:31:15,160 --> 00:31:17,560
+for bidirectional lenses that gets compiled down
+
+
+494
+00:31:17,560 --> 00:31:19,880
+to WebAssembly, but that you can then
+
+
+495
+00:31:19,880 --> 00:31:22,960
+invoke from this datalog-inspired language
+
+
+496
+00:31:22,960 --> 00:31:25,880
+to essentially solve for those paths, those schema translators
+
+
+497
+00:31:25,880 --> 00:31:28,160
+and then apply them to the data that you're processing
+
+
+498
+00:31:28,160 --> 00:31:29,720
+and pulling down from IPFS.
+
+
+499
+00:31:29,720 --> 00:31:31,720
+I want to be clear, none of this is built yet.
+
+
+500
+00:31:31,720 --> 00:31:34,960
+It's mostly just like scaffolding and designs
+
+
+501
+00:31:34,960 --> 00:31:38,360
+that we have on pieces of paper scattered all over the place.
+
+
+502
+00:31:38,360 --> 00:31:40,480
+But in theory, it all works.
+
+
+503
+00:31:44,240 --> 00:31:47,800
+I want to zoom out a little bit again.
+
+
+504
+00:31:47,800 --> 00:31:50,560
+I wrote down a summary.
+
+
+505
+00:31:50,560 --> 00:31:53,400
+I thought what I would be the gist of your talk.
+
+
+506
+00:31:53,400 --> 00:31:56,520
+So I'm going to try to, and then you can maybe comment on it.
+
+
+507
+00:31:56,520 --> 00:31:57,080
+Sure.
+
+
+508
+00:31:57,080 --> 00:32:00,040
+So in general, today we're talking here
+
+
+509
+00:32:00,040 --> 00:32:02,760
+about how to build distributed systems.
+
+
+510
+00:32:02,760 --> 00:32:05,560
+And we really want to make sure that people can,
+
+
+511
+00:32:05,560 --> 00:32:08,520
+and we and people can trust these systems.
+
+
+512
+00:32:08,520 --> 00:32:10,560
+But you're arguing that the end result will
+
+
+513
+00:32:10,560 --> 00:32:14,840
+be chaos and disharmony, however hard we try.
+
+
+514
+00:32:14,840 --> 00:32:19,600
+Or none person can ever understand anything.
+
+
+515
+00:32:19,600 --> 00:32:21,000
+To an extent.
+
+
+516
+00:32:21,000 --> 00:32:22,760
+To an extent.
+
+
+517
+00:32:22,760 --> 00:32:24,640
+There's different, OK, go ahead.
+
+
+518
+00:32:24,640 --> 00:32:27,840
+But what makes us human is that we always
+
+
+519
+00:32:27,840 --> 00:32:30,760
+strive for harmony and for order.
+
+
+520
+00:32:30,760 --> 00:32:32,560
+And that part is the querying part,
+
+
+521
+00:32:32,560 --> 00:32:35,680
+so that we, how we're going to look at the data,
+
+
+522
+00:32:35,680 --> 00:32:37,140
+and we're going to create the data,
+
+
+523
+00:32:37,140 --> 00:32:41,680
+and then we strive for our own personal and local harmony.
+
+
+524
+00:32:41,680 --> 00:32:44,560
+Yeah, exactly.
+
+
+525
+00:32:44,560 --> 00:32:47,920
+My point is less that it is impossible to find
+
+
+526
+00:32:47,920 --> 00:32:51,760
+some locally meaningful definition of harmony or order,
+
+
+527
+00:32:51,760 --> 00:32:54,160
+but that trying to do so across everyone
+
+
+528
+00:32:54,160 --> 00:32:56,840
+in the world for every application of the data
+
+
+529
+00:32:56,840 --> 00:32:59,320
+that you're operating over is not feasible.
+
+
+530
+00:32:59,320 --> 00:33:02,800
+And that instead we need to find better ways of translating
+
+
+531
+00:33:02,800 --> 00:33:06,120
+these locally meaningful views of data
+
+
+532
+00:33:06,120 --> 00:33:11,240
+into ways that can be shared and collaboratively operated over.
+
+
+533
+00:33:11,240 --> 00:33:14,440
+Basically, that there's limits to the types and amounts
+
+
+534
+00:33:14,440 --> 00:33:17,200
+of order that we can pull out of these systems that
+
+
+535
+00:33:17,200 --> 00:33:20,080
+are kind of innately limited by causality and the speed of light
+
+
+536
+00:33:20,080 --> 00:33:21,880
+and so on.
+
+
+537
+00:33:21,880 --> 00:33:22,840
+Well, thank you.
+
+
+538
+00:33:22,840 --> 00:33:24,280
+Yeah, thank you all for your time.
+
+
+539
+00:33:24,280 --> 00:33:47,840
+Thank you.

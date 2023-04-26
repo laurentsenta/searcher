@@ -1,0 +1,48 @@
+1
+00:00:00,000 --> 00:00:09,200
+All right, well, welcome to the integrating IPFS talk, or track. This track is kind of
+
+
+2
+00:00:09,200 --> 00:00:14,840
+like a grab bag of a few different talks that didn't quite fit into other tracks, or maybe
+
+
+3
+00:00:14,840 --> 00:00:22,000
+a few smaller tracks that got combined together. So this is kind of our schedule for today.
+
+
+4
+00:00:22,000 --> 00:00:27,440
+I'm going to open us up with the first talk, are we interplanetary yet? David will be next.
+
+
+5
+00:00:27,440 --> 00:00:32,440
+He's going to talk about DURN, which is IPFS on mobile. And then Brooklyn will follow after
+
+
+6
+00:00:32,440 --> 00:00:38,360
+that with decentralizing Auth and UCAN, too. Then we'll have a little lunch break, and
+
+
+7
+00:00:38,360 --> 00:00:45,440
+then Arakli will come in with a UCAN workshop. And that's slated for 90 minutes, but he's
+
+
+8
+00:00:45,440 --> 00:00:50,480
+just going to take as much time as he needs to within that to talk us through that. And
+
+
+9
+00:00:50,480 --> 00:00:55,800
+then we'll have Brooklyn again talking about IPVM. So this is kind of like the Brooklyn
+
+
+10
+00:00:55,800 --> 00:00:59,720
+and other people show. That's kind of what this is turned into.

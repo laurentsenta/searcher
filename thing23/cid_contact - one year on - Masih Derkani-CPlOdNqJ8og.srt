@@ -1,0 +1,1478 @@
+1
+00:00:00,000 --> 00:00:13,880
+CID.contact really is a cluster of IP and I nodes. Is it really? Ah, it has fangs. This
+
+
+2
+00:00:13,880 --> 00:00:23,680
+thing is built to handle heavy load. It is the largest, most complete IP and I instance,
+
+
+3
+00:00:23,680 --> 00:00:29,520
+if you like, both in terms of the features, states to the latest, as well as the amount
+
+
+4
+00:00:29,520 --> 00:00:40,280
+of data that it has. But success for me is that it shouldn't be for long, hopefully.
+
+
+5
+00:00:40,280 --> 00:00:48,720
+A quick timeline of CID.contact. Started life in April last year. Was the only running IP
+
+
+6
+00:00:48,720 --> 00:00:58,400
+and I service. We got it integrated into Lotus 1.15. Since then, Lotus nodes have been native
+
+
+7
+00:00:58,400 --> 00:01:08,320
+IP and I providers. In August last year, at the previous IPFS thing, we talked about how
+
+
+8
+00:01:08,320 --> 00:01:18,400
+it's been growing. We had over 8 billion SIDs ingested by CID.contact. Entire NFT data storage
+
+
+9
+00:01:18,400 --> 00:01:23,920
+data was indexed by CID.contact. There's a talk on this that I highly recommend looking
+
+
+10
+00:01:23,920 --> 00:01:32,400
+up on a previous IPFS thing. And we had about 20% of Filecoin deals being indexed. Fast
+
+
+11
+00:01:32,400 --> 00:01:41,240
+forward October last year, IPFS camp. We had just about 800 billion SIDs ingested. Too
+
+
+12
+00:01:41,240 --> 00:01:49,920
+many zeros for my small brain. About 7 billion CIDs per week being ingested. This is more,
+
+
+13
+00:01:49,920 --> 00:01:55,080
+almost the same amount as what we totally had in August. And this is per week. We have
+
+
+14
+00:01:55,080 --> 00:02:00,480
+six partners running indexing instances. So CID.contact is not the only one. There's actually
+
+
+15
+00:02:00,480 --> 00:02:06,040
+six more out there. If you go to CID.contact, you can see the list. Collab clusters fully
+
+
+16
+00:02:06,040 --> 00:02:11,760
+indexed thanks to great work that was done by Ivan. And we had Hydra boosters hooked
+
+
+17
+00:02:11,760 --> 00:02:18,920
+up to CID.contact. This was when Kubo did not have default to CID.contact. So the way
+
+
+18
+00:02:18,920 --> 00:02:25,400
+by which content was being looked up on behalf of the clients was they have a high probability
+
+
+19
+00:02:25,400 --> 00:02:30,440
+of hitting one of the Hydra boosts in the DHT, and then Hydra boosters would do the
+
+
+20
+00:02:30,440 --> 00:02:38,800
+nice thing of also looking up content for them at CID.contact. So that was all done.
+
+
+21
+00:02:38,800 --> 00:02:47,400
+By December last year, we passed the threshold we've been striving for. 1 trillion CIDs.
+
+
+22
+00:02:47,400 --> 00:02:56,480
+That's 10 to 12. We made significant changes in the back end. We moved to a more performant
+
+
+23
+00:02:56,480 --> 00:03:03,040
+value store that was fitting the use case of network indexers called Pebble. This is
+
+
+24
+00:03:03,040 --> 00:03:12,680
+the data store that's used in CockroachDB. We had over 50% reduction in the running cost
+
+
+25
+00:03:12,680 --> 00:03:19,680
+of CID.contact. We are pretty proud of that, considering the rate of growth never slowed
+
+
+26
+00:03:19,680 --> 00:03:27,760
+down. So we are doing even more, but at half the cost. And in December 2022, the uptime
+
+
+27
+00:03:27,760 --> 00:03:34,940
+was 100% for the first time. For the first quarter, we had 100% uptime, which is amazing.
+
+
+28
+00:03:34,940 --> 00:03:39,120
+And this is credit to the work that the team's been doing in terms of stabilizing things
+
+
+29
+00:03:39,120 --> 00:03:45,840
+and turning this really from an implementation into a IPNI itself, from an implementation
+
+
+30
+00:03:45,840 --> 00:03:53,360
+into a protocol and a stablished instance of a data set. Today, we have 1.3 trillion
+
+
+31
+00:03:53,360 --> 00:04:03,440
+CIDs, about 300 billion more. We have a lookup traffic of 250,000 requests per minute. This
+
+
+32
+00:04:03,440 --> 00:04:10,560
+actually reduced significantly over the last six months or so. We'll go into that, but
+
+
+33
+00:04:10,560 --> 00:04:18,200
+it was about four to five times that before. Again, this last quarter, we hit another 100%
+
+
+34
+00:04:18,200 --> 00:04:24,680
+uptime. Not going to jinx it, but really great to see. 46% of Filecoin deals are now covered
+
+
+35
+00:04:24,680 --> 00:04:33,440
+by CID.contact, so you've got the probability of 46% probability of finding your data that
+
+
+36
+00:04:33,440 --> 00:04:39,880
+you stored on Filecoin. And just to give you a little window, this number is actually a
+
+
+37
+00:04:39,880 --> 00:04:46,840
+lot better than you think it is, because we believe that we have over 96% of new deals
+
+
+38
+00:04:46,840 --> 00:04:53,440
+being indexed in IPNI. And that is a much more interesting number, because there's a
+
+
+39
+00:04:53,440 --> 00:04:58,760
+lot of historical deals and so on in Filecoin that never gets touched. So the probability
+
+
+40
+00:04:58,760 --> 00:05:04,960
+that you should really be taking away from this slide is 96%, and the chances are 96%
+
+
+41
+00:05:04,960 --> 00:05:10,080
+you can find your data if you have made a deal in Filecoin recently. CID.contact is
+
+
+42
+00:05:10,080 --> 00:05:17,480
+now the built-in default, one of the default delegated routing endpoints since KUBO 118
+
+
+43
+00:05:17,480 --> 00:05:24,040
+that was shipped in January. Thanks to the huge undertaking by both the IPNI team and
+
+
+44
+00:05:24,040 --> 00:05:31,640
+the IP stewards, it took a lot of doing. So honestly, fantastic to see this happening.
+
+
+45
+00:05:31,640 --> 00:05:35,560
+Brings the clients closer to the benefits of the sort of thing we're building, and this
+
+
+46
+00:05:35,560 --> 00:05:39,960
+is just the beginning. We haven't even started scratching the surface. We're going to talk
+
+
+47
+00:05:39,960 --> 00:05:47,080
+about the provider side too. CID.contact is also the default LASI content router. This
+
+
+48
+00:05:47,080 --> 00:05:56,520
+is how LASI separates the concern of the content discovery from content delivery. We have now
+
+
+49
+00:05:56,520 --> 00:06:02,400
+cascading rolled out into CID.contact, so you can try out the protocols that I bored
+
+
+50
+00:06:02,400 --> 00:06:08,680
+you with earlier on CID.contact, actually see it in action. And we have streaming rolled
+
+
+51
+00:06:08,680 --> 00:06:17,840
+out on CID.contact, which gives you five times faster lookup. The number five could fluctuate
+
+
+52
+00:06:17,840 --> 00:06:24,840
+between five to 500, I think, depending on the size of popularity of your content, because
+
+
+53
+00:06:24,840 --> 00:06:28,920
+the latency if you're doing it non-streaming is a factor of the number of providers found
+
+
+54
+00:06:28,920 --> 00:06:33,840
+for that CID. So it's hard to quantify it, but it is much, much faster. If you're building
+
+
+55
+00:06:33,840 --> 00:06:41,160
+applications that looks up content, streaming is the way to go full stop. If you have been
+
+
+56
+00:06:41,160 --> 00:06:50,320
+paying attention, CID.contact is now one year old. It was... Yeah! Amazing work. This is
+
+
+57
+00:06:50,320 --> 00:06:57,080
+today or it's not exactly today, but I think it was 22nd of April, that's probably the
+
+
+58
+00:06:57,080 --> 00:07:06,080
+birthday of CID.contact. So this little service of ours has been turning one. In October,
+
+
+59
+00:07:06,080 --> 00:07:12,480
+I presented the topology of CID.contact, which looked a bit like this. This was an IPFS camp,
+
+
+60
+00:07:12,480 --> 00:07:19,840
+pretty simple, typical setup in like a centralized sort of system. The only novelty there is
+
+
+61
+00:07:19,840 --> 00:07:29,120
+index star in the middle here, which does this scatter gather across multiple nodes.
+
+
+62
+00:07:29,120 --> 00:07:33,440
+So for every request, it asks all the nodes in the back end and collects the results.
+
+
+63
+00:07:33,440 --> 00:07:43,520
+Wait for it. Now it looks a bit like this. It took me hours to make this document. So
+
+
+64
+00:07:43,520 --> 00:07:51,920
+a lot's been happening. I'm going to go through this very quickly. The first thing, we have
+
+
+65
+00:07:51,920 --> 00:07:59,040
+a signer service, which takes care of optimizing the right path. And when I say right path,
+
+
+66
+00:07:59,040 --> 00:08:04,920
+I mean the path by which the content is ingested by network indexes. And this is thanks to
+
+
+67
+00:08:04,920 --> 00:08:11,440
+the great work that Andrew's been doing. We now have a mechanism by which we handle announcements
+
+
+68
+00:08:11,440 --> 00:08:16,520
+that are made by the providers and explicitly assign it to a node. And that means that each
+
+
+69
+00:08:16,520 --> 00:08:25,880
+node now, rather than having the full records, it has a slice through the records. We have
+
+
+70
+00:08:25,880 --> 00:08:33,800
+been working on double hashing and reader privacy. This is largely the work that, a
+
+
+71
+00:08:33,800 --> 00:08:39,780
+nice work that Ivan has been working on. What we are actually doing right now is testing
+
+
+72
+00:08:39,780 --> 00:08:47,640
+this whole flow in production using canary requests that are hitting our production endpoint.
+
+
+73
+00:08:47,640 --> 00:08:54,360
+So we have built a service which is called DH find that does the encryption of requests
+
+
+74
+00:08:54,360 --> 00:09:00,060
+from unencrypted CIDs on your behalf and then looks the data up into a back end that is
+
+
+75
+00:09:00,060 --> 00:09:07,000
+only storing encrypted information. We have built a bespoke piece of software to store
+
+
+76
+00:09:07,000 --> 00:09:15,040
+this private encrypted information which is called DH store. And that is also backed by
+
+
+77
+00:09:15,040 --> 00:09:23,160
+Pebble. We have rolled out mirroring in production which helps us speed up re-ingestion of advertisements
+
+
+78
+00:09:23,160 --> 00:09:29,200
+for the purposes of double hashing and privacy, but as well as setting the stepping stones
+
+
+79
+00:09:29,200 --> 00:09:33,880
+in terms of having a federated IP network. That is the work that Andrew's been working
+
+
+80
+00:09:33,880 --> 00:09:43,320
+on and he gives a presentation later on today. Moving on, Pebble... Sorry, go ahead.
+
+
+81
+00:09:43,320 --> 00:09:55,120
+Sure. Great question. So the question is what exactly is encrypted and why? This is an effort
+
+
+82
+00:09:55,120 --> 00:10:06,080
+to make the lookups private to the network itself. So it will stop me as a service provider
+
+
+83
+00:10:06,080 --> 00:10:11,280
+snooping on you that Martin is looking up CID whatever every two hours, for example.
+
+
+84
+00:10:11,280 --> 00:10:16,000
+I won't be able to do this type of thing. There's a whole talk on this later on today
+
+
+85
+00:10:16,000 --> 00:10:25,640
+on privacy, both on the specification side that Guy's been working on, changes that it
+
+
+86
+00:10:25,640 --> 00:10:30,720
+incurs on the DHT side, as well as the changes in IP and I. So great question. Please keep
+
+
+87
+00:10:30,720 --> 00:10:36,880
+that in mind. We'll get back to it. You're getting the request in here and then
+
+
+88
+00:10:36,880 --> 00:10:42,640
+you're doing the encryption. Great question. So the question is we are doing the encryption
+
+
+89
+00:10:42,640 --> 00:10:51,040
+here on behalf of the client. Why? That is not secure, right? So the idea is that the
+
+
+90
+00:10:51,040 --> 00:10:57,760
+double hashing would require changes on the client side for them to do the encryption.
+
+
+91
+00:10:57,760 --> 00:11:03,000
+We have libraries built for the clients, but they need to adopt it, right? And also on
+
+
+92
+00:11:03,000 --> 00:11:07,560
+the server side, we want to test the whole thing to make sure that the encrypted data
+
+
+93
+00:11:07,560 --> 00:11:12,880
+actually works, because once it's encrypted, you can't go back. So this is the idea behind
+
+
+94
+00:11:12,880 --> 00:11:17,320
+DHFind, to do the encryption on behalf of the client, and this is why we are canarying
+
+
+95
+00:11:17,320 --> 00:11:22,680
+the connections just as a testing mechanism, to make sure everything is working. And then
+
+
+96
+00:11:22,680 --> 00:11:27,920
+eventually once everything is working, we're going to end up a period where we will have
+
+
+97
+00:11:27,920 --> 00:11:31,560
+both type of traffic, right? We have clients that are adopted, clients that are not. But
+
+
+98
+00:11:31,560 --> 00:11:37,220
+in the back end, we don't want to deal with the complexity of having to store encrypted
+
+
+99
+00:11:37,220 --> 00:11:43,440
+and non-encrypted data, right? So in the future, what we see this service being useful as is
+
+
+100
+00:11:43,440 --> 00:11:47,880
+not only testing, but also reduce complexity in the back end by just us having to store
+
+
+101
+00:11:47,880 --> 00:11:53,000
+encrypted data full stop, less responsibility on our side. Whenever clients are ready, we
+
+
+102
+00:11:53,000 --> 00:12:01,520
+just have one service to burn, not restructuring, right? Going back to the topology, the Pebble
+
+
+103
+00:12:01,520 --> 00:12:09,880
+data store is now the default. If you're running IP9 instances, go migrate today. There's never
+
+
+104
+00:12:09,880 --> 00:12:18,800
+been a better day. Save a lot on the running costs, faster lookup, and so on. And the main
+
+
+105
+00:12:18,800 --> 00:12:24,640
+thing here to point out is that the back end of Network Indexer deals with mutable data.
+
+
+106
+00:12:24,640 --> 00:12:28,440
+If you remember, you have multi-hashes that point to a key that then point to information
+
+
+107
+00:12:28,440 --> 00:12:35,360
+that changes. The number of key, the multi-hash mapping to key is one to many, so this list
+
+
+108
+00:12:35,360 --> 00:12:39,720
+fluctuates. So you're dealing with dynamic data. And for that, you need a data store
+
+
+109
+00:12:39,720 --> 00:12:45,520
+that is optimized for changing content, right? So that's why Pebble was a really good choice
+
+
+110
+00:12:45,520 --> 00:12:53,160
+for us. We have rollout cascading. So we have two new services, Cascade DHT for the cascading
+
+
+111
+00:12:53,160 --> 00:12:59,920
+over DHT and Cassette for the legacy stuff. Who remembers storing music on cassette off
+
+
+112
+00:12:59,920 --> 00:13:07,280
+the radio? I do. Great. That's why we call it the legacy thing, right? For the Cascade
+
+
+113
+00:13:07,280 --> 00:13:14,600
+DHT, I'll go over these a little bit deeper later today. And of course, if you look at
+
+
+114
+00:13:14,600 --> 00:13:21,700
+the fleet that's being looked up, we have so many things that are sitting behind this
+
+
+115
+00:13:21,700 --> 00:13:28,320
+poor little index star service that does the scatter gather. The main thing to point out
+
+
+116
+00:13:28,320 --> 00:13:34,360
+there is, yeah, that doesn't look like a fast service to me. There's a lot of lookups going
+
+
+117
+00:13:34,360 --> 00:13:41,860
+on. And the answer is we have rolled out streaming down to the core of the system. So regardless
+
+
+118
+00:13:41,860 --> 00:13:47,640
+of whether the request that is hitting index star is streaming or not, we turn it into
+
+
+119
+00:13:47,640 --> 00:13:51,960
+a streaming request and scatter it across all the nodes because all our back-end nodes
+
+
+120
+00:13:51,960 --> 00:13:58,320
+support streaming and then return the first one that we find. And then if the client was
+
+
+121
+00:13:58,320 --> 00:14:02,440
+asking for a streaming request, great. We are good friends, right? We just return it
+
+
+122
+00:14:02,440 --> 00:14:08,240
+as is. If not, then we just accumulate the information over a period of up to a number
+
+
+123
+00:14:08,240 --> 00:14:13,880
+of seconds and just return the information. But without a doubt, this has an effect on
+
+
+124
+00:14:13,880 --> 00:14:22,640
+the latency. And I'll get back to that later. Cache hit rates. If you have paid attention
+
+
+125
+00:14:22,640 --> 00:14:28,800
+right in front of this whole thing, there's a heavy cloud front cache that caches all
+
+
+126
+00:14:28,800 --> 00:14:34,920
+the success requests for up to an hour and as well as 404s for up to 10 minutes. This
+
+
+127
+00:14:34,920 --> 00:14:39,880
+is the thing that allows us to cope with the amount of traffic that is hitting us. The
+
+
+128
+00:14:39,880 --> 00:14:46,880
+cache hit rate fluctuated significantly because of the events that happened end of last year,
+
+
+129
+00:14:46,880 --> 00:14:51,440
+like for example, Hydra drawdown. So the type of traffic pattern that we see is slightly
+
+
+130
+00:14:51,440 --> 00:14:56,920
+different. There was a reduction also in the amount of requests that we're receiving because
+
+
+131
+00:14:56,920 --> 00:15:03,020
+of Hydra drawdown. Lots going on there. The main thing to point out here is just fluctuation
+
+
+132
+00:15:03,020 --> 00:15:10,960
+of the amount of requests. So I put the number 250,000 per minute earlier. You can see how
+
+
+133
+00:15:10,960 --> 00:15:16,360
+high it was before. And there's a blip on the end right there, which is where the real
+
+
+134
+00:15:16,360 --> 00:15:22,040
+testing started. So we are feeling reasonably confident in terms of being able to handle
+
+
+135
+00:15:22,040 --> 00:15:27,840
+the sort of traffic that looking up the entire content address data out there can throw at
+
+
+136
+00:15:27,840 --> 00:15:34,160
+us. But obviously, we need to get even more efficient to be able to not only reduce our
+
+
+137
+00:15:34,160 --> 00:15:41,760
+own costs, but also convince others in terms of traffic. The ratio of 404s. So this is
+
+
+138
+00:15:41,760 --> 00:15:48,360
+pretty high. When you look at it, the line that you see significant there is just changing
+
+
+139
+00:15:48,360 --> 00:15:55,720
+the specification from returning 200 to returning 404 instead. That's why it jumped up. But
+
+
+140
+00:15:55,720 --> 00:16:00,600
+the main thing to point out is that the ratio of 404s is pretty high. I'll dive deeper into
+
+
+141
+00:16:00,600 --> 00:16:06,120
+that and rationale behind that. The long story there is that the requests that are hitting
+
+
+142
+00:16:06,120 --> 00:16:11,960
+us don't always have the cascade parameter set. And the IP and I network itself has a
+
+
+143
+00:16:11,960 --> 00:16:20,280
+proportion of the total stuff that's being looked up. That's why you get the 404s.
+
+
+144
+00:16:20,280 --> 00:16:25,680
+So if you look at the back end, the cache misses. The ratio of 404s is sort of 50-50
+
+
+145
+00:16:25,680 --> 00:16:30,760
+fluctuates. A few weeks back for the first time, we had twice as many 200s than we had
+
+
+146
+00:16:30,760 --> 00:16:38,160
+404s. But the really true number to look at in terms of 404s is what are the cache misses
+
+
+147
+00:16:38,160 --> 00:16:46,520
+on the back end and what do they result to. And that is sort of 50-50 right now.
+
+
+148
+00:16:46,520 --> 00:16:51,720
+Closing the gap. So we have been working on closing the gap. And this whole effort is
+
+
+149
+00:16:51,720 --> 00:16:57,080
+driven by project RIA and the LASI project that I mentioned, which is using IP and I
+
+
+150
+00:16:57,080 --> 00:17:03,560
+as a content routing system. Two projects rolled out, Cascade DHT. Right now, the implementation
+
+
+151
+00:17:03,560 --> 00:17:10,480
+lives there. It is using full RT client as a way of looking up information. It is running
+
+
+152
+00:17:10,480 --> 00:17:18,500
+over a cluster of five instances on pretty beefy machines. Lookup success of about 40%.
+
+
+153
+00:17:18,500 --> 00:17:23,160
+This is every time anybody looks up something that has Cascade equals IPFS DHT, we're going
+
+
+154
+00:17:23,160 --> 00:17:27,840
+to forward to the service. And of those service lookups, we have to get 40%. This is getting
+
+
+155
+00:17:27,840 --> 00:17:34,240
+hit about 80,000 requests per minute. The main thing to point out there is that
+
+
+156
+00:17:34,240 --> 00:17:43,400
+full RT or implementations of DHT clients, they're less suited for running as a long-running
+
+
+157
+00:17:43,400 --> 00:17:50,440
+service. They're perhaps CPU intensive. So there's a whole bunch of work going on there
+
+
+158
+00:17:50,440 --> 00:17:55,600
+in the IP and I team to see how we can scale that better and make a DHT client that could
+
+
+159
+00:17:55,600 --> 00:18:02,840
+be used as an efficient long-running service and fits that use case more. But plenty of
+
+
+160
+00:18:02,840 --> 00:18:09,560
+research to be done there. We hope to work closely with the folks at ProbeLab to experiment
+
+
+161
+00:18:09,560 --> 00:18:17,040
+with alternatives there. More to come. Time to first byte. Pretty fast. You know,
+
+
+162
+00:18:17,040 --> 00:18:25,360
+P99, about 200 milliseconds, which is good. Moving on to cassettes, this is a very, very
+
+
+163
+00:18:25,360 --> 00:18:34,400
+cherry picked implementation that speaks BitSwap. It uses the vanilla Boxo BitSwap implementation,
+
+
+164
+00:18:34,400 --> 00:18:42,000
+but with a twist. And I recommend you going to have a look at that repo. This is a service
+
+
+165
+00:18:42,000 --> 00:18:45,800
+that you could run yourself. All of this is open source, so you can run it if you really
+
+
+166
+00:18:45,800 --> 00:18:53,400
+need to discover data only over BitSwap, available only over BitSwap with explicit peering. It
+
+
+167
+00:18:53,400 --> 00:18:58,720
+has a whole bunch of metrics that allow us to judge when to get rid of it, because we
+
+
+168
+00:18:58,720 --> 00:19:09,560
+are keen to reduce moving parts and focus on a new set of protocols that enable lookup.
+
+
+169
+00:19:09,560 --> 00:19:14,640
+So there's a whole bunch of metrics that allows you to see things like the rate of publication.
+
+
+170
+00:19:14,640 --> 00:19:20,080
+There's things like circuit breakers to fall back and not spam the network. The main concern
+
+
+171
+00:19:20,080 --> 00:19:26,480
+there is for us to build this while being a really good citizen to the content address
+
+
+172
+00:19:26,480 --> 00:19:33,360
+network. It's easy to write a system, write a BitSwap client that spams the world, and
+
+
+173
+00:19:33,360 --> 00:19:39,280
+that's not something that we want to encourage. So instead, this is bespokely written, very
+
+
+174
+00:19:39,280 --> 00:19:45,960
+careful decision making to reduce this noisiness. Traffic, same as Cascade DHT, and the reason
+
+
+175
+00:19:45,960 --> 00:19:50,080
+for that is I think there's only one client right now that is using those parameters,
+
+
+176
+00:19:50,080 --> 00:19:56,200
+and that's Lassie. So that's why it's a fraction of the total traffic that you see. On cassette,
+
+
+177
+00:19:56,200 --> 00:19:59,960
+we get a little bit more higher lookup success, about 45%.
+
+
+178
+00:20:00,000 --> 00:20:30,000
+and that's really just the result of the type of CIDs that's being looked up. Again, time to first byte. It is pretty fast when it's going, but it can fluctuate, and the fluctuation there you see is a result of peering clients basically redeploying or disconnecting, and then the circuit breaker is open and all these things happen in the background, but it is pretty choppy and it's just the nature of BitSop. This affects our upstream latency
+
+
+179
+00:20:30,000 --> 00:20:36,800
+significantly, so you can see when these requests, these services were rolled out. This
+
+
+180
+00:20:36,800 --> 00:20:42,960
+was before we rolled out streaming all the way to the backend, so from latency perspective
+
+
+181
+00:20:42,960 --> 00:20:47,460
+having these edges is not great, but what we were hoping for is to have a better way
+
+
+182
+00:20:47,460 --> 00:20:56,460
+of just making that content available in IPNI full stop. In terms of success, I showed you
+
+
+183
+00:20:56,460 --> 00:21:02,400
+numbers on the lookup success. If we zoom in on the lookup success that RIA sees, for
+
+
+184
+00:21:02,400 --> 00:21:09,520
+example, Project RIA, this is metrics that are generated by a service called Lookout,
+
+
+185
+00:21:09,520 --> 00:21:14,680
+which gets a set of CIDs and repeatedly looks them up against a given endpoint to see lookup
+
+
+186
+00:21:14,680 --> 00:21:19,680
+success. The list of CIDs that is being looked up by this service, you can find the code
+
+
+187
+00:21:19,680 --> 00:21:26,520
+there. You can test your own IPNI instance, but these CIDs come from Saturn. There's an
+
+
+188
+00:21:26,520 --> 00:21:32,080
+endpoint that lists the top CIDs, and after rolling out this cascading, which BitSop was
+
+
+189
+00:21:32,080 --> 00:21:39,000
+the last one, you can see the lookup success increasing significantly, and right now we
+
+
+190
+00:21:39,000 --> 00:21:46,440
+are at parity with the existing IPFS gateway in terms of lookup success, so we can find
+
+
+191
+00:21:46,440 --> 00:21:53,240
+as many CIDs as the other BitSop nodes can find with the help of cascading over two networks,
+
+
+192
+00:21:53,240 --> 00:22:04,620
+DHT and the BitSop. And this is explicitly the lookup success of requests sent by LASI.
+
+
+193
+00:22:04,620 --> 00:22:12,080
+So the previous one was just testing a dataset. This one is live traffic that is hitting us
+
+
+194
+00:22:12,080 --> 00:22:18,160
+from RIA project via LASI to fill in the cache misses, and you can see the significant increase
+
+
+195
+00:22:18,160 --> 00:22:26,320
+in the lookup success there. Running costs. How much all this is costing us? A lot. We
+
+
+196
+00:22:26,320 --> 00:22:31,320
+want it to be free and we want it to run by others, but we are running it today. Half
+
+
+197
+00:22:31,320 --> 00:22:38,840
+of the cost right now goes on the storage, EBS volumes. 30% of that is just the caching.
+
+
+198
+00:22:38,840 --> 00:22:42,960
+We look to optimize that further. We have done a whole bunch of work in optimizing EBS
+
+
+199
+00:22:42,960 --> 00:22:48,160
+volumes but not so much on the caching front, so we'll hit that later. 10% of that is just
+
+
+200
+00:22:48,160 --> 00:22:59,320
+spend on raw compute and miscellaneous VPC, sorry, egress and so on. 10% of that. So this
+
+
+201
+00:22:59,320 --> 00:23:05,960
+gives you a rough estimation of how much things would cost you relative to category. Takeaways.
+
+
+202
+00:23:05,960 --> 00:23:14,480
+Go use streaming ndjson now. If you want to take one line away, please use ndjson. We
+
+
+203
+00:23:14,480 --> 00:23:21,240
+don't want to see accept JSON anymore on the request side. Go switch to Pebble if you're
+
+
+204
+00:23:21,240 --> 00:23:26,280
+running an IP and IP and I node. Much, much cheaper and much faster. And cascading lookups.
+
+
+205
+00:23:26,280 --> 00:23:31,560
+Now IP and I or sit.contact is turning into a one-stop shop for looking things up. So
+
+
+206
+00:23:31,560 --> 00:23:36,600
+if you want to build stuff on top of it, there has never been a better time than now. You
+
+
+207
+00:23:36,600 --> 00:23:42,640
+have a single, simple REST API to look content address data up and not only look up who has
+
+
+208
+00:23:42,640 --> 00:23:47,320
+it but also have reasonable understanding of protocols over which you can query stuff,
+
+
+209
+00:23:47,320 --> 00:23:52,720
+which is quite powerful. Feature work. Read path optimization. We have spent a lot of
+
+
+210
+00:23:52,720 --> 00:23:58,440
+time on the write path optimization. We're going to move to read path, make the lookups
+
+
+211
+00:23:58,440 --> 00:24:05,640
+even faster with the help of double hashing. Ivan will go into the whole double hashing
+
+
+212
+00:24:05,640 --> 00:24:12,600
+story later on today. We want to shift left from cascading. What does shift left mean?
+
+
+213
+00:24:12,600 --> 00:24:17,840
+If you have cascade on the right-hand side, an IP and I here which cascades to it, we
+
+
+214
+00:24:17,840 --> 00:24:21,240
+want to shift the content so that it's more available on the IP and I side so that you
+
+
+215
+00:24:21,240 --> 00:24:28,080
+don't have to do the cascade at all. And that is a whole category of works in terms of reducing
+
+
+216
+00:24:28,080 --> 00:24:35,040
+barriers that I touched on earlier. More caching, because we want to reduce trust in sit.contact.
+
+
+217
+00:24:35,040 --> 00:24:39,920
+This is both caching on the edge where the data is being looked up, for example, on the
+
+
+218
+00:24:39,920 --> 00:24:46,760
+closer to RIA side, as well as HTTP caching. It makes up a good chunk of our costs, and
+
+
+219
+00:24:46,760 --> 00:24:50,640
+I think we can be much, much more efficient there if we design a cache system that is
+
+
+220
+00:24:50,640 --> 00:24:56,920
+built for the use case of sit.contact. And over the last two quarters or so, there has
+
+
+221
+00:24:56,920 --> 00:25:02,320
+been a tsunami of metrics that are being collected and engineered into sit.contact. There's a
+
+
+222
+00:25:02,320 --> 00:25:06,520
+whole bunch of really interesting information there. What we really want to do is to make
+
+
+223
+00:25:06,520 --> 00:25:12,960
+that into a public dashboard so that you don't have to be bored by my talks, and you can
+
+
+224
+00:25:12,960 --> 00:25:19,400
+just go onto a website and see things straight up. That would be beautiful.
+
+
+225
+00:25:19,400 --> 00:25:25,020
+Thank you so much for listening. Please find us again at falcon.slack.ipni. There's a whole
+
+
+226
+00:25:25,020 --> 00:25:31,000
+team behind this, names there. There's a whole bunch of people across Bedrock that have the
+
+
+227
+00:25:31,000 --> 00:25:35,600
+patience to try the things that we're building, and even more patient people out there that
+
+
+228
+00:25:35,600 --> 00:25:40,520
+are trying these things. I'm grateful to all of you. A bunch of links there for interesting
+
+
+229
+00:25:40,520 --> 00:25:44,520
+repos to look at in terms of implementation and tools if you're looking at running IPNI.
+
+
+230
+00:25:44,520 --> 00:25:54,560
+With that, I'll pass it over to you for questions. Thank you.
+
+
+231
+00:25:54,560 --> 00:26:03,320
+So why do you want to use NDJSON? Or why prefer the streaming NDJSON?
+
+
+232
+00:26:03,320 --> 00:26:10,920
+So as we add new ways by which providers could be discovered, we find that the list of discovered
+
+
+233
+00:26:10,920 --> 00:26:18,080
+providers is growing. There are stats on P90s of a number of providers that are found, and
+
+
+234
+00:26:18,080 --> 00:26:24,260
+this can go up to 150 provider records. Now, if you don't have the streaming mechanism,
+
+
+235
+00:26:24,260 --> 00:26:30,840
+in the back end we see that this information is being found, but because of the safeguards
+
+
+236
+00:26:30,840 --> 00:26:37,100
+of worst latency that we are willing to give back to clients, we have to cut this off.
+
+
+237
+00:26:37,100 --> 00:26:42,560
+So what is actually happening is that we're finding information that client wants, but
+
+
+238
+00:26:42,560 --> 00:26:48,760
+we are hitting the P99 latency that we absolutely have to return stuff, and yet we are not returning
+
+
+239
+00:26:48,760 --> 00:26:54,320
+that value that really exists in the back end. And that is basically the reason, you
+
+
+240
+00:26:54,320 --> 00:26:58,720
+know, because what we really want is to return that information, all that information to
+
+
+241
+00:26:58,720 --> 00:27:03,880
+the user, and more importantly, what we really want is to not decide for the client how long
+
+
+242
+00:27:03,880 --> 00:27:07,660
+I'm willing to wait to collect the stuff for you. You just choose it. As long as you stay
+
+
+243
+00:27:07,660 --> 00:27:11,160
+connected, you get results. If you get bored, if there's too much information, just cut
+
+
+244
+00:27:11,160 --> 00:27:14,960
+off the connection, right? Obviously, there's room for improvement there in terms of how
+
+
+245
+00:27:14,960 --> 00:27:20,720
+do you order the list of providers that are found. There's a whole other discussion, but
+
+
+246
+00:27:20,720 --> 00:27:25,480
+the main thing is to just give the power back to the users and avoid making application
+
+
+247
+00:27:25,480 --> 00:27:42,480
+layer design decisions on IP and I, because that's not what we want to do.
+
+
+248
+00:27:42,480 --> 00:27:48,160
+What do you think the path is to decentralizing this, to getting other people taking up the
+
+
+249
+00:27:48,160 --> 00:27:54,680
+burden of some of this infrastructure in a decentralized way? And if that works out the
+
+
+250
+00:27:54,680 --> 00:28:00,840
+way you want, what is the rump? What is the stuff that you can imagine Protocol Labs
+
+
+251
+00:28:00,840 --> 00:28:04,880
+still running into the future?
+
+
+252
+00:28:04,880 --> 00:28:14,120
+That is a great question. Why should you run this thing when SID.contact exists? Do you
+
+
+253
+00:28:14,120 --> 00:28:20,320
+remember I said we don't want to enable making out of the Google Analytics? There's another
+
+
+254
+00:28:20,320 --> 00:28:25,440
+thing that occurs to me, which is when I look stuff up on Google, it is free for me. I find
+
+
+255
+00:28:25,440 --> 00:28:30,800
+stuff, but the way that Google makes money is by ranking, advertisement, and whatever.
+
+
+256
+00:28:30,800 --> 00:28:36,480
+Obviously, we don't want to add ads into this, for sure. But then for me, still, there's
+
+
+257
+00:28:36,480 --> 00:28:44,120
+a lesson there, in that lookup or content routing is the gateway to the actual functionality
+
+
+258
+00:28:44,120 --> 00:28:53,760
+that people are looking for. And we already have systems, designs, implementations that
+
+
+259
+00:28:53,760 --> 00:29:03,600
+focus on incentivization of retrieval. Like Filecoin system, for example, we have ways
+
+
+260
+00:29:03,600 --> 00:29:09,000
+by which retrieval could be paid. You have paid retrieval, unpaid retrieval. This is
+
+
+261
+00:29:09,000 --> 00:29:16,440
+all in the making. So if you think about it, as somebody who is providing the lookup service,
+
+
+262
+00:29:16,440 --> 00:29:23,440
+you would be in an excellent position to then upsell or provide a whole ecosystem or market
+
+
+263
+00:29:23,440 --> 00:29:32,000
+for retrieval of the data that's being looked at. So this is one path that I see this in
+
+
+264
+00:29:32,000 --> 00:29:38,720
+terms of incentivization of a whole lookup mechanism. You touched on what the decentralized
+
+
+265
+00:29:38,720 --> 00:29:47,120
+thing would look like. I would love to see a reputation system that is giving multiple
+
+
+266
+00:29:47,120 --> 00:29:52,560
+clients information to choose their own instances. It's not just a completeness here. There's
+
+
+267
+00:29:52,560 --> 00:29:56,720
+other parameters like locality. If I want to look something up in Australia, I really
+
+
+268
+00:29:56,720 --> 00:30:02,280
+don't want to connect to US West to look it up. So if there is an instance there that
+
+
+269
+00:30:02,280 --> 00:30:07,360
+could give me information much faster because I'm building a live editing app on top of
+
+
+270
+00:30:07,360 --> 00:30:13,480
+content address data, because why not? It shouldn't exist. So lookup matters there.
+
+
+271
+00:30:13,480 --> 00:30:22,680
+So the way that I see this working out is replications of information across multiple
+
+
+272
+00:30:22,680 --> 00:30:28,920
+nodes that are geographically distributed, a federation layer on top of that which guarantees
+
+
+273
+00:30:28,920 --> 00:30:35,200
+hard problems like eventual consistency across these, but it has to be optimized based on
+
+
+274
+00:30:35,200 --> 00:30:39,760
+flow of traffic. You really don't want to copy things very fast that are never touched
+
+
+275
+00:30:39,760 --> 00:30:44,080
+and are only accessed on US West into Australia, for example. So there's a whole bunch of questions
+
+
+276
+00:30:44,080 --> 00:30:50,840
+to be figured out there. And the next thing that I see this growing is really breaking
+
+
+277
+00:30:50,840 --> 00:30:55,080
+down the service by which we provide this lookup mechanism. There could be many, many
+
+
+278
+00:30:55,080 --> 00:31:02,800
+tiers here. For example, the ranking of the way by which results are returned could be
+
+
+279
+00:31:02,800 --> 00:31:07,760
+optimized to provide a better service. The amount of information that's being ingested
+
+
+280
+00:31:07,760 --> 00:31:12,120
+could be meters. So for example, if you have this much information, it's okay for each
+
+
+281
+00:31:12,120 --> 00:31:16,880
+year. If you have more information, it's that much. Separation between hot and cold data,
+
+
+282
+00:31:16,880 --> 00:31:22,040
+for example. So there could be a totally new paid version of sit.contact, for example,
+
+
+283
+00:31:22,040 --> 00:31:28,540
+that guarantees that once you publish something, it is discoverable within 20 milliseconds.
+
+
+284
+00:31:28,540 --> 00:31:34,180
+And you could build a system around that and charge people for that because content providers
+
+
+285
+00:31:34,180 --> 00:31:41,800
+are charging people for retrieval. So it would make sense for them to then pay for this.
+
+
+286
+00:31:41,800 --> 00:31:50,400
+How much of this would PL build? Success for me is that all of this is driven by the community
+
+
+287
+00:31:50,400 --> 00:31:56,880
+because I think it is very true that nobody in this room, in this community, knows what
+
+
+288
+00:31:56,880 --> 00:32:02,560
+the future of this decentralized web that we are building would look like, really. And
+
+
+289
+00:32:02,560 --> 00:32:08,120
+nobody knows the answer. So what can we do in the meantime? I would love to engineer
+
+
+290
+00:32:08,120 --> 00:32:16,080
+more of these tuning knobs into this whole ecosystem that enables experimentation. That
+
+
+291
+00:32:16,080 --> 00:32:20,360
+is the most important, most powerful thing that I see we can do as a community to just
+
+
+292
+00:32:20,360 --> 00:32:28,200
+engineer swappable things that enables groups of independent people to experiment and then
+
+
+293
+00:32:28,200 --> 00:32:34,200
+in forums like this, share their experiences so that together we can build something that,
+
+
+294
+00:32:34,200 --> 00:32:39,600
+like I mentioned, not only matches the web too, but really smashes it because it has
+
+
+295
+00:32:39,600 --> 00:32:44,320
+to be much, much faster. So this is the path that I see in terms of growth. I hope that
+
+
+296
+00:32:44,320 --> 00:33:01,320
+answers your question.

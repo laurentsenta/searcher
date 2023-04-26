@@ -1,0 +1,1868 @@
+1
+00:00:00,000 --> 00:00:07,000
+Cool, thank you folks. So, back here again. So this, I'm kind of in the right track I
+
+
+2
+00:00:10,440 --> 00:00:17,440
+hope. So this is mostly about stuff we did in IRO. We had, as you might have heard this
+
+
+3
+00:00:17,960 --> 00:00:22,920
+morning, in IRO we made a lot of interesting decisions earlier this year and the end of
+
+
+4
+00:00:22,920 --> 00:00:27,360
+last year. And so this talk is kind of like summarizing a little bit of that. We got a
+
+
+5
+00:00:27,360 --> 00:00:30,560
+lot of questions like, why did you do that? Why are you doing that? What actually are
+
+
+6
+00:00:30,560 --> 00:00:37,080
+you doing? So I'm going to try to cover that and see if I can answer some questions. And
+
+
+7
+00:00:37,080 --> 00:00:41,560
+I'm planning to have some time for questions afterwards, so if you have more questions,
+
+
+8
+00:00:41,560 --> 00:00:47,280
+hopefully we can answer them too. For those who don't know me, I work on this company
+
+
+9
+00:00:47,280 --> 00:00:53,360
+number zero and this is kind of like also is related to where does IRO come from. So
+
+
+10
+00:00:53,360 --> 00:01:00,360
+one and a half years ago roughly, I was like, can we have better IPFS? Can we do things?
+
+
+11
+00:01:01,440 --> 00:01:06,120
+Some people might know I like Rust, so I was like, I'm going to do this in Rust at least.
+
+
+12
+00:01:06,120 --> 00:01:11,480
+And it was kind of where it started, but it went quickly farther than that. And so we
+
+
+13
+00:01:11,480 --> 00:01:17,560
+had actually an implementation that was somewhat compatible with the existing IPFS network
+
+
+14
+00:01:17,560 --> 00:01:23,560
+by the end of last year at IPFS camp, where I got to launch the first version on stage,
+
+
+15
+00:01:23,560 --> 00:01:30,560
+which was kind of fun. But when we came back from that, we sat down and had a hard look
+
+
+16
+00:01:30,760 --> 00:01:35,520
+of like, okay, we have a prototype, we have a thing that kind of works, it kind of interrupts,
+
+
+17
+00:01:35,520 --> 00:01:41,320
+but it wasn't anywhere close in terms of actual performance and actually the goals that we
+
+
+18
+00:01:41,320 --> 00:01:46,680
+had set ourselves for actually this new implementation. And we're trying to understand where does
+
+
+19
+00:01:46,680 --> 00:01:53,680
+this come from? What is the problem? And that led to an interesting experiment that is called
+
+
+20
+00:01:54,480 --> 00:02:00,520
+SendMe. You can find this repo still. I'll talk a little bit about that later this year,
+
+
+21
+00:02:00,520 --> 00:02:07,520
+and then that actually becomes, so what SendMe was become what is now the IRO. And IRO got,
+
+
+22
+00:02:08,920 --> 00:02:14,360
+we deprecated the original implementation of IRO. Not even a year old and already getting
+
+
+23
+00:02:14,360 --> 00:02:21,360
+deprecated. That's a very short life cycle there. Almost like Google.
+
+
+24
+00:02:24,560 --> 00:02:30,760
+That's called now Beetle, and this is like somewhat interoperable implementation in Rust,
+
+
+25
+00:02:30,760 --> 00:02:34,920
+but not what we're focusing on now. But if you have some needs, feel free to still send
+
+
+26
+00:02:34,920 --> 00:02:40,800
+us PRs and talk to us about it. And we shipped the first version of the renamed thing at
+
+
+27
+00:02:40,800 --> 00:02:46,360
+the end of February 23. And our first success story is actually the death chat integration
+
+
+28
+00:02:46,360 --> 00:02:50,960
+that I mentioned earlier this morning, which is actually we have an implementation that
+
+
+29
+00:02:50,960 --> 00:02:57,040
+now works across mobile platforms and desktops actually on local networks to send content
+
+
+30
+00:02:57,040 --> 00:03:00,280
+address data fast in the way that we actually wanted to.
+
+
+31
+00:03:00,280 --> 00:03:04,160
+And that was really important for us in that development process was like, okay, if we're
+
+
+32
+00:03:04,160 --> 00:03:10,000
+doing this from scratch, we still need to make sure actually that very early on, we
+
+
+33
+00:03:10,000 --> 00:03:15,200
+can't wait six months to see if this works for anybody. We need to put this into actual
+
+
+34
+00:03:15,200 --> 00:03:19,480
+hands, into actual other developers' hands and be like, does this work for you? Can you
+
+
+35
+00:03:19,480 --> 00:03:23,240
+actually build something useful for you users with this?
+
+
+36
+00:03:23,240 --> 00:03:30,240
+All right. So I mentioned a couple of hard, some hard problems that we had when we came
+
+
+37
+00:03:32,040 --> 00:03:38,280
+back from IPFS camp last year. And so I'm going to talk a little bit about those. So
+
+
+38
+00:03:38,280 --> 00:03:44,520
+one of them, which you might've heard me talk about, I talk about BitSwap and we've also
+
+
+39
+00:03:44,520 --> 00:03:48,400
+mentioned, talked a lot about the move, the bytes working group that was kind of spawned
+
+
+40
+00:03:48,400 --> 00:03:53,160
+from this was like data transfer was like not where we needed to be. Right. We had an
+
+
+41
+00:03:53,160 --> 00:03:57,680
+implementation. I eventually wrote an implementation of GoBitSwap, which is like a straight up
+
+
+42
+00:03:57,680 --> 00:04:04,680
+port of the Go implementation and Rust, which was very painful. And actually it still exists.
+
+
+43
+00:04:04,680 --> 00:04:11,680
+It's, but it's not that great for many reasons. And we tried to figure out like, how can we,
+
+
+44
+00:04:12,040 --> 00:04:17,720
+how can we make these things better? And just like, we just didn't get, like, there was
+
+
+45
+00:04:17,720 --> 00:04:23,000
+no like happy path where we got. And so we started moving the bytes working group. Thank
+
+
+46
+00:04:23,000 --> 00:04:27,400
+everybody who was participating still. This is a great ongoing effort to like figure out,
+
+
+47
+00:04:27,400 --> 00:04:33,480
+Hey, what other ways can we move data around? Why is, why do we have problems with BitSwap?
+
+
+48
+00:04:33,480 --> 00:04:37,960
+Maybe BitSwap is not the problem. Maybe the implementation is, we don't, I think it's
+
+
+49
+00:04:37,960 --> 00:04:44,040
+a mix. But that was one of the hard, really hard things. So we like looked at like, okay,
+
+
+50
+00:04:44,040 --> 00:04:49,400
+what data transfer protocol can we actually employ? The other piece, which kind of also
+
+
+51
+00:04:49,400 --> 00:04:54,840
+is related to BitSwap, but also to DHTs and it's all your, all your favorite topic is
+
+
+52
+00:04:54,840 --> 00:05:00,880
+content discovery. And like, just very quickly, this is very important for anybody who's like
+
+
+53
+00:05:00,880 --> 00:05:07,640
+new to the space. Like content discovery is the actual hard part I claim in these systems,
+
+
+54
+00:05:07,640 --> 00:05:11,840
+like downloading data, like HTTP does that. Cool. Like, like if I know somebody has the
+
+
+55
+00:05:11,840 --> 00:05:16,560
+data, like we can find a way, like, even though we talk a lot and move the bytes, but like,
+
+
+56
+00:05:16,560 --> 00:05:20,320
+how do we officially move the bytes? This is not the really hard part. The really hard
+
+
+57
+00:05:20,320 --> 00:05:24,880
+part in most cases, especially in a system like where I profess where you're like, you
+
+
+58
+00:05:24,880 --> 00:05:32,080
+want a global view into the world. And I be like, I have this thing that's roughly 32
+
+
+59
+00:05:32,080 --> 00:05:39,480
+bytes. Who has the answer to this? That's a really hard question. And so content discovery
+
+
+60
+00:05:39,480 --> 00:05:43,320
+is basically how do you answer this question? Where are these bytes on the internet or rather
+
+
+61
+00:05:43,320 --> 00:05:46,960
+in the world, in the world? Because they don't necessarily have to be in the internet, but
+
+
+62
+00:05:46,960 --> 00:05:53,320
+if I want to retrieve them over the internet protocol, they have to be. Looking at the
+
+
+63
+00:05:53,320 --> 00:05:56,960
+existing solution, there was like, this is not, this is not where it needs to be. We
+
+
+64
+00:05:56,960 --> 00:06:02,000
+like, we need to rely, like we had like the one big issue is like reliability, right?
+
+
+65
+00:06:02,000 --> 00:06:07,680
+It's like something that's older than 24 hours on the IPFS network. And that is not on the
+
+
+66
+00:06:07,680 --> 00:06:15,640
+gateways kind of hard to get. Oftentimes high latency. Again, if it's not, if I can't go
+
+
+67
+00:06:15,640 --> 00:06:21,760
+to the indexers, like usually it was like, although the gateways, like it can take seconds,
+
+
+68
+00:06:21,760 --> 00:06:25,960
+right? To even just know where to download things. And I haven't done anything yet, except
+
+
+69
+00:06:25,960 --> 00:06:34,760
+the record where it is. The existing DHT sometimes worked really well and sometimes just didn't
+
+
+70
+00:06:34,760 --> 00:06:38,920
+for oftentimes like unknown reasons. ProLab time team, for example, spending a lot of
+
+
+71
+00:06:38,920 --> 00:06:43,800
+time, like figuring this out. There's a lot of research in like improvements to DHT. How
+
+
+72
+00:06:43,800 --> 00:06:48,800
+can we make this better? But another thing that we also realized here is like, there
+
+
+73
+00:06:48,800 --> 00:06:53,840
+might be solutions to this, but pretty much all of the really good solutions mean breaking
+
+
+74
+00:06:53,840 --> 00:07:01,040
+the DHT. So like basically have to have fork in the network anyway. And then the third
+
+
+75
+00:07:01,040 --> 00:07:07,680
+one, which is the one that was like probably the most painful and hard to see kind of was
+
+
+76
+00:07:07,680 --> 00:07:13,880
+too many layers. So we, we ran into this issue. It was like, we just don't know where the
+
+
+77
+00:07:13,880 --> 00:07:18,160
+problem is, right? Like you have the system and even you like implement it as you look
+
+
+78
+00:07:18,160 --> 00:07:25,400
+at it, it's like, it doesn't work, but nobody's like, even if I instrument, it's like there's
+
+
+79
+00:07:25,400 --> 00:07:30,800
+pain, but it's basically in the whole body and you don't know where it is. And so it
+
+
+80
+00:07:30,800 --> 00:07:35,320
+was really, really hard for us to like understand which piece should we improve? Which do we
+
+
+81
+00:07:35,320 --> 00:07:40,600
+need to actually work on to get the problems solved and moved out? And so it's really searching
+
+
+82
+00:07:40,600 --> 00:07:47,560
+the needle in the haystack. And yeah, I'll talk about how we actually went about solving
+
+
+83
+00:07:47,560 --> 00:07:55,880
+this in a moment. But like this was like really, really hard, especially with a lot of abstractions
+
+
+84
+00:07:55,880 --> 00:08:02,760
+that are in IPFS. Juan has this famous slide where it's like, there's like all the components
+
+
+85
+00:08:02,760 --> 00:08:07,640
+of the P2P and multi-formats and IPLD, and they're all nicely stacked together. And it's
+
+
+86
+00:08:07,640 --> 00:08:12,440
+a beautiful picture. And I'm like, but if you try to find a problem, the problem is
+
+
+87
+00:08:12,440 --> 00:08:18,880
+that in reality, these all have arms and they're all, these arms are all intertwined. And now,
+
+
+88
+00:08:18,880 --> 00:08:24,320
+if you try to know, like find the problem, you now have to go through this labyrinth
+
+
+89
+00:08:24,320 --> 00:08:28,720
+and it gets really, really hard to know which of these abstractions might be wrong, which
+
+
+90
+00:08:28,720 --> 00:08:33,040
+of these abstractions might be exactly right, but like they both look wrong because like
+
+
+91
+00:08:33,040 --> 00:08:39,280
+together they just don't work. So that was really hard to see and understand and kind
+
+
+92
+00:08:39,280 --> 00:08:45,640
+of accept because like as a programmer, eventually if you had like two classes in CS or so, you
+
+
+93
+00:08:45,640 --> 00:08:54,600
+learn like, oh, abstractions are good. Right. And eventually they're not. And there's a
+
+
+94
+00:08:54,600 --> 00:08:59,400
+reason people have been built monoliths. It goes really quickly into the same discussion
+
+
+95
+00:08:59,400 --> 00:09:04,280
+that people are having, microservices versus monoliths. And I'm not going to say like either
+
+
+96
+00:09:04,280 --> 00:09:10,240
+one is right, but either one going to an extreme is going to be wrong and painful. Right. If
+
+
+97
+00:09:10,240 --> 00:09:16,760
+you have on your machine, 2000 different microservices running and you need Kubernetes to like manage
+
+
+98
+00:09:16,760 --> 00:09:22,120
+them, that's probably not where you want to go. But like you also probably don't want
+
+
+99
+00:09:22,120 --> 00:09:25,480
+your Slack implementation to be part of the operating system. Right. That's also probably
+
+
+100
+00:09:25,480 --> 00:09:30,760
+not the direction you want to go. But finding this balance is really hard. And there's like,
+
+
+101
+00:09:30,760 --> 00:09:37,720
+the most things there's no very easy solution, unfortunately. Speaking of solutions. So got
+
+
+102
+00:09:37,720 --> 00:09:42,960
+to think very hard. Right. So Feynman had this great method. So we wrote down a problem
+
+
+103
+00:09:42,960 --> 00:09:47,560
+and we have to think very hard. At least we have to pretend that we think, thought very
+
+
+104
+00:09:47,560 --> 00:09:55,480
+hard. And this, this quote captured like one of the themes that I eventually ended up going
+
+
+105
+00:09:55,480 --> 00:10:01,160
+to, which is perfection is achieved not when there's nothing more to add, but when there's
+
+
+106
+00:10:01,160 --> 00:10:07,600
+nothing left to take away. And, and this came very much from the, like, there's too many
+
+
+107
+00:10:07,600 --> 00:10:12,400
+layers, there's too many things. I don't know what to do. Right. It's like, so I like the
+
+
+108
+00:10:12,400 --> 00:10:19,440
+approach eventually became like, okay, what did we start with zero and only add things
+
+
+109
+00:10:19,440 --> 00:10:25,420
+that we've checked that are fine. And that we actually need. And this is the other piece
+
+
+110
+00:10:25,420 --> 00:10:31,960
+through this is like, okay, so we remove everything and try to remove as much as we can, but,
+
+
+111
+00:10:31,960 --> 00:10:37,760
+but also have a very strict rule of what, what we add back. Right. When you, anybody
+
+
+112
+00:10:37,760 --> 00:10:42,280
+has built the software and like had it interact with any other user, there's going to be a
+
+
+113
+00:10:42,280 --> 00:10:47,600
+request, like, can you maybe add this feature, which is like printing emojis, but upside
+
+
+114
+00:10:47,600 --> 00:10:54,960
+down in reverse when I press the button C. Right. And you're like, sure I can. Should
+
+
+115
+00:10:54,960 --> 00:11:02,840
+I though? Probably not in this case. But it seems like a fun program. Kubo has this problem
+
+
+116
+00:11:02,840 --> 00:11:07,720
+for many years, right? Kubo have to solve everything for everybody. Right. There's one
+
+
+117
+00:11:07,720 --> 00:11:12,040
+implementation that everybody was using. And so it had to jump through all the hoops and
+
+
+118
+00:11:12,040 --> 00:11:17,920
+like, yes, you want it. And also Kubo had the, the, the challenge of like when it, when
+
+
+119
+00:11:17,920 --> 00:11:22,560
+it was being developed, nobody knew what was IPFS was right in the first years. And so
+
+
+120
+00:11:22,560 --> 00:11:25,680
+you're, you're, you're both like trying to tell people what the thing is. They're telling
+
+
+121
+00:11:25,680 --> 00:11:31,000
+you how it needs to change. And you're like in this, in this dance. Right. And, and it's
+
+
+122
+00:11:31,000 --> 00:11:36,760
+very, very easy and actually predictable that you very quickly end up in this place. We
+
+
+123
+00:11:36,760 --> 00:11:42,080
+have a thing that kind of does everything for everybody, but also nothing for nobody
+
+
+124
+00:11:42,080 --> 00:11:52,440
+because it, it, you can't do everything at once. So we're trying to push to very much
+
+
+125
+00:11:52,440 --> 00:11:56,400
+like, okay, one user is not like one user request basically is not enough. It has to
+
+
+126
+00:11:56,400 --> 00:12:03,080
+be like a really good reason. And especially pushing to a level where why is it like always
+
+
+127
+00:12:03,080 --> 00:12:08,880
+asking why is this not application land? I think some, some systems do this really well
+
+
+128
+00:12:08,880 --> 00:12:12,840
+and they're like, they, they push everything into application land. Application land is
+
+
+129
+00:12:12,840 --> 00:12:17,920
+big, right? And developers of their own applications, right? They will know best what to do with
+
+
+130
+00:12:17,920 --> 00:12:23,080
+their metadata, how to deduplicate data. Like we can't take all the work from applications
+
+
+131
+00:12:23,080 --> 00:12:28,560
+developer and like, it would be nice, but we can't. And so, but the less we have to
+
+
+132
+00:12:28,560 --> 00:12:34,560
+do and the more abstract of a platform we actually can provide, others can go and be
+
+
+133
+00:12:34,560 --> 00:12:39,880
+like, you know what? I like this thing. And another one can be like, oh, I like this thing.
+
+
+134
+00:12:39,880 --> 00:12:43,680
+And like, they can both interact on the same platform and we don't have to make decisions
+
+
+135
+00:12:43,680 --> 00:12:47,600
+of like, no, but your data format is much nicer than yours. So we're going to use yours
+
+
+136
+00:12:47,600 --> 00:12:51,120
+and the other one is going to be upset. And like, they can talk to each other and it's
+
+
+137
+00:12:51,120 --> 00:13:00,080
+like very sad. The third one here is everybody, everybody counts. I have this nice picture
+
+
+138
+00:13:00,080 --> 00:13:08,160
+of like all the wrapping and frames that we have on like a regular UDP packet. I was like,
+
+
+139
+00:13:08,160 --> 00:13:14,560
+this is more just to highlight back in the day when it was not that much RAM and not
+
+
+140
+00:13:14,560 --> 00:13:20,000
+that much processing power around, people did a lot of many hard tricks to store. They
+
+
+141
+00:13:20,000 --> 00:13:24,720
+literally started to try to save bits, right? They would like encode bits and two of like,
+
+
+142
+00:13:24,720 --> 00:13:30,280
+oh, I have one zero padding here left. I can just encode my bit in here. Cool. People are
+
+
+143
+00:13:30,280 --> 00:13:37,440
+kind of have stopped doing this in most implementation places. It's, it's very time consuming. Like,
+
+
+144
+00:13:37,440 --> 00:13:42,000
+I'm not suggesting everybody starts doing this, but if you're building fundamental software
+
+
+145
+00:13:42,000 --> 00:13:47,400
+that you expect to be used by millions of people on millions of devices, you should
+
+
+146
+00:13:47,400 --> 00:13:53,480
+start thinking like, okay, if I add 10 bytes here, that means every device in this room
+
+
+147
+00:13:53,480 --> 00:14:01,000
+sends those 10 bytes. Maybe once a second, if we just have very low, like low communications,
+
+
+148
+00:14:01,000 --> 00:14:05,880
+this adds up very, very quickly. So if you're an application land, it's oftentimes fine.
+
+
+149
+00:14:05,880 --> 00:14:11,520
+Yeah, just use Jason, just send it over. It's fine. Compression will take care of it. But
+
+
+150
+00:14:11,520 --> 00:14:16,280
+if you're implementing protocols that are going, actually, we have to worry about the
+
+
+151
+00:14:16,280 --> 00:14:22,720
+packet size. And I was talking with Martin earlier today, like, can we get bigger packets
+
+
+152
+00:14:22,720 --> 00:14:29,840
+on UDP? Probably not. We probably suck for a while with like 12 to 1500 bytes of packets,
+
+
+153
+00:14:29,840 --> 00:14:37,200
+right? And like, okay, so this is a very limited number. So if I add 50 bytes of framing, that's
+
+
+154
+00:14:37,200 --> 00:14:43,040
+a high cost. And somebody is going to pay that. Not to say that sometimes you don't
+
+
+155
+00:14:43,040 --> 00:14:48,880
+need that. It's just be aware when you add it. And just like, don't add 50 bytes and
+
+
+156
+00:14:48,880 --> 00:14:55,520
+10 bytes and 10 bytes and 10 bytes. And then a length prefix. So you can manage the overhead
+
+
+157
+00:14:55,520 --> 00:15:02,120
+of the header. The other piece is there is every byte that we don't send makes our things
+
+
+158
+00:15:02,120 --> 00:15:07,160
+faster. And every byte we don't have to decode makes our thing faster too, right? If you
+
+
+159
+00:15:07,160 --> 00:15:14,520
+want to make something fast, what's the easiest way to do that? Avoid the work, right? So
+
+
+160
+00:15:14,520 --> 00:15:24,720
+all right. So eventually you have to write down some answers. Some of the answers that
+
+
+161
+00:15:24,720 --> 00:15:32,880
+we ended up with and looking at are kind of those five, well, they ended up being five.
+
+
+162
+00:15:32,880 --> 00:15:39,000
+One is special. Kind of goalposts for us where we're like, okay, we have these attempts of
+
+
+163
+00:15:39,000 --> 00:15:44,040
+like principles, how we can solve this. But what are we like, where are we like sticking
+
+
+164
+00:15:44,040 --> 00:15:50,280
+our hand, like posting a sign and like, we have to do this. And like, we will measure
+
+
+165
+00:15:50,280 --> 00:15:54,760
+ourselves against this afterwards. Right? So the first one is kind of this, and this
+
+
+166
+00:15:54,760 --> 00:15:58,720
+is why we're here, right? It's like, we love IPFS. We love the idea and we love the original
+
+
+167
+00:15:58,720 --> 00:16:02,860
+promise. Like I pulled this from the way back machine. This was very nostalgic when I did
+
+
+168
+00:16:02,860 --> 00:16:07,760
+that. This is how the IPFS website, this is not the first version of the IPFS website,
+
+
+169
+00:16:07,760 --> 00:16:14,960
+but it's the first like one that you want to look at. Really fun. Go, go, go, go check
+
+
+170
+00:16:14,960 --> 00:16:22,000
+it out if you, if you want to. And so it's like, we want to focus on, we're not going
+
+
+171
+00:16:22,000 --> 00:16:26,600
+to, there's some stuff in there, which is like cool, but we're probably not going to
+
+
+172
+00:16:26,600 --> 00:16:31,800
+focus on. And as you've heard this morning, like the vision of like, what is an IPFS system
+
+
+173
+00:16:31,800 --> 00:16:37,520
+has been involving like for the last, what, nine years, eight years, how old is this?
+
+
+174
+00:16:37,520 --> 00:16:41,640
+But we really want to focus on some pieces here. Like it needs to be global. It needs
+
+
+175
+00:16:41,640 --> 00:16:45,360
+to work global and needs to be peer to peer and needs. And one of the things that here
+
+
+176
+00:16:45,360 --> 00:16:50,640
+really stood out for us is like, it needs to have a simple interface, right? It can,
+
+
+177
+00:16:50,640 --> 00:17:00,720
+it needs to be very easily explained and said to people like how to use this, go and not,
+
+
+178
+00:17:00,720 --> 00:17:05,440
+you have to read three books before you can start using it.
+
+
+179
+00:17:05,440 --> 00:17:11,840
+So the other four pieces I talked about earlier, a little bit this morning is like, so reliability,
+
+
+180
+00:17:11,840 --> 00:17:18,160
+right? I can't have a program and be like, go to somebody and be like, you should totally
+
+
+181
+00:17:18,160 --> 00:17:24,560
+use this program instead of this working HTTP transport. Right? Like, right. This is, this
+
+
+182
+00:17:24,560 --> 00:17:29,000
+was like one of the like claims, okay, can we, can, can we replace HTTP? We're like,
+
+
+183
+00:17:29,000 --> 00:17:33,440
+it's a different story. But like, if I go to somebody and like web two, quote unquote,
+
+
+184
+00:17:33,440 --> 00:17:40,240
+until I'm like, here, this cool technology, it verifies your data. I'm like, cool. Okay.
+
+
+185
+00:17:40,240 --> 00:17:49,200
+I'll try it out. And like, works sometimes that, that I can't write. Like, I mean, I'll
+
+
+186
+00:17:49,200 --> 00:17:55,120
+be embarrassed. They'll be embarrassed. We'll both feel bad and like sad story. So let's,
+
+
+187
+00:17:55,120 --> 00:17:59,040
+let's not do that. The other piece is like, as I mentioned, it's like configuration and
+
+
+188
+00:17:59,040 --> 00:18:03,920
+like understanding, you can't expect people to like understand how your software works.
+
+
+189
+00:18:03,920 --> 00:18:08,400
+You have to give them software that works with some instructions, but you can't have
+
+
+190
+00:18:08,400 --> 00:18:14,000
+to like, you cannot be like, Oh, I need to teach you eight different concepts of like,
+
+
+191
+00:18:14,000 --> 00:18:19,520
+I don't know, object inheritance before you can use my software. No, it's your job as
+
+
+192
+00:18:19,520 --> 00:18:24,880
+a developer to understand object inheritance, to implement the program, but it's not your
+
+
+193
+00:18:24,880 --> 00:18:29,280
+customer's job to like, understand that you need to give them a simple interface that
+
+
+194
+00:18:29,280 --> 00:18:35,280
+they can actually just go and use. And for us, it's also like, it would be really nice
+
+
+195
+00:18:35,280 --> 00:18:40,960
+if there's a certain delight to using software. I think software engineering is a certain
+
+
+196
+00:18:40,960 --> 00:18:45,960
+craft and it's like, that's just, it's kind of a cherry on top, but it makes a big difference
+
+
+197
+00:18:45,960 --> 00:18:50,920
+for a lot of people, especially when you download a lot of software today and you're like, this
+
+
+198
+00:18:50,920 --> 00:18:58,000
+is not very delightful to use. It needs to be fast. I said like, look, if I go to somebody
+
+
+199
+00:18:58,000 --> 00:19:02,520
+and like, Hey, you can use this instead of curl. And like, it takes like 10 minutes to
+
+
+200
+00:19:02,520 --> 00:19:07,440
+download five megabytes. It's like, Hmm, they're going to be like, I go back and I'm going
+
+
+201
+00:19:07,440 --> 00:19:13,120
+to use curl. So the thing that we have to measure against ourselves is HTTP web servers.
+
+
+202
+00:19:13,120 --> 00:19:18,320
+Like this is like, this is the, if it's slower than that, we're going to get laughed out
+
+
+203
+00:19:18,320 --> 00:19:24,000
+of the room in most conversations. Um, because we need to have a conversation where we're
+
+
+204
+00:19:24,000 --> 00:19:30,760
+like, Hey, we, we're this fast, but also we add this big benefit, which is content addressing.
+
+
+205
+00:19:30,760 --> 00:19:36,200
+Cool. Your data is verified. You actually get the data and like, you know, it's the
+
+
+206
+00:19:36,200 --> 00:19:41,880
+right data and not just some arbitrary other data, right? This like, we need to have additional
+
+
+207
+00:19:41,880 --> 00:19:47,560
+features, not less. We can't be like, Oh, you trade off performance, but we give you
+
+
+208
+00:19:47,560 --> 00:19:51,400
+some content or something like, I'm going to make, no, I need my data today. My user
+
+
+209
+00:19:51,400 --> 00:19:59,400
+is going to kill me if I don't do that. Efficiency. Um, so efficiency originally this was like
+
+
+210
+00:19:59,400 --> 00:20:00,400
+kind of lumped together.
+
+
+211
+00:20:00,000 --> 00:20:30,000
+but I pulled it apart specifically because I think, um, it gets all left out a lot because you think you're like, I have the most efficient algorithm to compute pie. Cool. But what if I told you, you don't need to compute pie. You can just look up the first hundred digits in this lexicon, right? There's, there's no need to do that work. Right. And so, um, oftentimes we'll have sometimes where we get like very performance obsessed. It was like, it's going to optimize what is there.
+
+
+212
+00:20:30,000 --> 00:21:00,000
+And I was like, no, like let's took a step back and let's say, see if we can a avoid the work and be most environments are very resource constrained. Even though we, we, we tend to forget is like, okay, our Mac books are very fast. Cool. My iPhone is super fast. Cool. This big ass machine that runs my home server, which is totally overkill has like 64 cores. Like cool. Okay. Right. Like what resource constraints? Nah. Um, and then you go and like look at your phone and you try to
+
+
+213
+00:21:00,000 --> 00:21:03,600
+use an app and like an implement an app on a phone, like even on a really modern phone.
+
+
+214
+00:21:03,600 --> 00:21:09,040
+It's like, oh, after two minutes I get killed by the operating system. So. Okay. I've like,
+
+
+215
+00:21:09,040 --> 00:21:13,600
+I've probably better make use of those two minutes very well. And oh, if my CPU spikes too hard,
+
+
+216
+00:21:13,600 --> 00:21:16,800
+the operating system is also upset with me because I'm draining too much battery. So I guess
+
+
+217
+00:21:17,440 --> 00:21:22,960
+I don't know about betray compute course here. Um, and so there's, there's, there's a many pieces
+
+
+218
+00:21:22,960 --> 00:21:28,960
+on the efficiency side, but it's really, you need to look at binary size, CPU usage, RAM usage,
+
+
+219
+00:21:28,960 --> 00:21:33,680
+network usage. Yeah. Mobile networks are not fast. Um, sometimes they're about there. There's the
+
+
+220
+00:21:33,680 --> 00:21:40,240
+five G right. Sure. But do you have like, how much do you have five G if you're not in a big city,
+
+
+221
+00:21:40,240 --> 00:21:45,440
+like for two minutes a day, if you're lucky and then you get to another wife and all your IP
+
+
+222
+00:21:45,440 --> 00:21:53,520
+addresses change. And that's a fun story. Um, and then the fourth one is Peter pier,
+
+
+223
+00:21:53,520 --> 00:21:59,760
+right? As I mentioned in the original piece of about IPFS, um, for some, some is like
+
+
+224
+00:21:59,760 --> 00:22:05,520
+content dressing is the core, um, for us, peer to peer is still still really important.
+
+
+225
+00:22:05,520 --> 00:22:11,360
+And, and this is not necessarily just for the reason that like, we think things should be
+
+
+226
+00:22:11,920 --> 00:22:16,560
+less centralized, but also because this is actually one that both makes our problem harder,
+
+
+227
+00:22:16,560 --> 00:22:21,280
+but also gives us an advantage. It's, it's the one thing where we can actually be like, Hey,
+
+
+228
+00:22:21,280 --> 00:22:26,560
+we might be able to be faster than they. Right. So yes, conceptually, it's very easy to just
+
+
+229
+00:22:26,560 --> 00:22:33,120
+download the thing, sorry, from the big server, but there is actually inefficiencies in this system.
+
+
+230
+00:22:33,840 --> 00:22:39,600
+And if we are clever enough, and this is like, I want to, like, I cannot emphasize this enough.
+
+
+231
+00:22:39,600 --> 00:22:47,120
+This makes the problems that we're trying to solve a magnitude harder than the centralized
+
+
+232
+00:22:47,120 --> 00:22:52,080
+version. It was like, but it is theoretically at least possible that we can be more efficient
+
+
+233
+00:22:52,080 --> 00:22:58,800
+and actually more actually be faster. Right. Because it is faster to download this content
+
+
+234
+00:22:58,800 --> 00:23:03,680
+across the room than to pull it from Google servers, even if they're like three streets down,
+
+
+235
+00:23:05,200 --> 00:23:11,040
+but it's really hard and the hardware and the way that the software, most of places is architect
+
+
+236
+00:23:11,040 --> 00:23:16,000
+today is not optimized for doing this. So we have to like fight a lot of obstacles and like,
+
+
+237
+00:23:16,000 --> 00:23:20,640
+it is really hard, but if it works, it is kind of magical and really cool.
+
+
+238
+00:23:24,240 --> 00:23:28,960
+All right. So I already, earlier I mentioned, then writing down the answer.
+
+
+239
+00:23:30,400 --> 00:23:36,640
+Part of that was writing some code because, you know, I like writing code. So we made this
+
+
+240
+00:23:36,640 --> 00:23:41,760
+prototype called send me. And the idea was just like, okay, so what's the dumbest thing we can
+
+
+241
+00:23:41,760 --> 00:23:47,280
+do that kind of does this? And so it was like, okay, we need, we need to talk to two devices,
+
+
+242
+00:23:47,280 --> 00:23:51,840
+need to talk to each other, two nodes. Okay. So I'm going to use quick. All right. Quick kind of
+
+
+243
+00:23:51,840 --> 00:23:57,440
+gives us, it gives you encryption, gives you cool streams, like nice. And like, there's libraries
+
+
+244
+00:23:57,440 --> 00:24:01,680
+that can just pull off the shelf and like use them. Cool. All right. So I have a network connection.
+
+
+245
+00:24:03,440 --> 00:24:09,760
+Now quick is not very cool with like peer to peer in theory, because it uses CLS and TLS
+
+
+246
+00:24:09,760 --> 00:24:13,600
+like certificates and like certificates, like authorities. And we're like, ah,
+
+
+247
+00:24:14,400 --> 00:24:18,480
+but luckily the lip PDP teams that solve that for us. So there's lip PDP TLS,
+
+
+248
+00:24:20,080 --> 00:24:24,080
+which does generate the right certificates for you. And there's the library you can just use,
+
+
+249
+00:24:24,080 --> 00:24:30,000
+which is really nice. Okay, cool. So we have, we can talk to each other. Okay. Like,
+
+
+250
+00:24:30,000 --> 00:24:35,360
+so there's this thing called there isn't right. So we need a hash function. What a hash function.
+
+
+251
+00:24:35,360 --> 00:24:41,360
+So there's this cool hash function that we like called Blake three, which allows you to do
+
+
+252
+00:24:41,360 --> 00:24:46,160
+verified streaming. So you have a gigabyte blob and you send it over and you don't have to trust
+
+
+253
+00:24:46,160 --> 00:24:51,280
+download the whole glob. No, you start verifying it immediately as you go using a protocol called
+
+
+254
+00:24:51,280 --> 00:24:56,960
+bow. There's a nice talk from Rudiger earlier today, but all the fun things you can do with
+
+
+255
+00:24:56,960 --> 00:25:03,200
+that. So we kind of smushed those two together and be like, does this work? And it actually worked.
+
+
+256
+00:25:03,200 --> 00:25:07,920
+That was really fast. And like the quick implementation still have some way to go
+
+
+257
+00:25:07,920 --> 00:25:14,880
+to where as fast as TCP, but it's getting there. Um, and there was nothing else we kind of knew.
+
+
+258
+00:25:14,880 --> 00:25:19,440
+We just sent the hash and it was like verified streaming. We just exchanged a gigabyte of data
+
+
+259
+00:25:19,440 --> 00:25:28,080
+and it was like, cool. And then we're like, okay. And now, and now what? So we, we kind of spun on
+
+
+260
+00:25:28,080 --> 00:25:33,680
+this idea and try to like, okay, how far can we push this? And, and back to the thing, like how
+
+
+261
+00:25:33,680 --> 00:25:38,000
+many things can you remove? We were like, basically took this on the one hand side and then the other
+
+
+262
+00:25:38,000 --> 00:25:43,360
+side, like all of like our existing, then existing IRA implementation, all the things we have to like
+
+
+263
+00:25:43,360 --> 00:25:48,720
+add for like full compatibility with Kubo. And so like compare the two and we're like, okay, like,
+
+
+264
+00:25:48,720 --> 00:25:55,840
+look like what's pull over what we absolutely need and see how far we can get. And that's basically
+
+
+265
+00:25:55,840 --> 00:26:00,480
+what the new IRA is. And some of the things I'm not going to talk about the things that we added,
+
+
+266
+00:26:00,480 --> 00:26:05,920
+I'm going to talk about the things that we didn't add very explicitly. So the first one was there's
+
+
+267
+00:26:05,920 --> 00:26:13,520
+no data store. So if you've ever run Kubo, if you want to add your data, just gets sucked up and
+
+
+268
+00:26:13,520 --> 00:26:20,320
+it's gone. Well, it's still there, but the data that Kubo actually tracks by default, um, is gone.
+
+
+269
+00:26:20,320 --> 00:26:28,880
+And so the data actually ends up being chunked up and stored in a block store though slash data
+
+
+270
+00:26:28,880 --> 00:26:34,560
+store in Kubo that, um, there is a pattern called file store in Kubo, which does not do that,
+
+
+271
+00:26:34,560 --> 00:26:42,640
+which means it will just reference the original data. Um, but adding, so, but if you want to do
+
+
+272
+00:26:42,640 --> 00:26:47,440
+both of these things get very quickly, very complex, right? Because then you're in competition
+
+
+273
+00:26:47,440 --> 00:26:51,520
+like, okay, maybe this data is managed by the user. Maybe I'm managing this youth data
+
+
+274
+00:26:52,320 --> 00:26:57,040
+gets very nasty. So we originally, we were like, well, we obviously have to have a database. Like
+
+
+275
+00:26:57,040 --> 00:27:00,400
+it was like thinking about writing our own database. And it's like, we can optimize this
+
+
+276
+00:27:00,400 --> 00:27:05,680
+the hell out of this. Cool. But like, then we went to the Delta folks and they were like, dude,
+
+
+277
+00:27:05,680 --> 00:27:10,160
+you can't duplicate storage. Right? So the implement, the thing there was like,
+
+
+278
+00:27:10,160 --> 00:27:15,040
+this is a backup service. So they make a backup and now we need to ingest that. And we're like,
+
+
+279
+00:27:15,040 --> 00:27:20,240
+yeah, you'll just have double that. And they're like, you don't have the space for this on my SD
+
+
+280
+00:27:20,240 --> 00:27:26,240
+card. And so like, okay, I guess we need to rethink this. So we're like, okay, there's a
+
+
+281
+00:27:26,240 --> 00:27:32,800
+file store pattern. We can do this. But then when you think about adding complexity, it gets really
+
+
+282
+00:27:32,800 --> 00:27:38,240
+messy very quickly. So we're like, okay, what if we didn't ever store data ourselves? We already
+
+
+283
+00:27:38,240 --> 00:27:44,400
+have Blake three. So Blake three gives us the ability to avoid blocks. So the actual blocks
+
+
+284
+00:27:44,400 --> 00:27:50,560
+chunking, so we can just reference whole arbitrarily large files. And so we ended up
+
+
+285
+00:27:50,560 --> 00:27:56,320
+actually not using that at all. Right? So we just entirely store things outside.
+
+
+286
+00:27:57,200 --> 00:28:02,080
+And when the user gives us data, they give up as a path. And we're like, okay, this is the data.
+
+
+287
+00:28:02,080 --> 00:28:08,240
+If you change it, you're on your own. But we'll verify when we serve the data, that it is the data
+
+
+288
+00:28:08,240 --> 00:28:15,760
+that you gave us. And you're saying we're serving. So we don't become a bad node, but everything
+
+
+289
+00:28:15,760 --> 00:28:25,360
+else is up to the user. One other thing we're leaving out gateways. So HTTP gateway is cool,
+
+
+290
+00:28:26,960 --> 00:28:32,160
+but there are other people who are much better than writing web servers than ours. And like
+
+
+291
+00:28:32,160 --> 00:28:38,160
+writing yet another web service seems to like not be the ideal thing. So our current thinking
+
+
+292
+00:28:38,160 --> 00:28:44,080
+is here, we, I was focused to be a library. We're going to make it easy for people to write
+
+
+293
+00:28:44,960 --> 00:28:49,840
+an API on top of that, if that's needed. And I can just, you know, you can just make Jason RPC
+
+
+294
+00:28:50,560 --> 00:28:54,640
+APIs to this, and then you can call this from a browser. That's cool. And or from JavaScript,
+
+
+295
+00:28:54,640 --> 00:28:58,480
+if you want to, like, we don't need to have actually provide a web server. You can just
+
+
+296
+00:28:58,480 --> 00:29:03,600
+add the API and then use some tiny amounts of JavaScript to put things together if you want
+
+
+297
+00:29:03,600 --> 00:29:08,240
+in the browser. If you don't need this, like I wrote, like a lot of cases will be just fully
+
+
+298
+00:29:08,240 --> 00:29:16,880
+embedded into the application. You don't need a web server either. Without the P2P, for now,
+
+
+299
+00:29:18,160 --> 00:29:24,880
+this one, this one was a tricky one because it was the hardest breaking change we currently have.
+
+
+300
+00:29:27,200 --> 00:29:32,240
+The biggest one, as I mentioned earlier, was the many layers. And the P2P focuses on
+
+
+301
+00:29:32,240 --> 00:29:38,480
+solving a really hard problem. It's like, it wants to give you a modular configurable network stack
+
+
+302
+00:29:38,480 --> 00:29:45,840
+for P2P systems. That's at least what it says on the website today. That is a really, really hard
+
+
+303
+00:29:45,840 --> 00:29:52,400
+problem. But we don't want configurability. We want one protocol, one thing that does it,
+
+
+304
+00:29:52,400 --> 00:29:57,200
+and that works out of the box. And if we change something, we're going to increase the version
+
+
+305
+00:29:57,200 --> 00:30:02,320
+number and it's going to be entirely incompatible for a while anyway. So we don't want that, actually.
+
+
+306
+00:30:02,880 --> 00:30:08,400
+And so for us, it is right now just a lot easier and faster to iterate because we remove those
+
+
+307
+00:30:08,400 --> 00:30:12,080
+layers of configurability. Because every time you added the possibility to change something,
+
+
+308
+00:30:12,960 --> 00:30:18,320
+somewhere there is a config option stored. And you have to make decisions based on that dynamically,
+
+
+309
+00:30:18,320 --> 00:30:30,000
+and it costs you. Without a file system, this one is also potentially kind of weird, right?
+
+
+310
+00:30:30,000 --> 00:30:37,440
+Has it IPFS file systems kind of in the name. Our current abstraction, there's no actual file
+
+
+311
+00:30:37,440 --> 00:30:45,200
+system abstraction. As people know, nobody likes UnixFS, I think. Everybody's like, UnixFS v2,
+
+
+312
+00:30:45,200 --> 00:30:51,520
+WinFS, IPVM. But we haven't figured it out. WinFS, there's implementations, but it's like,
+
+
+313
+00:30:52,720 --> 00:30:58,400
+this will change again. I'm pretty sure there will be WinFS v2 and other cool file system
+
+
+314
+00:30:58,400 --> 00:31:03,600
+abstractions. We don't think we actually need to make that decision as long as we provide enough
+
+
+315
+00:31:03,600 --> 00:31:08,080
+underlying building blocks for people to actually build a file system abstraction on top of this.
+
+
+316
+00:31:08,080 --> 00:31:10,560
+But a lot of applications don't need a file system under the hood, right?
+
+
+317
+00:31:10,560 --> 00:31:16,160
+Like, if you write a simple data application, you're just like, store my data, give me back my
+
+
+318
+00:31:16,160 --> 00:31:21,680
+data by key maybe. File systems are make a cool, like, they work for a lot of applications,
+
+
+319
+00:31:21,680 --> 00:31:26,400
+but they're not necessarily the right abstraction. And so we're saying, we're trying to go a little
+
+
+320
+00:31:26,400 --> 00:31:31,840
+bit deeper, lower. And if you want to have a file system abstraction, hopefully we give you all the
+
+
+321
+00:31:31,840 --> 00:31:35,120
+right tools to actually build that on top, and we can iterate in application space.
+
+
+322
+00:31:35,120 --> 00:31:43,280
+Very similar for IPLD in a sense. Data modeling is really, really hard. And the problems IPLD is
+
+
+323
+00:31:43,280 --> 00:31:48,320
+trying to solve are really, really hard. But there are also a lot of other people who have been
+
+
+324
+00:31:48,320 --> 00:31:52,640
+trying to solve these problems and have very strong opinions about these. And we're like,
+
+
+325
+00:31:52,640 --> 00:31:55,840
+we're not going to make the right decision. It doesn't matter. Like, we can choose like,
+
+
+326
+00:31:55,840 --> 00:32:00,480
+A or B, and it's going to be wrong for a lot of people. So we're trying to basically, again,
+
+
+327
+00:32:00,480 --> 00:32:05,280
+remove ourselves as much as we can from that decision process. So you can put Cboard data on
+
+
+328
+00:32:05,280 --> 00:32:11,360
+this, you can put JSON data on this. We don't care. We're not going to attempt to read that.
+
+
+329
+00:32:11,360 --> 00:32:16,240
+It's going to be like, we're going to make it, try to make it as easy for you to read that and do
+
+
+330
+00:32:16,240 --> 00:32:21,600
+logic based on that in your application. And you can probably add IPLD libraries and you just run
+
+
+331
+00:32:21,600 --> 00:32:26,080
+them on top if you really like that. But we don't have to actually understand what that means.
+
+
+332
+00:32:26,080 --> 00:32:32,560
+We can just hand that off. The same way your HTTP connection doesn't actually understand
+
+
+333
+00:32:32,560 --> 00:32:41,040
+what JSON is. That was a bad comparison. Anyway. So we focus on these couple minimal
+
+
+334
+00:32:41,040 --> 00:32:46,640
+building blocks, right? So we like hashes. Hashes are cool. We like bytes because usually that's
+
+
+335
+00:32:46,640 --> 00:32:53,840
+the thing that we all agree on. Like, what do we need to move around? Bytes. So we take hashes or
+
+
+336
+00:32:53,840 --> 00:32:59,920
+bytes and then we need this one additional piece, which we might get almost rid of, which is called
+
+
+337
+00:32:59,920 --> 00:33:04,400
+list of hashes. So you want to like have more than one hash. You just don't want to send them,
+
+
+338
+00:33:04,400 --> 00:33:09,840
+but you want to kind of group them together. Currently call them collections. And they're
+
+
+339
+00:33:09,840 --> 00:33:15,200
+just a list of hashes. And you can say, give me all the, this collection until just download
+
+
+340
+00:33:15,200 --> 00:33:21,120
+like links, just like each piece, one after the other. Currently we're thinking we might be able
+
+
+341
+00:33:21,120 --> 00:33:25,520
+to actually get rid of this concept for the most part. Iris still needs to understand this idea,
+
+
+342
+00:33:26,400 --> 00:33:30,960
+but we don't need to have a separate type. Technically that collection is also just bytes.
+
+
+343
+00:33:31,760 --> 00:33:38,880
+And so maybe we can be very clever and simplify this even more, but that's still trying to figure
+
+
+344
+00:33:38,880 --> 00:33:47,920
+that out. All right. My time has ended two minutes ago. So the future is coming. Hopefully
+
+
+345
+00:33:47,920 --> 00:33:56,880
+a couple of things we're working on right now. Connectivity. So turns out right now we don't
+
+
+346
+00:33:56,880 --> 00:34:01,120
+have pole punching. Like, so things work with static IPs. That's great, but nobody has static
+
+
+347
+00:34:01,120 --> 00:34:07,360
+IPs anymore. So hole punching and relays is getting close. So this is coming very soon.
+
+
+348
+00:34:07,360 --> 00:34:12,480
+Data transfer. Almost done. Very coming very soon. Resumability and range requests.
+
+
+349
+00:34:12,480 --> 00:34:17,680
+All right. So if you interrupt things of large transfers, we can actually resume in the middle.
+
+
+350
+00:34:18,560 --> 00:34:22,320
+And range requests. So we can say, give me the first hundred bytes and the last 200 bytes and
+
+
+351
+00:34:22,320 --> 00:34:28,720
+the three bytes in the middle at offset 14. And the same for collections. So we will be able to
+
+
+352
+00:34:28,720 --> 00:34:33,520
+say, like, give me the first three items in this collection and the last two items and give me the
+
+
+353
+00:34:33,520 --> 00:34:38,640
+five bytes of those last. Which makes for some really interesting things because with a single
+
+
+354
+00:34:38,640 --> 00:34:43,680
+round request, the application knows exactly what's going to be in those bytes. So you can
+
+
+355
+00:34:43,680 --> 00:34:49,440
+now start embedding bytes at the beginning of files, for example, again. And content discovery,
+
+
+356
+00:34:49,440 --> 00:34:53,440
+I mentioned, is a hard problem. A lot of people are thinking about content discovery. We've been
+
+
+357
+00:34:53,440 --> 00:34:59,120
+doing some research. We have a rough idea of what we want to do, but still need to actually
+
+
+358
+00:34:59,120 --> 00:35:08,480
+implement that. All right. Sloppy. So the extension to... There's a nice paper about
+
+
+359
+00:35:08,480 --> 00:35:15,280
+distributed sloppy hash tables. Just kind of an extension of Cademblia. All right.
+
+
+360
+00:35:16,640 --> 00:35:20,160
+I don't know if I have time for questions, but yeah. That's my spiel.
+
+
+361
+00:35:20,160 --> 00:35:37,840
+So you tore out IPLD, which I love that. But I think that Adine's lenses are kind of useful
+
+
+362
+00:35:37,840 --> 00:35:41,920
+for making sure that you don't have to... You know, you can, like, compute where the data is.
+
+
+363
+00:35:43,040 --> 00:35:47,920
+Do you have any plans for standardization of that? Or are you going to leave it up to, like,
+
+
+364
+00:35:47,920 --> 00:35:53,280
+some kind of very, very arbitrary computing layer? Is there any thoughts about this yet?
+
+
+365
+00:35:54,560 --> 00:36:00,080
+Mostly just leave it up to the application. So I think we're going to see a lot of different
+
+
+366
+00:36:00,080 --> 00:36:04,160
+experimentation with this, especially with, like, the various WASM approaches. Like,
+
+
+367
+00:36:04,160 --> 00:36:10,400
+somebody very eloquently earlier this morning said, like, put WASM somewhere in IPFS,
+
+
+368
+00:36:10,400 --> 00:36:16,800
+tacked on. I don't know. I don't want to put a VM into IRO, but that doesn't mean there couldn't be,
+
+
+369
+00:36:16,800 --> 00:36:23,680
+like, a nice library, which is just WASM IRO. I don't know. Which just runs arbitrary WASM and
+
+
+370
+00:36:23,680 --> 00:36:29,120
+exposes hooks to, like, fetch data through IRO, right? But the goal is, like, especially with
+
+
+371
+00:36:29,120 --> 00:36:35,520
+the range requests, make that, like, give a lot of, like, very low-level, actually, primitives
+
+
+372
+00:36:35,520 --> 00:36:41,280
+to people to allow to experiment with these things, right? So that if your application uses
+
+
+373
+00:36:41,280 --> 00:36:46,560
+lenses, cool. Everybody who uses lenses over top of IRO, they can all collaborate. But not everybody
+
+
+374
+00:36:46,560 --> 00:36:50,880
+who uses IRO has to now use lenses to get any data out.

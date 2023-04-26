@@ -1,0 +1,1848 @@
+1
+00:00:00,000 --> 00:00:07,800
+So today we're going to learn about federated machine learning on FEVM.
+
+
+2
+00:00:07,800 --> 00:00:12,800
+So I'll share a little bit about me, talk about the impact of machine learning and how
+
+
+3
+00:00:12,800 --> 00:00:19,400
+it's growing every day tremendously, and how we combine federated machine learning and
+
+
+4
+00:00:19,400 --> 00:00:21,940
+blockchain.
+
+
+5
+00:00:21,940 --> 00:00:23,080
+So here's a little bit about me.
+
+
+6
+00:00:23,080 --> 00:00:25,240
+I'm a data engineer and blockchain developer.
+
+
+7
+00:00:25,240 --> 00:00:27,320
+I'm crazy about data.
+
+
+8
+00:00:27,320 --> 00:00:33,880
+I have a very eclectic engineering experience, from academic research to consulting, entrepreneurship,
+
+
+9
+00:00:33,880 --> 00:00:34,880
+working with CPG brands.
+
+
+10
+00:00:34,880 --> 00:00:39,600
+And to me, the biggest part of my development in Web3 has definitely been participating
+
+
+11
+00:00:39,600 --> 00:00:45,940
+in hackathons and DAOs, including being involved with D-ORG, which is a DAO that provides services
+
+
+12
+00:00:45,940 --> 00:00:52,560
+to different startups and businesses in Web3 for software engineering and design, all that
+
+
+13
+00:00:52,560 --> 00:00:54,000
+good stuff.
+
+
+14
+00:00:54,000 --> 00:00:58,440
+And you can find me on social and all that good stuff under Techie T.
+
+
+15
+00:00:58,440 --> 00:01:00,400
+So why is this so important?
+
+
+16
+00:01:00,400 --> 00:01:07,400
+So according to McKinsey's AI report, by 2030, the global economic impact of AI, machine
+
+
+17
+00:01:07,400 --> 00:01:11,800
+learning, and automation is going to be more than $13 trillion.
+
+
+18
+00:01:11,800 --> 00:01:13,880
+That's a lot of money, right?
+
+
+19
+00:01:13,880 --> 00:01:17,680
+But we still have a lot of unanswered questions about how this will impact a lot of different
+
+
+20
+00:01:17,680 --> 00:01:18,680
+industries.
+
+
+21
+00:01:18,680 --> 00:01:24,520
+Think about all the models that have become really popular over just the past few months
+
+
+22
+00:01:24,520 --> 00:01:28,680
+and have become just like everyday language and everyday experiences.
+
+
+23
+00:01:28,680 --> 00:01:33,520
+From stable to fusion, chat GPT, mid-journey, BARD, Bing.
+
+
+24
+00:01:33,520 --> 00:01:36,560
+And these models are not just going to be isolated to single industries.
+
+
+25
+00:01:36,560 --> 00:01:42,320
+They're going to have a tremendous impact on things like public policy, safety management,
+
+
+26
+00:01:42,320 --> 00:01:45,000
+decision making, law, medicine.
+
+
+27
+00:01:45,000 --> 00:01:52,080
+So how can we think about pushing this boundary even further and integrating this into blockchain?
+
+
+28
+00:01:52,080 --> 00:01:55,780
+So this is why I'm really excited about federated machine learning.
+
+
+29
+00:01:55,780 --> 00:02:00,120
+So with the average machine learning model that you have right now, the model and the
+
+
+30
+00:02:00,120 --> 00:02:03,040
+data have to work pretty close together.
+
+
+31
+00:02:03,040 --> 00:02:07,120
+So you have to share data from your devices to these models and then use that to train
+
+
+32
+00:02:07,120 --> 00:02:10,040
+the model and then develop the model, right?
+
+
+33
+00:02:10,040 --> 00:02:13,200
+But with federated machine learning, it takes a completely different approach.
+
+
+34
+00:02:13,200 --> 00:02:17,480
+It says instead of us sending, you can see here, sad clown, right?
+
+
+35
+00:02:17,480 --> 00:02:22,440
+So the data is being sent away from the devices to the model.
+
+
+36
+00:02:22,440 --> 00:02:26,780
+And we can actually change it to where the model is being sent to the device instead
+
+
+37
+00:02:26,780 --> 00:02:28,400
+of the data being sent.
+
+
+38
+00:02:28,400 --> 00:02:31,040
+This allows for more data privacy for the user.
+
+
+39
+00:02:31,040 --> 00:02:35,840
+This allows for us to expand new use cases in different industries where data privacy
+
+
+40
+00:02:35,840 --> 00:02:36,840
+is really important.
+
+
+41
+00:02:36,840 --> 00:02:41,560
+Think about law and medicine where you have a lot of different regulatory things and laws
+
+
+42
+00:02:41,560 --> 00:02:44,560
+that prohibit how data can be shared.
+
+
+43
+00:02:44,560 --> 00:02:47,680
+But we're missing out on a lot of those machine learning insights because of the regulatory
+
+
+44
+00:02:47,680 --> 00:02:48,680
+things around that.
+
+
+45
+00:02:48,680 --> 00:02:54,120
+FNL will allow us to explore what those use cases look like in these highly regulated
+
+
+46
+00:02:54,120 --> 00:02:57,800
+spaces while still protecting the privacy of the user.
+
+
+47
+00:02:57,800 --> 00:03:03,640
+It also makes you think about everyday items like your Google Assistant or Siri or your
+
+
+48
+00:03:03,640 --> 00:03:05,640
+different IoT devices that are at home.
+
+
+49
+00:03:05,640 --> 00:03:10,840
+You don't want your data that you have made at home and different things you've asked,
+
+
+50
+00:03:10,840 --> 00:03:15,920
+you know, Alexa and Siri to be shared with all the other users in that network, right?
+
+
+51
+00:03:15,920 --> 00:03:19,240
+But you might want to still benefit from the machine learning insights on your individual
+
+
+52
+00:03:19,240 --> 00:03:21,240
+data.
+
+
+53
+00:03:21,240 --> 00:03:30,300
+So let's actually build one during this little workshop and deploy it to FEVM.
+
+
+54
+00:03:30,300 --> 00:03:34,480
+So if you really want to follow along, you can scan this link right here, and then that
+
+
+55
+00:03:34,480 --> 00:03:35,480
+will give you all the materials.
+
+
+56
+00:03:35,480 --> 00:03:41,760
+It will give you the Google Colab link and also give you the repo for the model in the
+
+
+57
+00:03:41,760 --> 00:03:43,360
+smart contract.
+
+
+58
+00:03:43,360 --> 00:03:44,360
+So I like interaction.
+
+
+59
+00:03:44,360 --> 00:03:45,360
+I like feedback.
+
+
+60
+00:03:45,360 --> 00:03:46,360
+So if you're doing good, say, I'm doing good.
+
+
+61
+00:03:46,360 --> 00:03:47,360
+So every time I ask, give me a thumbs up.
+
+
+62
+00:03:47,360 --> 00:03:52,520
+Let me know you're breathing your last on me, okay?
+
+
+63
+00:03:52,520 --> 00:03:55,800
+So if everybody who wants to follow along has it, give me a thumbs up.
+
+
+64
+00:03:55,800 --> 00:03:56,800
+Are you good?
+
+
+65
+00:03:56,800 --> 00:03:57,800
+You're good?
+
+
+66
+00:03:57,800 --> 00:03:58,800
+Okay.
+
+
+67
+00:03:58,800 --> 00:04:02,320
+So I'm going to switch to the Google Colab.
+
+
+68
+00:04:02,320 --> 00:04:06,000
+So the reason why I use Google Colab is because we can run this completely online without
+
+
+69
+00:04:06,000 --> 00:04:09,080
+having to deal with the local environment.
+
+
+70
+00:04:09,080 --> 00:04:12,080
+So as long as you go to the link right here, we're going to go through each step, and I'll
+
+
+71
+00:04:12,080 --> 00:04:14,980
+explain what's happening in each part, okay?
+
+
+72
+00:04:14,980 --> 00:04:17,460
+So first we got to install our packages, right?
+
+
+73
+00:04:17,460 --> 00:04:20,960
+So just press the little play button right there.
+
+
+74
+00:04:20,960 --> 00:04:24,600
+It's going to do all the installation of the packages that we need.
+
+
+75
+00:04:24,600 --> 00:04:27,000
+The main package that we'll be using is something called Flowers.
+
+
+76
+00:04:27,000 --> 00:04:32,280
+Flowers is a very user-friendly federated machine learning package in Python.
+
+
+77
+00:04:32,280 --> 00:04:38,280
+And to me, it's one of the best libraries I found from the ones I tested out, because
+
+
+78
+00:04:38,280 --> 00:04:41,320
+you don't have to do a lot of configuration before running it, and you can run it in a
+
+
+79
+00:04:41,320 --> 00:04:43,400
+nice environment at Google Colab.
+
+
+80
+00:04:43,400 --> 00:04:46,480
+You can also run it in your local environment, too, if that's what you choose.
+
+
+81
+00:04:46,480 --> 00:04:50,480
+So this takes a few seconds for it to go.
+
+
+82
+00:04:50,480 --> 00:04:54,520
+It's loading, it's thinking, it's doing all that good stuff in the background.
+
+
+83
+00:04:54,520 --> 00:04:57,760
+Then after that, we're going to do all the imports that we need.
+
+
+84
+00:04:57,760 --> 00:04:59,760
+And I'll also tell you about the dataset that we're using.
+
+
+85
+00:04:59,760 --> 00:05:06,240
+The dataset that we're using is basically used for object detection.
+
+
+86
+00:05:06,240 --> 00:05:12,120
+It's used in a lot of visual detection algorithms.
+
+
+87
+00:05:12,120 --> 00:05:16,520
+It's about over 66,000 images in 10 different classes.
+
+
+88
+00:05:16,520 --> 00:05:19,360
+It's used pretty widely.
+
+
+89
+00:05:19,360 --> 00:05:22,600
+So now we've done all the imports and the installs, and now we're going to load the
+
+
+90
+00:05:22,600 --> 00:05:23,600
+data right here.
+
+
+91
+00:05:23,600 --> 00:05:26,680
+CIFAR10 is the dataset we're using.
+
+
+92
+00:05:26,680 --> 00:05:30,120
+So if you want to learn more about the dataset, just go here and check it out.
+
+
+93
+00:05:30,120 --> 00:05:32,240
+These are the classes that we'll be using.
+
+
+94
+00:05:32,240 --> 00:05:33,240
+Common everyday objects.
+
+
+95
+00:05:33,240 --> 00:05:36,280
+You know, plane, car, bird, cat.
+
+
+96
+00:05:36,280 --> 00:05:37,480
+Normal stuff, right?
+
+
+97
+00:05:37,480 --> 00:05:40,520
+So we define our classes right here.
+
+
+98
+00:05:40,520 --> 00:05:42,480
+Now we're going to determine the number of clients.
+
+
+99
+00:05:42,480 --> 00:05:44,720
+So for this demonstration, I'm only defining 16.
+
+
+100
+00:05:44,720 --> 00:05:46,720
+It's a pretty small number, right?
+
+
+101
+00:05:46,720 --> 00:05:50,640
+But if we get into large numbers, like 100 or so, I tried out different numbers of classes
+
+
+102
+00:05:50,640 --> 00:05:51,640
+and batches.
+
+
+103
+00:05:51,640 --> 00:05:52,640
+Oh.
+
+
+104
+00:05:52,640 --> 00:05:57,760
+Let's see.
+
+
+105
+00:05:57,760 --> 00:05:58,760
+Is that better?
+
+
+106
+00:05:58,760 --> 00:05:59,760
+Okay.
+
+
+107
+00:05:59,760 --> 00:06:04,800
+So when you go beyond, like, around 20 or so, Google Colab starts to freak out.
+
+
+108
+00:06:04,800 --> 00:06:08,920
+So keep it small if you're going to be running it in an online environment.
+
+
+109
+00:06:08,920 --> 00:06:11,240
+But for this one, I defined 16 clients.
+
+
+110
+00:06:11,240 --> 00:06:13,500
+This would be like the equivalent of having 16 cell phones.
+
+
+111
+00:06:13,500 --> 00:06:17,440
+So for our little experiment, we're going to imagine we have 16 cell phones, and we
+
+
+112
+00:06:17,440 --> 00:06:21,560
+want to be able to detect the different objects that are in the images of the cell phone without
+
+
+113
+00:06:21,560 --> 00:06:26,320
+actually sharing the personal data of each cell phone, right?
+
+
+114
+00:06:26,320 --> 00:06:28,560
+So after that, we want to define our batch size.
+
+
+115
+00:06:28,560 --> 00:06:30,080
+We want to load and split the data.
+
+
+116
+00:06:30,080 --> 00:06:32,760
+This is just like your regular approach you do for regular machine learning models so
+
+
+117
+00:06:32,760 --> 00:06:34,320
+far.
+
+
+118
+00:06:34,320 --> 00:06:36,440
+So we're batch size of 50.
+
+
+119
+00:06:36,440 --> 00:06:39,160
+We're loading the data set.
+
+
+120
+00:06:39,160 --> 00:06:40,160
+We're splitting it up.
+
+
+121
+00:06:40,160 --> 00:06:42,760
+So when we're doing the splitting and training, that means we're going to use some of our
+
+
+122
+00:06:42,760 --> 00:06:45,600
+data for training the model, and then we're going to use some of our data for testing
+
+
+123
+00:06:45,600 --> 00:06:46,600
+the model.
+
+
+124
+00:06:46,600 --> 00:06:49,880
+So your usual approach of how you're doing machine learning stuff.
+
+
+125
+00:06:49,880 --> 00:06:55,280
+It's finished, and now we need to configure our labels.
+
+
+126
+00:06:55,280 --> 00:06:59,800
+So we're going to use the classes that we defined earlier, like the cat, dog, plane,
+
+
+127
+00:06:59,800 --> 00:07:04,200
+all that good stuff, and we're going to use that for the labels to actually figure out,
+
+
+128
+00:07:04,200 --> 00:07:07,000
+okay, well, what is each thing in this image?
+
+
+129
+00:07:07,000 --> 00:07:10,280
+And it's going to spit out some examples for us.
+
+
+130
+00:07:10,280 --> 00:07:15,760
+So you see here, we got some images, and we see how well was it able to determine what
+
+
+131
+00:07:15,760 --> 00:07:16,760
+each thing was in the image.
+
+
+132
+00:07:16,760 --> 00:07:20,560
+We got a little doggy here, a little plane, a little ship.
+
+
+133
+00:07:20,560 --> 00:07:25,220
+So our model's working pretty well, like it's supposed to, right?
+
+
+134
+00:07:25,220 --> 00:07:30,400
+But now we need to develop this with a convolutional neural network, which is like a pretty robust
+
+
+135
+00:07:30,400 --> 00:07:35,600
+image identification algorithm, defining our classes.
+
+
+136
+00:07:35,600 --> 00:07:38,840
+Again, we just press the play button here.
+
+
+137
+00:07:38,840 --> 00:07:45,240
+Let me know if I'm going too quickly, or you want me to stop and explain something further.
+
+
+138
+00:07:45,240 --> 00:07:48,440
+And we need to find our training and test functions.
+
+
+139
+00:07:48,440 --> 00:07:52,480
+So this will determine basically how many times that the algorithm is going to go over
+
+
+140
+00:07:52,480 --> 00:08:00,600
+the data and keep going over it to train itself in what it's looking at.
+
+
+141
+00:08:00,600 --> 00:08:04,320
+And you can change a lot of things here for the flower library.
+
+
+142
+00:08:04,320 --> 00:08:09,680
+You can change the epic, and you can change how much entropy loss that you want to have.
+
+
+143
+00:08:09,680 --> 00:08:14,240
+It's a lot of things that you can personalize based off what you want for your model and
+
+
+144
+00:08:14,240 --> 00:08:15,240
+for your dataset.
+
+
+145
+00:08:15,240 --> 00:08:18,400
+And then also, what's the acceptable accuracy and loss?
+
+
+146
+00:08:18,400 --> 00:08:20,960
+All that good stuff.
+
+
+147
+00:08:20,960 --> 00:08:27,280
+So then here, we're going to train the model.
+
+
+148
+00:08:27,280 --> 00:08:29,600
+This one takes a little bit longer.
+
+
+149
+00:08:29,600 --> 00:08:34,680
+So you can see here, each epic is going through and trying to improve its accuracy of identifying
+
+
+150
+00:08:34,680 --> 00:08:37,080
+the objects, and it's outputting each time.
+
+
+151
+00:08:37,080 --> 00:08:41,800
+So the accuracy right now isn't very great, because we would have to train it for a longer
+
+
+152
+00:08:41,800 --> 00:08:43,080
+time.
+
+
+153
+00:08:43,080 --> 00:08:46,600
+But if you did give it more rounds to train itself, then the accuracy would continue to
+
+
+154
+00:08:46,600 --> 00:08:47,600
+improve.
+
+
+155
+00:08:47,600 --> 00:08:50,240
+But for the first time around, it's pretty good.
+
+
+156
+00:08:50,240 --> 00:08:53,440
+We got a little bit under 40% accuracy.
+
+
+157
+00:08:53,440 --> 00:08:59,840
+And so now we set up the federated learning with the flower, the flower package.
+
+
+158
+00:08:59,840 --> 00:09:01,460
+So we find our parameters.
+
+
+159
+00:09:01,460 --> 00:09:07,080
+We define the dictionary, the load, all that good stuff.
+
+
+160
+00:09:07,080 --> 00:09:11,000
+The most important part right here is where we implement the flower client.
+
+
+161
+00:09:11,000 --> 00:09:16,920
+And so this is where it takes the data that we all provided, and then it divides it up.
+
+
+162
+00:09:16,920 --> 00:09:22,080
+It partitions it into smaller sets, because this is simulated to be different devices.
+
+
+163
+00:09:22,080 --> 00:09:26,640
+If you had a real dataset coming from different cell phone devices, it would already be split
+
+
+164
+00:09:26,640 --> 00:09:27,640
+up.
+
+
+165
+00:09:27,640 --> 00:09:30,640
+But to simulate that, we were just partitioning it to make it seem like it's coming from 16
+
+
+166
+00:09:30,640 --> 00:09:34,960
+separate devices.
+
+
+167
+00:09:34,960 --> 00:09:44,840
+Then we turn the client, and then we start the training for the flower client.
+
+
+168
+00:09:44,840 --> 00:09:52,240
+You can see the output here.
+
+
+169
+00:09:52,240 --> 00:09:56,480
+And it's telling you which step of the process it's on.
+
+
+170
+00:09:56,480 --> 00:10:00,080
+So how many clients have been sampled out of 16.
+
+
+171
+00:10:00,080 --> 00:10:02,040
+So this is another thing about FML.
+
+
+172
+00:10:02,040 --> 00:10:07,920
+So it's randomly deciding which of the 16 it's going to use to work with the model on.
+
+
+173
+00:10:07,920 --> 00:10:13,040
+This potentially could be a downside of FML in its early stages, because what if you have
+
+
+174
+00:10:13,040 --> 00:10:16,600
+one cell phone that has a lot more data on it than another cell phone, right?
+
+
+175
+00:10:16,600 --> 00:10:19,720
+And so that could sway the development of the model.
+
+
+176
+00:10:19,720 --> 00:10:24,200
+But to me, I think some of those things can be controlled at the smart contract level.
+
+
+177
+00:10:24,200 --> 00:10:29,120
+Like you can say, we only want to accept this amount of data from this particular device,
+
+
+178
+00:10:29,120 --> 00:10:33,520
+or we can even say that we only want to accept data of this quality before it can be used
+
+
+179
+00:10:33,520 --> 00:10:34,520
+for the model.
+
+
+180
+00:10:34,520 --> 00:10:42,080
+I think the benefits of FML way outnumber the downsides of it.
+
+
+181
+00:10:42,080 --> 00:10:44,320
+So this one takes a little bit.
+
+
+182
+00:10:44,320 --> 00:10:45,320
+It's going.
+
+
+183
+00:10:45,320 --> 00:10:52,840
+Sometimes it can take like two or three minutes.
+
+
+184
+00:10:52,840 --> 00:11:00,520
+But you can see the progress that's happening in real time.
+
+
+185
+00:11:00,520 --> 00:11:06,800
+Oh, also, one thing that will make it run faster too is when you go to your runtime
+
+
+186
+00:11:06,800 --> 00:11:10,240
+here, you can go to...
+
+
+187
+00:11:10,240 --> 00:11:14,160
+I'm not going to change it right now, but I'll show you how to change it.
+
+
+188
+00:11:14,160 --> 00:11:16,800
+You can change your runtime right here.
+
+
+189
+00:11:16,800 --> 00:11:22,000
+So by default, when you go to Google Colab, it's set at none.
+
+
+190
+00:11:22,000 --> 00:11:25,960
+But if you set it to GPU, that will make it run a lot faster.
+
+
+191
+00:11:25,960 --> 00:11:32,640
+And it's freaking free, which is great.
+
+
+192
+00:11:32,640 --> 00:11:35,480
+So it's going on to its next round.
+
+
+193
+00:11:35,480 --> 00:11:38,920
+It's sampled five clients out of 16 so far.
+
+
+194
+00:11:38,920 --> 00:11:39,920
+Okay.
+
+
+195
+00:11:39,920 --> 00:11:48,160
+Now it's getting close to the end of the sampling.
+
+
+196
+00:11:48,160 --> 00:11:49,160
+It's going.
+
+
+197
+00:11:49,160 --> 00:12:01,280
+It's going.
+
+
+198
+00:12:01,280 --> 00:12:06,160
+After this step is completed right here, then we'll use a virtual client and then we can
+
+
+199
+00:12:06,160 --> 00:12:08,480
+get the accuracies and examples.
+
+
+200
+00:12:08,480 --> 00:12:12,160
+This is the second to last step right there.
+
+
+201
+00:12:12,160 --> 00:12:18,600
+Then after that step is done, we'll get the dictionaries and then we'll export the model
+
+
+202
+00:12:18,600 --> 00:12:22,720
+and we can use that in the smart contract.
+
+
+203
+00:12:22,720 --> 00:12:24,720
+Okay.
+
+
+204
+00:12:24,720 --> 00:12:28,720
+It's going.
+
+
+205
+00:12:28,720 --> 00:12:31,560
+It's going.
+
+
+206
+00:12:31,560 --> 00:12:34,560
+It takes a minute.
+
+
+207
+00:12:34,560 --> 00:12:48,360
+So we're on round four.
+
+
+208
+00:12:48,360 --> 00:12:54,640
+Sometimes also if you're on the free tier for Google Colab, if there are a lot of people
+
+
+209
+00:12:54,640 --> 00:12:58,840
+using it at that time, it's a little bit slower.
+
+
+210
+00:12:58,840 --> 00:13:00,480
+Usually it gets done in two minutes.
+
+
+211
+00:13:00,480 --> 00:13:01,480
+Now it's on three.
+
+
+212
+00:13:01,480 --> 00:13:03,800
+But it should be done pretty shortly.
+
+
+213
+00:13:03,800 --> 00:13:17,080
+Then we can move on to the next step.
+
+
+214
+00:13:17,080 --> 00:13:22,000
+It also gives you the failure rates of each round of training.
+
+
+215
+00:13:22,000 --> 00:13:40,440
+So it's all showing you in real time how well the model is training itself.
+
+
+216
+00:13:40,440 --> 00:13:48,560
+It's going.
+
+
+217
+00:13:48,560 --> 00:13:58,880
+Okay.
+
+
+218
+00:13:58,880 --> 00:14:01,160
+Close to finishing.
+
+
+219
+00:14:01,160 --> 00:14:07,440
+We can continue on with the next step and then it will catch up with us.
+
+
+220
+00:14:07,440 --> 00:14:13,720
+So after that step is completed, then you'll have to use the virtual client engine in Flower.
+
+
+221
+00:14:13,720 --> 00:14:19,080
+And this is going to be a further evaluation of the accuracy and the examples provided.
+
+
+222
+00:14:19,080 --> 00:14:21,320
+So we'll go ahead and process that.
+
+
+223
+00:14:21,320 --> 00:14:26,360
+And so, you know, we'll just put it in the queue to be processed.
+
+
+224
+00:14:26,360 --> 00:14:29,760
+Then we want to create a strategy to call the function whenever receives an evaluation
+
+
+225
+00:14:29,760 --> 00:14:30,760
+metric.
+
+
+226
+00:14:30,760 --> 00:14:34,840
+So you can define each of these things based off what you want for your data, based off
+
+
+227
+00:14:34,840 --> 00:14:38,360
+what you want for the accuracy, based off what you want for the fit.
+
+
+228
+00:14:38,360 --> 00:14:44,440
+So you can see here, fraction fit, fraction evaluation, the number of clients you want
+
+
+229
+00:14:44,440 --> 00:14:48,640
+to be used for the evaluation, the minimum number of clients you want to be used.
+
+
+230
+00:14:48,640 --> 00:14:53,000
+So that means basically, like, unless there's at least that number of clients there, separate
+
+
+231
+00:14:53,000 --> 00:14:58,840
+devices, then you if that's not met, then it wouldn't run.
+
+
+232
+00:14:58,840 --> 00:14:59,840
+Okay.
+
+
+233
+00:14:59,840 --> 00:15:01,840
+Let's see.
+
+
+234
+00:15:01,840 --> 00:15:04,200
+Both of those finished.
+
+
+235
+00:15:04,200 --> 00:15:08,960
+So now we create the strategy.
+
+
+236
+00:15:08,960 --> 00:15:13,300
+This step goes pretty quickly.
+
+
+237
+00:15:13,300 --> 00:15:20,680
+So now I'm creating the simulation with the Flowers package.
+
+
+238
+00:15:20,680 --> 00:15:27,240
+With all the initial parameters that were defined.
+
+
+239
+00:15:27,240 --> 00:15:28,960
+So right after that, this step is done right here.
+
+
+240
+00:15:28,960 --> 00:15:31,200
+Then we'll save the model and export it.
+
+
+241
+00:15:31,200 --> 00:15:35,320
+So all these steps that we've done right now are pretty combination of traditional machine
+
+
+242
+00:15:35,320 --> 00:15:41,320
+learning methods you see, irregular training, splitting the data, checking for accuracy.
+
+
+243
+00:15:41,320 --> 00:15:43,240
+All that's your regular machine learning approach.
+
+
+244
+00:15:43,240 --> 00:15:46,000
+The part that's different is the partitioning, right?
+
+
+245
+00:15:46,000 --> 00:15:52,120
+So we were able to partition the data and make it be simulated to look like it's coming
+
+
+246
+00:15:52,120 --> 00:15:54,040
+from separate devices, right?
+
+
+247
+00:15:54,040 --> 00:15:59,040
+And so also, like, how the model is shared with the data, right?
+
+
+248
+00:15:59,040 --> 00:16:04,400
+So instead of the data being sent to the model, the model is coming to the data.
+
+
+249
+00:16:04,400 --> 00:16:09,520
+So that's very different than that's a very different part from federal machine learning
+
+
+250
+00:16:09,520 --> 00:16:13,480
+compared to regular machine learning.
+
+
+251
+00:16:13,480 --> 00:16:18,760
+So this is the last step for the training evaluation.
+
+
+252
+00:16:18,760 --> 00:16:21,200
+After this, we just export the model.
+
+
+253
+00:16:21,200 --> 00:16:26,920
+And if you are on the GitHub page, I already exported the model and put it in the folder.
+
+
+254
+00:16:26,920 --> 00:16:31,400
+So it's in the root folder, so you don't have to go through all the steps here to get the
+
+
+255
+00:16:31,400 --> 00:16:38,920
+model to follow through the next part.
+
+
+256
+00:16:38,920 --> 00:16:45,200
+Okay.
+
+
+257
+00:16:45,200 --> 00:16:54,520
+It's gone.
+
+
+258
+00:16:54,520 --> 00:16:59,200
+So after that part is finished, I'm just gonna put this in the queue for it to run this next.
+
+
+259
+00:16:59,200 --> 00:17:05,400
+So unless you have, like, you know, an infrastructure already set up where you're doing, like, CICD
+
+
+260
+00:17:05,400 --> 00:17:08,080
+for your model or something, you need to export your model and save it somewhere.
+
+
+261
+00:17:08,080 --> 00:17:11,440
+Because otherwise, you're gonna lose all the freaking progress you just made on training
+
+
+262
+00:17:11,440 --> 00:17:12,440
+your model.
+
+
+263
+00:17:12,440 --> 00:17:14,040
+So we're gonna save it.
+
+
+264
+00:17:14,040 --> 00:17:17,240
+We save it to this model path right here.
+
+
+265
+00:17:17,240 --> 00:17:20,600
+Then we load the model path.
+
+
+266
+00:17:20,600 --> 00:17:25,040
+And we need to put it into a format that can actually be usable for the smart contract.
+
+
+267
+00:17:25,040 --> 00:17:31,080
+So there's the pretty robust, like, format called ONIX that's used in machine learning.
+
+
+268
+00:17:31,080 --> 00:17:36,960
+So once we basically export it as an ONIX file, this will allow us to basically put
+
+
+269
+00:17:36,960 --> 00:17:41,840
+the model, define the model in terms of bytes so that we can call on the model within the
+
+
+270
+00:17:41,840 --> 00:17:43,480
+smart contract.
+
+
+271
+00:17:43,480 --> 00:17:49,240
+And with our model service.
+
+
+272
+00:17:49,240 --> 00:17:51,480
+So we just do that.
+
+
+273
+00:17:51,480 --> 00:17:52,480
+Doing the same thing.
+
+
+274
+00:17:52,480 --> 00:17:57,400
+Importing and installs what we need to create the ONIX file.
+
+
+275
+00:17:57,400 --> 00:18:02,960
+And then we need to convert it to binary code.
+
+
+276
+00:18:02,960 --> 00:18:04,440
+And then we're gonna read that model from the file.
+
+
+277
+00:18:04,440 --> 00:18:06,040
+And I'm saving it as a text file.
+
+
+278
+00:18:06,040 --> 00:18:08,080
+And then that ends up being used.
+
+
+279
+00:18:08,080 --> 00:18:10,960
+But I already have the outputs from when I ran this earlier.
+
+
+280
+00:18:10,960 --> 00:18:13,200
+Basically this is what it ends up on being.
+
+
+281
+00:18:13,200 --> 00:18:21,080
+So this is a gigantic file with a byte code in it that represents the model.
+
+
+282
+00:18:21,080 --> 00:18:27,840
+And then we can use this to actually make a model service with a smart contract.
+
+
+283
+00:18:27,840 --> 00:18:28,840
+Everybody following?
+
+
+284
+00:18:28,840 --> 00:18:31,880
+So I'm gonna review what just happened.
+
+
+285
+00:18:31,880 --> 00:18:33,880
+So first we made our model, right?
+
+
+286
+00:18:33,880 --> 00:18:38,200
+We were able to create the model using our open source data.
+
+
+287
+00:18:38,200 --> 00:18:42,200
+And we were able to simulate it coming from 16 separate devices.
+
+
+288
+00:18:42,200 --> 00:18:47,120
+And we were able to make the FML package using flowers package.
+
+
+289
+00:18:47,120 --> 00:18:50,680
+But the model needs to be put into a format that can be understood by smart contracts.
+
+
+290
+00:18:50,680 --> 00:18:55,840
+So that's why we had to export it as an ONIX file and put it into byte code so we can use
+
+
+291
+00:18:55,840 --> 00:18:58,640
+it in our smart contract.
+
+
+292
+00:18:58,640 --> 00:19:01,000
+So here's the next part.
+
+
+293
+00:19:01,000 --> 00:19:09,380
+So now we're going to put this on chain.
+
+
+294
+00:19:09,380 --> 00:19:12,920
+So I think everybody in the room probably knows, because we're all really into data
+
+
+295
+00:19:12,920 --> 00:19:14,680
+and all that good stuff.
+
+
+296
+00:19:14,680 --> 00:19:19,400
+About Protocol Labs, you know, recently released the main net for FEVM.
+
+
+297
+00:19:19,400 --> 00:19:21,680
+And I'm really excited about it.
+
+
+298
+00:19:21,680 --> 00:19:23,120
+I just randomly thought about this one day.
+
+
+299
+00:19:23,120 --> 00:19:24,120
+Oh, okay.
+
+
+300
+00:19:24,120 --> 00:19:25,600
+What about machine learning on chain?
+
+
+301
+00:19:25,600 --> 00:19:30,940
+So we can create a model service with this smart contract right here.
+
+
+302
+00:19:30,940 --> 00:19:36,280
+So I just forked the basic FEVM hard hat kit.
+
+
+303
+00:19:36,280 --> 00:19:40,960
+And I just changed the simple coin contract to a contract that could be used to deploy
+
+
+304
+00:19:40,960 --> 00:19:45,240
+the model and also could be used to send predictions to it.
+
+
+305
+00:19:45,240 --> 00:19:46,240
+All right.
+
+
+306
+00:19:46,240 --> 00:19:47,480
+I forgot to show you one thing.
+
+
+307
+00:19:47,480 --> 00:19:51,520
+So when you're in Google Colab, you have to export your model.
+
+
+308
+00:19:51,520 --> 00:19:54,560
+And so if you go to the side here, this is where your files will be.
+
+
+309
+00:19:54,560 --> 00:19:58,320
+And then you can click on any of the folders.
+
+
+310
+00:19:58,320 --> 00:20:07,880
+And you can download the folder from there.
+
+
+311
+00:20:00,000 --> 00:20:30,000
+ľAnd so if we had ran it all the way to here, then it would show the file. You export that, and then you just put that in your local hard hat project. You can also run your hard hat project on Gitpod. I use IntelliJ, because that's my favorite IDE, but it really doesn't matter. As long as you can run hard hat in it, you can use anything you want. But if you fork the GitHub project, it will have everything you need in it. Here's the smart contract right here. It's a simple smart contract. So the one thing that you can do is you can
+
+
+312
+00:20:30,000 --> 00:20:35,280
+deploy the model and then choose to send predictions to it in terms of bytes. And then
+
+
+313
+00:20:36,960 --> 00:20:45,440
+you can see here, right here, this is where I put the output for the model. So everything you need
+
+
+314
+00:20:45,440 --> 00:20:52,960
+is already in the GitHub repo. You just clone it, and then everything is regular. And then you just
+
+
+315
+00:20:52,960 --> 00:21:05,920
+deploy it just like regular.ľ Oh, and I'm sure you know, you need your.env with your private key in it.
+
+
+316
+00:21:06,480 --> 00:21:12,080
+So you can define your private key from the command line, or you can just go to a new file
+
+
+317
+00:21:12,080 --> 00:21:16,480
+and then put your private key in there. And please, please, please make sure to add that to
+
+
+318
+00:21:16,480 --> 00:21:20,880
+Gitignore. You don't want your private key on GitHub. There's a little bit of an error happening.
+
+
+319
+00:21:20,880 --> 00:21:35,200
+One second. Let's see. So I made one update to it. Now it's acting crazy. I have another version
+
+
+320
+00:21:35,200 --> 00:21:44,480
+of the file before the change. There we go. Okay, so it's deploying it. So I didn't change any of
+
+
+321
+00:21:44,480 --> 00:21:48,320
+the other default contracts that are in there, like the storage deal, all that good stuff.
+
+
+322
+00:21:48,320 --> 00:21:52,480
+So it's deploying it right now. It's a little bit slow. So first, we'll deploy the model service,
+
+
+323
+00:21:52,480 --> 00:21:56,560
+and then we'll deploy the other default contracts that are in there. But voila, now you have an
+
+
+324
+00:21:56,560 --> 00:22:03,280
+FML model on chain where you can make predictions as long as you make sure it's in the right format.
+
+
+325
+00:22:03,280 --> 00:22:07,520
+And to me, what's the whole freaking purpose of this? Why do we need to do this on chain?
+
+
+326
+00:22:07,520 --> 00:22:10,640
+I just literally had this conversation with somebody two days ago when we were walking from
+
+
+327
+00:22:10,640 --> 00:22:16,560
+dinner. There's a lot of benefits to having these machine learning models on chain. So to me,
+
+
+328
+00:22:16,560 --> 00:22:23,840
+like I see more and more everyday decisions being influenced by machine learning, like public policy,
+
+
+329
+00:22:23,840 --> 00:22:30,320
+budgets for city council, really important issues for like healthcare, right? All these things.
+
+
+330
+00:22:30,320 --> 00:22:33,280
+A lot of these decisions are made pretty arbitrarily, right? But what if there was
+
+
+331
+00:22:33,280 --> 00:22:38,000
+accountability for these organizations to actually be able to show like, hey, these are the actual
+
+
+332
+00:22:38,800 --> 00:22:42,480
+decisions we're making. Here's a record of these things on chain. Here's the accountability of how
+
+
+333
+00:22:42,480 --> 00:22:48,000
+these models work to make sure there's no bias in these models, make sure that the data quality is
+
+
+334
+00:22:48,000 --> 00:22:51,680
+there. Now, will most people actually go and look at these things? If you could go to your local city
+
+
+335
+00:22:51,680 --> 00:22:57,840
+council website and see it? No, but it's there, right? So maybe it will take a few like really
+
+
+336
+00:22:57,840 --> 00:23:03,280
+passionate citizens to be involved and then, you know, translates to the rest of the world who may
+
+
+337
+00:23:03,280 --> 00:23:08,720
+not be technical to say like, hey, this is what's happening. And, you know, we have like a good
+
+
+338
+00:23:08,720 --> 00:23:18,240
+infrastructure, good ethics in place for how we're developing these models. So, yeah. So, yeah. And
+
+
+339
+00:23:18,240 --> 00:23:27,680
+I'll just go here really quickly. So, I'm gonna finish. Yeah. So, yeah. Again, I'm part of D-ORG.
+
+
+340
+00:23:28,560 --> 00:23:31,840
+We're building the decentralized web. We're working on a lot of cool stuff like this.
+
+
+341
+00:23:32,480 --> 00:23:37,760
+And I don't know if we have any time for questions. But, yeah. I hope this piqued your
+
+
+342
+00:23:37,760 --> 00:23:41,840
+curiosity a little bit for federated machine learning and that you deploy your own model.
+
+
+343
+00:23:41,840 --> 00:23:46,560
+Definitely check out the flowers package. It's very like user-friendly. You can literally have
+
+
+344
+00:23:46,560 --> 00:23:53,600
+your own FML model on chain for like under an hour. So, yeah. Thank you.
+
+
+345
+00:23:53,600 --> 00:24:08,320
+Thank you. That was great. You kind of lost me at the ONNX to MPC
+
+
+346
+00:24:10,160 --> 00:24:15,200
+part there. Like you just said, it's convert to bytecode. Can you kind of go through that and you
+
+
+347
+00:24:15,200 --> 00:24:21,120
+explain exactly what that bytecode is? Yeah. So, if you just put in like the raw model,
+
+
+348
+00:24:21,120 --> 00:24:27,120
+like how default comes out in Python, like it's not understandable for the smart contract. So,
+
+
+349
+00:24:27,120 --> 00:24:32,400
+I tried a lot of different formats. And it wasn't until I tried ONNX, the ONNX format,
+
+
+350
+00:24:32,400 --> 00:24:36,240
+that I was actually able to get the smart contract to compile and actually deploy to chain.
+
+
+351
+00:24:36,240 --> 00:24:40,880
+But ONNX is like pretty, I would say pretty commonplace. Like it's like basically for
+
+
+352
+00:24:40,880 --> 00:24:45,040
+interoperability. So, you can switch between platforms for your machine learning models and
+
+
+353
+00:24:45,040 --> 00:24:52,080
+then do a lot of things like outside of even blockchain space. Like it's a pretty like sturdy
+
+
+354
+00:24:52,080 --> 00:24:59,440
+format you can use. Okay. So, tell me if I'm wrong. I'm trying to recap what you said. Okay. So,
+
+
+355
+00:24:59,440 --> 00:25:04,240
+I cannot understand what ONNX is, right? So, basically you're taking the model in the ONNX
+
+
+356
+00:25:04,240 --> 00:25:10,480
+format and then compiling it into a smart contract bytecode. And that's why you had like that
+
+
+357
+00:25:10,480 --> 00:25:16,240
+assembly kind of like block. And you're just running that in a smart contract. Yeah. Right.
+
+
+358
+00:25:16,240 --> 00:25:22,800
+So, isn't that like slow if the model is big? It's going to be kind of like awful, right? Yeah.
+
+
+359
+00:25:22,800 --> 00:25:29,120
+So, like with the example, like even for that library, it's like over 66,000 images. And images
+
+
+360
+00:25:29,120 --> 00:25:34,080
+already are pretty like hefty in terms of memory. I was able still to compile within like a few
+
+
+361
+00:25:34,080 --> 00:25:39,120
+minutes. I think that there probably has to be considerations in the future about even larger
+
+
+362
+00:25:39,120 --> 00:25:44,560
+files, right? So, there needs to be kind of like this interface of like what will be done off chain
+
+
+363
+00:25:44,560 --> 00:25:48,720
+and what can be done on chain. Like as you saw, like all of the development of the model itself
+
+
+364
+00:25:48,720 --> 00:25:54,560
+was off chain. But actually like putting the model itself, like the output of that, of the training
+
+
+365
+00:25:54,560 --> 00:26:00,800
+on chain doesn't take up that much time to compile. That's why I think all the talks today
+
+
+366
+00:26:00,800 --> 00:26:07,600
+were interesting about like Bacalao and different ways of thinking about compute over compute on
+
+
+367
+00:26:07,600 --> 00:26:13,120
+data. I don't know. I mean, what would it be like if we had video? I think video would be very
+
+
+368
+00:26:13,120 --> 00:26:17,600
+interesting because that would be very memory intensive. Like I want to test it out. I want
+
+
+369
+00:26:17,600 --> 00:26:22,640
+to see like these are new areas of combining technologies together. So, we just have to keep
+
+
+370
+00:26:22,640 --> 00:26:37,840
+trying it out and experimenting and see what happens. Thank you.

@@ -1,0 +1,1068 @@
+1
+00:00:00,000 --> 00:00:12,000
+I'm Lajdel, part of IPFS2 at Protocol Labs and I lost my USB dongle so I'm on a borrowed laptop.
+
+
+2
+00:00:12,000 --> 00:00:20,000
+This will be a rapid fire year in review of specification IPIPs.
+
+
+3
+00:00:20,000 --> 00:00:30,000
+IPIP is a four-letter acronym for Interplanetary Improvement Proposal.
+
+
+4
+00:00:30,000 --> 00:00:34,000
+We had to come up with something that's four letters so that's it.
+
+
+5
+00:00:34,000 --> 00:00:50,000
+And the last year in Iceland we announced IPIP process to the community and asked if there is a spec, propose a delta, propose improvement proposal using this new process.
+
+
+6
+00:00:50,000 --> 00:00:53,000
+If there's no spec, write it.
+
+
+7
+00:00:53,000 --> 00:01:02,000
+So if there is something you want to change in a spec, open pull request, it does not have to be perfect, there was a template just to get the conversation rolling.
+
+
+8
+00:01:02,000 --> 00:01:18,000
+And this talk will go over some highlights of the IPIPs that happened in between that moment when we announced the possibility of engaging with the specs and today.
+
+
+9
+00:01:18,000 --> 00:01:25,000
+So right now we have a project board where we try to roughly track the lifecycle of IPIPs.
+
+
+10
+00:01:25,000 --> 00:01:42,000
+Things that are in progress are softly accepted for the continued conversation and once the spec gets reference implementation, once we agree on the shape,
+
+
+11
+00:01:42,000 --> 00:01:59,000
+we then discuss how we would test that, what types of pictures would you include and at the end of the pipeline when we have a spec that people are fairly happy,
+
+
+12
+00:01:59,000 --> 00:02:19,000
+we have an ad hoc group of spec stewards and we try to at least check in with people from outside of PL who maintain other implementations like IRO to be in the loop to raise any concerns about long term possibility of supporting those things.
+
+
+13
+00:02:19,000 --> 00:02:32,000
+Even if the implementations today don't plan to adapt a thing, we are planning ahead like in five years from now if it turns out it's something you would use, would you be happy with the spec?
+
+
+14
+00:02:32,000 --> 00:02:43,000
+And then once it's ratified and ships with at least one reference implementation, that's usually kubo, now the box library, we move that to ratified column.
+
+
+15
+00:02:43,000 --> 00:02:50,000
+So we had a bunch of proposals and I started with ones that we did not ratify.
+
+
+16
+00:02:50,000 --> 00:02:59,000
+We actually had a very lengthy discussion and then discussion ended, but this is still a very useful artifact for the community.
+
+
+17
+00:02:59,000 --> 00:03:06,000
+So for example, the first one we had discussion about exporting DNS sec proofs for DNS link records.
+
+
+18
+00:03:06,000 --> 00:03:23,000
+It was proposed by CloudFlare, but at the end of the, during the conversation we realized actually it's not IPFS specific, this should be part of DNS over HTTPS and should not be tied to IPFS records, you should be able to fetch proof of any record.
+
+
+19
+00:03:23,000 --> 00:03:38,000
+Similarly, we had a very lengthy discussion about CIDV2 and at the end of the day, people realized they can do the thing that they thought they need to introduce CIDV2 by way simpler means without impacting wider ecosystem.
+
+
+20
+00:03:38,000 --> 00:03:53,000
+And if we did not have IPIP process, and I will like stick my neck out probably by saying this, we could have a problem because someone could ship CIDV2 and then we need to live with this.
+
+
+21
+00:03:53,000 --> 00:04:02,000
+Every IPFS implementation have to implement CIDV2 now because one team had a need and other people did not really care or were not in the loop.
+
+
+22
+00:04:02,000 --> 00:04:12,000
+So I think the system works and the fact that we had a very lengthy conversation is like dozens of back and forth on this one.
+
+
+23
+00:04:12,000 --> 00:04:16,000
+And at the end, it was, everyone was happy with resolution.
+
+
+24
+00:04:16,000 --> 00:04:19,000
+So now things that shipped.
+
+
+25
+00:04:19,000 --> 00:04:38,000
+Mostly we have a gateway specs, so most of the things that shipped through IP process were gateway related, one support for redirects files, which enabled people to slowly shift website hosting to gateways.
+
+
+26
+00:04:38,000 --> 00:04:55,000
+That was submitted from the outside of PL, that was community driven IP, one of the first ones, and then people started using it and noticed there are some discrepancies with other parts of the gateway spec, namely the subdomain behaviors.
+
+
+27
+00:04:55,000 --> 00:04:59,000
+So we have follow up IPs that improve and build on top of that.
+
+
+28
+00:04:59,000 --> 00:05:03,000
+And gateway redirects file is supported since Kubo 16.
+
+
+29
+00:05:03,000 --> 00:05:07,000
+I tried to dig in information about when we shipped some things.
+
+
+30
+00:05:07,000 --> 00:05:24,000
+Additional things that landed, ability to fetch a bigger directory trees as a tar stream in the serialized form, Kubo 17, JSON and C-BOR in there, also like their DAG C-BOR and DAG JSON representation of IPLD data model.
+
+
+31
+00:05:24,000 --> 00:05:32,000
+Now you're able to request UnixFS directory as the JSON that shipped in Kubo 18.
+
+
+32
+00:05:32,000 --> 00:05:42,000
+In Kubo 19, we closed the gap around verifiability in IPFS ecosystem on gateways.
+
+
+33
+00:05:42,000 --> 00:05:49,000
+In the past, you were able to fetch a block or a car, but you had to trust someone to resolve IPNS for you.
+
+
+34
+00:05:49,000 --> 00:06:03,000
+Now you are able to fetch a signed IPNS record from gateway without running entire P2P stack, without having to run DHT or leaking your browser history to some centralized indexer.
+
+
+35
+00:06:03,000 --> 00:06:12,000
+Now you leak that to a gateway you effectively trust or not trust, but you can control that by having multiple gateways to choose from.
+
+
+36
+00:06:12,000 --> 00:06:14,000
+So that's Kubo 19.
+
+
+37
+00:06:14,000 --> 00:06:22,000
+As a part of the project RIA, we are working on a thing that we've been open for a while.
+
+
+38
+00:06:22,000 --> 00:06:31,000
+We have a support for retrieving multiple blocks in a single car archive, but that was very limited.
+
+
+39
+00:06:31,000 --> 00:06:34,000
+It always gave you the entire subgraph.
+
+
+40
+00:06:34,000 --> 00:06:44,000
+And if you are fetching Wikipedia, that's hundreds of gigabytes, and maybe you just wanted a single directory to enumerate items there.
+
+
+41
+00:06:44,000 --> 00:06:50,000
+So as a part of a project RIA, we realized we need some sort of a partial car support, partial car export.
+
+
+42
+00:06:50,000 --> 00:06:52,000
+We call that graph API.
+
+
+43
+00:06:52,000 --> 00:07:06,000
+And I believe that's like yesterday, this week, we have IPAP opened to add additional parameter, additional scope selectors to the car export.
+
+
+44
+00:07:06,000 --> 00:07:26,000
+Being able to limit the depth, logical depth, and also support translate HTTP byte range requests to block requests on IPFS, which will effectively enable people to write more efficient light clients.
+
+
+45
+00:07:26,000 --> 00:07:40,000
+And piggyback, going back to one of our existential threats, bad bits and deny lists are never a priority until there's an incident.
+
+
+46
+00:07:40,000 --> 00:07:44,000
+And that is a priority for a week, and that is no longer a priority.
+
+
+47
+00:07:44,000 --> 00:07:47,000
+But over time, people are pushing forward.
+
+
+48
+00:07:47,000 --> 00:07:52,000
+So we have Cloudflare starting that conversation, proposing the format.
+
+
+49
+00:07:52,000 --> 00:08:00,000
+Then we have people who run operations within PL and outside, providing feedback based on that.
+
+
+50
+00:08:00,000 --> 00:08:14,000
+Identifying that the first proposal was very limited, and we need more holistic view of how the list would be created, how list would be parsed and maintained, and what are the performance limitations around that.
+
+
+51
+00:08:14,000 --> 00:08:21,000
+And then how would we build governance around maintaining those lists?
+
+
+52
+00:08:21,000 --> 00:08:24,000
+It should not be just PL maintaining a single list.
+
+
+53
+00:08:24,000 --> 00:08:37,000
+There could be organizations being able to use the same format, maybe building lists from other lists for specific jurisdictions, maybe implementations, automatically enabling lists depending on which country you are running your node.
+
+
+54
+00:08:37,000 --> 00:08:40,000
+So we are on that path.
+
+
+55
+00:08:40,000 --> 00:08:47,000
+The latest IPAP 383 proposes compact denialist format, which covers a lot of use cases.
+
+
+56
+00:08:47,000 --> 00:08:55,000
+And it's already supported by the Bad Bits, which is the fact of the current thing that we have.
+
+
+57
+00:08:55,000 --> 00:08:57,000
+You can give it a try.
+
+
+58
+00:08:57,000 --> 00:09:01,000
+There's also implementation in Go.
+
+
+59
+00:09:01,000 --> 00:09:06,000
+In the past year, we cleaned up our delegated routing story.
+
+
+60
+00:09:06,000 --> 00:09:17,000
+We removed the experimental reframe protocol, and we replaced that with way simpler HTTP API for us.
+
+
+61
+00:09:17,000 --> 00:09:25,000
+Just give me some providers of this CID without having to run specialized clients.
+
+
+62
+00:09:25,000 --> 00:09:27,000
+It should be very, very easy.
+
+
+63
+00:09:27,000 --> 00:09:31,000
+IPAP 387 started us on that path.
+
+
+64
+00:09:31,000 --> 00:09:39,000
+It's implemented by CID.contact IPNI indexer, and support for that is in Kubo18.
+
+
+65
+00:09:39,000 --> 00:09:45,000
+And we have a bunch of follow-up work and ongoing work around this.
+
+
+66
+00:09:45,000 --> 00:09:49,000
+Currently, we only have delegated content routing, but there are other types of routing.
+
+
+67
+00:09:49,000 --> 00:09:55,000
+There is peer routing, being able to resolve IPNS records currently.
+
+
+68
+00:09:55,000 --> 00:10:00,000
+Those gateways that return your signed records, they should not be forced to use DHT as well.
+
+
+69
+00:10:00,000 --> 00:10:04,000
+They should be able to delegate that to some other box.
+
+
+70
+00:10:04,000 --> 00:10:12,000
+We are working on both adding other types of routing to that HTTP spec,
+
+
+71
+00:10:12,000 --> 00:10:20,000
+but also making it possible to not only get data, but also publish over HTTP.
+
+
+72
+00:10:20,000 --> 00:10:24,000
+The fact of being able to announce your provider records over HTTP,
+
+
+73
+00:10:24,000 --> 00:10:29,000
+or announce your IPNS record over HTTP instead of running full DHT client,
+
+
+74
+00:10:29,000 --> 00:10:31,000
+kind of grows the pie.
+
+
+75
+00:10:31,000 --> 00:10:33,000
+It's not like we are replacing Kubo.
+
+
+76
+00:10:33,000 --> 00:10:38,000
+We are just filling the niche where people would not be able to run things like Kubo.
+
+
+77
+00:10:38,000 --> 00:10:44,000
+Streaming is important, especially if you are doing DHT proxying through this delegated API.
+
+
+78
+00:10:44,000 --> 00:10:49,000
+You don't want to wait multiple minutes before you get a response back.
+
+
+79
+00:10:49,000 --> 00:10:57,000
+You want to get records as they arrive from DHT crawling, hopefully later this year.
+
+
+80
+00:10:57,000 --> 00:11:01,000
+Finally, I mentioned there are huge gaps in our specs.
+
+
+81
+00:11:01,000 --> 00:11:05,000
+One of them is IPFS DHT specification.
+
+
+82
+00:11:05,000 --> 00:11:10,000
+There is a proposal to add double hashing DHT to our ecosystem,
+
+
+83
+00:11:10,000 --> 00:11:13,000
+which helps with reader privacy.
+
+
+84
+00:11:13,000 --> 00:11:19,000
+But to do that, we need to define the current state of things.
+
+
+85
+00:11:19,000 --> 00:11:21,000
+That's very positive.
+
+
+86
+00:11:21,000 --> 00:11:30,000
+One, we will have a spec of DHT, and two, we'll have a better DHT as a process.
+
+
+87
+00:11:30,000 --> 00:11:33,000
+There's a long tail of other things that we want to do.
+
+
+88
+00:11:33,000 --> 00:11:41,000
+Cleaning up IPNS spec, improving the way UnixFS and gateways interact with each other around content types.
+
+
+89
+00:11:41,000 --> 00:11:47,000
+UnixFS specification is probably the biggest thing to land.
+
+
+90
+00:11:47,000 --> 00:11:51,000
+When we have time, things like data onboarding over HTTP post.
+
+
+91
+00:11:51,000 --> 00:11:54,000
+And finally, the indexer story.
+
+
+92
+00:11:54,000 --> 00:11:56,000
+It's still in the flux.
+
+
+93
+00:11:56,000 --> 00:11:59,000
+We need to figure out how to discover them.
+
+
+94
+00:11:59,000 --> 00:12:01,000
+What's the mechanism for that?
+
+
+95
+00:12:01,000 --> 00:12:05,000
+Probably not centralized HTTP endpoint.
+
+
+96
+00:12:05,000 --> 00:12:09,000
+There are better protocols for doing that.
+
+
+97
+00:12:09,000 --> 00:12:14,000
+Yeah, so probably I ran more than I should.
+
+
+98
+00:12:14,000 --> 00:12:21,000
+But this is a small set of highlights just to show that the process is working.
+
+
+99
+00:12:21,000 --> 00:12:23,000
+And I'd say keep them coming.
+
+
+100
+00:12:23,000 --> 00:12:25,000
+If there's no spec, write spec.
+
+
+101
+00:12:25,000 --> 00:12:32,000
+If you have no time to write spec, open an issue highlighting there's this gap in the specs.
+
+
+102
+00:12:32,000 --> 00:12:37,000
+And if there is a spec and you want to improve it or propose a change, open IPAP.
+
+
+103
+00:12:37,000 --> 00:12:38,000
+It does not have to be perfect.
+
+
+104
+00:12:38,000 --> 00:12:39,000
+There's a template.
+
+
+105
+00:12:39,000 --> 00:12:47,000
+We are in the process of moving IPAPs into this specs IPFS tech website to kind of like showcase them.
+
+
+106
+00:12:47,000 --> 00:12:50,000
+The ones that we ratified and also the process.
+
+
+107
+00:12:50,000 --> 00:12:57,000
+So it's easier for people to discover not only the GitHub history of the spec changes,
+
+
+108
+00:12:57,000 --> 00:13:02,000
+but also understand the rationale behind them, the rationale behind every spec change.
+
+
+109
+00:13:02,000 --> 00:13:06,000
+This like audit log, our community memory.
+
+
+110
+00:13:06,000 --> 00:13:08,000
+Why did we make some decisions?
+
+
+111
+00:13:08,000 --> 00:13:11,000
+Why did we make some changes to the specs?
+
+
+112
+00:13:11,000 --> 00:13:15,000
+That's effectively the value added by the IPAP process.
+
+
+113
+00:13:15,000 --> 00:13:16,000
+So keep them coming.
+
+
+114
+00:13:16,000 --> 00:13:17,000
+Thank you.
+
+
+115
+00:13:17,000 --> 00:13:26,000
+Anyone want to write a spec?
+
+
+116
+00:13:26,000 --> 00:13:33,000
+Sorry, any questions?
+
+
+117
+00:13:33,000 --> 00:13:36,000
+Besides writing specs, which is great and makes sense,
+
+
+118
+00:13:36,000 --> 00:13:39,000
+is there any other way for people to be able to help?
+
+
+119
+00:13:39,000 --> 00:13:41,000
+So there are multiple ways you can help.
+
+
+120
+00:13:41,000 --> 00:13:43,000
+One, look at the process.
+
+
+121
+00:13:43,000 --> 00:13:49,000
+If something seems too complicated or outdated, let us know.
+
+
+122
+00:13:49,000 --> 00:13:58,000
+If you see a way we could improve it, let us know.
+
+
+123
+00:13:58,000 --> 00:14:01,000
+It's like things with principles.
+
+
+124
+00:14:01,000 --> 00:14:03,000
+It's like a living process.
+
+
+125
+00:14:03,000 --> 00:14:06,000
+So we are looking for feedback.
+
+
+126
+00:14:06,000 --> 00:14:12,000
+In general, when it comes to spec improvements, it's not just technical.
+
+
+127
+00:14:12,000 --> 00:14:18,000
+It's very important and very valuable for people to read specs,
+
+
+128
+00:14:18,000 --> 00:14:24,000
+and if there are gaps, if there are mistakes, or something could be very confusing,
+
+
+129
+00:14:24,000 --> 00:14:28,000
+especially for people who are not native speakers.
+
+
+130
+00:14:28,000 --> 00:14:34,000
+We run into this trap where we describe fairly not that complex things
+
+
+131
+00:14:34,000 --> 00:14:39,000
+using too complex language, and that introduces artificial barriers.
+
+
+132
+00:14:39,000 --> 00:14:45,000
+So even people who don't feel like they could contribute technical things,
+
+
+133
+00:14:45,000 --> 00:14:52,000
+proofreading specs and raising questions, that makes specs better.
+
+
+134
+00:14:52,000 --> 00:14:57,000
+Because the specs should be written in a very, very simple language.
+
+
+135
+00:14:57,000 --> 00:15:00,000
+We are building complex systems.
+
+
+136
+00:15:00,000 --> 00:15:04,000
+We should not make things more complex than they have to be.
+
+
+137
+00:15:04,000 --> 00:15:09,000
+You cannot make the complex thing because the debugging will be way more complex
+
+
+138
+00:15:09,000 --> 00:15:13,000
+and you run out of your cognitive capacity to understand the system,
+
+
+139
+00:15:13,000 --> 00:15:16,000
+so the specs should be very, very easy to comprehend.
+
+
+140
+00:15:16,000 --> 00:15:20,000
+And you don't have to file an IPIP to improve the language, right?
+
+
+141
+00:15:20,000 --> 00:15:27,000
+Yeah, so the IPIP is specifically the process to create this audit trail,
+
+
+142
+00:15:27,000 --> 00:15:30,000
+why did we make some technical decisions.
+
+
+143
+00:15:30,000 --> 00:15:33,000
+If you see a gap in the specs, there's no spec.
+
+
+144
+00:15:33,000 --> 00:15:37,000
+You don't need IPIP for that. Just open PR, filling the gap.
+
+
+145
+00:15:37,000 --> 00:15:44,000
+If there is a typo or if you want to rephrase a sentence, that's an editorial change.
+
+
+146
+00:15:44,000 --> 00:15:46,000
+Editorial changes do not require IPIP.
+
+
+147
+00:15:46,000 --> 00:15:50,000
+If there is a technical change, then you need IPIP.
+
+
+148
+00:15:55,000 --> 00:15:58,000
+So we wrote all the specs we needed. That's good.
+
+
+149
+00:15:58,000 --> 00:16:01,000
+Who's validating that the specs are being implemented?
+
+
+150
+00:16:02,000 --> 00:16:11,000
+So that's why we don't need conformance tests next to specs.
+
+
+151
+00:16:11,000 --> 00:16:14,000
+Are we writing specs in code?
+
+
+152
+00:16:14,000 --> 00:16:20,000
+Yeah, so for example, the one I showed...
+
+
+153
+00:16:20,000 --> 00:16:28,000
+Yeah, so for example, for this IPIP, when the redirect support was introduced,
+
+
+154
+00:16:28,000 --> 00:16:32,000
+there was a reference implementation in Kubo,
+
+
+155
+00:16:32,000 --> 00:16:38,000
+and the IPIP itself included test fixtures section with CIDs.
+
+
+156
+00:16:38,000 --> 00:16:41,000
+It's very nice because you just put CID.
+
+
+157
+00:16:41,000 --> 00:16:49,000
+With CIDs that include all the important edge cases or the important use cases,
+
+
+158
+00:16:49,000 --> 00:16:52,000
+examples of important use cases for this specific thing.
+
+
+159
+00:16:52,000 --> 00:16:56,000
+And then we have the gateway conformance test suite.
+
+
+160
+00:16:56,000 --> 00:17:00,000
+Now, if we had it back then, it would be part of this IPIP.
+
+
+161
+00:17:00,000 --> 00:17:04,000
+The idea is that before it's merged, you have test fixtures
+
+
+162
+00:17:04,000 --> 00:17:07,000
+or at least explanation how to create them.
+
+
+163
+00:17:07,000 --> 00:17:13,000
+And in case of gateway IPIPs, test fixtures are part of IPIP,
+
+
+164
+00:17:13,000 --> 00:17:16,000
+and the same test fixtures, exactly the same CID,
+
+
+165
+00:17:16,000 --> 00:17:19,000
+exactly the same cars are part of the conformance tests,
+
+
+166
+00:17:19,000 --> 00:17:25,000
+and there are physical tests that demonstrate how things should work.
+
+
+167
+00:17:25,000 --> 00:17:30,000
+And then implementations like Kubo or someone else need to pass them.
+
+
+168
+00:17:30,000 --> 00:17:36,000
+And the nice property of this process is that different implementations
+
+
+169
+00:17:36,000 --> 00:17:39,000
+use the same test fixtures.
+
+
+170
+00:17:39,000 --> 00:17:44,000
+So we are testing against the same thing instead of writing our own tests
+
+
+171
+00:17:44,000 --> 00:17:50,000
+which pass our own code, and then we argue that this edge case is not a bug
+
+
+172
+00:17:50,000 --> 00:17:51,000
+or is a feature.
+
+
+173
+00:17:51,000 --> 00:17:55,000
+No, at least we can agree that the fixture from the IPIP
+
+
+174
+00:17:55,000 --> 00:17:58,000
+are the baseline that we should pass.
+
+
+175
+00:17:58,000 --> 00:18:03,000
+And that can also raise the bar for people who are reviewing IPIPs
+
+
+176
+00:18:03,000 --> 00:18:06,000
+to focus on the test fixtures.
+
+
+177
+00:18:06,000 --> 00:18:12,000
+Are the test fixtures present in the IPIP cover all the edge cases?
+
+
+178
+00:18:12,000 --> 00:18:16,000
+So it's kind of like exercising threat modeling of sorts,
+
+
+179
+00:18:16,000 --> 00:18:21,000
+but it pays benefit long term because people have more confidence.
+
+
+180
+00:18:21,000 --> 00:18:24,000
+Oh, I don't need to think about tests.
+
+
+181
+00:18:24,000 --> 00:18:27,000
+I just use existing fixtures.
+
+
+182
+00:18:27,000 --> 00:18:31,000
+Yeah, Nat, one thing is to bless you, Dietrich.
+
+
+183
+00:18:31,000 --> 00:18:38,000
+One thing is tomorrow, I think at 11, there's a non-conference workshop on
+
+
+184
+00:18:38,000 --> 00:18:41,000
+don't cite me on the exact time, I'll have to check it out,
+
+
+185
+00:18:41,000 --> 00:18:44,000
+but there's a non-conference workshop on tests on the test suite.
+
+
+186
+00:18:44,000 --> 00:18:49,000
+So that is definitely an important part of the infrastructure to go with this.
+
+
+187
+00:18:49,000 --> 00:18:54,000
+And eventually we would like to get test results for all implementations
+
+
+188
+00:18:54,000 --> 00:18:57,000
+on the spec site so that when you're reading a spec,
+
+
+189
+00:18:57,000 --> 00:19:01,000
+you can see which implementations pass how many tests,
+
+
+190
+00:19:01,000 --> 00:19:06,000
+and you can get a sense of the back and forth between testing and specs.
+
+
+191
+00:19:06,000 --> 00:19:08,000
+11 a.m.
+
+
+192
+00:19:08,000 --> 00:19:11,000
+11 a.m. Yeah, that was even remembered it right.
+
+
+193
+00:19:11,000 --> 00:19:14,000
+Thank you.
+
+
+194
+00:19:14,000 --> 00:19:17,000
+Yeah, I'm just curious, Lyle, obviously a lot of this happens on GitHub,
+
+
+195
+00:19:17,000 --> 00:19:18,000
+which is great.
+
+
+196
+00:19:18,000 --> 00:19:24,000
+Where does some of the verbal conversation and decision making occur?
+
+
+197
+00:19:24,000 --> 00:19:26,000
+Yeah, it's a very good question.
+
+
+198
+00:19:26,000 --> 00:19:28,000
+So there are actually two questions here.
+
+
+199
+00:19:28,000 --> 00:19:29,000
+One, where's the place?
+
+
+200
+00:19:29,000 --> 00:19:32,000
+And two, who are stakeholders?
+
+
+201
+00:19:32,000 --> 00:19:34,000
+Who are the people participating in the process?
+
+
+202
+00:19:34,000 --> 00:19:44,000
+So currently the home for IP process is in IPFS implementers working group.
+
+
+203
+00:19:44,000 --> 00:19:49,000
+We have biweekly, I believe, call.
+
+
+204
+00:19:49,000 --> 00:19:54,000
+We have people from various implementations,
+
+
+205
+00:19:54,000 --> 00:20:00,000
+usually Kubobox or we have folks from number zero on that occasion.
+
+
+206
+00:20:00,000 --> 00:20:08,740
+.:And we have during that call, we have IP IP corner where at least we try to not spend too much time at the same time.
+
+
+207
+00:20:09,000 --> 00:20:18,740
+But if there's a new IP IP that I or other stewards sees or proposes, we bring that to attention of the community saying, hey, this is this thing.
+
+
+208
+00:20:19,000 --> 00:20:24,740
+We are planning to land that within that many weeks, let's say, like in Cuba.
+
+
+209
+00:20:24,740 --> 00:20:37,480
+And there's the time to review it. And we will plan to have like a soft vote on ratifying that within like one or two cycles of this meeting.
+
+
+210
+00:20:37,740 --> 00:20:44,480
+So that's going back to the first problem I mentioned. Who are the stakeholders?
+
+
+211
+00:20:44,480 --> 00:20:57,220
+Currently, we have our thin on spec stewards of sorts. I think that group should be like way more diverse than just people from IPFS stewards group.
+
+
+212
+00:20:57,480 --> 00:21:05,220
+This group. But I think we can improve on both fronts.
+
+
+213
+00:21:05,220 --> 00:21:20,960
+One, growing that group and making sure it's like diverse enough. And two, if we start squatting too much time on that call, we may nucleate out of that.
+
+
+214
+00:21:20,960 --> 00:21:37,700
+But for now, that's IPFS implementers call. I believe it's in IPFS community calendar. Yeah. Yeah.

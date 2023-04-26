@@ -1,0 +1,193 @@
+1
+00:00:00,000 --> 00:00:07,840
+Hi everyone, I'm Ian Preston from Pegos. I'm going to talk to you about NABU, which is
+
+
+2
+00:00:07,840 --> 00:00:12,520
+a Java IPFS implementation. But first I'm going to answer a question that's probably
+
+
+3
+00:00:12,520 --> 00:00:18,960
+on everyone's mind. Why Java? Do I really want to be writing abstract factory-factory
+
+
+4
+00:00:18,960 --> 00:00:26,560
+IPFS implementation beans? Well actually there are a bunch of reasons. It's a super popular
+
+
+5
+00:00:26,560 --> 00:00:32,000
+language. It's the third most used language behind Python and JavaScript, or C depending
+
+
+6
+00:00:32,000 --> 00:00:38,720
+on your metric. It's universal. It runs on mobiles, in browsers, desktops, IoT. Fang
+
+
+7
+00:00:38,720 --> 00:00:45,840
+are big users of it. 90% of Fortune 500 use it. And there's huge corporate buy-in, so
+
+
+8
+00:00:45,840 --> 00:00:49,760
+if you want companies to use it, that's a good idea. So I think some people here found
+
+
+9
+00:00:49,760 --> 00:00:55,400
+that trying to run a Go binary at Microsoft is actually a big problem, whereas they're
+
+
+10
+00:00:55,400 --> 00:01:02,600
+totally set up to run Java. This actually surprised me, but it's apparently faster than
+
+
+11
+00:01:02,600 --> 00:01:08,280
+Go according to the Debian Benchmarks game. It has world-leading pauseless GCs. JVM and
+
+
+12
+00:01:08,280 --> 00:01:13,960
+Java are extremely durable and backwards compatible. I personally run code that I wrote 20 years
+
+
+13
+00:01:13,960 --> 00:01:20,680
+ago unmodified and run it again today and it still works. And runtime code loading,
+
+
+14
+00:01:20,680 --> 00:01:27,560
+A plugins are a first class citizen. But enough about Java, let's talk about Nabu. If the
+
+
+15
+00:01:27,560 --> 00:01:33,560
+clicker works. So Nabu, it aims to be a minimal, embeddable IPFS implementation, so you can
+
+
+16
+00:01:33,560 --> 00:01:39,600
+store and serve your blocks over standard libp2p. Our motto is root your peers, not
+
+
+17
+00:01:39,600 --> 00:01:44,120
+your content. So the idea is on the application level, you often have more information about
+
+
+18
+00:01:44,120 --> 00:01:48,400
+where your data is, so we want to let people use that and say actually I don't want to
+
+
+19
+00:01:48,400 --> 00:01:53,520
+just ask the world for this data, I want to ask this node by this peer ID. So you can
+
+
+20
+00:01:53,520 --> 00:02:00,920
+see for the get block call, we've added an optional argument which is a set of peer IDs.
+
+
+21
+00:02:00,920 --> 00:02:05,120
+If you don't supply that, then yes, we can still fall back to the DHC and do the normal
+
+
+22
+00:02:05,120 --> 00:02:12,560
+lookup. And there's enough API if you want to implement GC or pinning externally if desired.
+
+
+23
+00:02:12,560 --> 00:02:16,560
+So what's the current status? We've only been working on it for two months, but it's already
+
+
+24
+00:02:16,560 --> 00:02:22,800
+usable. We have the TLS security transport with early Mux and negotiation. Cadamly including
+
+
+25
+00:02:22,800 --> 00:02:29,680
+IPNS. There's BitSwap with an auth extension and the secure API to use it. There's a peer
+
+
+26
+00:02:29,680 --> 00:02:38,080
+to peer HTTP proxy, which is awesome. Everyone should use this model. It's also in Kubo.
+
+
+27
+00:02:38,080 --> 00:02:43,240
+Standard port mapping and Bloom and InfiniFilter block stores. If you want to know what an
+
+
+28
+00:02:43,240 --> 00:02:47,240
+InfiniFilter block store is, come talk to me later. They're super cool.
+
+
+29
+00:02:47,240 --> 00:02:51,760
+So real world benchmarks. So this comes from Pyrgos. This is basically, can you mirror
+
+
+30
+00:02:51,760 --> 00:02:58,320
+this DAG for me, please, as fast as possible? It's a champ. It's six layers deep, about
+
+
+31
+00:02:58,320 --> 00:03:04,440
+6,000 blocks or about 20 megs. So not actually much data, but a lot of blocks. And mirroring
+
+
+32
+00:03:04,440 --> 00:03:11,640
+this in Kubo currently takes 120 seconds using the pin command. NABU takes 12 seconds. This
+
+
+33
+00:03:11,640 --> 00:03:17,000
+isn't actually optimized. The theoretical minimum is, well, with BitSwap, which this
+
+
+34
+00:03:17,000 --> 00:03:24,280
+is using, is six round trips. So it should be optimally about a few seconds.
+
+
+35
+00:03:24,280 --> 00:03:27,640
+So our conclusion from this is BitSwap, the protocol, isn't actually bad with sensible
+
+
+36
+00:03:27,640 --> 00:03:33,640
+data structures. So yeah, please do try it out and give us some feedback. And come to
+
+
+37
+00:03:33,640 --> 00:03:38,240
+my Sunday talk tomorrow on a better web and private data.
+
+
+38
+00:03:38,240 --> 00:03:43,240
+And finally, a huge thank you to the IPFS fund, without which this wouldn't have happened.
+
+
+39
+00:03:43,240 --> 00:04:08,240
+Thank you.

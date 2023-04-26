@@ -1,0 +1,448 @@
+1
+00:00:00,000 --> 00:00:14,000
+Hello everyone, thank you for coming here. Let us get started on my topics.
+
+
+2
+00:00:14,000 --> 00:00:20,000
+K-Notes, Data Origin Systems on Filecoin Virtual Machine.
+
+
+3
+00:00:20,000 --> 00:00:30,000
+Let us get started from data economy with the launch of Filecoin VM.
+
+
+4
+00:00:30,000 --> 00:00:38,000
+You know, for the past month, with the launch of Filecoin virtual machines,
+
+
+5
+00:00:38,000 --> 00:00:50,000
+there are more than just a strategy opportunities, or you can explore in the Filecoin ecosystems.
+
+
+6
+00:00:50,000 --> 00:00:56,000
+Basically, there is a new economy have just been born, the data economy.
+
+
+7
+00:00:56,000 --> 00:01:02,000
+This will drive the industry disruption, lots of new business models,
+
+
+8
+00:01:02,000 --> 00:01:12,000
+and especially with China government have given many policy support for the Web3 data economy,
+
+
+9
+00:01:12,000 --> 00:01:18,000
+and like you know, the Web3 festival is happening in Hong Kong, it just finished in Hong Kong.
+
+
+10
+00:01:18,000 --> 00:01:26,000
+So that is a good opportunity with the Filecoin virtual machine launch.
+
+
+11
+00:01:26,000 --> 00:01:32,000
+As you know, data is a valuable resource, data has proven to be a valuable resource.
+
+
+12
+00:01:32,000 --> 00:01:36,000
+Many success stories are built on it.
+
+
+13
+00:01:36,000 --> 00:01:47,000
+In 2020, YouTube reaped almost $7 billion from just revenue, ad revenue.
+
+
+14
+00:01:47,000 --> 00:01:54,000
+And the Internet, as we know, today hosts some of the most important data.
+
+
+15
+00:01:54,000 --> 00:01:59,000
+It is the together from the fabric of who you are, where you are, where you're from,
+
+
+16
+00:01:59,000 --> 00:02:03,000
+and where you are going, and what do you like, and what you don't like.
+
+
+17
+00:02:03,000 --> 00:02:09,000
+But all this data currently is hosted by the central authorities,
+
+
+18
+00:02:09,000 --> 00:02:16,000
+and you can freely use the platform, but you use the data to exchange it,
+
+
+19
+00:02:16,000 --> 00:02:28,000
+a free service, but your data is exchanged as other revenues.
+
+
+20
+00:02:28,000 --> 00:02:32,000
+And Gartner has predicted that by 2022,
+
+
+21
+00:02:32,000 --> 00:02:39,000
+information will be a critical asset to 90% of enterprise corporate strategies.
+
+
+22
+00:02:39,000 --> 00:02:43,000
+Data is increasingly acknowledged as a valuable resource,
+
+
+23
+00:02:43,000 --> 00:02:50,000
+and this present is another issue organizations are incentivized to collect as much data as possible,
+
+
+24
+00:02:50,000 --> 00:02:56,000
+but become stalled out by the limits on how they can use it.
+
+
+25
+00:02:56,000 --> 00:03:01,000
+Okay, let us meet Kanos and the DataDos stack.
+
+
+26
+00:03:01,000 --> 00:03:05,000
+Kanos is the data operating system for DataDos, for Web3 DataDos.
+
+
+27
+00:03:05,000 --> 00:03:08,000
+DataDos stack is an open source data-first stack,
+
+
+28
+00:03:08,000 --> 00:03:13,000
+advancing the technology and adoption of Kanos.
+
+
+29
+00:03:13,000 --> 00:03:19,000
+Kanos takes the tank of interdependencies in the current state of art,
+
+
+30
+00:03:19,000 --> 00:03:24,000
+and make it more coherent and reliable and easier to deploy.
+
+
+31
+00:03:24,000 --> 00:03:35,000
+Basically, Kanos included these four key components, four important parts.
+
+
+32
+00:03:35,000 --> 00:03:39,000
+The first one is operating system for Web3 DataDos,
+
+
+33
+00:03:39,000 --> 00:03:46,000
+and the combined smart contract, and distribute the compute and the field storage market into one package.
+
+
+34
+00:03:46,000 --> 00:03:52,000
+And the IPRD polytrace for handling the large amounts of structured data,
+
+
+35
+00:03:52,000 --> 00:03:56,000
+which could not be available otherwise.
+
+
+36
+00:03:56,000 --> 00:04:01,000
+And easy to use front-end for creating DOS, managing their data size,
+
+
+37
+00:04:01,000 --> 00:04:04,000
+and running computation over their data.
+
+
+38
+00:04:04,000 --> 00:04:14,000
+So that is the basic important part of the data operating system.
+
+
+39
+00:04:14,000 --> 00:04:21,000
+Okay, as you can see here, from the left part is maybe,
+
+
+40
+00:04:21,000 --> 00:04:26,000
+and currently ongoing there are a lot of DataDos are building Fairclone VM,
+
+
+41
+00:04:26,000 --> 00:04:30,000
+but there are many duplicate components and duplicate service,
+
+
+42
+00:04:30,000 --> 00:04:34,000
+and the different dependency between these DataDos.
+
+
+43
+00:04:34,000 --> 00:04:39,000
+We can synergy all these efforts together to build a data operating system,
+
+
+44
+00:04:39,000 --> 00:04:44,000
+just like the right part of the diagram.
+
+
+45
+00:04:44,000 --> 00:04:50,000
+You can see here we can have a call service in the data operating systems,
+
+
+46
+00:04:50,000 --> 00:04:57,000
+and different frameworks for different DataDos.
+
+
+47
+00:04:57,000 --> 00:05:04,000
+And all these service and framework are built on Fairclone VM.
+
+
+48
+00:05:04,000 --> 00:05:19,000
+The different DataDos could build their dedicated customized business logics on this data operating system.
+
+
+49
+00:05:19,000 --> 00:05:27,000
+Basically, if we look into the data operating system, there are three different planes.
+
+
+50
+00:05:27,000 --> 00:05:32,000
+From bottom to top, the first plane is the data plane, as you know,
+
+
+51
+00:05:32,000 --> 00:05:37,000
+Fairclone, IPFS, and other different storage solutions,
+
+
+52
+00:05:37,000 --> 00:05:45,000
+for example, Fairproof, yesterday in the database panel.
+
+
+53
+00:05:45,000 --> 00:05:52,000
+All these data solutions are using IPRD data format.
+
+
+54
+00:05:52,000 --> 00:05:57,000
+All these data storage solutions are data plane.
+
+
+55
+00:05:57,000 --> 00:06:02,000
+We can leverage the parity indexing and other indexing technologies
+
+
+56
+00:06:02,000 --> 00:06:10,000
+to indexing the big data of IPRD data.
+
+
+57
+00:06:10,000 --> 00:06:14,000
+In the middle of this stack, there is a control plane.
+
+
+58
+00:06:14,000 --> 00:06:19,000
+The control plane, as I mentioned before, is the call service and the framework service.
+
+
+59
+00:06:19,000 --> 00:06:29,000
+The framework includes the contracts and provides the infrastructure to easily create and manage your DOS and your plugins.
+
+
+60
+00:06:29,000 --> 00:06:40,000
+The call primitives are intended to be used by users and implemented by developers of the DOS frameworks.
+
+
+61
+00:06:40,000 --> 00:06:49,000
+Maybe there are other service that could be used to bridge external services.
+
+
+62
+00:06:49,000 --> 00:06:52,000
+On top of the control plane, there is the application plane.
+
+
+63
+00:06:52,000 --> 00:07:01,000
+You can use the frontend to easily create your DOS, scale your DOS, launch your DOS, and deploy your DOS, data DOS.
+
+
+64
+00:07:01,000 --> 00:07:09,000
+You can also do some experimental for data DOS.
+
+
+65
+00:07:09,000 --> 00:07:16,000
+Let us look at the data DOS stack.
+
+
+66
+00:07:16,000 --> 00:07:23,000
+Basically, this is a stack discussed much inside the protocol library.
+
+
+67
+00:07:23,000 --> 00:07:30,000
+You can see here is the IPRD data layer, the Faircoin VM layer, bridge layer, and the business logic layer.
+
+
+68
+00:07:30,000 --> 00:07:45,000
+But the most important is from bottom to top, the CAD is a very key important data.
+
+
+69
+00:07:45,000 --> 00:07:49,000
+I didn't identify from bottom to top.
+
+
+70
+00:07:49,000 --> 00:07:51,000
+You can see here.
+
+
+71
+00:07:51,000 --> 00:08:08,000
+CAD could be in Stardew providers and also could be in the smart contracts and also could be in Oracle service and other data DOS services.
+
+
+72
+00:08:08,000 --> 00:08:18,000
+The most important is we wanted to, you know, for Web3 data DOS, there are many big data of IPRD data size.
+
+
+73
+00:08:18,000 --> 00:08:24,000
+So we wanted to introduce the polytree for indexing.
+
+
+74
+00:08:24,000 --> 00:08:32,000
+Polytree basically is a possibility search tree just like a B-tree in the traditional database.
+
+
+75
+00:08:32,000 --> 00:08:38,000
+We have much discussion in the yesterday's database panel.
+
+
+76
+00:08:38,000 --> 00:08:52,000
+You can find many materials on the internet about the polytree and how to combine the content addressable properties with indexing properties.
+
+
+77
+00:08:52,000 --> 00:08:57,000
+I think that is all my introduction about the data operating systems.
+
+
+78
+00:08:57,000 --> 00:08:59,000
+Any questions?
+
+
+79
+00:08:59,000 --> 00:09:08,000
+Hi, Daoshan, could you please tell me what's the main key features?
+
+
+80
+00:09:08,000 --> 00:09:11,000
+Okay.
+
+
+81
+00:09:11,000 --> 00:09:15,000
+I think the key features here are just put on the slides.
+
+
+82
+00:09:15,000 --> 00:09:22,000
+The first one is operating system for Web3 data DOS dedicated for Web3 data DOS.
+
+
+83
+00:09:22,000 --> 00:09:34,000
+That is different with other DOS, for example, for Ethereum, traditional, not traditional, I mean, just the DOS, not the data DOS.
+
+
+84
+00:09:34,000 --> 00:09:41,000
+The second is combined the smart contract distributed compute and the storage markets together in one package.
+
+
+85
+00:09:41,000 --> 00:09:44,000
+The third one is IPRD polytree for indexing.
+
+
+86
+00:09:44,000 --> 00:09:52,000
+The third one is easy to use front-end to creating and deploying launch your data DOS.
+
+
+87
+00:09:52,000 --> 00:09:53,000
+That's all.
+
+
+88
+00:09:53,000 --> 00:09:54,000
+Thank you.
+
+
+89
+00:09:54,000 --> 00:09:55,000
+Thank you.
+
+
+90
+00:09:55,000 --> 00:10:15,000
+Thank you.

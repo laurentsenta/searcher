@@ -1,0 +1,2398 @@
+1
+00:00:00,000 --> 00:00:08,220
+All right. Going to get started here. Thanks, everyone, for sticking out to the very, very
+
+
+2
+00:00:08,220 --> 00:00:15,080
+end of this track, which continuing the UCAN theme for like two-thirds of the day. We're
+
+
+3
+00:00:15,080 --> 00:00:18,720
+going to talk about the interplanetary virtual machine, conscious-addressed compute for an
+
+
+4
+00:00:18,720 --> 00:00:28,640
+open world. This is work that builds on top of UCAN. And Zeeshan, my colleague, gave a
+
+
+5
+00:00:28,640 --> 00:00:34,280
+talk about the implementation of this in a different track earlier today. This is more
+
+
+6
+00:00:34,280 --> 00:00:44,320
+about the specs, standards, and roadmap for IPVM. Ellen Perlis has this great quote from
+
+
+7
+00:00:44,320 --> 00:00:49,760
+several decades ago, which I think shows just how universal and enduring a lot of these
+
+
+8
+00:00:49,760 --> 00:00:54,720
+concepts are, right? The only universal in computing is the fetch-execute cycle, which
+
+
+9
+00:00:54,720 --> 00:01:01,080
+we're going to be talking a fair bit about here. My name is Brooklyn Zelinka. You can
+
+
+10
+00:01:01,080 --> 00:01:06,720
+find me anywhere on the internet as xpeed. I'm the co-founder and CTO at Fission. You
+
+
+11
+00:01:06,720 --> 00:01:12,800
+can find us on Discord or the Pro Collabs network, Mastodon. And the past few months
+
+
+12
+00:01:12,800 --> 00:01:19,760
+of my life have been lived as a IPVM spec wrangler, herding cats. It's not much, but
+
+
+13
+00:01:19,760 --> 00:01:28,720
+it's an honest life, you know? And hopefully today I'm going to answer these things. People
+
+
+14
+00:01:28,720 --> 00:01:35,280
+drop into my DMs on a semi-regular basis asking, what's the status of the project? What's going
+
+
+15
+00:01:35,280 --> 00:01:42,320
+on? What even is an IPVM? And so hopefully I can answer all of these for you, plus a
+
+
+16
+00:01:42,320 --> 00:01:48,200
+few things that we've learned along the way. So this talk is brought to you by the IPVM
+
+
+17
+00:01:48,200 --> 00:01:55,440
+Working Group, which is, yes, spearheaded by Fission, but has had significant effort
+
+
+18
+00:01:55,440 --> 00:02:04,000
+from DAG House and BatcoYOW, and also some help from Ceramic and Workforge. So it's a
+
+
+19
+00:02:04,000 --> 00:02:16,160
+whole community effort. Timeline. So at the last IPFS thing in Reykjavik in July, I gave
+
+
+20
+00:02:16,160 --> 00:02:19,400
+a talk basically pulling stuff out of the Fission roadmap, saying like, hey, wouldn't
+
+
+21
+00:02:19,400 --> 00:02:24,400
+it be interesting if we did some of these things? That spurred a lot of discussion and
+
+
+22
+00:02:24,400 --> 00:02:29,520
+people saying, ah, you know, we need to work on the ABI and, you know, fuel metering and,
+
+
+23
+00:02:29,520 --> 00:02:34,320
+you know, all of these things. And it was very exciting. And then there were several
+
+
+24
+00:02:34,320 --> 00:02:38,640
+months of just silence. We thought that we were going to be able to pull things further
+
+
+25
+00:02:38,640 --> 00:02:43,880
+closer up in our roadmap, but unfortunately we had to wrap some stuff up first. But then
+
+
+26
+00:02:43,880 --> 00:02:51,480
+by the end of the year, this actual video of me going wild on the keyboard, wrote a
+
+
+27
+00:02:51,480 --> 00:02:56,600
+bunch of specs to kick things off, and then did a couple of proof of concepts. First one
+
+
+28
+00:02:56,600 --> 00:03:02,200
+was actually in Bash, and it was surprisingly high fidelity. It worked shockingly well,
+
+
+29
+00:03:02,200 --> 00:03:07,200
+considering how little code it was. And then also a proof of concept in Rust. Then early
+
+
+30
+00:03:07,200 --> 00:03:13,640
+2023, Zeeshan got started on the Homestar implementation, which is the RS IPVM. So in
+
+
+31
+00:03:13,640 --> 00:03:20,640
+the same way as Go IPFS became Kubo, RS IPVM is now Homestar.
+
+
+32
+00:03:20,640 --> 00:03:31,800
+Exactly. Specs v.2 went through another loop, aligning with some stuff that Daghouse in
+
+
+33
+00:03:31,800 --> 00:03:39,000
+particular are doing. We ran an in-person workshop in Vancouver, and then here we are
+
+
+34
+00:03:39,000 --> 00:03:46,280
+in Brussels at the next IPFS thing, and hopefully we'll have even more cats hacking on keyboards
+
+
+35
+00:03:46,280 --> 00:03:48,560
+soon.
+
+
+36
+00:03:48,560 --> 00:03:55,360
+So what is an IPVM? The overall goal that we're aiming for is to have an open standard,
+
+
+37
+00:03:55,360 --> 00:04:03,160
+almost like an HTTP equivalent, but for compute. So computation, like data, should be a ubiquitous
+
+
+38
+00:04:03,160 --> 00:04:06,160
+commodity. It should be available to everyone, everywhere. If you want to run it yourself,
+
+
+39
+00:04:06,160 --> 00:04:12,440
+you can. If you want to pay for a hosted service, you should be able to, but you should also
+
+
+40
+00:04:12,440 --> 00:04:18,560
+be able to move between services completely transparently. You should be able to depend
+
+
+41
+00:04:18,560 --> 00:04:22,720
+on having an execution environment around, right? So in the browser we have Wasm, we
+
+
+42
+00:04:22,720 --> 00:04:28,800
+have it on the desktop. In servers, we should be able to pass that around and expect that
+
+
+43
+00:04:28,800 --> 00:04:35,120
+to be there as part of our environment. It should be fully consistent between clients,
+
+
+44
+00:04:35,120 --> 00:04:40,280
+even if they don't have all the same capabilities. So one of them might have a GPU, the other
+
+
+45
+00:04:40,280 --> 00:04:45,920
+one might not, but they should be able to pass jobs around between each other to essentially
+
+
+46
+00:04:45,920 --> 00:04:49,880
+subcontract each other to do work. And it should be able to be a full replacement for
+
+
+47
+00:04:49,880 --> 00:04:59,040
+something like AWS Lambda for open protocols and nodes. So that's not to say that Lambda
+
+
+48
+00:04:59,040 --> 00:05:03,840
+couldn't participate if they really wanted to. It's totally open, but you should be able
+
+
+49
+00:05:03,840 --> 00:05:09,720
+to do the same sorts of things that you could do with Lambda.
+
+
+50
+00:05:09,720 --> 00:05:16,000
+A lot of the way that people think about compute is from an era when there was a server rack
+
+
+51
+00:05:16,000 --> 00:05:20,780
+in the corner and you could say it runs over there, right? On the co-located machine. These
+
+
+52
+00:05:20,780 --> 00:05:29,200
+days we have really heterogeneous network, right? So we have Filecoin and the FVM, we
+
+
+53
+00:05:29,200 --> 00:05:37,360
+have people running jobs right on their phone, and we have cloud and edge networks. So like
+
+
+54
+00:05:37,360 --> 00:05:45,720
+Cloudflare, Edgeworkers, et cetera. And we need to be able to run computation transparently
+
+
+55
+00:05:45,720 --> 00:05:50,760
+across these different places, right? I should be able to run totally offline, going through
+
+
+56
+00:05:50,760 --> 00:05:57,880
+a tunnel, stuff right on my phone. And then if I need more power or access to some capability
+
+
+57
+00:05:57,880 --> 00:06:02,520
+that I don't have, send that job off to somebody else. They can run it and return it to me.
+
+
+58
+00:06:02,520 --> 00:06:07,600
+Or if there's six petabytes of data, I don't have six petabytes of space on my phone. I
+
+
+59
+00:06:07,600 --> 00:06:13,320
+need to be able to run that next to the data and have them return a result to me.
+
+
+60
+00:06:13,320 --> 00:06:17,120
+And this needs to be all permissionless. So instead of having a registry that says, these
+
+
+61
+00:06:17,120 --> 00:06:22,620
+are the things that we can do and nothing else, we are designing this so that anyone
+
+
+62
+00:06:22,620 --> 00:06:31,480
+can stand up and say, I need to run a CUDA job or really take your pick. And there's
+
+
+63
+00:06:31,480 --> 00:06:37,760
+somebody who is doing service providing, they could literally just turn on the spare cycles
+
+
+64
+00:06:37,760 --> 00:06:42,800
+on their desktop and say, yeah, I can run these kinds of things. And the network should
+
+
+65
+00:06:42,800 --> 00:06:48,680
+be able to connect them to each other without the network having to understand anything
+
+
+66
+00:06:48,680 --> 00:06:56,760
+about the specific tasks that are being passed around. So it should just be a discovery layer
+
+
+67
+00:06:56,760 --> 00:07:01,440
+at that point, and then both sides should understand how to actually execute and return
+
+
+68
+00:07:01,440 --> 00:07:04,960
+results to each other.
+
+
+69
+00:07:04,960 --> 00:07:10,440
+So we've been trying to get to compute at Fission for a while. And when we looked at
+
+
+70
+00:07:10,440 --> 00:07:14,880
+it, we wanted to get to compute. To do compute, you need data. And to do data in a production
+
+
+71
+00:07:14,880 --> 00:07:23,640
+setting, you need to have auth. So we built UCAN. On top of data, for data, we're doing
+
+
+72
+00:07:23,640 --> 00:07:28,360
+IPFS. And on top of that, we've built a web-native file system so that we can do permissioned
+
+
+73
+00:07:28,360 --> 00:07:36,240
+access to data as well. And WebAssembly, which runs on its own standards process and is quickly
+
+
+74
+00:07:36,240 --> 00:07:40,000
+becoming a standard basically everywhere. And with all of these combined, you get an
+
+
+75
+00:07:40,000 --> 00:07:46,360
+IPVM, roughly. When we started looking at the specs for how to actually glue these parts
+
+
+76
+00:07:46,360 --> 00:07:49,160
+together, we realized that a lot of it could actually be extracted out. And so you don't
+
+
+77
+00:07:49,160 --> 00:07:53,040
+have to buy into the entire stack. If you just want the invocations, and we'll talk
+
+
+78
+00:07:53,040 --> 00:07:57,040
+about what exactly that means in a few minutes, you can just pull that one part out. We found,
+
+
+79
+00:07:57,040 --> 00:08:04,400
+for example, we wanted a generalized signature multi-format. And so we actually pulled that
+
+
+80
+00:08:04,400 --> 00:08:09,280
+out into its own spec rather than just baking it into the core where it actually originally
+
+
+81
+00:08:09,280 --> 00:08:19,040
+started. So specs to date, at least. UCAN core to power actually transmitting around
+
+
+82
+00:08:19,040 --> 00:08:27,760
+access to particular resources. IPLD-WIT, we'll talk about that later. It's an ABI layer.
+
+
+83
+00:08:27,760 --> 00:08:35,000
+So Zeeshan did a bunch of work to get that working, and actually in a very smooth manner.
+
+
+84
+00:08:35,000 --> 00:08:40,120
+And VARsig, so this is what I was just mentioning, general multi-format for signatures. We would
+
+
+85
+00:08:40,120 --> 00:08:43,280
+have called it multisig, but unfortunately the name was already taken, so we've now called
+
+
+86
+00:08:43,280 --> 00:08:49,800
+it VARsig, and that lives in the Chain Agnostic Standards Alliance. We have UCAN invocation,
+
+
+87
+00:08:49,800 --> 00:08:55,340
+which does input addressing, execution, memorization, a bunch of that stuff. And the same spec actually
+
+
+88
+00:08:55,340 --> 00:09:01,200
+includes pipelines, which is call graphs, awaits, etc. Those are actually in the same
+
+
+89
+00:09:01,200 --> 00:09:07,440
+spec. Today they might get split out into their own separate ones. We have IPVM tasks,
+
+
+90
+00:09:07,440 --> 00:09:14,360
+which is around the computations. If you want to say I need a limit on how long this thing
+
+
+91
+00:09:14,360 --> 00:09:21,760
+can run or fuel limits on WASM, things like that. You can configure the shell that's going
+
+
+92
+00:09:21,760 --> 00:09:28,160
+to run it and workflows, which is your transactions, error handling, defaults, things like that.
+
+
+93
+00:09:28,160 --> 00:09:33,480
+There's one more part in here that we haven't built yet that we have a napkin sketch version
+
+
+94
+00:09:33,480 --> 00:09:42,240
+of. That's payment channels on UCAN. That's both for actual payment, but also for limiting
+
+
+95
+00:09:42,240 --> 00:09:48,560
+access to any consumable resource. And the running joke around is UCAN channels, or you
+
+
+96
+00:09:48,560 --> 00:09:55,000
+can channels, so we'll probably have a cute little anime mascot, I assume. And we've had
+
+
+97
+00:09:55,000 --> 00:10:02,440
+a few people say, well, are you just trying to use this to block out all of the other
+
+
+98
+00:10:02,440 --> 00:10:08,320
+possible compute providers, etc.? It's like, no, no, please get involved. This isn't to
+
+
+99
+00:10:08,320 --> 00:10:13,560
+try to capture the market or something. We're trying to make everybody in the ecosystem
+
+
+100
+00:10:13,560 --> 00:10:21,320
+better. This isn't one organization. This is a group effort. We're not competing with
+
+
+101
+00:10:21,320 --> 00:10:27,000
+each other in the decentralized web space. We're going up against Amazon and Google and
+
+
+102
+00:10:27,000 --> 00:10:35,720
+Microsoft. And we are tiny compared to them, so we need to band together. And by cooperating,
+
+
+103
+00:10:35,720 --> 00:10:44,100
+we can only benefit from each other. There's just so much space for us all to play in.
+
+
+104
+00:10:44,100 --> 00:10:52,120
+So let's actually look at how this is structured. This is UCAN invocation. Ultimately, we want
+
+
+105
+00:10:52,120 --> 00:10:57,740
+to pass arguments to WebAssembly or potentially to other things, but today it's all WebAssembly
+
+
+106
+00:10:57,740 --> 00:11:04,000
+for now. So we just have those two, great, and they're content addressed, and then we
+
+
+107
+00:11:04,000 --> 00:11:10,280
+wrap those in a task, which has some of that config that I was mentioning earlier as well.
+
+
+108
+00:11:10,280 --> 00:11:16,100
+There's a difference here between the reference and the actual indication that sometimes needs
+
+
+109
+00:11:16,100 --> 00:11:25,380
+a little bit of explaining. Using JavaScript as a rough analogy, I have a closure, so just
+
+
+110
+00:11:25,380 --> 00:11:31,780
+an anonymous function that points to an alert in this case, and if I just pass around the
+
+
+111
+00:11:31,780 --> 00:11:37,280
+reference to that, I just say message, nothing happens until I actually put the brackets
+
+
+112
+00:11:37,280 --> 00:11:43,860
+on it and then I get the alert, shows up. A more classic OCAP description of this would
+
+
+113
+00:11:43,860 --> 00:11:49,220
+be if I give somebody, why do we need this instead of just UCAN? If I give somebody my
+
+
+114
+00:11:49,220 --> 00:11:55,780
+car keys, that doesn't tell them what I want them to do with it. If I hand the keys and
+
+
+115
+00:11:55,780 --> 00:11:58,660
+they immediately get in the car and drive off, that may or may not be an appropriate
+
+
+116
+00:11:58,660 --> 00:12:03,620
+thing to do. So there's a difference from here's the keys, I'm leaving for the week,
+
+
+117
+00:12:03,620 --> 00:12:07,900
+versus I need you to actually run this task for me. So these exist at separate layers,
+
+
+118
+00:12:07,900 --> 00:12:11,420
+you embed a UCAN inside of this structure to authorize that something's going to happen
+
+
+119
+00:12:11,420 --> 00:12:17,500
+if you need access to a resource. And then this describes what I actually expect you
+
+
+120
+00:12:17,500 --> 00:12:22,980
+to do with that. Once it's actually run, we attach it to a receipt, or rather the receipt
+
+
+121
+00:12:22,980 --> 00:12:29,420
+points at this task. It includes the pure values that were output, and any effects,
+
+
+122
+00:12:29,420 --> 00:12:36,540
+that is to say any further tasks that I want to have on queued be put back into the system.
+
+
+123
+00:12:36,540 --> 00:12:43,260
+And then additional metadata, it might be a trace, tags, things like that. Here's the
+
+
+124
+00:12:43,260 --> 00:12:48,740
+actual IPLD schema. So at the bottom is what we're calling instruction, used to be called
+
+
+125
+00:12:48,740 --> 00:12:54,260
+a closure, and this contains the resource, so the URI, the ability, so these are directly
+
+
+126
+00:12:54,260 --> 00:13:04,860
+from UCAN. Any inputs it needs. So for WebAssembly this will just be a single string key, that's
+
+
+127
+00:13:04,860 --> 00:13:13,460
+args and then array of the arguments, but could conceivably be anything. And a nonce.
+
+
+128
+00:13:13,460 --> 00:13:17,640
+So with deterministic wasm, you can actually leave this blank, which is great, because
+
+
+129
+00:13:17,640 --> 00:13:23,460
+any time you run that, they're all equivalent. But if you were to say update DNS or send
+
+
+130
+00:13:23,460 --> 00:13:29,860
+an email, those may need to be unique invocations, and so they need to have this because we index
+
+
+131
+00:13:29,860 --> 00:13:35,980
+everything based on this specific structure. And we'll talk more about that later.
+
+
+132
+00:13:35,980 --> 00:13:43,220
+We wrap that in a task, and point back to the instruction in this run field. Invocation
+
+
+133
+00:13:43,220 --> 00:13:51,740
+then adds the authorization on top of that. So now it's actually been signed by the invoker,
+
+
+134
+00:13:51,740 --> 00:13:57,180
+by the one that's requesting this to actually be run, and then that contains the other two.
+
+
+135
+00:13:57,180 --> 00:14:01,180
+And we can have a bunch of these and wrap those up in a workflow. So we'll talk about
+
+
+136
+00:14:01,180 --> 00:14:04,320
+workflows near the end.
+
+
+137
+00:14:04,320 --> 00:14:08,860
+When you're building these, how do you pass in the right arguments? So this is a question
+
+
+138
+00:14:08,860 --> 00:14:20,620
+about ABI. We have in IPLD, it's essentially roughly JSON, plus a couple extra types. And
+
+
+139
+00:14:20,620 --> 00:14:28,940
+this is the WebAssembly component model types. This is WIT. They're a little bit different.
+
+
+140
+00:14:28,940 --> 00:14:34,140
+And WIT isn't actually done. It's still in flux. It's still changing a little bit. It's
+
+
+141
+00:14:34,140 --> 00:14:39,860
+changing slower. And we've talked to the folks at the Bytecode Alliance. It sounds like maybe
+
+
+142
+00:14:39,860 --> 00:14:46,340
+end of this year, this will be actually done. Right now, the spec is empty in their repo,
+
+
+143
+00:14:46,340 --> 00:14:50,300
+but they've done writing in other places. So we're just going to keep it up to date
+
+
+144
+00:14:50,300 --> 00:14:59,180
+with this stuff. But just, you know, caveats. Some of the underlying details here may change.
+
+
+145
+00:14:59,180 --> 00:15:03,340
+When we looked at this, we're like, well, we want to reuse as much as possible existing
+
+
+146
+00:15:03,340 --> 00:15:06,900
+stuff happening in the Bytecode Alliance, not having to write stuff ourselves so we
+
+
+147
+00:15:06,900 --> 00:15:15,180
+can reuse all of that tooling. But these are very different types. In IPLD, we have two
+
+
+148
+00:15:15,180 --> 00:15:22,860
+numeric types. And in WIT, there's ten. So they're very different. But if you compile
+
+
+149
+00:15:22,860 --> 00:15:29,380
+your module with the component toolchain, it creates type definitions for you. And so
+
+
+150
+00:15:29,380 --> 00:15:38,900
+Zeeshan went ahead and created a totally transparent translation layer, both on the way in and
+
+
+151
+00:15:38,900 --> 00:15:46,380
+on the way out. So we get data back as WIT, and then before we put the results back into
+
+
+152
+00:15:46,380 --> 00:15:53,260
+IPFS, we convert them back into IPLD. So the advantage of this is you don't have to think
+
+
+153
+00:15:53,260 --> 00:15:57,060
+about, except for when you're compiling your WASM, you don't have to think about that layer
+
+
+154
+00:15:57,060 --> 00:16:03,180
+at all. You just hand it essentially what looks like, I mean, I've inlined a few things
+
+
+155
+00:16:03,180 --> 00:16:08,660
+here, but essentially what looks like JSON or CBOR or however you want to have that formatted.
+
+
+156
+00:16:08,660 --> 00:16:11,420
+And it'll do the translation for you under the hood.
+
+
+157
+00:16:11,420 --> 00:16:19,140
+Let's talk about Dataflow. Dataflow is pretty great. I think it's too bad that we don't
+
+
+158
+00:16:19,140 --> 00:16:26,780
+get to work with it more often. The guy who invented it tried to, or he went to the lawyers
+
+
+159
+00:16:26,780 --> 00:16:30,620
+at IBM and said, hey, I just invented this thing, should I patent it? And they came back
+
+
+160
+00:16:30,620 --> 00:16:34,500
+to him and said, well, this seems kind of more just like how nature works, so we can't
+
+
+161
+00:16:34,500 --> 00:16:42,460
+actually patent it. So it's not that surprising that it shows up all over the place, but really
+
+
+162
+00:16:42,460 --> 00:16:48,940
+important for how we do things in IPVM because it's very distributed, and especially because
+
+
+163
+00:16:48,940 --> 00:16:53,700
+there's an increasing amount of data going onto these networks. We have a lot of data
+
+
+164
+00:16:53,700 --> 00:16:58,300
+today, but as we're computing, we're going to be dumping more of that into this data
+
+
+165
+00:16:58,300 --> 00:17:03,860
+store, including receipts that come out of this system, out of the computation. So there's
+
+
+166
+00:17:03,860 --> 00:17:10,620
+additional metadata in addition to the data that's actually being operated on and updated.
+
+
+167
+00:17:10,620 --> 00:17:15,320
+So we need to be able to pass messages to where that data lives and have it execute
+
+
+168
+00:17:15,320 --> 00:17:21,060
+there and return us results, at least just the thin receipts as well. In order to do
+
+
+169
+00:17:21,060 --> 00:17:25,140
+that, we need to be able to describe everything that should run over there, rather than waiting
+
+
+170
+00:17:25,140 --> 00:17:29,740
+for a single thing and going back and forth. In order to do that, we also need to be able
+
+
+171
+00:17:29,740 --> 00:17:36,100
+to transfer authority. This is part of where UCAN comes in. So here's Alice. She has a
+
+
+172
+00:17:36,100 --> 00:17:42,220
+bunch of capabilities and she can delegate all of those to Bob, and Bob can delegate
+
+
+173
+00:17:42,220 --> 00:17:47,820
+just some of this to Carol, who's going to do some service providing for him. This can
+
+
+174
+00:17:47,820 --> 00:17:54,300
+also go in other directions as well. So this could even be, say, Alice kicking off a job,
+
+
+175
+00:17:54,300 --> 00:18:01,700
+and then the other four here collaborating to do which parts of the jobs that they can,
+
+
+176
+00:18:01,700 --> 00:18:06,860
+and essentially subcontracting out to others the bits that they can't do because they maybe
+
+
+177
+00:18:06,860 --> 00:18:11,620
+are missing some hardware or missing a private key because they can't decrypt some data,
+
+
+178
+00:18:11,620 --> 00:18:13,580
+etc.
+
+
+179
+00:18:13,580 --> 00:18:19,980
+This breaks down roughly like this. This is a simple example. So when you pass a bunch
+
+
+180
+00:18:19,980 --> 00:18:25,700
+of invocations to a workflow, the order that you pass them doesn't matter. We just analyze
+
+
+181
+00:18:25,700 --> 00:18:32,860
+the dependency graph and produce the graph from that. So we have a bunch of awaits in
+
+
+182
+00:18:32,860 --> 00:18:39,380
+here. So if you look at this one, everything depends on the top. That data then flows down
+
+
+183
+00:18:39,380 --> 00:18:50,100
+into both of these email sends, and then at the end the bottom one awaits those other
+
+
+184
+00:18:50,100 --> 00:18:51,260
+two.
+
+
+185
+00:18:51,260 --> 00:18:55,780
+We have a lot of flexibility now in how that actually gets run. So the scheduler, the distributed
+
+
+186
+00:18:55,780 --> 00:19:02,140
+scheduler has a lot of control over what happens from here. So we can break these up if it
+
+
+187
+00:19:02,140 --> 00:19:10,780
+makes sense to do this based on how much load they're handling, if they have certain capabilities,
+
+
+188
+00:19:10,780 --> 00:19:15,740
+service discovery, all of this stuff. So in this case Alice is doing these first two,
+
+
+189
+00:19:15,740 --> 00:19:20,500
+Bob does the other two, and the awaits actually go across the wire.
+
+
+190
+00:19:20,500 --> 00:19:25,740
+So you could run that entire sequence locally if you have the ability to do it, but if it
+
+
+191
+00:19:25,740 --> 00:19:31,780
+needs to be broken up across multiple providers, that happens automatically in the system.
+
+
+192
+00:19:31,780 --> 00:19:36,460
+And we've taken some degree of freedom away from the developer saying, no, you can't just
+
+
+193
+00:19:36,460 --> 00:19:41,100
+put them in order unless you specify the dependencies between things. The upshot is that we can
+
+
+194
+00:19:41,100 --> 00:19:46,580
+make really efficient use of the network as a whole.
+
+
+195
+00:19:46,580 --> 00:19:54,700
+Those awaits are also in the schema. So they look like this. It's a key value pair of awaits
+
+
+196
+00:19:54,700 --> 00:19:58,460
+and then the branch that you care about, so either the okay or the error side. Or you
+
+
+197
+00:19:58,460 --> 00:20:01,980
+can take either.
+
+
+198
+00:20:00,000 --> 00:20:09,500
+and it'll include the branch in the result. That points out an instruction that it's awaiting.
+
+
+199
+00:20:09,500 --> 00:20:17,500
+So it's await okay, this CID. That will resolve into a receipt, which will finish the awaits,
+
+
+200
+00:20:17,500 --> 00:20:24,500
+which then means that another instruction doesn't have awaits anymore, so it's all been inline,
+
+
+201
+00:20:24,500 --> 00:20:29,220
+so that can execute now, which will produce more receipts. And we have this cycle of resolving,
+
+
+202
+00:20:29,220 --> 00:20:35,500
+producing more receipts, and that's how we do the actual working through the call graph.
+
+
+203
+00:20:35,500 --> 00:20:44,500
+On IPFS, we do content addressing. So I have some content, like a nice Belgian waffle,
+
+
+204
+00:20:44,500 --> 00:20:53,500
+and I just hash my waffle, and I get a key value pair. Here we have receipts.
+
+
+205
+00:20:53,500 --> 00:21:01,500
+But I don't know what the output of it was, so I need to actually index it on the request for the job.
+
+
+206
+00:21:01,500 --> 00:21:06,500
+So instead of hashing the receipts, because we don't know what that is,
+
+
+207
+00:21:06,500 --> 00:21:11,500
+we hash the description of the job instead. So this is called input addressing.
+
+
+208
+00:21:11,500 --> 00:21:17,500
+Because of this, it actually has to live in a different DHT, so we're just composing this out of libpdp.
+
+
+209
+00:21:17,500 --> 00:21:26,500
+It was actually, like, libpdp is amazing, so we spun up Academlia, used these as keys, and it works really well.
+
+
+210
+00:21:26,500 --> 00:21:37,500
+You could potentially retrofit the content addressing into this new DHT, because one way of thinking about
+
+
+211
+00:21:37,500 --> 00:21:41,500
+content as opposed to computation is it's like a function with no arguments.
+
+
+212
+00:21:41,500 --> 00:21:44,500
+It's just like, well, just give me the thing, it's just the identity function.
+
+
+213
+00:21:44,500 --> 00:21:51,500
+You could do that. I don't know if that's actually required. It's more of just a fun thought experiment.
+
+
+214
+00:21:51,500 --> 00:21:56,500
+Because now we have the ability to look up results and to see if someone else, anyone else on the network,
+
+
+215
+00:21:56,500 --> 00:22:02,500
+has run this before, when we're calling certain functions, certain WASM modules,
+
+
+216
+00:22:02,500 --> 00:22:10,500
+we can look up and skip steps as needed. So as we go from each component down this chain,
+
+
+217
+00:22:10,500 --> 00:22:17,500
+we can tap it and asynchronously do the WIT to IPLD conversion and dump it into IPFS,
+
+
+218
+00:22:17,500 --> 00:22:22,500
+so that it's actually happening in a separate process as we continue to execute the WASM.
+
+
+219
+00:22:22,500 --> 00:22:26,500
+So when you have composed WebAssembly modules, they actually get stuck together,
+
+
+220
+00:22:26,500 --> 00:22:34,500
+and we haven't implemented this part yet, but you put a thin shim in between that then basically redirects,
+
+
+221
+00:22:34,500 --> 00:22:37,500
+copies the data and redirects it out into the separate process.
+
+
+222
+00:22:37,500 --> 00:22:45,500
+The advantage is then if I ask for this process again, or the process crashed and I'm restarting,
+
+
+223
+00:22:45,500 --> 00:22:55,500
+I don't have to run that again. I can just grab that out of the DHT and continue on computing.
+
+
+224
+00:22:55,500 --> 00:23:07,500
+Earlier today, Zeeshan gave a demo of exactly this. So took a photo of a cat,
+
+
+225
+00:23:07,500 --> 00:23:14,500
+and the first two steps of these two workflows are the same. So it was crop the image and rotate it 90 degrees.
+
+
+226
+00:23:14,500 --> 00:23:21,500
+And I think he also crashed the process and restarted as well. So he ran this top flow first,
+
+
+227
+00:23:21,500 --> 00:23:27,500
+and then blurred the image, and then after that does crop rotate and grayscale,
+
+
+228
+00:23:27,500 --> 00:23:32,500
+but because the crop rotate steps have already been done, it skips them completely and just does the grayscale.
+
+
+229
+00:23:32,500 --> 00:23:37,500
+So you get this massive performance improvement. Because this goes over the network,
+
+
+230
+00:23:37,500 --> 00:23:42,500
+this could also be on another machine, so you might not even be aware that there's been a crop rotate done before.
+
+
+231
+00:23:42,500 --> 00:23:49,500
+You just notice that things got really fast all of a sudden.
+
+
+232
+00:23:49,500 --> 00:23:54,500
+When you're scaling up computation to work on multiple processes,
+
+
+233
+00:23:54,500 --> 00:24:03,500
+and we have very, very high parallelism potentially in IPVM, what you want is to have this linear...
+
+
+234
+00:24:03,500 --> 00:24:06,500
+If you don't have dependencies between data, you can get this linear improvement.
+
+
+235
+00:24:06,500 --> 00:24:12,500
+As you add more computation resources, you can go faster.
+
+
+236
+00:24:12,500 --> 00:24:20,500
+The commonly cited limit to this is Omdahl's Law, which says there's some coordination,
+
+
+237
+00:24:20,500 --> 00:24:25,500
+you get less benefit as you go, there's only so much you can parallelize a task.
+
+
+238
+00:24:25,500 --> 00:24:29,500
+In reality, what often happens is the universal scaling law instead.
+
+
+239
+00:24:29,500 --> 00:24:32,500
+Because you have incoherence and data contention, things like this,
+
+
+240
+00:24:32,500 --> 00:24:36,500
+actually adding more parallelism can slow things down.
+
+
+241
+00:24:36,500 --> 00:24:43,500
+The good news is on the thing that we think is going to be by far the most used in IPVM,
+
+
+242
+00:24:43,500 --> 00:24:50,500
+which is the deterministic subset of WASM, you don't have incoherence or data contention.
+
+
+243
+00:24:50,500 --> 00:24:54,500
+You don't have to wait for anybody to finish.
+
+
+244
+00:24:54,500 --> 00:24:58,500
+If they're taking too long, you can just run another copy of it yourself if you think you can get it done faster.
+
+
+245
+00:24:58,500 --> 00:25:04,500
+You can pull receipts that somebody else has run, even race them, and go faster.
+
+
+246
+00:25:04,500 --> 00:25:11,500
+You can do this thing where two of the three steps on the image are shared, and you can just skip right over it.
+
+
+247
+00:25:11,500 --> 00:25:15,500
+Something that on the flight over here, Tim was chatting about,
+
+
+248
+00:25:15,500 --> 00:25:19,500
+that's kind of like an interesting accidental thing that's fallen out of the system,
+
+
+249
+00:25:19,500 --> 00:25:24,500
+is that we get reverse lookup for free, because we've essentially built a reverse lookup DHT.
+
+
+250
+00:25:24,500 --> 00:25:27,500
+I can go from a SID to its computed metadata.
+
+
+251
+00:25:27,500 --> 00:25:34,500
+I say the resource is the LLM WASM.
+
+
+252
+00:25:34,500 --> 00:25:37,500
+Its argument is a SID.
+
+
+253
+00:25:37,500 --> 00:25:42,500
+I take that and say, well, what did you compute as metadata out the other side?
+
+
+254
+00:25:42,500 --> 00:25:48,500
+Was this moderation classifier or an image classifier to say, here's a bunch of tags that you should add to it?
+
+
+255
+00:25:48,500 --> 00:25:53,500
+Or do we want to check if a token that you can is valid?
+
+
+256
+00:25:53,500 --> 00:25:59,500
+We can just go into this DHT and say, hey, how many receipts do I have for that?
+
+
+257
+00:25:59,500 --> 00:26:02,500
+Okay, cool, there's 10 people that have already checked this for me.
+
+
+258
+00:26:02,500 --> 00:26:06,500
+I have a pretty good degree of confidence that this is actually going to be a valid token.
+
+
+259
+00:26:06,500 --> 00:26:13,500
+I don't have to go and pull all of them down and check the entire thing.
+
+
+260
+00:26:13,500 --> 00:26:18,500
+Which is something I've heard a lot of people actually talking about,
+
+
+261
+00:26:18,500 --> 00:26:23,500
+is this classification, how would we actually look up the metadata?
+
+
+262
+00:26:23,500 --> 00:26:25,500
+This is one approach to it.
+
+
+263
+00:26:25,500 --> 00:26:27,500
+There's probably generalizations to it as well.
+
+
+264
+00:26:27,500 --> 00:26:31,500
+But it's just something that we get for free, which is kind of nice.
+
+
+265
+00:26:31,500 --> 00:26:33,500
+Let's talk about safety.
+
+
+266
+00:26:33,500 --> 00:26:39,500
+People often, especially if they have a distributed systems background, are worried about partial failure.
+
+
+267
+00:26:39,500 --> 00:26:42,500
+We have workflows, there's lots of different things happening.
+
+
+268
+00:26:42,500 --> 00:26:45,500
+What happens if part of it fails halfway through?
+
+
+269
+00:26:45,500 --> 00:26:51,500
+We've actually given this a fair bit of thought, mostly coming from thinking about software transactional memory.
+
+
+270
+00:26:51,500 --> 00:26:55,500
+This great paper from Microsoft Research called Ambrosia,
+
+
+271
+00:26:55,500 --> 00:27:00,500
+it coins this term virtual resiliency, which allows you to write failure-oblivious code,
+
+
+272
+00:27:00,500 --> 00:27:05,500
+i.e. code that doesn't know that it could have partial failure in it, run in a failure-resistant manner,
+
+
+273
+00:27:05,500 --> 00:27:13,500
+by limiting to certain cases how you structure your computation.
+
+
+274
+00:27:13,500 --> 00:27:17,500
+The basic upshot of it is if you limit yourself to only having a mutation at the end,
+
+
+275
+00:27:17,500 --> 00:27:24,500
+you can do as many queries and just raw computation in the middle as you want,
+
+
+276
+00:27:24,500 --> 00:27:27,500
+you get essentially software transactional memory.
+
+
+277
+00:27:27,500 --> 00:27:30,500
+You get transactions for free out of the system,
+
+
+278
+00:27:30,500 --> 00:27:35,500
+which means that you can use all of the techniques from the database community.
+
+
+279
+00:27:35,500 --> 00:27:39,500
+And the developer no longer has to worry about the possibility of failure.
+
+
+280
+00:27:39,500 --> 00:27:46,500
+The whole thing will get committed or not, just like a database transaction, but for arbitrary computation.
+
+
+281
+00:27:46,500 --> 00:27:51,500
+I lied a little bit a moment ago when I said that it's queries and mutations, that's a simplification.
+
+
+282
+00:27:51,500 --> 00:27:58,500
+The three properties that we actually care about are determinism, idempotency, and mutation.
+
+
+283
+00:27:58,500 --> 00:28:05,500
+I'm going to keep using query and mutation just to keep it simple, because it's a half-hour talk.
+
+
+284
+00:28:05,500 --> 00:28:09,500
+We have a call graph that looks like this. I've got a bunch of queries and then some computation,
+
+
+285
+00:28:09,500 --> 00:28:12,500
+then another query, then some computation, and then at the end is a mutation.
+
+
+286
+00:28:12,500 --> 00:28:16,500
+We can do this entire thing atomically, and that will work.
+
+
+287
+00:28:16,500 --> 00:28:19,500
+We can rerun big chunks of this until the mutation at the end.
+
+
+288
+00:28:19,500 --> 00:28:24,500
+If we have something that looks more like this, where we have mutation layered throughout,
+
+
+289
+00:28:24,500 --> 00:28:27,500
+we can't have this be atomic anymore.
+
+
+290
+00:28:27,500 --> 00:28:33,500
+The plan for this is to say, hey, you should really add things or structure things
+
+
+291
+00:28:33,500 --> 00:28:37,500
+if you have a single mutation. If you need to have several, that's fine.
+
+
+292
+00:28:37,500 --> 00:28:41,500
+You just have to pass a force flag to it and say, I understand, that's okay.
+
+
+293
+00:28:41,500 --> 00:28:44,500
+There might be a partial failure in that case.
+
+
+294
+00:28:44,500 --> 00:28:49,500
+The overall layout of this is we have queries and we have computation,
+
+
+295
+00:28:49,500 --> 00:28:54,500
+and those can cycle back and forth as much as they want,
+
+
+296
+00:28:54,500 --> 00:28:57,500
+but we have to treat mutation in a very special way.
+
+
+297
+00:28:57,500 --> 00:29:03,500
+I'm skipping over a little bit of detail here, but that's the basic idea.
+
+
+298
+00:29:03,500 --> 00:29:07,500
+The other thing is when we have these call graphs, we can't just do a top sort on it
+
+
+299
+00:29:07,500 --> 00:29:11,500
+and say, yeah, here's roughly how they're laid out.
+
+
+300
+00:29:11,500 --> 00:29:15,500
+We need to push the actual call of that mutation to the very end.
+
+
+301
+00:29:15,500 --> 00:29:22,500
+It might not even have a dependency, but we're going to leave that as long as possible.
+
+
+302
+00:29:22,500 --> 00:29:28,500
+A related thing is doing SID resolution.
+
+
+303
+00:29:28,500 --> 00:29:32,500
+There's a question when you involve things like slashing,
+
+
+304
+00:29:32,500 --> 00:29:35,500
+who's at fault when something can't be run?
+
+
+305
+00:29:35,500 --> 00:29:39,500
+We have a CID, we pass that to the process.
+
+
+306
+00:29:39,500 --> 00:29:42,500
+It checks on the network, hey, can I actually resolve this thing?
+
+
+307
+00:29:42,500 --> 00:29:44,500
+If the network says, yeah, I can totally do that.
+
+
+308
+00:29:44,500 --> 00:29:47,500
+I'm not going to give you the whole thing right now, but yeah, I have that available.
+
+
+309
+00:29:47,500 --> 00:29:54,500
+It converts it to a runtime type that is not expressible in IPLD called a content handle or cha
+
+
+310
+00:29:54,500 --> 00:29:56,500
+and passes that to the task.
+
+
+311
+00:29:56,500 --> 00:29:57,500
+This happens under the hood.
+
+
+312
+00:29:57,500 --> 00:30:01,500
+Programmer doesn't need to know about it, but tasks don't accept CIDs.
+
+
+313
+00:30:01,500 --> 00:30:02,500
+It doesn't know about them.
+
+
+314
+00:30:02,500 --> 00:30:10,500
+It only accepts these handles that have already been checked by the runtime.
+
+
+315
+00:30:10,500 --> 00:30:16,500
+Some stuff that we haven't gotten to, but that's sort of in the nearest term roadmap,
+
+
+316
+00:30:16,500 --> 00:30:18,500
+is optimistic verifications.
+
+
+317
+00:30:18,500 --> 00:30:19,500
+We already have receipts.
+
+
+318
+00:30:19,500 --> 00:30:30,500
+We need to start comparing receipts to say, you know, I've had so many confirmations of the same value.
+
+
+319
+00:30:30,500 --> 00:30:33,500
+I got three receipts.
+
+
+320
+00:30:33,500 --> 00:30:35,500
+One of them differs.
+
+
+321
+00:30:35,500 --> 00:30:41,500
+I need to go back and rerun that one step or check it against a referee of some kind.
+
+
+322
+00:30:41,500 --> 00:30:46,500
+We would really like to experiment with zero knowledge proofs for this stuff as well.
+
+
+323
+00:30:46,500 --> 00:30:53,500
+So one of the ZKP WASM systems would be really great.
+
+
+324
+00:30:53,500 --> 00:30:57,500
+We really wanted to have IPFS run working before we got here.
+
+
+325
+00:30:57,500 --> 00:31:01,500
+We kind of hacked it together, but doing a deeper integration would be nice.
+
+
+326
+00:31:01,500 --> 00:31:05,500
+So this is definitely very much on the roadmap still as well.
+
+
+327
+00:31:05,500 --> 00:31:08,500
+And decentralized WASM repositories.
+
+
+328
+00:31:08,500 --> 00:31:13,500
+So instead of having to always write your own WASM every single time,
+
+
+329
+00:31:13,500 --> 00:31:21,500
+putting this into a file system and routing that at a name, so it might be on NNS or on DNS link or somewhere,
+
+
+330
+00:31:21,500 --> 00:31:27,500
+and saying, yeah, just look at my repo and it's at this path, gives you essentially package management.
+
+
+331
+00:31:27,500 --> 00:31:34,500
+And then you can start composing workflows out of well understood, already known task types.
+
+
+332
+00:31:34,500 --> 00:31:37,500
+So please join us.
+
+
+333
+00:31:37,500 --> 00:31:42,500
+Here is the link to the community, which is a GitHub org.
+
+
+334
+00:31:42,500 --> 00:31:46,500
+We do monthly calls on Luma.
+
+
+335
+00:31:46,500 --> 00:31:48,500
+So there's the link for the Luma as well.
+
+
+336
+00:31:48,500 --> 00:31:55,500
+And in the uncomf, we have two sessions tomorrow in the morning and in the afternoon.
+
+
+337
+00:31:55,500 --> 00:32:04,500
+So the Rust template and Homestar with Zeeshan and then everybody in 2.30 as well.
+
+
+338
+00:32:04,500 --> 00:32:07,500
+Thank you.
+
+
+339
+00:32:07,500 --> 00:32:18,500
+Any questions?
+
+
+340
+00:32:18,500 --> 00:32:35,500
+What are some of your early thoughts on the security of the input based DHD? Because you're storing outputs to an input CID.
+
+
+341
+00:32:35,500 --> 00:32:39,500
+So how do you know who to trust?
+
+
+342
+00:32:39,500 --> 00:32:48,500
+In that sense, are you assuming that you're only going to be accepting receipts from people you trust?
+
+
+343
+00:32:48,500 --> 00:32:49,500
+Yeah.
+
+
+344
+00:32:49,500 --> 00:32:55,500
+So there may be more than one receipt, so you can set a minimum number of confirmations that you need.
+
+
+345
+00:32:55,500 --> 00:32:57,500
+So it's like, I need 100 confirmations.
+
+
+346
+00:32:57,500 --> 00:32:58,500
+You can scope it down.
+
+
+347
+00:32:58,500 --> 00:33:01,500
+Actually, the way it works today is it's scoped down to a subnet as well.
+
+
+348
+00:33:01,500 --> 00:33:03,500
+So it's already in a trusted environment.
+
+
+349
+00:33:03,500 --> 00:33:07,500
+We're going to open that up basically as soon as we can.
+
+
+350
+00:33:07,500 --> 00:33:10,500
+We're just trying to get this system up and running first.
+
+
+351
+00:33:10,500 --> 00:33:22,500
+And a reputation score is the short answer in the longer term as well.
+
+
+352
+00:33:22,500 --> 00:33:32,500
+When there's actual long running tasks that take a proper amount of time, like more than scaling pictures or something,
+
+
+353
+00:33:32,500 --> 00:33:42,500
+are there ideas already around how a coordination between worker nodes would happen so that they don't start the same task at the same time when it flows in?
+
+
+354
+00:33:42,500 --> 00:33:44,500
+Yeah, absolutely.
+
+
+355
+00:33:44,500 --> 00:33:52,500
+So for things that are happening in Wasm, if there's some degree of parallelism, that's actually not necessarily a bad thing.
+
+
+356
+00:33:52,500 --> 00:33:59,500
+The process that kicks it off, it's not that you say, hey, who wants to pick this up and they just all run with it?
+
+
+357
+00:33:59,500 --> 00:34:01,500
+It's all mediated by UCAN.
+
+
+358
+00:34:01,500 --> 00:34:05,500
+So you actually have a point to point saying, hey, actually, I've agreed.
+
+
+359
+00:34:05,500 --> 00:34:07,500
+Yeah, you run this and you run this and you run this.
+
+
+360
+00:34:07,500 --> 00:34:11,500
+So you control your level of fan out.
+
+
+361
+00:34:11,500 --> 00:34:12,500
+This is great.
+
+
+362
+00:34:12,500 --> 00:34:17,500
+I have a bunch of questions, so I'll ask a few and then pause for others.
+
+
+363
+00:34:17,500 --> 00:34:29,500
+For receipts, it seems right now the receipt is both addressing a competition that has terminated and addressing a competition that may or may not have started or that might be ongoing.
+
+
+364
+00:34:29,500 --> 00:34:31,500
+Is that correct?
+
+
+365
+00:34:31,500 --> 00:34:33,500
+Receipts are things that have terminated.
+
+
+366
+00:34:33,500 --> 00:34:37,500
+So then why can't you address a receipt with just a CID?
+
+
+367
+00:34:37,500 --> 00:34:44,500
+Why do you need the handle that is not the output of the competition?
+
+
+368
+00:34:44,500 --> 00:34:47,500
+Is that just to enable the lookup so that you can find the receipt?
+
+
+369
+00:34:47,500 --> 00:34:48,500
+Yeah, exactly.
+
+
+370
+00:34:48,500 --> 00:34:52,500
+It's to say, I have this job and has somebody run it before?
+
+
+371
+00:34:52,500 --> 00:34:53,500
+Is there an output for it?
+
+
+372
+00:34:53,500 --> 00:34:55,500
+Because I don't know what the output is.
+
+
+373
+00:34:55,500 --> 00:35:02,500
+So it might be useful to have a separate type there, which is the handle to the computation, whether or not it has terminated.
+
+
+374
+00:35:02,500 --> 00:35:18,500
+And that's the thing that you should place at the mutable invocation reference, because some long-running thing could signal that and you can find the handle to the thing that may or may not be computing.
+
+
+375
+00:35:18,500 --> 00:35:25,500
+And it might be a place to place other things like what nodes might be computing on this thing at a particular moment in time.
+
+
+376
+00:35:25,500 --> 00:35:28,500
+And then I had another question around IPLD-WIT.
+
+
+377
+00:35:28,500 --> 00:35:37,500
+Would it make sense to just make an IPLD codec that reads directly from WIT so you can just store WIT as is without having to convert back and forth?
+
+
+378
+00:35:37,500 --> 00:35:39,500
+Yeah, absolutely.
+
+
+379
+00:35:39,500 --> 00:35:41,500
+Yeah, I totally think we could do that.
+
+
+380
+00:35:41,500 --> 00:35:45,500
+I'll pause for now.
+
+
+381
+00:35:45,500 --> 00:35:47,500
+Good suggestions, though. Thanks.
+
+
+382
+00:35:47,500 --> 00:35:50,500
+How do you think about work that is not fungible?
+
+
+383
+00:35:50,500 --> 00:36:00,500
+If I have a job that wants to do something like read some weather data in Atlanta and you go, oh, well, I scheduled in Boston, that may not solve your problem.
+
+
+384
+00:36:00,500 --> 00:36:01,500
+Yeah, totally.
+
+
+385
+00:36:01,500 --> 00:36:04,500
+So there's a bunch of cases like this, right?
+
+
+386
+00:36:04,500 --> 00:36:11,500
+One example is email server for a certain email address or decrypt this data.
+
+
+387
+00:36:11,500 --> 00:36:13,500
+So I actually didn't talk about decryption stuff at all.
+
+
+388
+00:36:13,500 --> 00:36:15,500
+There's a layer about privacy as well.
+
+
+389
+00:36:15,500 --> 00:36:18,500
+So decrypt this data and operate on it, right?
+
+
+390
+00:36:18,500 --> 00:36:20,500
+Yeah, there's lots of non-fungible resources.
+
+
+391
+00:36:20,500 --> 00:36:21,500
+Yeah, right?
+
+
+392
+00:36:21,500 --> 00:36:23,500
+There's a huge number of use cases for this.
+
+
+393
+00:36:23,500 --> 00:36:26,500
+That's done with, and we didn't really talk about this either, affinities.
+
+
+394
+00:36:26,500 --> 00:36:39,500
+So to say certain nodes have an affinity to run certain kinds of jobs and they have to prove that they have those things.
+
+
+395
+00:36:39,500 --> 00:36:45,500
+And other things in that realm of affinities could even be like, I have a GPU or not, right?
+
+
+396
+00:36:45,500 --> 00:36:47,500
+So it's very common.
+
+
+397
+00:36:47,500 --> 00:36:50,500
+We just haven't baked it in yet because it's just WASM today.
+
+
+398
+00:36:50,500 --> 00:36:53,500
+Do you also support anti-affinities if I want this to be on a different host?
+
+
+399
+00:36:53,500 --> 00:36:56,500
+Yep.
+
+
+400
+00:36:56,500 --> 00:37:00,500
+It's not implemented yet, but that's the plan.
+
+
+401
+00:37:00,500 --> 00:37:11,500
+I had a question as to why the resource is a URI and not just a CAD because then it doesn't make the invocation fully deterministic if it's a resource that might be mutable.
+
+
+402
+00:37:11,500 --> 00:37:14,500
+Yeah, so some resources are mutable, right?
+
+
+403
+00:37:14,500 --> 00:37:25,500
+So we want to enable things like read from DNS link, operate on it with deterministic WASM, right back into DNS link as an atomic transaction.
+
+
+404
+00:37:25,500 --> 00:37:29,500
+So I need to then say the thing that I'm resolving is the DNS URI.
+
+
+405
+00:37:29,500 --> 00:37:42,500
+It might be useful to create a different type there for things that are fully specified all the way down to immutable artifacts and things that may be mutable.
+
+
+406
+00:37:42,500 --> 00:37:45,500
+Because then it becomes really easy.
+
+
+407
+00:37:45,500 --> 00:37:54,500
+Certain things become really nice and easy when you know that everything that you're pointing to is fully figured out as opposed to you might have mutable ref.
+
+
+408
+00:37:54,500 --> 00:38:04,500
+In the same way that you have these mutations that might occur if you have the ability to just distinguish a call graph that is entirely deterministic from one that isn't.
+
+
+409
+00:38:04,500 --> 00:38:07,500
+Yeah, so we do that.
+
+
+410
+00:38:07,500 --> 00:38:19,500
+By looking at the resource type, like literally the schema, and the ability, we can tell in advance the safety level of that bit of computation.
+
+
+411
+00:38:19,500 --> 00:38:24,500
+So actually this is also a two of three, right? You can't have all three of these.
+
+
+412
+00:38:24,500 --> 00:38:30,500
+If it's deterministic and idempotent, it must be pure, for example.
+
+
+413
+00:38:30,500 --> 00:38:35,500
+So you're in this totally safe, I can do whatever I want level.
+
+
+414
+00:38:35,500 --> 00:38:39,500
+We've worked it out because again it's a two of three or you can even have one of them.
+
+
+415
+00:38:39,500 --> 00:38:47,500
+And I think there's like eight or nine levels that map roughly to consistency levels, basically.
+
+
+416
+00:38:47,500 --> 00:38:50,500
+And then that changes how the scheduler can interact with it.
+
+
+417
+00:38:50,500 --> 00:39:01,500
+Yeah, got it. So then it's the program writing the invocation has to make sure that the description is correctly matching the resource type.
+
+
+418
+00:39:01,500 --> 00:39:13,500
+And is it easy to enforce? I can imagine many cases where lying about that can get really bad for the computer that is trying to run the thing.
+
+
+419
+00:39:13,500 --> 00:39:20,500
+Yeah, so an example would be, this actually used to happen, right?
+
+
+420
+00:39:20,500 --> 00:39:26,500
+Having mutations happen on an HTTP GET, that breaks the contract, right?
+
+
+421
+00:39:26,500 --> 00:39:33,500
+We don't have a strong solution for that other than a reputation system, they shouldn't do that.
+
+
+422
+00:39:33,500 --> 00:39:44,500
+And then on the traces for receipts, which I think is great to have the ability to have that, that might want to be in some kind of handle instead,
+
+
+423
+00:39:44,500 --> 00:39:47,500
+because you might want to be able to see the trace as it's occurring.
+
+
+424
+00:39:47,500 --> 00:39:55,500
+So think of like a CI model where you have a job and it's processing and you want to see the outputs as it's happening before it's terminated.
+
+
+425
+00:39:55,500 --> 00:40:05,500
+Would you do those as a DHT or would you have them as a...
+
+
+426
+00:40:00,000 --> 00:40:00,320
+Etc. ŠAŠan įσųŴ
+
+
+427
+00:40:00,320 --> 00:40:01,440
+and say gossip, so.
+
+
+428
+00:40:01,440 --> 00:40:05,360
+Yeah, I would probably just use the DHT for pointers,
+
+
+429
+00:40:05,360 --> 00:40:08,760
+like mutable references only, and then you
+
+
+430
+00:40:08,760 --> 00:40:12,080
+then put everything else as mutable objects
+
+
+431
+00:40:12,080 --> 00:40:13,080
+in an appending log.
+
+
+432
+00:40:13,080 --> 00:40:15,240
+So I would do it kind of like a get graph
+
+
+433
+00:40:15,240 --> 00:40:17,840
+where you keep rolling up, and you just
+
+
+434
+00:40:17,840 --> 00:40:20,800
+change the latest state of the head in the DHT
+
+
+435
+00:40:20,800 --> 00:40:22,880
+or something like that.
+
+
+436
+00:40:22,880 --> 00:40:25,080
+And you could, once you have identified
+
+
+437
+00:40:25,080 --> 00:40:28,600
+who has this content, you can obviate the call to the DHT
+
+
+438
+00:40:28,600 --> 00:40:30,400
+entirely, because you know who are
+
+
+439
+00:40:30,400 --> 00:40:32,280
+the parties that are running the computation,
+
+
+440
+00:40:32,280 --> 00:40:33,400
+and you can just ask them.
+
+
+441
+00:40:33,400 --> 00:40:33,900
+For example.
+
+
+442
+00:40:39,800 --> 00:40:42,520
+What about compute over data?
+
+
+443
+00:40:42,520 --> 00:40:44,840
+Meaning, specifically, do you have anything like affinity
+
+
+444
+00:40:44,840 --> 00:40:45,640
+to the input data?
+
+
+445
+00:40:45,640 --> 00:40:47,020
+So like, hey, I have a data set.
+
+
+446
+00:40:47,020 --> 00:40:48,400
+Someone wants to do a computation
+
+
+447
+00:40:48,400 --> 00:40:50,400
+over that specific data set.
+
+
+448
+00:40:50,400 --> 00:40:53,440
+So therefore, let's make sure we target the code.
+
+
+449
+00:40:53,440 --> 00:40:55,160
+Because the nice thing here is that IPVM
+
+
+450
+00:40:55,160 --> 00:40:56,900
+lets you basically ship code really easily
+
+
+451
+00:40:56,900 --> 00:40:58,840
+to different endpoints.
+
+
+452
+00:40:58,840 --> 00:41:01,920
+So is there a plan to model the actual affinity
+
+
+453
+00:41:01,920 --> 00:41:03,920
+to the data itself?
+
+
+454
+00:41:03,920 --> 00:41:05,080
+Yeah, absolutely.
+
+
+455
+00:41:05,080 --> 00:41:08,040
+So essentially, what the scheduler will do,
+
+
+456
+00:41:08,040 --> 00:41:10,320
+it's not this sophisticated today,
+
+
+457
+00:41:10,320 --> 00:41:12,480
+but it looks at the description of the thing that's
+
+
+458
+00:41:12,480 --> 00:41:18,680
+being run and its inputs, asks, hey, who has this data?
+
+
+459
+00:41:18,680 --> 00:41:21,120
+Is this 9 terabytes of data, for example?
+
+
+460
+00:41:21,120 --> 00:41:23,080
+Then, OK, I'm going to try to schedule that with you
+
+
+461
+00:41:23,080 --> 00:41:24,320
+if you can provide that to me.
+
+
+462
+00:41:24,320 --> 00:41:28,200
+And it will win the bid for that job, basically.
+
+
+463
+00:41:28,200 --> 00:41:29,680
+Thank you.
+
+
+464
+00:41:29,680 --> 00:41:32,680
+As a follow up to what you just said, this communication
+
+
+465
+00:41:32,680 --> 00:41:37,520
+to find out which node should run what and so on,
+
+
+466
+00:41:37,520 --> 00:41:40,840
+is this like a PubSub protocol?
+
+
+467
+00:41:40,840 --> 00:41:44,800
+Or how are these nodes talking to each other?
+
+
+468
+00:41:44,800 --> 00:41:48,160
+Yeah, today, GossipSub, EpiSub eventually, I assume.
+
+
+469
+00:41:48,160 --> 00:41:51,800
+Yeah.
+
+
+470
+00:41:51,800 --> 00:41:55,680
+And you can also do pre-negotiation
+
+
+471
+00:41:55,680 --> 00:41:56,800
+for some of this stuff.
+
+
+472
+00:41:56,800 --> 00:41:59,840
+So one thing that I didn't mention in the payments layer,
+
+
+473
+00:41:59,840 --> 00:42:04,080
+or that was really just any sort of consumable resource layer,
+
+
+474
+00:42:04,080 --> 00:42:07,760
+is you could say, I prefer to run,
+
+
+475
+00:42:07,760 --> 00:42:10,240
+I have a bunch of credits with this provider,
+
+
+476
+00:42:10,240 --> 00:42:13,200
+and I want them to run a cron job for me every week.
+
+
+477
+00:42:13,200 --> 00:42:15,360
+So you can do that pre-negotiation,
+
+
+478
+00:42:15,360 --> 00:42:18,480
+and then it'll just kick off the process every week.
+
+
+479
+00:42:18,480 --> 00:42:19,000
+All right.
+
+
+480
+00:42:19,000 --> 00:42:45,640
+Thank you.

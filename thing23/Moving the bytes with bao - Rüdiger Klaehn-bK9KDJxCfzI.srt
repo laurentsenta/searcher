@@ -1,0 +1,1648 @@
+1
+00:00:00,000 --> 00:00:09,880
+Okay, yeah, let's just get right on it. So I'm Rüdiger from Number Zero, and I'm going
+
+
+2
+00:00:09,880 --> 00:00:17,200
+to talk about BAU. It's kind of a mix of hashing algorithm and a data transfer protocol that
+
+
+3
+00:00:17,200 --> 00:00:21,800
+is related to the Blake 3 hashing algorithm, and I'm going to try to explain why this is
+
+
+4
+00:00:21,800 --> 00:00:28,880
+so awesome. So let's just get on it. First of all, there was a decision at Arrow
+
+
+5
+00:00:28,880 --> 00:00:37,600
+to kind of rethink things from the ground up, and well, we tried to keep things extremely
+
+
+6
+00:00:37,600 --> 00:00:42,720
+simple. The reason for that is that we are a very small team, and we want to put things
+
+
+7
+00:00:42,720 --> 00:00:49,800
+into production as quickly as possible, so we cannot afford a lot of complexity. And
+
+
+8
+00:00:49,800 --> 00:00:54,680
+this is kind of our guideline to make things really as simple as you can. So like, if you
+
+
+9
+00:00:54,680 --> 00:01:00,720
+take one thing away, it just doesn't work anymore. And okay, so the outline is first
+
+
+10
+00:01:00,720 --> 00:01:09,520
+basically what primitives does the new Arrow offer? Then what do we want out of this? How
+
+
+11
+00:01:09,520 --> 00:01:16,200
+does BAU enable this? And then some applications where this works very well, and some other
+
+
+12
+00:01:16,200 --> 00:01:21,160
+applications where it doesn't work very well. And last but not least, a discussion about
+
+
+13
+00:01:21,160 --> 00:01:26,080
+whether this can still be considered IPFS or not, because as you'll see, it is quite
+
+
+14
+00:01:26,080 --> 00:01:31,920
+a departure to some things. But let's just see what it does. Okay, so what primitives
+
+
+15
+00:01:31,920 --> 00:01:38,360
+do we have? So the project was started very in the beginning of this year, and it's already
+
+
+16
+00:01:38,360 --> 00:01:47,920
+used in DeltaJet, and so there is not much in terms of primitives. So let's see, what
+
+
+17
+00:01:47,920 --> 00:01:54,240
+do we got? We got blobs. So blobs can be arbitrary size. You can have a blob that is one byte,
+
+
+18
+00:01:54,240 --> 00:01:57,360
+you can have a blob that is one terabyte, it doesn't matter. If it fits on your hard
+
+
+19
+00:01:57,360 --> 00:02:06,600
+disk, it can be an Arrow blob. So there's no limit of four megabytes or whatever. And
+
+
+20
+00:02:06,600 --> 00:02:10,840
+we use the file store pattern by default, I mean, people that use Kubo are probably
+
+
+21
+00:02:10,840 --> 00:02:16,320
+familiar with that. It means that the file itself stays in the hand of the user, so if
+
+
+22
+00:02:16,320 --> 00:02:19,800
+you have a large data set, you might want to work with the data set and still provide
+
+
+23
+00:02:19,800 --> 00:02:24,560
+it to other people, and then it's quite useful to have the data available at the same time
+
+
+24
+00:02:24,560 --> 00:02:28,440
+as sharing it. Like if you have a big machine learning data set and you want to play with
+
+
+25
+00:02:28,440 --> 00:02:32,120
+it, but you also want to share it, then it's not good if you have to have it twice on your
+
+
+26
+00:02:32,120 --> 00:02:39,440
+disk. And this is the default for Arrow, we don't do anything else. Then we have a concept
+
+
+27
+00:02:39,440 --> 00:02:45,760
+called collections, that's kind of the smallest thing we could come up with to combine multiple
+
+
+28
+00:02:45,760 --> 00:02:50,760
+blobs. And what's a collection? A collection is a blob, it's clear. We only have blobs,
+
+
+29
+00:02:50,760 --> 00:02:56,960
+so collections are just blobs. A collection can be thought of as a sequence of links with
+
+
+30
+00:02:56,960 --> 00:03:00,920
+some metadata. There's some discussion about whether we need that, but currently there's
+
+
+31
+00:03:00,920 --> 00:03:06,480
+some metadata. And a collection, just like a blob, can be as big as you want. So if you
+
+
+32
+00:03:06,480 --> 00:03:10,360
+want a collection with one billion links, it's no problem, you can do it. It's like
+
+
+33
+00:03:10,360 --> 00:03:18,280
+32 billion bytes, it's no big deal. And typically links go to blobs. You could have links to
+
+
+34
+00:03:18,280 --> 00:03:23,640
+collections, but so far we don't do that. So far we just have the two-level hierarchy
+
+
+35
+00:03:23,640 --> 00:03:32,600
+a collection contains blobs and that's it. And like Hannah mentioned, no DAG, no problem.
+
+
+36
+00:03:32,600 --> 00:03:37,560
+And we use, this might also be a bit controversial, we use the same hash algorithm for all links
+
+
+37
+00:03:37,560 --> 00:03:45,040
+in a collection. And currently the only hash algorithm that we support is Flake 3. So we
+
+
+38
+00:03:45,040 --> 00:03:51,680
+get to why we do that. So what do we want with these two primitives? We basically just
+
+
+39
+00:03:51,680 --> 00:03:57,840
+want one thing, which is verified streaming. Meaning we want to send content over the wire
+
+
+40
+00:03:57,840 --> 00:04:02,160
+only if it was requested due to a hash, and we never want to send something which does
+
+
+41
+00:04:02,160 --> 00:04:08,720
+not match the hash. And we want incremental verification, meaning that you should not
+
+
+42
+00:04:08,720 --> 00:04:14,120
+have to download a huge amount of stuff. You should notice very early if somebody sends
+
+
+43
+00:04:14,120 --> 00:04:20,200
+you wrong data, either due to a bit flip on the wire or due to malice or whatever. Should
+
+
+44
+00:04:20,200 --> 00:04:25,640
+be able to notice that immediately. And we want to validate on send and on receive. So
+
+
+45
+00:04:25,640 --> 00:04:32,360
+validation is good, let's do it everywhere. So this is a typical collection. This is one
+
+
+46
+00:04:32,360 --> 00:04:38,440
+data set I've been playing with a lot of times. And it's a typical machine learning data set.
+
+
+47
+00:04:38,440 --> 00:04:45,920
+It has some very small files, there's 100 bytes, and some very large files, 12 gigs.
+
+
+48
+00:04:45,920 --> 00:04:50,560
+And we don't need to split this up into a tree or anything, we just have the collection
+
+
+49
+00:04:50,560 --> 00:04:56,200
+and the blobs. I mean, there are still trees, you'll see, but they are kind of an implementation
+
+
+50
+00:04:56,200 --> 00:05:02,840
+detail. Okay, so now let's take a look at what we want to do with this collection. So
+
+
+51
+00:05:02,840 --> 00:05:09,280
+the data transfer protocol. So first of all, it is a request response protocol. So all
+
+
+52
+00:05:09,280 --> 00:05:15,280
+this ceremony about who is it from, who is it for, and so on, it's all taken care of
+
+
+53
+00:05:15,280 --> 00:05:22,680
+because it's request response. It is specifically not a discovery protocol. So I actually go
+
+
+54
+00:05:22,680 --> 00:05:26,920
+to go to great length to make sure that nobody can abuse it as a discovery protocol. It's
+
+
+55
+00:05:26,920 --> 00:05:30,840
+just about, you know, the other side has the data and you want it and you want to say,
+
+
+56
+00:05:30,840 --> 00:05:35,320
+I want this data, give it to me. There will be a discovery protocol, it will look similar,
+
+
+57
+00:05:35,320 --> 00:05:41,880
+but this is not a discovery protocol. And again, verified streaming, and on send and
+
+
+58
+00:05:41,880 --> 00:05:47,160
+receive. So what, what are the possible things that people might want to do? So the first
+
+
+59
+00:05:47,160 --> 00:05:52,720
+thing, of course, you have a hash and you want the data. That's what bitswap does. So
+
+
+60
+00:05:52,720 --> 00:05:58,480
+you have a hash and you want all the data that is behind that hash. And that would of
+
+
+61
+00:05:58,480 --> 00:06:03,520
+course be a bit limited if you have a giant piece of data. So the next thing we want to
+
+
+62
+00:06:03,520 --> 00:06:08,920
+support is the ability to say, I want some ranges of this data, like the, you know, HTTP
+
+
+63
+00:06:08,920 --> 00:06:13,320
+range request, where you say, I have a big asset and I specify which part of the data
+
+
+64
+00:06:13,320 --> 00:06:19,840
+I want. And that's one thing we support. And we support not just one range, but multiple
+
+
+65
+00:06:19,840 --> 00:06:25,480
+ranges. So whatever complexity of the part of the data you want, you can specify it.
+
+
+66
+00:06:25,480 --> 00:06:30,680
+Okay. Then once you go to the level of collections, the most obvious thing you might want to do
+
+
+67
+00:06:30,680 --> 00:06:35,640
+is you want the entire collection. So in these diagrams, blue is always what you already
+
+
+68
+00:06:35,640 --> 00:06:41,640
+have and green is what you want. And this is the simplest case. You have a hash and
+
+
+69
+00:06:41,640 --> 00:06:46,800
+you want everything below this hash. But it turns out that this would be very limited
+
+
+70
+00:06:46,800 --> 00:06:52,440
+if this was all we could do. So I got a few other scenarios. So this is resume. Basically
+
+
+71
+00:06:52,440 --> 00:06:57,480
+you have made a download and you were interrupted in the middle. And then you basically got
+
+
+72
+00:06:57,480 --> 00:07:01,680
+the collection itself. You've got a bunch of files, but you were in the middle of the
+
+
+73
+00:07:01,680 --> 00:07:07,160
+second file, you were interrupted. So you want exactly the rest and nothing more. And
+
+
+74
+00:07:07,160 --> 00:07:12,080
+you need to be able to specify, I want like the second part of the big file, number two
+
+
+75
+00:07:12,080 --> 00:07:16,840
+and the last file. So that's one thing the thing needs to be able to support, but it
+
+
+76
+00:07:16,840 --> 00:07:22,680
+gets more complex. So this is repair. Imagine you have a big data set, but for some reason
+
+
+77
+00:07:22,680 --> 00:07:28,920
+you have some breakage, a bit flips, or you deleted some files or whatever. And you want
+
+
+78
+00:07:28,920 --> 00:07:34,200
+to be able to specify, give me exactly the blocks that repair this data set to make it
+
+
+79
+00:07:34,200 --> 00:07:38,760
+whole again, to make it conform to the hash again. And then you might get some very complex
+
+
+80
+00:07:38,760 --> 00:07:45,920
+like ranges. And this is another scenario. This is multi-party data transfer. You have
+
+
+81
+00:07:45,920 --> 00:07:51,200
+a big data set, you want it, and you have multiple peers that announce that they have
+
+
+82
+00:07:51,200 --> 00:07:55,640
+it. And then you want to kind of shift the load on the different peers. So you say, you
+
+
+83
+00:07:55,640 --> 00:08:00,480
+do first half, you do the other half, and then you might get some sort of stripe pattern
+
+
+84
+00:08:00,480 --> 00:08:06,320
+or whatever. I mean, how exactly this looks like is up to the higher level algorithm,
+
+
+85
+00:08:06,320 --> 00:08:12,840
+but this is basically what you might end up with. And so these are the scenarios that
+
+
+86
+00:08:12,840 --> 00:08:21,080
+we need to support. So how does a request look like? A request contains a root hash,
+
+
+87
+00:08:21,080 --> 00:08:27,680
+of course, it's content addressed. And then it contains ranges for each element. So the
+
+
+88
+00:08:27,680 --> 00:08:33,320
+collection, as I mentioned, is just a blob. So we treat the collection as first element.
+
+
+89
+00:08:33,320 --> 00:08:39,000
+And for the collection, just like for any other blob, you can specify ranges. So you
+
+
+90
+00:08:39,000 --> 00:08:43,600
+can say, imagine you have a collection which contains a billion links, you might not want
+
+
+91
+00:08:43,600 --> 00:08:47,360
+to download the entire collection. So for the collection itself, you can also specify
+
+
+92
+00:08:47,360 --> 00:08:54,280
+ranges. And then everything basically in the order in which the links appear in the collection,
+
+
+93
+00:08:54,280 --> 00:08:59,480
+you specify then ranges for each element. And this is a little bit compressed. There
+
+
+94
+00:08:59,480 --> 00:09:05,560
+is a range encoding, which basically compresses multiple ranges. So you end up with smaller
+
+
+95
+00:09:05,560 --> 00:09:10,920
+numbers. And then there's another encoding, which encodes multiple ranges. But well, if
+
+
+96
+00:09:10,920 --> 00:09:15,960
+you are interested in deep meta-tails, then ask me in the hallway or look in the repo.
+
+
+97
+00:09:15,960 --> 00:09:23,160
+But let's just say it's very compact. And now, once you get to the response, so what
+
+
+98
+00:09:23,160 --> 00:09:29,920
+is the response? The response is just the data that you've requested in a certain order.
+
+
+99
+00:09:29,920 --> 00:09:35,640
+And the natural order is, of course, the collection first, and then all the elements in the collection
+
+
+100
+00:09:35,640 --> 00:09:41,920
+in the order in which they appear in the collection. And well, OK, so let's see what the response
+
+
+101
+00:09:41,920 --> 00:09:48,080
+is. It's just the concatenate response for each non-empty item. So if you have an empty
+
+
+102
+00:09:48,080 --> 00:09:54,880
+item, you don't need to send anything. The requester knows what he requested. So you
+
+
+103
+00:09:54,880 --> 00:10:00,480
+can only make sense of the response if you are the requester and know the request. That's
+
+
+104
+00:10:00,480 --> 00:10:04,520
+important, but you can do it because it's a request response protocol. You can assume
+
+
+105
+00:10:04,520 --> 00:10:10,640
+in a request response protocol that the requester knows what he has requested.
+
+
+106
+00:10:10,640 --> 00:10:15,080
+And now, OK, you could say, just send the bytes, but that would be pretty weak because
+
+
+107
+00:10:15,080 --> 00:10:19,920
+that would not be verified streaming. That would mean you would have to download everything
+
+
+108
+00:10:19,920 --> 00:10:25,280
+and then hash it once it is on your disk and then find out, oops, I downloaded the wrong
+
+
+109
+00:10:25,280 --> 00:10:34,880
+thing. And so that's exactly when BAU comes in. So what is BAU? BAU is basically an extension
+
+
+110
+00:10:34,880 --> 00:10:40,040
+of the Blake 3 hashing algorithm. The Blake 3 hashing algorithm is relatively new and
+
+
+111
+00:10:40,040 --> 00:10:45,480
+relatively fast hashing algorithm. There are some controversial properties, but I'm not
+
+
+112
+00:10:45,480 --> 00:10:52,120
+going to go into them. But the main thing is it is a cryptographic hash function. And
+
+
+113
+00:10:52,120 --> 00:10:59,560
+it is using an internal ephemeral Merkle tree. This happens to be a binary Merkle tree that
+
+
+114
+00:10:59,560 --> 00:11:07,440
+is kind of left balanced. And it has the smallest addressable element is 1 kilobyte chunks.
+
+
+115
+00:11:07,440 --> 00:11:14,160
+And now this sounds pretty abstract, so I got some pretty pictures. This is a Blake
+
+
+116
+00:11:14,160 --> 00:11:20,920
+3 tree. So below these white rectangles are the content. And then basically whenever we
+
+
+117
+00:11:20,920 --> 00:11:26,560
+have a chunk, so here we have two chunks, and we compute the hash for each chunk, make
+
+
+118
+00:11:26,560 --> 00:11:35,520
+a hash pair out of it. And then the hash of these two hashes is the hash of the entire
+
+
+119
+00:11:35,520 --> 00:11:40,120
+tree. And this is how Blake 3 works internally. So for a single piece, it's very simple. You
+
+
+120
+00:11:40,120 --> 00:11:44,200
+just hash the thing and that's your result. But as soon as the tree gets bigger, you build
+
+
+121
+00:11:44,200 --> 00:11:49,280
+this internal tree. I guess for another audience, I would have to spend a lot of time explaining
+
+
+122
+00:11:49,280 --> 00:11:56,720
+this, but here I think it's pretty common, this kind of thing. So you end up with some
+
+
+123
+00:11:56,720 --> 00:12:02,640
+kind of left packed binary tree. And as you can see, you have only two things in this
+
+
+124
+00:12:02,640 --> 00:12:08,400
+tree. You only have chunks and hash pairs. So hashes always appear in pairs, and these
+
+
+125
+00:12:08,400 --> 00:12:15,040
+hashes are 32 bytes, so you always have these 64 byte hash pairs. And so this is how the
+
+
+126
+00:12:15,040 --> 00:12:21,320
+tree looks when you have a larger number of chunks. As you can see, the thing above is
+
+
+127
+00:12:21,320 --> 00:12:28,600
+the final hash. This is what you get if you just do Blake 3 hash. And all the intermediate
+
+
+128
+00:12:28,600 --> 00:12:34,240
+nodes are ephemeral. They are just used during the calculation of the final hash, but they're
+
+
+129
+00:12:34,240 --> 00:12:39,600
+not stored anywhere. So you've got a bunch of data, you do this nice tree, but then you
+
+
+130
+00:12:39,600 --> 00:12:44,000
+throw away the key and just keep the result. That's what Blake 3 is. And I think Blake
+
+
+131
+00:12:44,000 --> 00:12:49,640
+3 is supported by Kubo, but only in this mode where you can just hash the whole thing. But
+
+
+132
+00:12:49,640 --> 00:12:56,320
+if you do that, you're kind of missing out because BAU, what is BAU? BAU is exactly the
+
+
+133
+00:12:56,320 --> 00:13:04,400
+same as Blake 3, except... So it is Blake 3. You get the same hashes, but you persist
+
+
+134
+00:13:04,400 --> 00:13:10,880
+the tree. And that means that you can save some calculations, so you don't have to build
+
+
+135
+00:13:10,880 --> 00:13:16,400
+the tree every time you need to do something with the data. And there's two ways to use
+
+
+136
+00:13:16,400 --> 00:13:24,800
+BAU. One is basically you store this tree in a single separate file in a certain order,
+
+
+137
+00:13:24,800 --> 00:13:30,920
+and this is referred to as an outboard, or you kind of mix the hashes with the data.
+
+
+138
+00:13:30,920 --> 00:13:35,880
+And we are using the outboard version because we want to leave the original data unchanged.
+
+
+139
+00:13:35,880 --> 00:13:44,560
+You want to be able to use your data while you share it. And so here we see this is basically
+
+
+140
+00:13:44,560 --> 00:13:50,160
+Blake 3, except that you keep the tree. And as you can see, the outboard file is just
+
+
+141
+00:13:50,160 --> 00:13:55,480
+a list of hashes, of hash pairs to be precise, with the size prefix. That's all there is
+
+
+142
+00:13:55,480 --> 00:14:02,320
+to it. There's nothing else. No metadata, nothing. And the outboard obviously is much,
+
+
+143
+00:14:02,320 --> 00:14:08,800
+much, much smaller than the data itself. This is not the scale. And in what order is the
+
+
+144
+00:14:08,800 --> 00:14:14,920
+stuff stored? Well, you basically store it in exactly the order in which you would need
+
+
+145
+00:14:14,920 --> 00:14:21,220
+it to verify it. So the first thing you store is the two hashes immediately below the root,
+
+
+146
+00:14:21,220 --> 00:14:25,400
+because these are the hashes that you would have to hash to check that it actually matches
+
+
+147
+00:14:25,400 --> 00:14:31,040
+the root. And then, and so on, and so on. And this is called the depth-first left-to-right
+
+
+148
+00:14:31,040 --> 00:14:37,880
+preorder traversal. And this is exactly how the outboard is laid out. So the outboard
+
+
+149
+00:14:37,880 --> 00:14:42,400
+is a single file. It is not some database, not some giant complex thing. It's just a
+
+
+150
+00:14:42,400 --> 00:14:48,280
+single file where the offset can be easily calculated based on where you are in the tree.
+
+
+151
+00:14:48,280 --> 00:14:56,160
+Okay, so now we got this great tree. How does this enable us to do verified streaming? So
+
+
+152
+00:14:56,160 --> 00:15:00,120
+we don't want to do verified streaming of the entire thing. We also want to be able
+
+
+153
+00:15:00,120 --> 00:15:06,360
+to do verified streaming of ranges, small and large ranges. So let's take a look. So
+
+
+154
+00:15:06,360 --> 00:15:12,800
+on the provider side, you get the request, and you figure out which tree you need. That's
+
+
+155
+00:15:12,800 --> 00:15:19,400
+pretty clear. And then you basically have to look at the tree and traverse only the
+
+
+156
+00:15:19,400 --> 00:15:23,400
+relevant part of the tree. So everything in the tree that is not relevant for the query,
+
+
+157
+00:15:23,400 --> 00:15:29,300
+you can just ignore. Which also means that if you don't have that data, it's no big deal.
+
+
+158
+00:15:29,300 --> 00:15:33,400
+It's only a big deal if you don't have any of the data that was requested. So you can
+
+
+159
+00:15:33,400 --> 00:15:41,640
+share data which you have partially downloaded. And the traversal, again, is in preorder.
+
+
+160
+00:15:41,640 --> 00:15:46,120
+And then all you need to do is you basically take data out of the output file, take data
+
+
+161
+00:15:46,120 --> 00:15:51,000
+out of the data file, mix it, send it over the wire. That's all you need to do. It's
+
+
+162
+00:15:51,000 --> 00:15:56,200
+as fast as you could possibly imagine. So this is how it looks. Here we got a tree.
+
+
+163
+00:15:56,200 --> 00:16:02,300
+It's not a perfect binary tree, but it's kind of left-packed. That's how they always look.
+
+
+164
+00:16:02,300 --> 00:16:09,240
+And down there, we got the ranges that we want to request. So the smallest unit in BAU
+
+
+165
+00:16:09,240 --> 00:16:14,360
+is a chunk. Chunk is one kilobyte. So the first thing we do is round up the ranges to
+
+
+166
+00:16:14,360 --> 00:16:20,860
+chunks. So we get one chunk on the left and two chunks on the right. And the next thing,
+
+
+167
+00:16:20,860 --> 00:16:25,440
+we need to figure out which part of the tree actually is relevant for this query. Just
+
+
+168
+00:16:25,440 --> 00:16:31,680
+throw away everything that is not relevant. And then we just need to traverse this in
+
+
+169
+00:16:31,680 --> 00:16:35,760
+the right order and send it over the wire. That's all we need to do. And this is the
+
+
+170
+00:16:35,760 --> 00:16:40,920
+order, obviously, first to root, because that's what the remote needs first to validate. And
+
+
+171
+00:16:40,920 --> 00:16:47,500
+then we basically make a path from the root to the leaves. And this is the order in which
+
+
+172
+00:16:47,500 --> 00:16:53,680
+we need to send the data. There's not much to it, basically.
+
+
+173
+00:16:53,680 --> 00:16:59,680
+There's one thing we also validate when we send the data. The reason for that is that
+
+
+174
+00:16:59,680 --> 00:17:04,160
+this is data that is in the user directory. And the user might have changed it. So we
+
+
+175
+00:17:04,160 --> 00:17:08,760
+don't want to lie. We don't want to send wrong data over the wire. So we validate on send.
+
+
+176
+00:17:08,760 --> 00:17:12,920
+And if the user has changed it, I mean, we tell people, don't change your data while
+
+
+177
+00:17:12,920 --> 00:17:20,440
+you share it. But people will do it anyway. So if you verify on send, we will notice.
+
+
+178
+00:17:20,440 --> 00:17:27,000
+And now, this is kind of interesting, what happens on the requester side. There is no
+
+
+179
+00:17:27,000 --> 00:17:32,080
+metadata. There is no header. Now comes the hash pair. Now comes the chunk or anything
+
+
+180
+00:17:32,080 --> 00:17:37,720
+like that. But the requester knows exactly what to expect, because the requester knows
+
+
+181
+00:17:37,720 --> 00:17:44,040
+the shape of the tree. So the requester knows which ranges it has requested. And the requester
+
+
+182
+00:17:44,040 --> 00:17:48,880
+knows the shape of the tree. So it does the exact same thing. It does the exact same tree
+
+
+183
+00:17:48,880 --> 00:17:56,560
+traversal. So first of all, it reads the size. Then it knows the shape of the tree. And then
+
+
+184
+00:17:56,560 --> 00:18:04,120
+it does the exact same thing as what is done on the sender side. And the tree iterator
+
+
+185
+00:18:04,120 --> 00:18:08,900
+kind of tells you what to expect. OK, the tree iterator says, now comes a pair. Then
+
+
+186
+00:18:08,900 --> 00:18:14,320
+you read 64 bytes, treat them as a pair, validate them, and so on. And the tree iterator tells
+
+
+187
+00:18:14,320 --> 00:18:20,560
+you now comes a chunk. Then you read a chunk, validate it, and do whatever you want with
+
+
+188
+00:18:20,560 --> 00:18:27,520
+it, basically. And you will detect corruption after one item. So at most, after one kilobyte,
+
+
+189
+00:18:27,520 --> 00:18:34,200
+you will detect if somebody is lying to you. OK, in summary, so the provider traverses
+
+
+190
+00:18:34,200 --> 00:18:40,160
+the tree, reads from data and output, validates, and writes to socket, whatever. We use QUIC,
+
+
+191
+00:18:40,160 --> 00:18:46,240
+but it is not a part of this talk which exactly the transport is. And the receiver does basically
+
+
+192
+00:18:46,240 --> 00:18:52,960
+the same thing, except the receiver side doesn't have the data yet. It traverses the tree to
+
+
+193
+00:18:52,960 --> 00:18:58,880
+know what to expect. Then reads from the socket and validates. And then it uses the data in
+
+
+194
+00:18:58,880 --> 00:19:03,640
+whatever store or process or stream to the video or whatever.
+
+
+195
+00:19:03,640 --> 00:19:09,640
+OK, performance. So Blake3 is a very fast hash function. But that's not the main thing.
+
+
+196
+00:19:09,640 --> 00:19:15,600
+The main thing is how this all is optimized in terms of data layout. So no matter how
+
+
+197
+00:19:15,600 --> 00:19:19,920
+big your data is, you're only dealing with two files. You're dealing with a very small
+
+
+198
+00:19:19,920 --> 00:19:26,280
+file which is called an outport and a possibly very large file which is your actual data.
+
+
+199
+00:19:26,280 --> 00:19:31,280
+And in these two files, you have a very sequential access pattern. If you request the whole thing,
+
+
+200
+00:19:31,280 --> 00:19:36,840
+it will just read the files from the beginning to the end, both the outport and the data.
+
+
+201
+00:19:36,840 --> 00:19:43,640
+And if you have a range request, it will only seek forward. It will never seek backward.
+
+
+202
+00:19:43,640 --> 00:19:50,800
+And it will only seek forward once for each gap, basically. And for the outport, it will
+
+
+203
+00:19:50,800 --> 00:19:55,720
+also only seek forward. And in the worst case, it will seek forward the number of levels
+
+
+204
+00:19:55,720 --> 00:20:15,720
+in the tree. So also no big deal.
+
+
+205
+00:20:00,000 --> 00:20:30,000
+And this is as close as I mean, this was very important back when we were when we had spinning this, but even solid taste state this like if you have a predictable access pattern, because they also have caches and so on. And they like if if you behave in a certain way, because then they can prefetch stuff for you. So this is really in terms of IO. This is as close as to optimum as you can get. And currently, our performance limit is quick and encryption. It's the
+
+
+206
+00:20:30,000 --> 00:20:37,800
+actual transfer itself. I mean, the computation itself is almost free, basically. And we can
+
+
+207
+00:20:37,800 --> 00:20:42,920
+validate on scent because it's so cheap. And there's another talk called measuring on the
+
+
+208
+00:20:42,920 --> 00:20:47,180
+fast track. I think it's happening right now. So if you want, you can watch the replay to
+
+
+209
+00:20:47,180 --> 00:20:54,440
+see the performance numbers. OK, now let's talk about the overhead. So in the best case,
+
+
+210
+00:20:54,440 --> 00:21:00,560
+you have a giant file and request it all. The overhead is one two and a fifty six of
+
+
+211
+00:21:00,560 --> 00:21:07,920
+the data size due to some things we've done. And so for one terabyte file, you would have
+
+
+212
+00:21:07,920 --> 00:21:13,280
+a four gigabyte of overhead. And this overhead consists entirely of the hashes. So there's
+
+
+213
+00:21:13,280 --> 00:21:19,640
+nothing else. No, no, like headers or whatever, just hashes and data. That's all this. And
+
+
+214
+00:21:19,640 --> 00:21:24,400
+the hashes are one two hundred fifty six. Now, let's talk about the worst case. The worst
+
+
+215
+00:21:24,400 --> 00:21:29,680
+case is you have a giant file and somebody requests a single chunk. In that case, you
+
+
+216
+00:21:29,680 --> 00:21:35,720
+have to kind of build a path from the root to this chunk. And that means the number of
+
+
+217
+00:21:35,720 --> 00:21:42,280
+parent and a node. So the number of hash pairs you have is locked to the number of chunks.
+
+
+218
+00:21:42,280 --> 00:21:46,860
+And so to put a number on it, it's like two kilobytes. So this would be interesting if
+
+
+219
+00:21:46,860 --> 00:21:53,040
+somebody has a large file, one terabyte file and announces it on the network. And you just
+
+
+220
+00:21:53,040 --> 00:21:58,400
+want to probe whether it's actually true. Like you ask for a random sample of the file
+
+
+221
+00:21:58,400 --> 00:22:04,520
+to see if this party actually has the data or not, or if you want a tiny bit of the data,
+
+
+222
+00:22:04,520 --> 00:22:11,120
+I don't know, random access, whatever. And in both cases, the overhead is not very large.
+
+
+223
+00:22:11,120 --> 00:22:17,160
+Totally acceptable. But to get to this point, we actually had to modify the bio algorithm
+
+
+224
+00:22:17,160 --> 00:22:24,360
+a little bit. So we are doing a thing called chunk groups. So the original bio algorithm
+
+
+225
+00:22:24,360 --> 00:22:31,760
+has the tree built for every chunk. So average for every chunk, you have a hash and in total
+
+
+226
+00:22:31,760 --> 00:22:38,640
+you have two hashes per chunk. So you have 64 bytes for each kilobyte, which is one sixteenth,
+
+
+227
+00:22:38,640 --> 00:22:42,800
+which is a bit much. So if you have a one terabyte file, you would have a 64 gigabyte
+
+
+228
+00:22:42,800 --> 00:22:47,120
+output, which would mean that you could not keep it in memory. And we want to keep it
+
+
+229
+00:22:47,120 --> 00:22:54,080
+in memory. So we did something, we implement something that actually the original author
+
+
+230
+00:22:54,080 --> 00:23:02,560
+also thought about. We only store higher levels of the tree. So let's take a look how this
+
+
+231
+00:23:02,560 --> 00:23:10,840
+works. You have this tree and now I've numbered the levels. So you've got level zero are the
+
+
+232
+00:23:10,840 --> 00:23:17,840
+leaves, one leaf for each two chunks and number one, number two. And now you can basically
+
+
+233
+00:23:17,840 --> 00:23:23,560
+treat the lower levels as ephemeral and the higher levels as persistent. And if you do
+
+
+234
+00:23:23,560 --> 00:23:32,520
+this and this, as you can see, your outboard gets smaller and you can afford then to keep
+
+
+235
+00:23:32,520 --> 00:23:37,240
+your outputs in memory. I mean, there is of course also a downside because you have to,
+
+
+236
+00:23:37,240 --> 00:23:42,400
+if you want to do something within one of these kind of chunk groups, you have to recompute
+
+
+237
+00:23:42,400 --> 00:23:47,560
+the hashes. But as I mentioned, Blake3 is very fast. So recomputing the hashes only
+
+
+238
+00:23:47,560 --> 00:23:53,800
+has to be done for queries that are so small that they are below one chunk, below one chunk
+
+
+239
+00:23:53,800 --> 00:24:01,440
+group size. And it's very fast. So don't worry about it. Okay. Applications. So what can
+
+
+240
+00:24:01,440 --> 00:24:08,600
+you do with this? One thing we are doing already is the database sync on mobile platforms.
+
+
+241
+00:24:08,600 --> 00:24:15,360
+So basically we have also a talk called Data Chat and Arrow. The application is that you
+
+
+242
+00:24:15,360 --> 00:24:21,760
+have a database on a phone of a chat app and you want to sync the database to a new device.
+
+
+243
+00:24:21,760 --> 00:24:26,680
+That's one thing that's already in production. And the next thing that I really like is machine
+
+
+244
+00:24:26,680 --> 00:24:35,640
+learning datasets. They really have a mixture of small and very large files. And for them,
+
+
+245
+00:24:35,640 --> 00:24:42,640
+this works very well. And large file storage would also be an application and game assets,
+
+
+246
+00:24:42,640 --> 00:24:47,960
+as mentioned in the talk before, and directory trees. We can also do very large directory
+
+
+247
+00:24:47,960 --> 00:24:56,320
+trees because collections can contain an arbitrary number of links. And we are mapping deep directory
+
+
+248
+00:24:56,320 --> 00:25:00,960
+structures to a single collection. So there are no collections in collections. You just
+
+
+249
+00:25:00,960 --> 00:25:06,800
+have one big collection, which is the entire directory structure. And you can also share
+
+
+250
+00:25:06,800 --> 00:25:10,240
+disk images. If you have a giant disk image and you want to get it on a different machine,
+
+
+251
+00:25:10,240 --> 00:25:17,440
+this is one of the fastest ways you can do it. And here I'm basically, I got a demo of
+
+
+252
+00:25:17,440 --> 00:25:25,280
+adding this Lama 13B dataset to Arrow. This is not network. This is just building of the
+
+
+253
+00:25:25,280 --> 00:25:31,600
+outboard. And as you can see, it's pretty fast. It's more than one gigabyte per second.
+
+
+254
+00:25:31,600 --> 00:25:38,240
+And it's just very smooth. It doesn't even cost much CPU. I mean, your machine won't
+
+
+255
+00:25:38,240 --> 00:25:45,040
+slow to crawl with this because it's just not doing that much.
+
+
+256
+00:25:45,040 --> 00:25:50,640
+Future plans. So wait a second. There should be a section about where it doesn't work well.
+
+
+257
+00:25:50,640 --> 00:25:59,280
+So, future plans are, one thing you can do is if you have a collection or blob and you
+
+
+258
+00:25:59,280 --> 00:26:08,280
+append data, you can reuse most of the three. So you can think about, let's say, a log file,
+
+
+259
+00:26:08,280 --> 00:26:16,160
+log file which is append only, and you want to share the log file. An application would
+
+
+260
+00:26:16,160 --> 00:26:20,680
+be basically you have already transferred most of the log and then you compute the new
+
+
+261
+00:26:20,680 --> 00:26:28,160
+hash for new log and basically transfer only the delta. This can work for blobs and for
+
+
+262
+00:26:28,160 --> 00:26:32,320
+collections. And then one thing that is a little bit further in the future is arbitrary
+
+
+263
+00:26:32,320 --> 00:26:38,240
+write. So you have a file and you write anywhere in the file. You recompute the root hash and
+
+
+264
+00:26:38,240 --> 00:26:46,040
+then you basically send this over the wire and basically only need to transfer the delta.
+
+
+265
+00:26:46,040 --> 00:26:50,760
+So imagine you have a database, a live database, which is a single big file, and this gets
+
+
+266
+00:26:50,760 --> 00:26:59,240
+modified all over the place and then you can sync that to another place with very low overhead.
+
+
+267
+00:26:59,240 --> 00:27:04,960
+And so this is dbimages and you could even think about having a complete mutable file
+
+
+268
+00:27:04,960 --> 00:27:13,640
+system that you sync on another device. So you could sync your def, STA, whatever. But
+
+
+269
+00:27:13,640 --> 00:27:17,720
+single writer is something we are going to keep. We are not going to tackle multi-writer.
+
+
+270
+00:27:17,720 --> 00:27:20,080
+That will be a layer on top of this.
+
+
+271
+00:27:20,080 --> 00:27:27,000
+Okay, limitations. There it is. So where does this not work very well? So if you have a
+
+
+272
+00:27:27,000 --> 00:27:32,640
+deep and highly dynamic DAG, this is not going to work well for you. I mean, there's nothing
+
+
+273
+00:27:32,640 --> 00:27:40,160
+fundamentally that makes this slower than anything of the existing stuff, but we encourage
+
+
+274
+00:27:40,160 --> 00:27:46,960
+people to have flat hierarchies because it's just so much better for transfer. And so ribbon
+
+
+275
+00:27:46,960 --> 00:27:53,720
+chunking, for example, we don't support. Our chunk size is always one chunk, is one kilobyte.
+
+
+276
+00:27:53,720 --> 00:27:58,880
+And probably trees, there could be some ways to make them work, but it's going to be a
+
+
+277
+00:27:58,880 --> 00:28:06,120
+little bit difficult. And so you can put collections in collections. You can create a hierarchy
+
+
+278
+00:28:06,120 --> 00:28:11,080
+as deep as you want, but currently we don't have a garbage collection that is aware of
+
+
+279
+00:28:11,080 --> 00:28:15,480
+this. So if you have a garbage collection that is not aware of it, it would just throw
+
+
+280
+00:28:15,480 --> 00:28:22,760
+away all your DAG except for the first level. And that would not be good, obviously. But
+
+
+281
+00:28:22,760 --> 00:28:28,400
+I'm going to make the case that actually this carrying that much about these very complex
+
+
+282
+00:28:28,400 --> 00:28:33,080
+DAGs is not as common as you might think. So here's the Linux kernel. I just took the
+
+
+283
+00:28:33,080 --> 00:28:39,560
+Linux kernel as a car file and did some analysis on it. So the total size of branches is about
+
+
+284
+00:28:39,560 --> 00:28:46,960
+four megabyte and the total size of all leaves is 1.2 gigabyte. So the branches are just
+
+
+285
+00:28:46,960 --> 00:28:52,600
+a tiny fraction of the leaves, meaning that if you have a way to transfer the leaves in
+
+
+286
+00:28:52,600 --> 00:28:57,120
+a quick way and put the rest in a single collection, you're not going to lose that much unless
+
+
+287
+00:28:57,120 --> 00:29:02,400
+the data set is extremely dynamic. Here's another example, Wikipedia. I didn't take
+
+
+288
+00:29:02,400 --> 00:29:07,320
+the whole Wikipedia, but I took a small subset, just the math part, just so I could compute
+
+
+289
+00:29:07,320 --> 00:29:15,480
+some stats. Branch size is three, whatever, 32, 33 megabytes. And leaf size is again a
+
+
+290
+00:29:15,480 --> 00:29:23,360
+factor of 100 more. So all this DAG stuff only happens in this 1%, which is the branches.
+
+
+291
+00:29:23,360 --> 00:29:29,280
+So I would argue that for many, many use cases, just forget about all this stuff. Put your
+
+
+292
+00:29:29,280 --> 00:29:34,760
+leaves, make sure you can transfer your leaves quickly and put all the DAG stuff just in
+
+
+293
+00:29:34,760 --> 00:29:39,720
+a single collection. And here's the data set where it doesn't work. This is something from
+
+
+294
+00:29:39,720 --> 00:29:46,320
+Filecoin and there you have a small test data set from Filecoin. And there you have the
+
+
+295
+00:29:46,320 --> 00:29:51,080
+vast majority of the data is in branches. So this would be something which we just cannot
+
+
+296
+00:29:51,080 --> 00:30:01,000
+do currently. OK. So now, it's too late, but the question is, is this still IPFS? So if
+
+
+297
+00:30:01,000 --> 00:30:05,580
+you take the view that IPFS is something that has all these things or that has the majority
+
+
+298
+00:30:05,580 --> 00:30:14,840
+of these things, then this is definitely not IPFS. No way. We have equivalents to most
+
+
+299
+00:30:14,840 --> 00:30:21,120
+of these things, but we don't have, I mean, this is not what we are doing. But if you
+
+
+300
+00:30:21,120 --> 00:30:26,800
+take this wider view, IPFS is everything where content addressing is baked in at the very,
+
+
+301
+00:30:26,800 --> 00:30:33,760
+very low level and everything works with content addressing. Then most definitely what we're
+
+
+302
+00:30:33,760 --> 00:30:39,120
+doing is IPFS. Because there's not a single byte going over the wire that is not in some
+
+
+303
+00:30:39,120 --> 00:30:45,080
+way related to a hash that came before. You do a single bit flip anywhere and it will
+
+
+304
+00:30:45,080 --> 00:30:51,000
+immediately blow up. So content addressing, every single byte that goes over the wire
+
+
+305
+00:30:51,000 --> 00:30:56,720
+is content addressed. And we got incremental verification at a very, very fine-grained
+
+
+306
+00:30:56,720 --> 00:31:02,560
+level, even more fine-grained than UnixFS, by the way. Because in UnixFS, you will download
+
+
+307
+00:31:02,560 --> 00:31:08,080
+a directory block which can be up to 200K in size before you notice that it's wrong.
+
+
+308
+00:31:08,080 --> 00:31:13,880
+And in our case, it's on chunk or chunk group level. So it's much, very, very fine-grained
+
+
+309
+00:31:13,880 --> 00:31:20,120
+incremental verification. And we don't even trust the file system because it's in the
+
+
+310
+00:31:20,120 --> 00:31:25,240
+hand of the user. So if the user modifies a file, we have to check whether it's actually
+
+
+311
+00:31:25,240 --> 00:31:31,200
+still the same. So we even validate the stuff that we read from the file system. And that's
+
+
+312
+00:31:31,200 --> 00:31:36,440
+why I would argue that it is very, very much in the spirit of IPFS, even though it doesn't
+
+
+313
+00:31:36,440 --> 00:31:47,440
+have some of the primitives. And that's it.
+
+
+314
+00:31:47,440 --> 00:31:50,760
+So questions? Or do we have time for questions?
+
+
+315
+00:31:50,760 --> 00:31:55,280
+Hi. We worked on some BAS stuff last year, so I'm really, really excited to see this
+
+
+316
+00:31:55,280 --> 00:31:59,280
+going into prod. The thing where you throw out the lower levels is smart. We were about
+
+
+317
+00:31:59,280 --> 00:32:06,320
+to change the chunk size, which is bad, obviously. So my question is for support for mixing this
+
+
+318
+00:32:06,320 --> 00:32:11,880
+with like RABN content-defined chunking. Have you guys put any thought into the different
+
+
+319
+00:32:11,880 --> 00:32:18,040
+options? Like you could decide to throw Blake 3 out. You could RABN chunk and then BAU.
+
+
+320
+00:32:18,040 --> 00:32:21,800
+You could RABN chunk the inboard BAU format. There's a lot of options and all of them are
+
+
+321
+00:32:21,800 --> 00:32:26,320
+kind of bad. Are you guys just not going to do content-defined chunking?
+
+
+322
+00:32:26,320 --> 00:32:33,600
+Yeah. So like I said, this is in the big topic of DAG support. I think we have some ideas
+
+
+323
+00:32:33,600 --> 00:32:39,400
+how to do it. So I mean, transferring the individual RABN chunk pieces would still be
+
+
+324
+00:32:39,400 --> 00:32:46,400
+very fast with this. The thing is that we are a small team and we are really going to
+
+
+325
+00:32:46,400 --> 00:32:52,640
+look for applications where we have revenue potential. Let's put it that way. And so if
+
+
+326
+00:32:52,640 --> 00:32:57,040
+there's something where we say, if we can make this little piece work, we're going to
+
+
+327
+00:32:57,040 --> 00:33:02,040
+have revenue. We're going to do it probably. But we're not going to do something just in
+
+
+328
+00:33:02,040 --> 00:33:06,680
+case somebody might need it at some point in the future. So that's all there is to it.
+
+
+329
+00:33:06,680 --> 00:33:11,080
+How exactly we're going to do it, I can talk to you later. It's a bit more complex. Okay.
+
+
+330
+00:33:11,080 --> 00:33:32,120
+So thanks a lot.

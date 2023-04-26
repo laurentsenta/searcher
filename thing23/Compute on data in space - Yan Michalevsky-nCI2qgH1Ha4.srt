@@ -1,0 +1,648 @@
+1
+00:00:00,000 --> 00:00:10,960
+I'm Jan Michalewski. I'm one of the founders of Cryptosat. We're a team that's based all
+
+
+2
+00:00:10,960 --> 00:00:18,280
+over, headquartered in the US, California, and New York. And I'll be talking about compute
+
+
+3
+00:00:18,280 --> 00:00:27,320
+on data in space and tied to kind of what we're doing and also integrations with the
+
+
+4
+00:00:27,320 --> 00:00:34,440
+Protocol Labs specific projects. It's a sharp talk, so I'm going to keep it very high level.
+
+
+5
+00:00:34,440 --> 00:00:38,720
+Welcome to ask me questions at the end about specific topics and dive into details or just
+
+
+6
+00:00:38,720 --> 00:00:42,960
+catch me after and ask whatever you feel like.
+
+
+7
+00:00:42,960 --> 00:00:46,920
+Cool. So in terms of the general mission of Cryptosat, we essentially build the trust
+
+
+8
+00:00:46,920 --> 00:00:53,400
+infrastructure for Web3, that's how we like to call it, in space. And we do it by launching,
+
+
+9
+00:00:53,400 --> 00:01:00,480
+essentially building, integrating, and launching satellites into low Earth orbits for Web3
+
+
+10
+00:01:00,480 --> 00:01:05,240
+use cases, cryptographic protocols, and confidential computing. And the confidential computing
+
+
+11
+00:01:05,240 --> 00:01:10,120
+aspect is what I'm going to focus on in this talk.
+
+
+12
+00:01:10,120 --> 00:01:14,640
+So here you see the launches of our first two satellites. One of them was launched in
+
+
+13
+00:01:14,640 --> 00:01:21,800
+May 2022, and the other one was launched just earlier this year in January. In terms of
+
+
+14
+00:01:21,800 --> 00:01:25,480
+some of the milestones, we did a couple of experiments aboard the International Space
+
+
+15
+00:01:25,480 --> 00:01:31,600
+Station to test different aspects of operations with the assets in space. Launched our two
+
+
+16
+00:01:31,600 --> 00:01:38,080
+satellites. And one thing I wanted to mention is the recent participation in the KCG ceremony,
+
+
+17
+00:01:38,080 --> 00:01:42,400
+if you were following that, that's related to Ethereum scaling. So it's essentially the
+
+
+18
+00:01:42,400 --> 00:01:48,160
+centralized ceremony that requires parties to produce public parameters that can be trusted
+
+
+19
+00:01:48,160 --> 00:01:54,760
+later on to be produced with computational integrity in a certain way. Otherwise, the
+
+
+20
+00:01:54,760 --> 00:01:59,120
+scheme can be compromised. So this is something we contributed to from our second satellite
+
+
+21
+00:01:59,120 --> 00:02:05,680
+in space. And we're working on launching more, basically working towards the constellation.
+
+
+22
+00:02:05,680 --> 00:02:10,560
+In terms of the very high-level architectures, you can see here a mechanical design. You
+
+
+23
+00:02:10,560 --> 00:02:16,240
+can see that it's basically this little thing with multiple boards, including an onboard
+
+
+24
+00:02:16,240 --> 00:02:20,720
+computer, including computers that serves for the cryptographic operations that we're
+
+
+25
+00:02:20,720 --> 00:02:26,480
+doing. And in addition to the satellites themselves that we're launching, we also connect to a
+
+
+26
+00:02:26,480 --> 00:02:32,760
+ground station infrastructure and provide convenient APIs for users to be able to directly
+
+
+27
+00:02:32,760 --> 00:02:37,880
+issue requests to those satellites. And that's not very common, actually, in the space. Usually
+
+
+28
+00:02:37,880 --> 00:02:42,480
+it involves a lot of coordination and operation. And our vision is to get to a very simple,
+
+
+29
+00:02:42,480 --> 00:02:48,720
+trustful API, plus direct integrations with smart contracts that we're actually already
+
+
+30
+00:02:48,720 --> 00:02:55,720
+doing that would enable users to request certain operations and have them completed in space.
+
+
+31
+00:02:55,720 --> 00:03:03,880
+Here, that's a screenshot from our tracking website. So that shows two of the satellites
+
+
+32
+00:03:03,880 --> 00:03:08,920
+we have. So you can see the different locations earlier this morning when I was updating the
+
+
+33
+00:03:08,920 --> 00:03:15,120
+slide. And another thing we built that's kind of nice for developers is mostly for onboarding
+
+
+34
+00:03:15,120 --> 00:03:20,160
+and explaining the different use cases that we're addressing is what we call the CryptoSat
+
+
+35
+00:03:20,160 --> 00:03:26,560
+simulator. So you can go online to simulator.cryptosat.io. And it's basically kind of an interactive
+
+
+36
+00:03:26,560 --> 00:03:32,840
+tutorial plus satellite tracker and a playground in JavaScript where you can try different
+
+
+37
+00:03:32,840 --> 00:03:38,960
+APIs. And it basically exemplifies what you can do with such a satellite, different use
+
+
+38
+00:03:38,960 --> 00:03:47,320
+cases that it can serve, and so on. So basically a developer onboarding tool.
+
+
+39
+00:03:47,320 --> 00:03:53,760
+I want to give one real-world example of a use case that we're serving already. I have
+
+
+40
+00:03:53,760 --> 00:03:59,560
+customers, some customers, for. So one of the use cases is essentially trusted setups
+
+
+41
+00:03:59,560 --> 00:04:05,720
+for cryptographic schemes. Some cryptographic schemes require public parameters, just some
+
+
+42
+00:04:05,720 --> 00:04:13,320
+numbers that need to be produced in a certain way. And if it's not being done correctly
+
+
+43
+00:04:13,320 --> 00:04:18,520
+or it's being done maliciously, it can potentially compromise the entire protocol. One example
+
+
+44
+00:04:18,520 --> 00:04:23,160
+of that which you're well familiar with is ZK-SNARKS. So some schemes require a trusted
+
+
+45
+00:04:23,160 --> 00:04:29,120
+setup. Another example, polynomial commitments, which is also part of ZK-SNARKS but can also
+
+
+46
+00:04:29,120 --> 00:04:35,680
+be used for other things like the KZG, what KZG is used for in Ethereum. So those are
+
+
+47
+00:04:35,680 --> 00:04:44,840
+two examples of cryptographic setups that need to be produced in a certain correct way.
+
+
+48
+00:04:44,840 --> 00:04:49,040
+So here we're basically providing kind of a trusted execution environment, completely
+
+
+49
+00:04:49,040 --> 00:04:53,640
+physically isolated. And that's the important point that we're trying to emphasize about
+
+
+50
+00:04:53,640 --> 00:04:58,720
+our solution is the lack of any physical access and the ability to compromise anything in
+
+
+51
+00:04:58,720 --> 00:05:03,520
+memory, use any side channels and so on. Basically a trusted execution environment that can do
+
+
+52
+00:05:03,520 --> 00:05:09,320
+those things for you. And two examples of that was the participation in the KZG ceremony
+
+
+53
+00:05:09,320 --> 00:05:15,040
+that I mentioned. And another one is producing a trusted setup for a ZK-SNARK scheme that's
+
+
+54
+00:05:15,040 --> 00:05:22,720
+used by the DoraHax DAO that serves for community project funding.
+
+
+55
+00:05:22,720 --> 00:05:30,560
+And now I want to get to decentralized cloud compute and tie it together. So it's essentially
+
+
+56
+00:05:30,560 --> 00:05:36,560
+a growing market, kind of emerging for the past couple of years. And there are different
+
+
+57
+00:05:36,560 --> 00:05:42,640
+examples of that. So within Protocol Labs, the Baka.io project is one example. There
+
+
+58
+00:05:42,640 --> 00:05:46,840
+are also additional projects like Super Protocol. Cache is more of a marketplace. And just today
+
+
+59
+00:05:46,840 --> 00:05:52,120
+I met Sami here and talked to him and learned about TauByte, which is a serverless decentralized
+
+
+60
+00:05:52,120 --> 00:05:58,240
+compute. I hope I'm presenting it correctly. So those are just some examples of that, focused
+
+
+61
+00:05:58,240 --> 00:06:05,320
+on different aspects of decentralized computation. And one thing that can be very relevant to
+
+
+62
+00:06:05,320 --> 00:06:14,560
+this domain, not applicable to each and every use case, but is often important, is providing
+
+
+63
+00:06:14,560 --> 00:06:21,800
+confidentiality and integrity for various sensitive workloads. So often users of decentralized
+
+
+64
+00:06:21,800 --> 00:06:28,920
+clouds would like to process sensitive data potentially. And ensure that an attacker,
+
+
+65
+00:06:28,920 --> 00:06:34,000
+a very powerful attacker that has complete access to the infrastructure, cannot compromise
+
+
+66
+00:06:34,000 --> 00:06:38,920
+or leak their data and infer anything useful from it. On the left I put this example of
+
+
+67
+00:06:38,920 --> 00:06:44,800
+genomic data that can be very sensitive. But you can think of other examples of financial
+
+
+68
+00:06:44,800 --> 00:06:51,960
+data, etc. The other aspect can be getting an assurance of computation integrity. Basically
+
+
+69
+00:06:51,960 --> 00:06:59,140
+getting an assurance that the computation is done correctly. And the cloud is not taking
+
+
+70
+00:06:59,140 --> 00:07:04,800
+any shortcuts in terms of not producing the right result and not putting the computational
+
+
+71
+00:07:04,800 --> 00:07:12,920
+effort needed to produce what you needed to produce. Or is not doing something maliciously.
+
+
+72
+00:07:12,920 --> 00:07:19,240
+So here I put those hands with beads, basically referring to something like an auction. So
+
+
+73
+00:07:19,240 --> 00:07:25,080
+for instance, think of a sealed bid auction, where you need to reveal the winning bid.
+
+
+74
+00:07:25,080 --> 00:07:28,720
+And nobody knows the actual bids. They're sealed, they're encrypted. So you need to
+
+
+75
+00:07:28,720 --> 00:07:33,560
+trust this party that's commencing the auction to do it correctly and produce the right result.
+
+
+76
+00:07:33,560 --> 00:07:38,680
+So for that you need a trusted execution environment, or you need some cryptographic means to achieve
+
+
+77
+00:07:38,680 --> 00:07:45,560
+that. I'll mention the cryptographic solutions first, but then we'll proceed to the other
+
+
+78
+00:07:45,560 --> 00:07:50,760
+alternative, which is trusted execution environments. So in terms of confidentiality, something
+
+
+79
+00:07:50,760 --> 00:07:57,240
+like homomorphic and fully homomorphic encryption potentially can be ways to achieve this goal
+
+
+80
+00:07:57,240 --> 00:08:03,720
+of working on data that's protected and encrypted, even when you're actually processing it. And
+
+
+81
+00:08:03,720 --> 00:08:09,680
+for integrity, we have SNARKs and ZKSNARKs that also preserve the privacy of the input.
+
+
+82
+00:08:09,680 --> 00:08:13,800
+There are different nuances here in terms of what you can achieve with those. There
+
+
+83
+00:08:13,800 --> 00:08:20,080
+are practicality, a lot of, obviously, constraints around performance. So I'm not going to go
+
+
+84
+00:08:20,080 --> 00:08:28,680
+into all of that, but happy to discuss that after if anybody is interested. And I'm mostly
+
+
+85
+00:08:28,680 --> 00:08:34,160
+focusing on the alternative of trusted execution environments for achieving both confidentiality
+
+
+86
+00:08:34,160 --> 00:08:41,080
+and integrity. So jumping to compute and data in space, and I'll make it very short. I don't
+
+
+87
+00:08:41,080 --> 00:08:45,600
+have time to dive into all the details. But essentially, providing this kind of trusted
+
+
+88
+00:08:45,600 --> 00:08:50,440
+execution environment, we can apply it to decentralized clouds in the following way.
+
+
+89
+00:08:50,440 --> 00:08:56,840
+For instance, taking Bacayau as an example, we have this architecture that we have this
+
+
+90
+00:08:56,840 --> 00:09:02,800
+diagram that in a nutshell describes the Bacayau architecture. It has compute nodes that can
+
+
+91
+00:09:02,800 --> 00:09:12,120
+bid on workloads, on processing different requests from users. And they can run it on
+
+
+92
+00:09:12,120 --> 00:09:17,000
+different types of executors, and there are verifiers that are verifying the results.
+
+
+93
+00:09:17,000 --> 00:09:22,840
+Often they'll verify that there's a consensus between different compute nodes or executors
+
+
+94
+00:09:22,840 --> 00:09:29,760
+that processed a certain computation. And basically, in our case, what we're proposing,
+
+
+95
+00:09:29,760 --> 00:09:37,940
+what we're looking into actively right now is the option of having this kind of an executor
+
+
+96
+00:09:37,940 --> 00:09:44,160
+in space. Basically, having one of our satellites or a constellation provide those executors
+
+
+97
+00:09:44,160 --> 00:09:52,280
+in space, and having ground compute gateways that would be able to bid on sensitive workloads.
+
+
+98
+00:09:52,280 --> 00:09:56,040
+Basically to the extent that the user can be very specific about it, and adding this
+
+
+99
+00:09:56,040 --> 00:10:01,640
+kind of a flag that we called run in space, indicate that they want a workload to run
+
+
+100
+00:10:01,640 --> 00:10:06,880
+in this kind of a physically isolated environment. And in this case, it will basically go to
+
+
+101
+00:10:06,880 --> 00:10:13,160
+a satellite, the compute will be done there, and the results will be returned to the user
+
+
+102
+00:10:13,160 --> 00:10:19,320
+with the attestation that it all happened on an authentic crypto-sat satellite.
+
+
+103
+00:10:19,320 --> 00:10:25,720
+In another example of super protocols architecture, so that's their architecture slide, and basically
+
+
+104
+00:10:25,720 --> 00:10:31,360
+the idea here, and they have this notion of a TE provider. So the idea here is that we
+
+
+105
+00:10:31,360 --> 00:10:36,160
+provide it via one of our satellites, and that becomes the trusted execution environment
+
+
+106
+00:10:36,160 --> 00:10:43,760
+plugged into the rest of their infrastructure that can process data. So just wanted to mention
+
+
+107
+00:10:43,760 --> 00:10:49,720
+those two examples and show how it applies to different architectures. An important aspect
+
+
+108
+00:10:49,720 --> 00:10:55,480
+of all of that is attestation. So attestation in this space of trusted execution environments
+
+
+109
+00:10:55,480 --> 00:11:03,860
+is this concept of proving that you're basically running whatever you want to run in an actual
+
+
+110
+00:11:03,860 --> 00:11:08,360
+trusted execution environment and not somewhere else. Because that's crucial to this whole
+
+
+111
+00:11:08,360 --> 00:11:14,400
+concept. If somebody just tells you, oh, it's OK, it's running in SGX, or it's running on
+
+
+112
+00:11:14,400 --> 00:11:20,080
+a satellite, or wherever, you cannot trust that you wouldn't be willing to deposit any
+
+
+113
+00:11:20,080 --> 00:11:25,600
+sensitive data unless you get some cryptographic assurance, and that's usually done with attestation.
+
+
+114
+00:11:25,600 --> 00:11:30,080
+So first of all, proving that the user is sending some data to a space-based node, in
+
+
+115
+00:11:30,080 --> 00:11:36,800
+our case, and also attesting to the authenticity of any produced results. And the way to achieve
+
+
+116
+00:11:36,800 --> 00:11:43,360
+it is the following. We basically have this key generation ceremony that starts after
+
+
+117
+00:11:43,360 --> 00:11:49,600
+the launch of each of our satellites, where we generate a keeper, or a couple of keepers,
+
+
+118
+00:11:49,600 --> 00:11:54,360
+after the launch. So the private keys never leave the satellite. And we start broadcasting
+
+
+119
+00:11:54,360 --> 00:11:59,480
+the public key for a certain time, such that multiple participants, multiple ground stations
+
+
+120
+00:11:59,480 --> 00:12:04,200
+can receive it, and gossip between them and see that they agree that they're getting the
+
+
+121
+00:12:04,200 --> 00:12:09,800
+same public key. So there's a signing and verification keeper produced, and also an
+
+
+122
+00:12:09,800 --> 00:12:15,160
+encryption keeper. And the public encryption key can enable you to encrypt some data that
+
+
+123
+00:12:15,160 --> 00:12:20,280
+will only be accessible later on by the satellite. And also, every result that's going to be
+
+
+124
+00:12:20,280 --> 00:12:25,680
+produced by our satellite is going to be digitally signed, so you can verify that it came from
+
+
+125
+00:12:25,680 --> 00:12:31,320
+CryptoSat using the corresponding public key. Just one thing I'm asking for a small help
+
+
+126
+00:12:31,320 --> 00:12:36,600
+with, so we launched this tweet from space campaign. Tweet at us at CryptoSatBot on Twitter,
+
+
+127
+00:12:36,600 --> 00:12:41,080
+and we'll get your tweets signed in space by one of our satellites. So that's a small
+
+
+128
+00:12:41,080 --> 00:12:45,600
+PR campaign we're launching. Help us with that. And yeah, with that, I'll conclude the
+
+
+129
+00:12:45,600 --> 00:12:47,920
+talk, and happy to talk to you after.
+
+
+130
+00:12:47,920 --> 00:13:02,920
+Thank you so much. Thank you, Jan.

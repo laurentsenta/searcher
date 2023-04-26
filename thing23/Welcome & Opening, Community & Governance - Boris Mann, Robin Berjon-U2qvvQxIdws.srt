@@ -1,0 +1,148 @@
+1
+00:00:00,000 --> 00:00:13,680
+Welcome to the Boris and Robin Community and Governance show. We have a ton of short sessions
+
+
+2
+00:00:13,680 --> 00:00:19,880
+throughout the day. We're getting kicked off with this in to collect and share a bunch
+
+
+3
+00:00:19,880 --> 00:00:25,960
+of other things that fit into this incredibly broad topic of community and governance. It's
+
+
+4
+00:00:25,960 --> 00:00:31,400
+super awesome that we have a bunch of natural formation and interest in this area and want
+
+
+5
+00:00:31,400 --> 00:00:36,920
+to see more gathering around it and make it very clear that everything from this event
+
+
+6
+00:00:36,920 --> 00:00:46,720
+to the operations of the wider IPFS and Filecoin cinematic universe is up to all of us and
+
+
+7
+00:00:46,720 --> 00:00:52,520
+figuring out how to recruit more people to work on these topics.
+
+
+8
+00:00:52,520 --> 00:00:57,360
+We just finished these slides, so each one of them will be a bit of a surprise to us
+
+
+9
+00:00:57,360 --> 00:01:02,160
+as well. But thankfully we made it look professional
+
+
+10
+00:01:02,160 --> 00:01:09,040
+by color coordinating in the morning, so I hope you appreciate that touch at the very
+
+
+11
+00:01:09,040 --> 00:01:11,240
+least. So this is our schedule for the day. This
+
+
+12
+00:01:11,240 --> 00:01:18,160
+is the opening discussion that you're in. At 10.50 Enrique will talk about interplanetary
+
+
+13
+00:01:18,160 --> 00:01:29,360
+specs, Lidl about specs repo and IPIPs. At 11.30 Bastien will talk about star maps. 11.50
+
+
+14
+00:01:29,360 --> 00:01:36,120
+Cade memory and uncertainty, IPFS and digital preservation in the multi-crisis present.
+
+
+15
+00:01:36,120 --> 00:01:44,440
+Is that a long way of saying we're fucked? With better words.
+
+
+16
+00:01:44,440 --> 00:01:49,200
+Yes, exactly. In the afternoon after lunch we're back in
+
+
+17
+00:01:49,200 --> 00:01:55,560
+here again for some short talks. Open source governance, funding, etc. and the schedule
+
+
+18
+00:01:55,560 --> 00:02:00,280
+says bore us to figure out. It's 15 minutes. What I want to talk about
+
+
+19
+00:02:00,280 --> 00:02:04,760
+there is actually just where are we at in this concept of open source, how do we do
+
+
+20
+00:02:04,760 --> 00:02:09,600
+the funding and then like the etc. is actually where all the important stuff hides. So come
+
+
+21
+00:02:09,600 --> 00:02:11,840
+to my talk. So you have figured it out.
+
+
+22
+00:02:11,840 --> 00:02:19,720
+Yeah, totally. Robin is going to give an update on the decentralized data compliance working
+
+
+23
+00:02:19,720 --> 00:02:24,960
+group. Don't you love to have all these words together?
+
+
+24
+00:02:24,960 --> 00:02:33,000
+Exactly, yes, exactly. Uni wants to make it very clear that IPFS comp is coming. It's
+
+
+25
+00:02:33,000 --> 00:02:38,120
+in November which is basically tomorrow in event planning world. So if we want to work
+
+
+26
+00:02:38,120 --> 00:02:43,040
+on it, we got to start basically working on it now and almost like a kick off for participation
+
+
+27
+00:02:43,040 --> 00:02:50,280
+in that. And after that we'll round out the day also guided by Uni which is basically
+
+
+28
+00:02:50,280 --> 00:02:57,680
+how do we spread the love of IPFS worldwide, what's our ground game and more events and
+
+
+29
+00:02:57,680 --> 00:03:05,560
+really decentralizing the way that we do events for having people participate in between larger
+
+
+30
+00:03:05,560 --> 00:03:11,080
+events like this one.

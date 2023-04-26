@@ -1,0 +1,1063 @@
+1
+00:00:00,000 --> 00:00:15,600
+I'm Floris, I'm on the Number Zero team. Basically we made IRO and we then managed
+
+
+2
+00:00:15,600 --> 00:00:19,120
+to put it into a real application and actually ship this. And that's kind of what I will
+
+
+3
+00:00:19,120 --> 00:00:24,520
+be talking about here. So IRO, there have been several talks about it already, explaining
+
+
+4
+00:00:24,520 --> 00:00:32,840
+more detail on it. I won't go into too much detail here. But yeah, essentially for us
+
+
+5
+00:00:32,840 --> 00:00:41,800
+this was like our first prototype. It was really like where do we want to go with building
+
+
+6
+00:00:41,800 --> 00:00:47,000
+a content-addressable system that does all the verified streaming, etc. But also what
+
+
+7
+00:00:47,000 --> 00:00:52,600
+is like the very first minimal step we can make something useful with. And that's what
+
+
+8
+00:00:52,600 --> 00:00:59,160
+this is essentially. This is the first prototype and a step in that direction. So it basically
+
+
+9
+00:00:59,160 --> 00:01:07,880
+transfers data using verified streaming. If you missed those talks, they're probably recordings.
+
+
+10
+00:01:07,880 --> 00:01:15,640
+It's content-addressable, PHP, and importantly also for us here, it's authenticated.
+
+
+11
+00:01:15,640 --> 00:01:21,320
+And then what is DeltaChat? It's basically a messenger. It looks like in the middle of
+
+
+12
+00:01:21,320 --> 00:01:26,840
+the screen it's like any other messenger. But it has no infrastructure of its own. It
+
+
+13
+00:01:26,840 --> 00:01:32,880
+relies on email infrastructure and any kind of... Well, most people will initially think
+
+
+14
+00:01:32,880 --> 00:01:38,840
+like really? That was my reaction to it the first time. But yeah, it works remarkably
+
+
+15
+00:01:38,840 --> 00:01:46,560
+well. It really does. Because it has no infrastructure, you can use whatever email service you like.
+
+
+16
+00:01:46,560 --> 00:01:54,720
+You can configure your own island. It works pretty well and seems to be fairly popular.
+
+
+17
+00:01:54,720 --> 00:02:01,600
+The other thing is also like surprisingly censorship-resistant. It just turns out that
+
+
+18
+00:02:01,600 --> 00:02:09,000
+regimes that try and shut down messengers equationally don't shut down email. Because
+
+
+19
+00:02:09,000 --> 00:02:18,040
+they can't, presumably. Anyway, relevant to us, it uses opportunistic encryption. There
+
+
+20
+00:02:18,040 --> 00:02:25,840
+is also a way of forcing encryption on chats. But by default it's opportunistic. And also
+
+
+21
+00:02:25,840 --> 00:02:32,760
+it ships to the three main platforms in this case. It's like Android, iOS, desktop. There's
+
+
+22
+00:02:32,760 --> 00:02:37,600
+actually a ton of... The right-hand side of this is all the different downloads you can
+
+
+23
+00:02:37,600 --> 00:02:44,000
+get, which is more than I even knew existed. So yeah, it gets shipped and it runs on a
+
+
+24
+00:02:44,000 --> 00:02:51,400
+lot of platforms. What we care about today for it is like multi-device. Because it just
+
+
+25
+00:02:51,400 --> 00:02:56,000
+connects to your email server. It connects to your SMTP and IMAP server. Your IMAP server
+
+
+26
+00:02:56,000 --> 00:03:00,800
+usually stores your messages for you, at least until you delete them. You can configure Delta
+
+
+27
+00:03:00,800 --> 00:03:04,040
+Chat to delete messages, et cetera, for you. But if you leave them on there for a little
+
+
+28
+00:03:04,040 --> 00:03:10,840
+while, your second device already can see the same messages on the server. And IMAP
+
+
+29
+00:03:10,840 --> 00:03:14,760
+also already synchronizes the unread state, et cetera. So this kind of works remarkably
+
+
+30
+00:03:14,760 --> 00:03:22,960
+well if you just configure a second device. Unfortunately, that encryption part kind of
+
+
+31
+00:03:22,960 --> 00:03:28,680
+plays a role now. Because when you first set up an account in Delta Chat, you just tell
+
+
+32
+00:03:28,680 --> 00:03:34,040
+it the login details to your email server. But then it also generates a private key.
+
+
+33
+00:03:34,040 --> 00:03:36,960
+If you do this independently on two different devices, you'll get different private keys
+
+
+34
+00:03:36,960 --> 00:03:43,560
+and everything breaks. So if you want to use two devices, then you really need to transfer
+
+
+35
+00:03:43,560 --> 00:03:48,000
+your private key. The solution that Delta Chat don't for is,
+
+
+36
+00:03:48,000 --> 00:03:56,320
+you know, is this kind of obvious export-import. It's usually recommended to not just export
+
+
+37
+00:03:56,320 --> 00:04:01,640
+the key, but the whole database, like the whole state of the messenger, essentially.
+
+
+38
+00:04:01,640 --> 00:04:08,480
+So you actually get all the history and et cetera easily.
+
+
+39
+00:04:08,480 --> 00:04:17,320
+So that's kind of what has worked for a long time. But this is very painful if you ask
+
+
+40
+00:04:17,320 --> 00:04:22,480
+a normal user, like, export a backup on your phone. Now, where is it? How do I get it to
+
+
+41
+00:04:22,480 --> 00:04:30,160
+my PC? No idea. So obvious solution for us, that's at IRO.
+
+
+42
+00:04:30,160 --> 00:04:36,040
+And because this is our first prototype, we limited the scope of this very much. We assume
+
+
+43
+00:04:36,040 --> 00:04:42,120
+we basically tell you only do this on the same local network. This is not too much of
+
+
+44
+00:04:42,120 --> 00:04:44,840
+restriction because usually you have your phone next to your desktop or something when
+
+
+45
+00:04:44,840 --> 00:04:50,760
+you're doing this, or on your laptop or whatever. Also, it uses out-of-band communication using
+
+
+46
+00:04:50,760 --> 00:04:57,840
+QR codes. This is already an established thing. QR codes are already used by Delta Chat for
+
+
+47
+00:04:57,840 --> 00:05:03,760
+a couple of other things. Like, if you want to force encryption, et cetera, you do this
+
+
+48
+00:05:03,760 --> 00:05:08,680
+with QR codes already. So even though you already have a mixture of machines, like your
+
+
+49
+00:05:08,680 --> 00:05:14,320
+desktop might not be able to scan QR codes, there are already workarounds for this. You
+
+
+50
+00:05:14,320 --> 00:05:22,880
+can copy-paste the text of the QR code and then move that across somehow. It can be annoying,
+
+
+51
+00:05:22,880 --> 00:05:26,320
+but it's possible, basically. And it's an established thing, so this shouldn't be anything
+
+
+52
+00:05:26,320 --> 00:05:30,480
+new for Delta Chat. Another consequence of this is because we
+
+
+53
+00:05:30,480 --> 00:05:37,240
+are IRO is a content addressable system, is that we essentially, the basic mechanism is
+
+
+54
+00:05:37,240 --> 00:05:42,800
+you need to create the backup first to be able to compute the hash. So it's one directional.
+
+
+55
+00:05:42,800 --> 00:05:49,280
+Like, you need to, the provider essentially provides a QR code, the new device has to
+
+
+56
+00:05:49,280 --> 00:05:57,840
+do the scan. Yeah. That's about the restrictions we set out.
+
+
+57
+00:05:57,840 --> 00:06:04,400
+So the other reason we thought this cooperation was really nice was basically the goals are
+
+
+58
+00:06:04,400 --> 00:06:10,360
+very aligned. Both projects were already written in Rust. Delta Chat is kind of architected
+
+
+59
+00:06:10,360 --> 00:06:17,680
+in a way that they try and do as much as they can in the core library, which is written
+
+
+60
+00:06:17,680 --> 00:06:23,200
+in Rust, and then they try and do as little as possible, I guess, in the UIs. So the UIs
+
+
+61
+00:06:23,200 --> 00:06:31,440
+are actually then written in Java, Swift, and Node.js, I think, for the desktop one.
+
+
+62
+00:06:31,440 --> 00:06:38,560
+And they already have bindings for that. They use, I think, the Java and iOS bindings are
+
+
+63
+00:06:38,560 --> 00:06:47,520
+using CFFI. Desktop has a mixture of that and JSON RPC now, I think.
+
+
+64
+00:06:47,520 --> 00:06:51,280
+And the interesting thing for us is also, like, Delta Chat has already figured out how
+
+
+65
+00:06:51,280 --> 00:06:56,080
+to ship this code to all their platforms. Like, they support phones that are terribly
+
+
+66
+00:06:56,080 --> 00:07:03,320
+old, like Android 4 still, and they already have figured out the tool chain, the compiling,
+
+
+67
+00:07:03,320 --> 00:07:08,640
+et cetera. So all the hard work, hopefully, has already happened. Should be easy.
+
+
+68
+00:07:08,640 --> 00:07:15,920
+So how to go about this? Iro's main concept is really about collections. So a collection
+
+
+69
+00:07:15,920 --> 00:07:25,480
+is just essentially a list of files, or a list of hashes. So currently, basically, it's
+
+
+70
+00:07:25,480 --> 00:07:30,760
+a name plus a hash, and then the hash is another blob, and that's then usually a file.
+
+
+71
+00:07:30,760 --> 00:07:38,720
+So the plan for the provider side here was to... The database in SQLite, where most of
+
+
+72
+00:07:38,720 --> 00:07:44,960
+the data is stored, is SQLite in Delta Chat. So to have something that we need to hash,
+
+
+73
+00:07:44,960 --> 00:07:49,800
+we first have to create a database export. Unfortunately, that is still duplicating data
+
+
+74
+00:07:49,800 --> 00:07:58,960
+on the device's storage. If that's an SD card, that can be painful. But even so... And then
+
+
+75
+00:07:58,960 --> 00:08:02,720
+basically we add that to the collection. And then the other thing that's... Usually, if
+
+
+76
+00:08:02,720 --> 00:08:07,640
+you have large accounts, you have lots of attachments to emails. They're basically like
+
+
+77
+00:08:07,640 --> 00:08:14,240
+image videos. It's just a messenger. You get all these things like stickers. I don't know
+
+
+78
+00:08:14,240 --> 00:08:18,680
+what else. And they all get added to this collection, essentially.
+
+
+79
+00:08:18,680 --> 00:08:24,360
+Then you start the server, essentially, Iro provider, which is just a network server,
+
+
+80
+00:08:24,360 --> 00:08:28,120
+listens for connections, and now you can create a QR code, basically, with all the information
+
+
+81
+00:08:28,120 --> 00:08:34,280
+in it. So the QR code essentially contains the hash of the collection, so you know what
+
+
+82
+00:08:34,280 --> 00:08:40,760
+to ask. It contains where to reach the provider on the network, because you're supposed to
+
+
+83
+00:08:40,760 --> 00:08:49,480
+be on the same local network. It contains the peer ID, so you know you're connecting
+
+
+84
+00:08:49,480 --> 00:08:55,760
+to the right provider, and you can't be man-in-the-middle. And then it contains also an authentication
+
+
+85
+00:08:55,760 --> 00:08:59,400
+code, so again, because the provider is just listening on the local network and doesn't
+
+
+86
+00:08:59,400 --> 00:09:04,880
+want to suggest everyone to start connecting to it.
+
+
+87
+00:09:04,880 --> 00:09:08,640
+So that's the provider side. The receiver side is basically the opposite direction,
+
+
+88
+00:09:08,640 --> 00:09:13,880
+but fairly straightforward at this point. Gets the QR code, connects to your provider,
+
+
+89
+00:09:13,880 --> 00:09:19,440
+requests the hash. Then this whole bio-verified streaming happens, all the files arrive. At
+
+
+90
+00:09:19,440 --> 00:09:24,840
+the end of that, you need to import your database into your running SQLite system again, and
+
+
+91
+00:09:24,840 --> 00:09:28,840
+you have to start the system again. Start the system is like, because while you're doing
+
+
+92
+00:09:28,840 --> 00:09:32,840
+this, also on the provider side, DeltaShed has to be a little careful that you're not
+
+
+93
+00:09:32,840 --> 00:09:37,280
+at the same time going to modify the files. So it tries to stop the system as much as
+
+
+94
+00:09:37,280 --> 00:09:42,840
+it can, so no files are being modified, because otherwise we get hash changes.
+
+
+95
+00:09:42,840 --> 00:09:52,680
+So going about this, we had IRO, basically implementation prepared and made a release.
+
+
+96
+00:09:52,680 --> 00:10:00,240
+We also created the DeltaShed PR, basically being what's fully reviewed, had tests, has
+
+
+97
+00:10:00,240 --> 00:10:06,240
+a little developer-oriented testing tool in there as well that a couple of people had
+
+
+98
+00:10:06,240 --> 00:10:10,360
+tried out, you transfer, et cetera. So everything worked perfectly fine. Transfers worked on
+
+
+99
+00:10:10,360 --> 00:10:16,760
+real accounts of people with that testing tool. So time to ask the UI developers, the
+
+
+100
+00:10:16,760 --> 00:10:22,840
+app developers, to start implementing this on their side. And this is essentially the
+
+
+101
+00:10:22,840 --> 00:10:30,960
+QR code, how it kind of looks. I think this is the desktop version. Yeah, straightforward,
+
+
+102
+00:10:30,960 --> 00:10:35,320
+hopefully. Like, everything tested, everything works.
+
+
+103
+00:10:35,320 --> 00:10:41,840
+Or not quite. Even though we kind of tried to do our very best to compile IRO on all
+
+
+104
+00:10:41,840 --> 00:10:47,320
+the platforms that we will care about, that still didn't catch everything. New dependencies,
+
+
+105
+00:10:47,320 --> 00:10:55,960
+new things breaks. So turns out our quick implementation didn't support explicit congestion
+
+
+106
+00:10:55,960 --> 00:11:03,200
+notification on all the, I think mostly Android phones, because the Linux kernel didn't implement
+
+
+107
+00:11:03,200 --> 00:11:08,720
+that yet, like send message. So basically figuring out what breaks, what
+
+
+108
+00:11:08,720 --> 00:11:14,560
+are the workarounds, and patch the upstreams. It's kind of, they were very nice, so that
+
+
+109
+00:11:14,560 --> 00:11:19,800
+was kind of, wasn't too difficult. But it's like hunting down what these versions, et
+
+
+110
+00:11:19,800 --> 00:11:23,600
+cetera, works. The next thing is kind of interesting, because
+
+
+111
+00:11:23,600 --> 00:11:28,840
+how blind we were to this, in a way. So I said, like, initially we said, like, hey,
+
+
+112
+00:11:28,840 --> 00:11:33,760
+let's just do local network, right? We don't care about, we don't want to do this discovery
+
+
+113
+00:11:33,760 --> 00:11:40,440
+yet where the peer is. But then it turned out that when we actually
+
+
+114
+00:11:40,440 --> 00:11:46,360
+really tried this on two devices, from a phone to a laptop, to the testing tool running on
+
+
+115
+00:11:46,360 --> 00:11:51,600
+your laptop, that all of a sudden we actually didn't do this at all. We were just connecting
+
+
+116
+00:11:51,600 --> 00:11:57,040
+to the local host, and we completely forgot about this.
+
+
+117
+00:11:57,040 --> 00:12:02,760
+Solution to this is kind of easy enough, in a way. You can bind to anything, but you still
+
+
+118
+00:12:02,760 --> 00:12:06,880
+don't know which of your local networks is actually the one you need to connect to. The
+
+
+119
+00:12:06,880 --> 00:12:12,120
+problem is, if you're on a laptop on your Wi-Fi, you probably have several interfaces.
+
+
+120
+00:12:12,120 --> 00:12:15,880
+Your phone will have, like, a radio interface and a Wi-Fi interface and a couple of other
+
+
+121
+00:12:15,880 --> 00:12:21,560
+things. If you're running VMs on your laptop, you will have other network interfaces probably
+
+
+122
+00:12:21,560 --> 00:12:28,240
+for those. So we ended up having to stuff all the IP addresses that we found your local
+
+
+123
+00:12:28,240 --> 00:12:34,720
+machine has into the QR code to send over, and then essentially just try all of them
+
+
+124
+00:12:34,720 --> 00:12:40,600
+at the same time and see which one connects. Still, the peer ID is verified, so there's
+
+
+125
+00:12:40,600 --> 00:12:47,120
+no concerns about that. Shouldn't be too hard. There is even an API
+
+
+126
+00:12:47,120 --> 00:12:53,600
+for this. But again, platforms, versions, this was very painful. At this point, we really
+
+
+127
+00:12:53,600 --> 00:13:01,520
+tried to actually test on real phones to check that permissions actually would work out.
+
+
+128
+00:13:01,520 --> 00:13:06,600
+Turns out, like, on some old version, you could use one technique. On a newer version,
+
+
+129
+00:13:06,600 --> 00:13:11,320
+you had to use another technique because the old technique didn't work anymore. And even
+
+
+130
+00:13:11,320 --> 00:13:19,120
+though we tried this, we ran tests, like, on real phones, when we actually shipped this
+
+
+131
+00:13:19,120 --> 00:13:25,080
+when we actually built this on real applications, we still had permission problems with this
+
+
+132
+00:13:25,080 --> 00:13:30,920
+in the final application. So that was just a very painful trial and error, kind of, like,
+
+
+133
+00:13:30,920 --> 00:13:38,800
+figuring out which techniques work. And yeah, it was surprising that to the best efforts
+
+
+134
+00:13:38,800 --> 00:13:44,520
+of our testing, we still couldn't, like, fix these things ahead of time.
+
+
+135
+00:13:44,520 --> 00:13:49,400
+Another interesting thing was, like, users cancel operations. That's not too bad. Like,
+
+
+136
+00:13:49,400 --> 00:13:53,600
+we knew that they would cancel operations. But they, like, go, like, cancel, and then
+
+
+137
+00:13:53,600 --> 00:13:57,640
+start again. Oh, no, it's canceled again. Oh, no, it starts anyway. Like, really quickly
+
+
+138
+00:13:57,640 --> 00:14:02,160
+after each other. And then, like, you know, you're in the middle of a transaction, or
+
+
+139
+00:14:02,160 --> 00:14:11,800
+you're writing a file, or I don't know what. This wasn't so bad. This was mostly a bug
+
+
+140
+00:14:11,800 --> 00:14:17,320
+in the integration code. Because DeltaShared actually has, already has a mechanism for
+
+
+141
+00:14:17,320 --> 00:14:23,480
+this, like, where when it cancels it, it still allows you, the mechanism that is supposed
+
+
+142
+00:14:23,480 --> 00:14:28,440
+to communicate between the core and the UIs still kind of allows for the cancellation,
+
+
+143
+00:14:28,440 --> 00:14:34,200
+like you're actually supposed to wait until the operation actually managed to be canceled.
+
+
+144
+00:14:34,200 --> 00:14:40,640
+But the UIs still have to handle this somehow. They have to, like, be nice to the user. And
+
+
+145
+00:14:40,640 --> 00:14:46,560
+then they have to add some delays, et cetera. But yeah, it's this, like, you know, cancellation
+
+
+146
+00:14:46,560 --> 00:14:53,720
+isn't, it's really annoying. They just go really quickly between the two.
+
+
+147
+00:14:53,720 --> 00:14:59,640
+Last thing is, like, users like progress. And we initially, we built Iroh, like, the
+
+
+148
+00:14:59,640 --> 00:15:07,880
+internal Iroh demo tool, I guess, also had progress bars, and they work really nicely.
+
+
+149
+00:15:07,880 --> 00:15:15,560
+And the progress is kind of very smooth. Unfortunately, on the sender side, we didn't really think
+
+
+150
+00:15:15,560 --> 00:15:23,240
+of that until the applications were kind of using this. And there, it is, like, much rougher.
+
+
+151
+00:15:23,240 --> 00:15:28,120
+It's basically, like, on per file, it moves forward, rather than, like, during a large
+
+
+152
+00:15:28,120 --> 00:15:33,800
+file. And users are really bothered by this. Like, if, like, one of the devices, especially
+
+
+153
+00:15:33,800 --> 00:15:38,040
+if you have them next to each other, if one of the devices is showing a progress bar,
+
+
+154
+00:15:38,040 --> 00:15:41,240
+showing moving, and the other one is, like, stuttering, they're like, oh, maybe it's broken,
+
+
+155
+00:15:41,240 --> 00:15:48,360
+and they'll go and cancel it again. It's, yeah, progress matters, basically, to
+
+
+156
+00:15:48,360 --> 00:15:54,720
+users. And it needs to be a really nice experience. Even though both devices are doing something
+
+
+157
+00:15:54,720 --> 00:16:02,000
+different, you really need to try and show them the same progress, which is kind of annoying.
+
+
+158
+00:16:02,000 --> 00:16:11,080
+But anyways, at the end of this, like, before we actually managed to make this work, we
+
+
+159
+00:16:11,080 --> 00:16:15,520
+were three IRO releases further. We also had, like, two releases from some upstream that
+
+
+160
+00:16:15,520 --> 00:16:22,080
+we had to ask for. But eventually, it worked. The interesting thing was, like, most bugs
+
+
+161
+00:16:22,080 --> 00:16:26,560
+were actually in the integration code. IRO itself, apart from the part where we were
+
+
+162
+00:16:26,560 --> 00:16:30,040
+completely blind to, you know, we don't provide actually enough features for the users to
+
+
+163
+00:16:30,040 --> 00:16:37,560
+do what they need, was actually all right. But also, even though the integration code
+
+
+164
+00:16:37,560 --> 00:16:43,360
+was mostly to blame, like, this was done by me, and I knew both projects very well. So
+
+
+165
+00:16:43,360 --> 00:16:51,160
+this was not, like, it's still, even though you know these things, it was still remarkably
+
+
+166
+00:16:51,160 --> 00:17:00,520
+easy to avoid any errors, I guess, in getting it right entirely. So what other things that
+
+
+167
+00:17:00,520 --> 00:17:08,600
+I saw, like, kind of feedback from the DeltaShed side, I guess, is sort of, obviously, connectivity
+
+
+168
+00:17:08,600 --> 00:17:13,240
+across networks. Like, it would be nice to not be limited to this local network. And
+
+
+169
+00:17:13,240 --> 00:17:23,560
+also having to send this, like, all these addresses in the QR code is not the nicest.
+
+
+170
+00:17:23,560 --> 00:17:29,040
+That is something that we're actively working on right now. But it's, like, this bidirectional
+
+
+171
+00:17:29,040 --> 00:17:34,920
+thing is also kind of interesting. Like, users are surprisingly uncomfortable about having
+
+
+172
+00:17:34,920 --> 00:17:43,640
+a single scan, like, and that gives them all your data, including their private key. There
+
+
+173
+00:17:43,640 --> 00:17:47,560
+is some resistance to this, and their first reaction is, like, why can't I scan the other
+
+
+174
+00:17:47,560 --> 00:17:51,440
+way around? Apart from, you know, the obvious thing, if the other way around, you don't
+
+
+175
+00:17:51,440 --> 00:17:56,360
+have cameras the right way around, I guess. There are other ways to solve this as well,
+
+
+176
+00:17:56,360 --> 00:18:00,760
+instead of scanning the other way around. You could, like, add a confirmation code or
+
+
+177
+00:18:00,760 --> 00:18:06,080
+something, like how Bluetooth setup does. But that would also need a modification in
+
+
+178
+00:18:06,080 --> 00:18:11,280
+the IRO protocol. Like, right now, you couldn't implement that.
+
+
+179
+00:18:11,280 --> 00:18:17,960
+But, like, one of the recurring friction points, I guess, is, like, why content addressing?
+
+
+180
+00:18:17,960 --> 00:18:22,120
+In a way, like, DeltaShed, even though, like, from our point of view, this seems like a
+
+
+181
+00:18:22,120 --> 00:18:27,720
+fairly nice solution, but there was also always this, like, well, content addressing doesn't
+
+
+182
+00:18:27,720 --> 00:18:33,080
+really help us. Like, we just need to transfer this back up. You already, we already verify,
+
+
+183
+00:18:33,080 --> 00:18:37,200
+authenticate people both ways. So when we have an established connection, we already
+
+
+184
+00:18:37,200 --> 00:18:44,080
+know, like, we trust this other device to give us the right data. And the network connection
+
+
+185
+00:18:44,080 --> 00:18:50,600
+isn't going to flip bits on us, because our transport protocol takes care of this.
+
+
+186
+00:18:50,600 --> 00:18:55,000
+So why bother with this? Maybe the solution is something IP and S-like, where you can
+
+
+187
+00:18:55,000 --> 00:19:02,160
+say, like, just give me most recent backup. Maybe the solution is we actually want to
+
+
+188
+00:19:02,160 --> 00:19:08,000
+also give users, like, basically the raw stream. Like, just give them a quick connection, and
+
+
+189
+00:19:08,000 --> 00:19:14,280
+they can run things as they like. We don't know. We still have to figure those things
+
+
+190
+00:19:14,280 --> 00:19:16,360
+out, I guess.
+
+
+191
+00:19:16,360 --> 00:19:20,960
+What libraries and tools and, like, prior art did you look at for solving these network
+
+
+192
+00:19:20,960 --> 00:19:26,280
+things, especially on the local network? And, you know, are any of them still, like, in
+
+
+193
+00:19:26,280 --> 00:19:30,480
+the running for solving the hole punching? Or is it stuff that's going to be, like, written
+
+
+194
+00:19:30,480 --> 00:19:34,720
+just for your project?
+
+
+195
+00:19:34,720 --> 00:19:40,280
+So what did we look at? Obviously, lipay2pay. That's also where we initially looked for,
+
+
+196
+00:19:40,280 --> 00:19:45,680
+like, give us all your local addresses. Although we didn't end up, we ended up using a different
+
+
+197
+00:19:45,680 --> 00:19:54,720
+dependency than the lipay2pay one. Regarding the hole punching part of that, like, that's
+
+
+198
+00:19:54,720 --> 00:20:16,200
+going on now, I guess. What we're looking at there is the...
+
+
+199
+00:20:00,000 --> 00:20:08,640
+the model that, what's the name, Tailscale uses, and also ZeroTier as well.
+
+
+200
+00:20:08,640 --> 00:20:15,280
+Like, they essentially also have these hole punching problems and nut traversals, etc.
+
+
+201
+00:20:15,280 --> 00:20:24,240
+So we're looking at them to, like, figure out what our solution should look like, I guess.
+
+
+202
+00:20:24,240 --> 00:20:31,040
+I mean, yeah. Thank you for the talk, really interesting. I have two questions. First one is,
+
+
+203
+00:20:31,040 --> 00:20:38,480
+how fast is interaction with mail servers when we're talking about chat, like, I'm talking live chat, for example?
+
+
+204
+00:20:38,480 --> 00:20:49,760
+Depends on your mail server. But as I said, remarkably good. Like, it's, if you have two users on the same server,
+
+
+205
+00:20:49,760 --> 00:20:56,240
+the chat messages are sub-second. Like, yeah.
+
+
+206
+00:20:56,240 --> 00:21:03,200
+Second question, you touched on anti-censorship as a side effect of this.
+
+
+207
+00:21:03,200 --> 00:21:08,480
+Am I right that right now Deltashet only operates on a single mail server as a user?
+
+
+208
+00:21:08,480 --> 00:21:15,760
+Like, imagine if I wanted to work around censorship, can I use multiple mail servers to store my data?
+
+
+209
+00:21:15,760 --> 00:21:20,080
+Yeah, totally. Like, Deltashet is just a normal mail client, essentially, under the hood.
+
+
+210
+00:21:20,080 --> 00:21:27,680
+And the email system publicly is federated. So most mail servers that I know of are not islands,
+
+
+211
+00:21:27,680 --> 00:21:34,720
+and they just participate in the normal network. Like, also, because of this, I can just see my Deltashet client
+
+
+212
+00:21:34,720 --> 00:21:38,560
+chat to your normal email address, and you will just receive it as an email, and you'll respond,
+
+
+213
+00:21:38,560 --> 00:21:49,440
+and I'll get the message, like, looking like a normal response. Different service, all just fine.

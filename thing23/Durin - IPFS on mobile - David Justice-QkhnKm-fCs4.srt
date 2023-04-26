@@ -1,0 +1,713 @@
+1
+00:00:00,000 --> 00:00:08,520
+So today I'm going to tell you all about Durin. I announced this back at IPFS camp,
+
+
+2
+00:00:08,520 --> 00:00:13,760
+so we'll have some updates from then. We'll answer some questions about what it is, how
+
+
+3
+00:00:13,760 --> 00:00:19,800
+it's built, what we have in the future, and mostly like the purposes of it. So to start
+
+
+4
+00:00:19,800 --> 00:00:24,800
+out here, what is Durin? Dietrich really summed it up really well in this tweet here. He said,
+
+
+5
+00:00:24,800 --> 00:00:30,760
+Durin is an iOS and Android app for exploring IPFS use cases, initially with read and share
+
+
+6
+00:00:30,760 --> 00:00:36,560
+flows but with a place where we can experiment with like-client protocol implementation,
+
+
+7
+00:00:36,560 --> 00:00:43,960
+proximity transports, and the where's my stuff problem. So yeah, Android app, iOS app, we
+
+
+8
+00:00:43,960 --> 00:00:50,240
+support the uploading and we support IPFS colon slash slash links with protocol handling.
+
+
+9
+00:00:50,240 --> 00:00:53,920
+We're going to go ahead and convert those to HTTPS for share. This is like really simple
+
+
+10
+00:00:53,920 --> 00:00:59,800
+stuff that we were doing already in like companion. We try and get your content as fast as possible
+
+
+11
+00:00:59,800 --> 00:01:04,640
+on mobile here. We use basically like a racing or caching gateway. I'll explain a little
+
+
+12
+00:01:04,640 --> 00:01:08,920
+bit more of that in like the next slide. And we're really thinking of this as like a base
+
+
+13
+00:01:08,920 --> 00:01:14,880
+for IPFS enabled apps, like a very, very like simple base for those. So we want people to,
+
+
+14
+00:01:14,880 --> 00:01:18,760
+we want to make this friendly enough, document it, put tutorials together so that people
+
+
+15
+00:01:18,760 --> 00:01:24,360
+can just fork this and start building off of it. And lastly, it's a testing ground for
+
+
+16
+00:01:24,360 --> 00:01:30,000
+just as any experimental things we can come up with to try new things on mobile. So how
+
+
+17
+00:01:30,000 --> 00:01:35,720
+does it work? I mentioned the racing or caching gateway. Simplest way to explain this is we
+
+
+18
+00:01:35,720 --> 00:01:41,280
+wanted to put the most lightweight way to access IPFS on mobile. As we know, like Kubo
+
+
+19
+00:01:41,280 --> 00:01:46,880
+is not really built with mobile in mind initially. We have some new stuff coming in from Iro
+
+
+20
+00:01:46,880 --> 00:01:51,240
+and things, which I'll actually kind of touch on later in the talk also, which might be
+
+
+21
+00:01:51,240 --> 00:01:57,080
+more efficient on battery and these things on mobile. So, but we weren't quite there
+
+
+22
+00:01:57,080 --> 00:02:02,640
+yet. So we wanted to do the lowest resource intensive thing that we can do. And so we
+
+
+23
+00:02:02,640 --> 00:02:09,240
+came up with was we're, we get a list of gateways basically, and we check them on an interval.
+
+
+24
+00:02:09,240 --> 00:02:14,320
+We rank them based on the speed and the health of the gateways. As you can see over here
+
+
+25
+00:02:14,320 --> 00:02:19,120
+on the right side of the screen, this is a screenshot of the settings page. So if you
+
+
+26
+00:02:19,120 --> 00:02:22,960
+have auto selected there, that's the default, it's going to go ahead and rank these gateways
+
+
+27
+00:02:22,960 --> 00:02:29,360
+and try and return you the fastest one from the fastest gateway. But we have the option
+
+
+28
+00:02:29,360 --> 00:02:32,960
+if you're having issues or anything like that, or you just want to, you really like a gateway
+
+
+29
+00:02:32,960 --> 00:02:38,800
+specifically, you can just select that there. I want to mention there's an IPIP that was
+
+
+30
+00:02:38,800 --> 00:02:44,960
+work was a lot moving a lot faster in 2022. I'd like to pick up some of the momentum from
+
+
+31
+00:02:44,960 --> 00:02:51,560
+that. Mark Geiser was working on this. He was like heading it up mostly. And he's still
+
+
+32
+00:02:51,560 --> 00:02:55,920
+involved absolutely with it. But this is the multi-client gateway. This is the type of
+
+
+33
+00:02:55,920 --> 00:02:59,960
+work that's really going to help these like light client nodes. If we can really define
+
+
+34
+00:02:59,960 --> 00:03:04,040
+that and get everybody working together with that. So I have a link to it at the end of
+
+
+35
+00:03:04,040 --> 00:03:09,200
+the talk. So I encourage you if you're interested to take a look at that, give some input on
+
+
+36
+00:03:09,200 --> 00:03:15,280
+the pull request. I'd like to get that moving. Like we mentioned, we do that transformation
+
+
+37
+00:03:15,280 --> 00:03:23,880
+of the IPFS to HTTPS, really simple transformation there. Same as companion, the browser extension.
+
+
+38
+00:03:23,880 --> 00:03:31,200
+Our uploads are done up to web3.storage. They've been really easy to work with. And then the
+
+
+39
+00:03:31,200 --> 00:03:38,960
+sharing, obviously we have the built-in sharing that any like iOS or Android app has. This
+
+
+40
+00:03:38,960 --> 00:03:43,080
+is like airdrop messaging, all that built-in stuff. We just get that for free. We also
+
+
+41
+00:03:43,080 --> 00:03:47,840
+generate QR codes to make it really simple to pass files around. And then we are just
+
+
+42
+00:03:47,840 --> 00:03:53,180
+added share targets. So now if you're actually in like the photos app or accessing these
+
+
+43
+00:03:53,180 --> 00:03:56,800
+photos like directly, you can open up the share button and Durin is actually one of
+
+
+44
+00:03:56,800 --> 00:04:02,400
+those options to share to. And then it will auto upload and then you'll get your CID back,
+
+
+45
+00:04:02,400 --> 00:04:08,240
+share links, all those things. So what's new since IPFS camp? I just mentioned the share
+
+
+46
+00:04:08,240 --> 00:04:13,120
+target. This is a screenshot of it like sort of in action. You can see down at the bottom,
+
+
+47
+00:04:13,120 --> 00:04:16,920
+the Durin is one of the things you can share directly to. This is a photo from Robin's
+
+
+48
+00:04:16,920 --> 00:04:23,480
+talk yesterday. Should be shipping this week, next week. We're really close to it. We're
+
+
+49
+00:04:23,480 --> 00:04:29,040
+just working on some permissions issues with iOS. There's a new design. We cleaned up a
+
+
+50
+00:04:29,040 --> 00:04:35,880
+lot. Looking a little bit better for like a more mainstream release here. We got a couple
+
+
+51
+00:04:35,880 --> 00:04:41,780
+bug fixes, always adding more gateways. As more and more gateways show up on the public
+
+
+52
+00:04:41,780 --> 00:04:45,720
+gateway checker and just through word of mouth when I hear about them, because not everything
+
+
+53
+00:04:45,720 --> 00:04:50,840
+is on there, we try and check and make sure that they have to have the subdomain support
+
+
+54
+00:04:50,840 --> 00:04:55,240
+and we like them to have the IP and S support so that it's just going to work the best with
+
+
+55
+00:04:55,240 --> 00:04:59,840
+us here and that we can support everything. So if you run a gateway, we'd love for you
+
+
+56
+00:04:59,840 --> 00:05:03,600
+to and you don't support the subdomain stuff, we'd love to talk to you and try and help
+
+
+57
+00:05:03,600 --> 00:05:09,280
+you get that moving along. Because the more the better, especially for people that are
+
+
+58
+00:05:09,280 --> 00:05:15,400
+in different regions. We also added a featured apps list. These are simple things, but they
+
+
+59
+00:05:15,400 --> 00:05:21,640
+can go a long way, I think. I'll talk a little bit more about the featured apps later.
+
+
+60
+00:05:21,640 --> 00:05:27,560
+So what's happening next? Like we mentioned the featured apps, I have IPFS search is one
+
+
+61
+00:05:27,560 --> 00:05:35,480
+of those. We're basically looking for what are IPFS enabled apps or things that run on
+
+
+62
+00:05:35,480 --> 00:05:40,000
+IPFS that look really good and have a good experience on mobile. We're going to feature
+
+
+63
+00:05:40,000 --> 00:05:46,120
+those and I think as we spend more time auditing these things and we get feedback of what people
+
+
+64
+00:05:46,120 --> 00:05:49,600
+like of these featured apps, we're looking at possibly doing integration with them. I
+
+
+65
+00:05:49,600 --> 00:05:55,880
+talked to the IPFS search in Portugal and that was really exciting. After playing with
+
+
+66
+00:05:55,880 --> 00:06:01,160
+that on mobile, I was really impressed by how good the integration feels already, just
+
+
+67
+00:06:01,160 --> 00:06:07,720
+like linking to it. Talk about maybe doing some file encryption, file sharing of encrypted
+
+
+68
+00:06:07,720 --> 00:06:13,920
+files. After watching the Delta chat talk, obviously got me thinking about the Iro integration
+
+
+69
+00:06:13,920 --> 00:06:19,040
+stuff. I have that PR open in another browser tab right now, hoping to get time to dig into
+
+
+70
+00:06:19,040 --> 00:06:26,920
+that through the hack days. Talking about contacts API support, maybe with wallet integrations.
+
+
+71
+00:06:26,920 --> 00:06:31,960
+There's still probably too early to do a talk on that, but if you're interested, I'd love
+
+
+72
+00:06:31,960 --> 00:06:36,360
+to chat with you about it. We have some pretty interesting ideas there. And then we were
+
+
+73
+00:06:36,360 --> 00:06:41,840
+talking about photo backups possibly using FVM and Filecoin. I think we could probably
+
+
+74
+00:06:41,840 --> 00:06:47,420
+do some interesting stuff there, probably also offer very competitive pricing to existing
+
+
+75
+00:06:47,420 --> 00:06:53,360
+cloud stuff. So what's for sure happening, that was the exploration share target. Want
+
+
+76
+00:06:53,360 --> 00:06:58,320
+to make it so people can use the web3.storage key directly so they can have all their stuff
+
+
+77
+00:06:58,320 --> 00:07:03,000
+in one place. Right now we have a global key just to make it as easy as possible. I also
+
+
+78
+00:07:03,000 --> 00:07:09,360
+want to talk with the web3.storage team and see if we can get specific flows for getting
+
+
+79
+00:07:09,360 --> 00:07:15,680
+your own API key for less technical users. Always trying to add those new gateways. Think
+
+
+80
+00:07:15,680 --> 00:07:22,520
+about adding this into the FDroid store. We want to do a tutorial on forking the project.
+
+
+81
+00:07:22,520 --> 00:07:25,720
+Like we mentioned before, we want this to be a really, really easy base for people to
+
+
+82
+00:07:25,720 --> 00:07:31,800
+get started with IPFS on mobile in a very, very lightweight way. No crazy battery usage
+
+
+83
+00:07:31,800 --> 00:07:35,600
+or anything like that. But that's on us. We've got to document it. We've got to make it so
+
+
+84
+00:07:35,600 --> 00:07:40,960
+it's really easy to do. We have a blog post. We're finally going to announce this in a
+
+
+85
+00:07:40,960 --> 00:07:46,640
+wider way on the IPFS blog. So keep an eye out for that probably in the next week or
+
+
+86
+00:07:46,640 --> 00:07:51,160
+so. And I'd like to add a little bit more metrics. We get a couple built in things,
+
+
+87
+00:07:51,160 --> 00:07:55,520
+but would like to get a little bit more information there.
+
+
+88
+00:07:55,520 --> 00:07:58,640
+So how do you get it? It's in the Google Play store. It's in the App Store. I'll be sharing
+
+
+89
+00:07:58,640 --> 00:08:02,680
+that repo too if you feel like pulling it down, building it, giving us some feedback
+
+
+90
+00:08:02,680 --> 00:08:08,360
+that way too. And how do you contribute? So I've added this QR code. It's actually like
+
+
+91
+00:08:08,360 --> 00:08:12,480
+a big link list, like link in bio thing, you know, like you'd see on Instagram or whatever.
+
+
+92
+00:08:12,480 --> 00:08:17,160
+A lot of stuff on there. I want to say before I get into all the contributions, big shout
+
+
+93
+00:08:17,160 --> 00:08:20,760
+out to Trigram. They've been working with us for a while on this. They're a contracting
+
+
+94
+00:08:20,760 --> 00:08:26,240
+company. They build a lot of products of their own and stuff also. So they've done like wonderful,
+
+
+95
+00:08:26,240 --> 00:08:29,560
+wonderful work with this and we're looking to continue working with them.
+
+
+96
+00:08:29,560 --> 00:08:34,080
+How can you contribute? More gateways with subdomain support. If you look at that public
+
+
+97
+00:08:34,080 --> 00:08:40,240
+gateway checker, not that many actually have like the subdomain support. I want to keep
+
+
+98
+00:08:40,240 --> 00:08:47,800
+seeing how we can build that up. Check out that, the IPIP that we were talking about,
+
+
+99
+00:08:47,800 --> 00:08:52,400
+the multi gateways IPIP. There's a couple other IPIPs that link to that also. I got
+
+
+100
+00:08:52,400 --> 00:08:58,520
+the GitHub repo right there. IPFS shipyard. We're always in browsers and platforms on
+
+
+101
+00:08:58,520 --> 00:09:05,760
+Slack. Any ideas you got, any, you know, bugs you see, come talk to me there about it. Fork
+
+
+102
+00:09:05,760 --> 00:09:11,680
+it. Try building it. Build your own IPFS app. Submit ideas. Hack with us this week.
+
+
+103
+00:09:11,680 --> 00:09:18,760
+Lastly, if you have a mobile or IPFS project, we definitely need to talk. I want to get
+
+
+104
+00:09:18,760 --> 00:09:21,840
+as much input as possible. I want to help other people with this. I think we should
+
+
+105
+00:09:21,840 --> 00:09:25,320
+all sync up. And that's all I have today. Thank you.
+
+
+106
+00:09:25,320 --> 00:09:30,840
+Super interesting. While you were talking, I downloaded the app and tried using it. So,
+
+
+107
+00:09:30,840 --> 00:09:36,200
+one thing I noticed was it's very gateway centric. Are you thinking down the road map
+
+
+108
+00:09:36,200 --> 00:09:43,680
+to do IPFS over other protocols like Bluetooth, LED, things like that? Maybe an Android, whatever
+
+
+109
+00:09:43,680 --> 00:09:49,920
+the Android version of AirDrop is for more like peer to peer local networks?
+
+
+110
+00:09:49,920 --> 00:09:54,400
+Totally. Yeah. That's something we've talked about. So, you can use AirDrop right now,
+
+
+111
+00:09:54,400 --> 00:10:00,440
+but it's not within Duran. One of the things we talked about was having AirDrop, but then
+
+
+112
+00:10:00,440 --> 00:10:04,960
+when you receive it on the other end, actually trying to verify the CIDs. It's one of the
+
+
+113
+00:10:04,960 --> 00:10:12,080
+things we talked about. We've also we looked into having local connectivity with MDNS.
+
+
+114
+00:10:12,080 --> 00:10:16,560
+We actually had a version of that working, but you had to change some of the default
+
+
+115
+00:10:16,560 --> 00:10:23,280
+configs in Kubo nodes. And it was something that was like really not secure enough, we
+
+
+116
+00:10:23,280 --> 00:10:27,720
+would say, that we would want to recommend to people. So, there's still work to be done
+
+
+117
+00:10:27,720 --> 00:10:31,560
+there. There's still exploration. We were getting like it was operating super fast.
+
+
+118
+00:10:31,560 --> 00:10:36,080
+And it was really cool being able to see stuff directly from your node or the gateways and
+
+
+119
+00:10:36,080 --> 00:10:39,640
+like racing them against each other. So, that's definitely a priority. Something I really
+
+
+120
+00:10:39,640 --> 00:10:45,600
+want to see happen. Need to get a little bit more in touch with the Kubo team and see where
+
+
+121
+00:10:45,600 --> 00:10:50,760
+that's moving along. I don't know that it's like the highest priority right now for them.
+
+
+122
+00:10:50,760 --> 00:10:54,920
+They have a lot of stuff on their plate, but definitely something I want to check out.
+
+
+123
+00:10:54,920 --> 00:11:02,440
+Hey, so I work at the Falcon Foundation with the decentralized web kind of gang of folks.
+
+
+124
+00:11:02,440 --> 00:11:09,240
+And there's a lot of them building or wanting to build tools for archiving and verification
+
+
+125
+00:11:09,240 --> 00:11:13,560
+on mobile. And I was just wondering if you were chatting to like the Guardian project
+
+
+126
+00:11:13,560 --> 00:11:20,560
+people already. Good. You sort of looked a little like, oh, I don't think I am. Because
+
+
+127
+00:11:20,560 --> 00:11:27,040
+they also do FDroid. They also actually help run the FDroid. And they're the people working
+
+
+128
+00:11:27,040 --> 00:11:35,160
+on FDroid on IPFS. So, they're sort of super deep in it. And now I will... Your expression
+
+
+129
+00:11:35,160 --> 00:11:37,360
+has answered the question. So, I'll introduce you.
+
+
+130
+00:11:37,360 --> 00:11:43,600
+So, yeah. Would love to chat with them. That sounds sick. And I will say, too, we love
+
+
+131
+00:11:43,600 --> 00:11:47,860
+archiving stuff. So, we have another project we did, Pintweet IPFS, where we're working
+
+
+132
+00:11:47,860 --> 00:11:52,780
+with WebRecorder to get all that stuff archived. And obviously, this is such an experimental
+
+
+133
+00:11:52,780 --> 00:11:57,640
+open app that can be forged and all these things. So, I mean, maybe one day we'll make
+
+
+134
+00:11:57,640 --> 00:12:01,720
+one that's specifically for archiving things. And not just like photos and sharing like
+
+
+135
+00:12:01,720 --> 00:12:03,760
+that. So...
+
+
+136
+00:12:03,760 --> 00:12:10,320
+So great progress on the team since IPFS camp. This is amazing. Are there any plans to...
+
+
+137
+00:12:10,320 --> 00:12:16,760
+Like on Android, you can register an app as a system-wide VPN. So, can we register this
+
+
+138
+00:12:16,760 --> 00:12:24,080
+as a VPN and say... Can we start resolving IPFS content dynamically like Companion does
+
+
+139
+00:12:24,080 --> 00:12:25,080
+in the browser?
+
+
+140
+00:12:25,080 --> 00:12:29,880
+That would be sick. Yeah. I hadn't even thought about that. So, let's talk about it. Yeah.
+
+
+141
+00:12:29,880 --> 00:12:30,880
+I like that a lot.
+
+
+142
+00:12:30,880 --> 00:12:33,960
+Okay. Okay. We'll talk. Okay. Thanks.
+
+
+143
+00:12:33,960 --> 00:13:00,960
+Thank you.

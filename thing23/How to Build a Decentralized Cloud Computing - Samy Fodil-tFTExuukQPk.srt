@@ -1,0 +1,1073 @@
+1
+00:00:00,000 --> 00:00:10,240
+Hi, my name is Sami Fadil. Thanks you all for being here. Today I'm going to tell you
+
+
+2
+00:00:10,240 --> 00:00:20,280
+about how to build a decentralized cloud computing platform. So when you look at what happened
+
+
+3
+00:00:20,280 --> 00:00:26,120
+before with Web2, like the exceptional growth and innovation that happened, it was because
+
+
+4
+00:00:26,120 --> 00:00:33,400
+of cloud computing. And cloud computing is also enabling actually Web3, but with considerable
+
+
+5
+00:00:33,400 --> 00:00:42,800
+downsides. So we're enforcing, like most DApps and protocols are using hyperscalers clouds,
+
+
+6
+00:00:42,800 --> 00:00:49,120
+so we're enforcing their oligopoly. But also there is an inverse correlation between the
+
+
+7
+00:00:49,120 --> 00:00:54,120
+developer experience, so more abstraction developers are leveraging from these cloud
+
+
+8
+00:00:54,120 --> 00:01:00,360
+providers, more vendor lock-in they have, and more centralized their solutions are.
+
+
+9
+00:01:00,360 --> 00:01:07,640
+So when you look at cloud computing itself, it's actually neither centralized nor decentralized.
+
+
+10
+00:01:07,640 --> 00:01:14,560
+It's a model. So I'm quoting here Paul Matris, former CEO of VMware. So he said, cloud is
+
+
+11
+00:01:14,560 --> 00:01:22,440
+about how you do computing, not where you do computing. And when you look at the computing
+
+
+12
+00:01:22,440 --> 00:01:28,200
+capacity out there, there are like over a billion internet-facing servers. Major cloud
+
+
+13
+00:01:28,200 --> 00:01:34,680
+providers only use about 1% of all of that. So we have this huge capacity that can be
+
+
+14
+00:01:34,680 --> 00:01:42,120
+tapped into to decentralize the web. It's just missing one thing. It's missing a decentralized
+
+
+15
+00:01:42,120 --> 00:01:47,560
+cloud computing software or platform. That's the only thing we require. That's the mode
+
+
+16
+00:01:47,560 --> 00:01:53,960
+that the hyperscalers have. That's the mode that centralized cloud providers have.
+
+
+17
+00:01:53,960 --> 00:02:00,680
+So what do we need to build a decentralized cloud computing platform or actually implement
+
+
+18
+00:02:00,680 --> 00:02:07,680
+cloud in a decentralized way? So two main components. I'll go over more details there,
+
+
+19
+00:02:07,680 --> 00:02:13,280
+but we need a peer-to-peer network, obvious, right? And then we need to implement cloud
+
+
+20
+00:02:13,280 --> 00:02:19,040
+features as peer-to-peer protocols, right? So there is no central node that's responsible
+
+
+21
+00:02:19,040 --> 00:02:29,120
+of a specific feature. So this is how we kind of like implement it. So a couple, I put it
+
+
+22
+00:02:29,120 --> 00:02:36,480
+in kind of like a layer so it's easy to understand. So on the bottom layer, we have the decentralization
+
+
+23
+00:02:36,480 --> 00:02:46,440
+layer. So where we have the peer-to-peer network, and then that's the DAG and stuff from IPFS.
+
+
+24
+00:02:46,440 --> 00:02:54,400
+And then on top of that, we have cloud features implemented as protocols. So CICD is a protocol,
+
+
+25
+00:02:54,400 --> 00:02:59,280
+application registry is a protocol, and so on. I'll go over some of these. And then on
+
+
+26
+00:02:59,280 --> 00:03:03,720
+top of that, we have the execution orchestration layer. So we have the TauBite WebAssembly
+
+
+27
+00:03:03,720 --> 00:03:11,680
+virtual machine that runs WebAssembly. We use that to run two features, D-functions,
+
+
+28
+00:03:11,680 --> 00:03:19,320
+which are just serverless, decentralized WebAssembly functions, and then SmartOps, which are basically
+
+
+29
+00:03:19,320 --> 00:03:24,040
+D-functions, but are executed for provisioning. So you can say like, don't provision this
+
+
+30
+00:03:24,040 --> 00:03:30,400
+storage or this function or website unless this node is taking, let's say, a Filecoin,
+
+
+31
+00:03:30,400 --> 00:03:36,560
+right, or has a GPU or something like that. So on top of that, it's all cloud-native.
+
+
+32
+00:03:36,560 --> 00:03:42,640
+So GitOps and serverless. So for example, if you want to change the state of the network
+
+
+33
+00:03:42,640 --> 00:03:48,480
+or something in your application, you have to push these changes as YAML files to GitHub.
+
+
+34
+00:03:48,480 --> 00:03:53,680
+It's not like an API, right? It's not like the best practice. So the best practice is
+
+
+35
+00:03:53,680 --> 00:03:57,960
+GitOps, and that's how we decided to go for it.
+
+
+36
+00:03:57,960 --> 00:04:05,800
+And on top of that, we built tools. So WebConsole, so grandma can build software. Tau, so CLI
+
+
+37
+00:04:05,800 --> 00:04:13,440
+for developers to quickly spin up their projects. Dreamland and Audible. So I'll go over all
+
+
+38
+00:04:13,440 --> 00:04:19,320
+of these, but these are like tools so you can run a TauBite network cloud on your laptop
+
+
+39
+00:04:19,320 --> 00:04:26,200
+and test things locally. And TauCorder, so kind of like a tricorder, but for a TauBite
+
+
+40
+00:04:26,200 --> 00:04:34,680
+network. And then on the side, these are not developer tools, but more like administrators
+
+
+41
+00:04:34,680 --> 00:04:44,760
+or DevOps tools. So SportDrive, Odo and Q. So it's deploying a network, joining a network.
+
+
+42
+00:04:44,760 --> 00:04:52,960
+Odo is a node that can run all the protocols given a config, and Q is an observability
+
+
+43
+00:04:52,960 --> 00:05:02,560
+tool. So I mentioned serverless, right? So you might think, why aren't we executing
+
+
+44
+00:05:02,560 --> 00:05:10,240
+containers or virtual machines or anything like that? So the thing with serverless, it's
+
+
+45
+00:05:10,240 --> 00:05:16,600
+like content addressing. We can easily make it location independent, especially if the
+
+
+46
+00:05:16,600 --> 00:05:22,520
+D functions are actually CIDs. And that enables a lot of magic and enables decentralization,
+
+
+47
+00:05:22,520 --> 00:05:28,440
+but it also enables something very interesting that I call autonomous. Because at the end
+
+
+48
+00:05:28,440 --> 00:05:33,120
+of the day, we want to eliminate as much as DevOps as possible too. That's the goal of
+
+
+49
+00:05:33,120 --> 00:05:42,600
+serverless. YWebAssembly, so it's portable, interoperable, it's secure, so we can control
+
+
+50
+00:05:42,600 --> 00:05:49,320
+how much is accessible from there. It's easy to store as a CID. It has a cold start. If
+
+
+51
+00:05:49,320 --> 00:05:52,960
+you guys know what cold start is, in serverless, we have this thing called cold start, how
+
+
+52
+00:05:52,960 --> 00:06:01,640
+long or how much it takes to get the runtime ready to execute the functions. So with WebAssembly,
+
+
+53
+00:06:01,640 --> 00:06:09,400
+it's very slow. We can also do predictive runtime spin-ups, which can take it down to
+
+
+54
+00:06:09,400 --> 00:06:17,880
+zero. And then there are possibilities to verify the builds and execution.
+
+
+55
+00:06:17,880 --> 00:06:29,720
+So let's take an example. All of that is theory and diagrams and stuff. So let's look at an
+
+
+56
+00:06:29,720 --> 00:06:40,280
+example. This is a function, same thing, go rust. It does the same thing. It gets a HTTP
+
+
+57
+00:06:40,280 --> 00:06:46,360
+request and it replies with a bug. Very simple. What I want to demonstrate here is how this
+
+
+58
+00:06:46,360 --> 00:06:53,680
+is handled in a decentralized cloud using different protocols instead of how it will
+
+
+59
+00:06:53,680 --> 00:07:02,880
+be handled in a centralized cloud, a Kubernetes cloud, or whatnot.
+
+
+60
+00:07:02,880 --> 00:07:08,480
+The first thing that the client does is it will say, hey, what is example.com? So let's
+
+
+61
+00:07:08,480 --> 00:07:14,760
+say this function is on example.com and it needs to resolve that. So that's a DNS request.
+
+
+62
+00:07:14,760 --> 00:07:22,080
+Instead of going to a static DNS server, it goes to a node in the network that is listening
+
+
+63
+00:07:22,080 --> 00:07:28,480
+to DNS and is also connected to the network. So we call that SEER or we call it the SEER
+
+
+64
+00:07:28,480 --> 00:07:34,800
+protocol. So SEER will say, OK, I have specific nodes in the network that I know have capacity
+
+
+65
+00:07:34,800 --> 00:07:42,160
+and can handle this request. And you can see there it's returning three IPs to the client.
+
+
+66
+00:07:42,160 --> 00:07:49,280
+So the client is, OK, I'm going to take that IP, one of the IPs, out of time. I mean, there
+
+
+67
+00:07:49,280 --> 00:07:55,120
+is a failover round robin implemented in any browser. It's going to hit one of these nodes
+
+
+68
+00:07:55,120 --> 00:08:01,040
+and the node's going to execute the function and reply with a bug. But really, under the
+
+
+69
+00:08:01,040 --> 00:08:07,240
+hood, there is more happening. So let's look into that.
+
+
+70
+00:08:07,240 --> 00:08:14,560
+So the first thing that happens when that node gets the request is, what is example.com
+
+
+71
+00:08:14,560 --> 00:08:20,280
+slash ping? Because it doesn't really know what it is. So it's going to reach out to
+
+
+72
+00:08:20,280 --> 00:08:27,080
+a number of nodes that implement the Talbite name system protocol, which is like a registry
+
+
+73
+00:08:27,080 --> 00:08:34,760
+of applications, websites, and resources on the network. DNS is going to reply with a
+
+
+74
+00:08:34,760 --> 00:08:40,800
+definition of a function, which includes the Wasm module CID. And then the node is going
+
+
+75
+00:08:40,800 --> 00:08:46,080
+to grab the CID from the network. We don't have, like a Talbite network doesn't have
+
+
+76
+00:08:46,080 --> 00:08:56,240
+pin-in, because pin-in relies on a cluster. And we want Talbite to scale horizontally
+
+
+77
+00:08:56,240 --> 00:09:01,160
+and be age-native. So we implemented a protocol that we call hoarder that can keep specific
+
+
+78
+00:09:01,160 --> 00:09:07,600
+copies of whatever you tell it to. So it can keep specific copies of a CID, or it can keep
+
+
+79
+00:09:07,600 --> 00:09:11,880
+specific copies of a storage, a distributed storage, which is one of the resources that
+
+
+80
+00:09:11,880 --> 00:09:19,560
+can be used on a Talbite cloud. So it grabs that CID. TVM is going to load
+
+
+81
+00:09:19,560 --> 00:09:24,280
+the dependencies of the module. So it's going to read the headers of the Wasm module, load
+
+
+82
+00:09:24,280 --> 00:09:29,760
+dependencies and dependencies of dependencies. Everything is in memory. There is execution,
+
+
+83
+00:09:29,760 --> 00:09:39,080
+and it returns the response to the client. Basically, like what's in this diagram. So
+
+
+84
+00:09:39,080 --> 00:09:45,720
+hits example dot, like resolves example dot com, gets the IPs of available nodes, send
+
+
+85
+00:09:45,720 --> 00:09:50,600
+a request to a node, the node resolves it using TNS if it's not cached or doesn't know
+
+
+86
+00:09:50,600 --> 00:09:57,080
+the answer, and then runs the code, returns the answer. And it's blazing fast. So you
+
+
+87
+00:09:57,080 --> 00:10:02,800
+might think that's slow, but we actually did a benchmark, compared it to AWS Lambda. So
+
+
+88
+00:10:02,800 --> 00:10:10,760
+10 times faster cold start, and then 8 times faster execution. So delivering that, like,
+
+
+89
+00:10:10,760 --> 00:10:15,280
+you know, web 3 should be faster than web 2, right?
+
+
+90
+00:10:15,280 --> 00:10:21,500
+So let's look at some of these tools. So web console is a tool that you can use to build
+
+
+91
+00:10:21,500 --> 00:10:27,320
+your project. So it's not like, like I said, like, it's Git operated. So actually, web
+
+
+92
+00:10:27,320 --> 00:10:33,120
+console is going to ask you to log into your GitHub. It's going to clone your repos in
+
+
+93
+00:10:33,120 --> 00:10:38,640
+the browser. It's going to work on your repos on the browser and then push to your repos.
+
+
+94
+00:10:38,640 --> 00:10:44,080
+Once you push, there is a protocol called Patrick. They'll grab that job and distribute
+
+
+95
+00:10:44,080 --> 00:10:49,440
+that job to another protocol that we call monkey, and they're going to bid and race
+
+
+96
+00:10:49,440 --> 00:10:54,120
+on who gets the build job. They're going to build, like, whatever you send there, like,
+
+
+97
+00:10:54,120 --> 00:11:00,400
+could be config, front-end, web assembly, and deploy that to the network.
+
+
+98
+00:11:00,400 --> 00:11:07,440
+We also have a CLI. If I have time, I'll go through all of this live. So you can log in,
+
+
+99
+00:11:07,440 --> 00:11:14,000
+create a project. It's very easy to use. And it has prompts, but if you're going to play
+
+
+100
+00:11:14,000 --> 00:11:18,440
+it, like, badass, you can also use, like, options in the command and kind of, like,
+
+
+101
+00:11:18,440 --> 00:11:23,640
+feed the command whatever you want. You can also edit YAML files. I mean, YAMLs
+
+
+102
+00:11:23,640 --> 00:11:28,760
+are meant also to be edited by humans, but it's up to you. I mean, command line makes
+
+
+103
+00:11:28,760 --> 00:11:34,480
+it easy. Dreamland, so it's a local Talbot network.
+
+
+104
+00:11:34,480 --> 00:11:41,920
+So you run it, like, here I run, like, Dream New Multiverse. You can create multiple universes,
+
+
+105
+00:11:41,920 --> 00:11:46,480
+like my universe is the default one is called Black Hole, but you can create multiple ones
+
+
+106
+00:11:46,480 --> 00:11:53,760
+and then with Audible, which is the graphical web interface, you can interact with the network,
+
+
+107
+00:11:53,760 --> 00:12:00,760
+add nodes, delete nodes, inject fixtures, and stuff like that.
+
+
+108
+00:12:00,760 --> 00:12:05,200
+We have more tools. So like I said, support drive, deploy your own network, Talcorder,
+
+
+109
+00:12:05,200 --> 00:12:11,920
+like you can play, you know, Scotty and inspect the network, and then Q, which is an observable
+
+
+110
+00:12:11,920 --> 00:12:16,840
+tool, so it tells you, like, what nodes are in the network, which ones are online, how
+
+
+111
+00:12:16,840 --> 00:12:22,960
+much capacity, and stuff like that. Okay, so yesterday when we went to dinner,
+
+
+112
+00:12:22,960 --> 00:12:29,800
+I met some people from the IPFS gateway team, and we talked about DevOps and stuff like
+
+
+113
+00:12:29,800 --> 00:12:37,160
+that, and I had this idea. I was like, why don't I create a serverless IPFS gateway,
+
+
+114
+00:12:37,160 --> 00:12:43,960
+right? So it took me roughly 15 minutes, and the code looks like this, it's roughly like
+
+
+115
+00:12:43,960 --> 00:12:52,880
+40 lines of code, and I mean, you can grab a CID, so actually, let me see where that
+
+
+116
+00:12:52,880 --> 00:13:03,760
+is. Okay, here you go. So I grabbed the CID from the P2P documentation, and, you know,
+
+
+117
+00:13:03,760 --> 00:13:10,760
+basically it's grabbing the CID and returning it, right? And it's all serverless. So this
+
+
+118
+00:13:10,760 --> 00:13:18,120
+function can run on any location that the sandbox network is available in. So if I go
+
+
+119
+00:13:18,120 --> 00:13:26,000
+here, I don't know if you guys can see this, but we have nodes. Okay, internet is slightly
+
+
+120
+00:13:26,000 --> 00:13:40,160
+slow here. Let me refresh quickly. Okay, so these are the nodes that we have running around.
+
+
+121
+00:13:40,160 --> 00:13:46,600
+So that serverless function is scaling horizontally through all these locations, and it's only
+
+
+122
+00:13:46,600 --> 00:13:52,500
+41 lines of code. You can also do more than that, like you can do processing and way more
+
+
+123
+00:13:52,500 --> 00:14:00,920
+than that. I'll show you here. I'm sorry, like the screen resolution is very small.
+
+
+124
+00:14:00,920 --> 00:14:07,260
+So like this is like image processing, right? So this is all serverless and WebAssembly,
+
+
+125
+00:14:07,260 --> 00:14:13,120
+so it's actually grabbing the image from HTTP and then doing some processing on it, returning
+
+
+126
+00:14:13,120 --> 00:14:20,640
+the result. And like the code is also online, like this is like, what, like 70 lines of
+
+
+127
+00:14:20,640 --> 00:14:30,800
+code. We can do Rust too, just Go is my preferred language, so most of my examples are in Go.
+
+
+128
+00:14:30,800 --> 00:14:39,280
+I mean, another example here is support.2. So support.2 is a URL shortener. I actually
+
+
+129
+00:14:39,280 --> 00:14:46,000
+have a video on YouTube how to build it. I mean, I explain details and the video is like
+
+
+130
+00:14:46,000 --> 00:14:52,040
+roughly 40 minutes long, so it's pretty fast frontend and backend, and basically stores
+
+
+131
+00:14:52,040 --> 00:15:00,280
+whatever URL you give it in a distributed key value store. Everything is distributed,
+
+
+132
+00:15:00,280 --> 00:15:05,280
+even the frontend. So frontend is the CID, all the functions are CIDs, and the network
+
+
+133
+00:15:05,280 --> 00:15:11,320
+builds everything for you. So the user, like the developer experience is amazing.
+
+
+134
+00:15:11,320 --> 00:15:20,440
+C3 is a chat or a web3 chat that we've built. Same thing, like everything is like on a peer-to-peer
+
+
+135
+00:15:20,440 --> 00:15:26,400
+network, it's fully serverless. And then everything we have is run in there, like, you know, our
+
+
+136
+00:15:26,400 --> 00:15:34,200
+website, blog, like everything. So if I go to our blog here and I'll show you this one,
+
+
+137
+00:15:34,200 --> 00:15:41,140
+the avatar generator, which is like an example I built that for some reason people like.
+
+
+138
+00:15:41,140 --> 00:15:48,560
+So this is generated with a D function, right? And this is roughly 60 lines of code in Go.
+
+
+139
+00:15:48,560 --> 00:15:55,200
+Love Go. We support Rust too. And this is randomly generated, right? So none of this
+
+
+140
+00:15:55,200 --> 00:16:02,360
+is our images, they're actually computed. All right, let me go back to my presentation
+
+
+141
+00:16:02,360 --> 00:16:13,560
+here. Okay. So we have two SDKs that are fully developed, so Go SDK, my preferred one, and
+
+
+142
+00:16:13,560 --> 00:16:21,120
+then Rust SDK, which is also awesome. Documentation on Taohao, two examples that I showed on the
+
+
+143
+00:16:21,120 --> 00:16:30,720
+top, and then the little example I built last night to do like IPFS gateway. So what kind
+
+
+144
+00:16:30,720 --> 00:16:37,480
+of features we support? So our, like, TVM has a pretty rich set of features. I mean,
+
+
+145
+00:16:37,480 --> 00:16:46,120
+you can look at all of that if you look at the Taobite SDK crate or the Go package. So
+
+
+146
+00:16:46,120 --> 00:16:54,720
+we can do HTTP, DNS, IPFS, Ethereum, like, you can talk to a VM as well. You can do PubSub,
+
+
+147
+00:16:54,720 --> 00:17:01,400
+Storage, KV, like any resource that Taobite provides, you can communicate with that. From
+
+
+148
+00:17:01,400 --> 00:17:11,080
+WebAssembly, we're wrapping up CircComp. So we're, like, you can call, like, the WebAssembly
+
+
+149
+00:17:11,080 --> 00:17:19,560
+witness generator from a D function, and then you can also verify and generate proofs from
+
+
+150
+00:17:19,560 --> 00:17:24,960
+a D function as well. We're also working on serverless containers, which will enable things
+
+
+151
+00:17:24,960 --> 00:17:37,480
+like AI and stuff like that. So, yeah, I don't know. Do I have more time? Okay. All right.
+
+
+152
+00:17:37,480 --> 00:17:49,520
+So I'm going to just show off here a little bit of, like, Tau. So Tau is the CLI that
+
+
+153
+00:17:49,520 --> 00:17:54,880
+we have, and it's very simple to use. So if I do, like, Tau login, it's going to log me
+
+
+154
+00:17:54,880 --> 00:18:02,520
+in. Here I'm logged in already. It's really going to log me in in my GitHub. Like, a Taobite
+
+
+155
+00:18:02,520 --> 00:18:07,600
+network doesn't really require login. Like, there is no real, like, API there to do a
+
+
+156
+00:18:07,600 --> 00:18:13,320
+login, because the source of truth is Git, right? It's Git-operated. So I'm going to
+
+
+157
+00:18:13,320 --> 00:18:20,360
+just choose that and then do, like, a Tau select project, and this will list all my
+
+
+158
+00:18:20,360 --> 00:18:27,720
+projects, and I'm going to go for the IPFS gateway, and then I'm going to do, like, Tau
+
+
+159
+00:18:27,720 --> 00:18:35,520
+clone project. You can do it with Git, but we kind of, like, made it easy to do all of
+
+
+160
+00:18:35,520 --> 00:18:45,080
+that. So this will clone, like, my project. Now if I LS here, I have, like, IPFS gateway,
+
+
+161
+00:18:45,080 --> 00:18:50,480
+and then you can see that I have config, which is actually, like, YAML files, right? So,
+
+
+162
+00:18:50,480 --> 00:18:57,680
+for example, my function that I was running is this getYAML, and let me do a cat on it.
+
+
+163
+00:18:57,680 --> 00:19:04,400
+So it's very simple YAML, right? So it has an ID, description, and then trigger. It was
+
+
+164
+00:19:04,400 --> 00:19:11,280
+HTTP, right? We support P2P and PubSub right now, and we'll add more. And then the path
+
+
+165
+00:19:11,280 --> 00:19:18,560
+is get. Domains. So there is a generated domain that I tested with first. So, like, the
+
+
+166
+00:19:18,560 --> 00:19:23,800
+network can give you a generated domain, and then I added my own domain, and that's a
+
+
+167
+00:19:23,800 --> 00:19:29,480
+very easy thing. You just do, you know, a TXT entry that the network gives you, like,
+
+
+168
+00:19:29,480 --> 00:19:36,800
+it will give you, like, a token to add to your DNS for validation, and it takes, like,
+
+
+169
+00:19:36,800 --> 00:19:43,800
+two, three minutes to do. And then execution. So timeout, 10 seconds, memory, 10 megabyte,
+
+
+170
+00:19:43,800 --> 00:19:49,800
+and the function that we call is get, right? So that's what the WebAssembly module exports.
+
+
+171
+00:19:49,800 --> 00:19:58,680
+For the code side, I can go to code, and then you can see, I mean, this is, like, the reason
+
+
+172
+00:19:58,680 --> 00:20:22,200
+there are two repos, so.
+
+
+173
+00:20:00,000 --> 00:20:30,000
+The code repo has all the source of truth of the config of your project. Code repo is meant for inline coding, right? The reason we separated it, because, like, somebody who's changing the config might not be the same that's writing code, right? But also, you can also create other repos as libraries, right? The reason we did this code repo is for inline, so grandma can code, right? Or you can code on the floor, you know, like the IP address, right? And so you can
+
+
+174
+00:20:30,000 --> 00:20:49,000
+do a DFS gateway. I didn't have to do complicated things. It was just a few clicks, and I was done. And then, so this is my get function, and I mean, I use the templates. This is why it's called ping pong.
+
+
+175
+00:20:49,000 --> 00:21:17,000
+But if I cut it here, hold on. Ping pong. That's the code, right? So roughly 60 lines of code in Go, and that's, you know, planet scale or interplanetary scale IPFS gateway. And, like, 60 lines of code.
+
+
+176
+00:21:17,000 --> 00:21:23,000
+Yeah. Any questions? I'll use the rest of the time for questions.
+
+
+177
+00:21:23,000 --> 00:21:46,000
+Hi. So clearly you've got quite, like, deep integration with IPFS and the general kind of stack, so you're able to, you know, do a lot of IPFS things. You mentioned about FEM as well, and you could, you know, execute stuff on FEM. Is there a way you could have a TAU function, like, registered to listen to an event being emitted by a smart contract on FEM?
+
+
+178
+00:21:46,000 --> 00:21:54,000
+Because that'd be a really cool feature, so that a smart contract on FEM could call out to a TAU function to do some other stuff and then come back.
+
+
+179
+00:21:54,000 --> 00:21:59,000
+Yeah, so we don't have that yet, but, I mean, we can add it.
+
+
+180
+00:21:59,000 --> 00:22:00,000
+That'd be cool.
+
+
+181
+00:22:00,000 --> 00:22:04,000
+Yeah, yeah, yeah. Let's, like, sit together and get that done.
+
+
+182
+00:22:04,000 --> 00:22:05,000
+That'd be cool. Thanks.
+
+
+183
+00:22:05,000 --> 00:22:07,000
+Yeah, that'd be awesome.
+
+
+184
+00:22:07,000 --> 00:22:10,000
+What other projects do you have in your roadmap?
+
+
+185
+00:22:10,000 --> 00:22:27,000
+Yeah, so what's next? So we're wrapping up, like, the SIRCOM support, so you can do, like, SIRCOM ZK proofs easily. And then the next thing is going to be, like, what we call serverless containers.
+
+
+186
+00:22:27,000 --> 00:22:45,000
+So we're thinking, like, embedding the containers with the WebAssembly module, so basically you can do things like Python or AI and stuff like that from WebAssembly, and, like, the whole package will be kind of, like, packaged as a CID.
+
+
+187
+00:22:45,000 --> 00:22:58,000
+And I also like that approach because, like, I was at Wasm.io, and the guys at Red Hat came up with this idea of putting a WebAssembly module inside a container. I think it should be the other way around.
+
+
+188
+00:22:58,000 --> 00:23:03,000
+The container should go inside the WebAssembly module, because WebAssembly is way cooler. Right?
+
+
+189
+00:23:03,000 --> 00:23:04,000
+Yeah.
+
+
+190
+00:23:04,000 --> 00:23:06,000
+Makes sense, right?
+
+
+191
+00:23:06,000 --> 00:23:15,000
+So another question. You mentioned ZK proofs with the SIRCOM. What use cases will it unlock?
+
+
+192
+00:23:15,000 --> 00:23:31,000
+Yeah, so some of the use cases there, so there are a few web3 companies that want to do, like, need to do, like, ZK proofs and avoid using oracles because they're expensive.
+
+
+193
+00:23:31,000 --> 00:23:40,000
+I mean, having a web3 cloud, you basically don't need oracles. You can build your own oracles, and ZK proof is one way to do that.
+
+
+194
+00:23:40,000 --> 00:23:57,000
+If I were to port an application to this that has existing databases and email servers that it calls out to, what is the security around having keys to those servers used in this system?
+
+
+195
+00:23:57,000 --> 00:24:10,000
+Yeah, so unfortunately, I don't have a slide for that, but we have a mechanism where the keys are, like, no node in the network really has access to the keys.
+
+
+196
+00:24:10,000 --> 00:24:27,000
+They are, like, when you want to store a secret, you reach out to a number of nodes in the network and ask for available, kind of, like, latest available generated public keys.
+
+
+197
+00:24:27,000 --> 00:24:36,000
+So what the network does in a regular manner, they generate public keys, and then shards goes to nodes running the vault protocol. Right?
+
+
+198
+00:24:36,000 --> 00:24:45,000
+So none of the vault protocols can decrypt anything encrypted with the public key by themselves. They need, like, a threshold. Right?
+
+
+199
+00:24:45,000 --> 00:24:56,000
+So you say, like, okay, give me, like, what's available. You figure out the one that's the best that's shared between, like, let's say, three vault nodes because you don't trust just one. Right?
+
+
+200
+00:24:56,000 --> 00:25:08,000
+And then you encrypt your secret with that public key, and you send it to one of the vault nodes. It's stored in the database, which is replicated, but none of them has full access to it. Right?
+
+
+201
+00:25:08,000 --> 00:25:22,000
+So you need, like, a threshold of nodes to come together and agree to the, like, well, actually, you need a threshold of nodes to give you their partial decryption, and then you regroup everything to get your key.
+
+
+202
+00:25:22,000 --> 00:25:25,000
+So that's how we do it.
+
+
+203
+00:25:25,000 --> 00:25:31,000
+Okay, but the running machine still has temporary access to the private keys.
+
+
+204
+00:25:31,000 --> 00:25:44,000
+Yes. So if you want to avoid that, so we're working. It's not, like, an immediate kind of, like, urgency because nobody is asking for that urgently.
+
+
+205
+00:25:44,000 --> 00:25:55,000
+But we know that there is, like, something called Ego, which runs, like, Go in an enclave, and that's kind of, like, one of the things that we are thinking about adding.
+
+
+206
+00:25:55,000 --> 00:26:00,000
+So when you gather that secret, like, still nobody has access to it.
+
+
+207
+00:26:00,000 --> 00:26:03,000
+Okay. Thank you.
+
+
+208
+00:26:03,000 --> 00:26:19,000
+What's the cost or the revenue model? I mean, you're probably looking for more nodes in your network. Do you have an incentive layer for nodes to join? And as a user, to run code, or do you have, is there a subscription model or you pay per execution?
+
+
+209
+00:26:19,000 --> 00:26:36,000
+Yeah, so Talbot is not a service provider, so we're kind of, like, building the Kubernetes for Web3 to some extent. So the network where everything is running, all of my examples, is what we call a sandbox network.
+
+
+210
+00:26:36,000 --> 00:26:43,000
+So people can build on it, but, I mean, it's free, but we don't also guarantee capacity or anything like that.
+
+
+211
+00:26:43,000 --> 00:26:53,000
+But we're working with specific providers that are looking to spin up their own networks, and anybody can spin up their own networks super easy with Support Drive.
+
+
+212
+00:26:53,000 --> 00:27:08,000
+Like, you can spin up a network in a few minutes, and we gather counters on what's going on on the network, like running off the functions and everything, and we generate proofs for that,
+
+
+213
+00:27:08,000 --> 00:27:22,000
+and it's up to the provider to ingest that. So they can ingest it in a smart contract if they wish, or they can ingest it in a billing system. That's really up to them.
+
+
+214
+00:27:22,000 --> 00:27:25,000
+Okay, thank you so much, Sami. It was a great presentation.
+
+
+215
+00:27:25,000 --> 00:27:39,000
+Thank you.

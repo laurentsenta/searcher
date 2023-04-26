@@ -1,0 +1,2483 @@
+1
+00:00:00,000 --> 00:00:13,680
+Fabrice, I've been working on the web for probably too long. I want to talk today about
+
+
+2
+00:00:13,680 --> 00:00:20,160
+some challenges that come from the current security and privacy model of the web and
+
+
+3
+00:00:20,160 --> 00:00:27,840
+how content-based addressing can provide us some solutions to come up with something better.
+
+
+4
+00:00:27,840 --> 00:00:34,280
+So I'm going to introduce some principles of web security, web privacy, describe some
+
+
+5
+00:00:34,280 --> 00:00:40,360
+solutions we thought about, well, mostly Robin, and the implementation that I started to do
+
+
+6
+00:00:40,360 --> 00:00:47,920
+in the context of Capilune. And based on these experiments, some initial thought about is
+
+
+7
+00:00:47,920 --> 00:00:54,240
+that a good idea, is that something we should push forward with.
+
+
+8
+00:00:54,240 --> 00:01:01,960
+So the web security model, a quick intro, I mean, the web is like almost 30 years old
+
+
+9
+00:01:01,960 --> 00:01:06,960
+now, and that's a pretty amazing platform in terms of like, you can still load content
+
+
+10
+00:01:06,960 --> 00:01:16,600
+that was created back then, in the 90s. And so it has evolved to be ready for new use
+
+
+11
+00:01:16,600 --> 00:01:22,400
+cases, new kind of apps, new APIs, and all that has been done while maintaining some
+
+
+12
+00:01:22,400 --> 00:01:27,120
+kind of pretty good backward compatibility, which is quite amazing. If you think about
+
+
+13
+00:01:27,120 --> 00:01:33,440
+it, I think the only other platform that can pretend to do as well is Win32, which is kind
+
+
+14
+00:01:33,440 --> 00:01:39,360
+of amazing because that's a very polar opposite in terms of openness overall, but they've
+
+
+15
+00:01:39,360 --> 00:01:47,160
+been doing a good job at backward compatibility. So when you think about web security, people
+
+
+16
+00:01:47,160 --> 00:01:53,040
+always think, oh, it's very complicated, it's not done the right way, and so on, but keep
+
+
+17
+00:01:53,040 --> 00:02:00,920
+in mind that it keeps running the thing that was done in the 90s. So that obviously comes
+
+
+18
+00:02:00,920 --> 00:02:08,320
+with a bunch of constraints. And one of the most important principles for
+
+
+19
+00:02:08,320 --> 00:02:14,660
+web security is what's called the same origin policy. So it's a set of rules that describes
+
+
+20
+00:02:14,660 --> 00:02:19,580
+what happens when you want to mix and match content that comes from different origins,
+
+
+21
+00:02:19,580 --> 00:02:27,320
+an origin being, roughly speaking, a different server or a different host name. And this
+
+
+22
+00:02:27,320 --> 00:02:32,680
+principle states that only the site that stores some information in the browser may later
+
+
+23
+00:02:32,680 --> 00:02:38,400
+read or modify that information. So it's not just like fetching content from some other
+
+
+24
+00:02:38,400 --> 00:02:44,840
+places. It's like what happens once you've fetched some content. So for instance, if
+
+
+25
+00:02:44,840 --> 00:02:51,120
+you load an image, you can load cross-origin images. You do that all the time on the web.
+
+
+26
+00:02:51,120 --> 00:02:56,200
+But if you load an image from a different origin, you cannot read the pixels of this
+
+
+27
+00:02:56,200 --> 00:03:01,440
+image. You'd get a security error if you try to do that.
+
+
+28
+00:03:01,440 --> 00:03:09,680
+Scripts are also very interesting in that regard. You can load scripts from various
+
+
+29
+00:03:09,680 --> 00:03:16,400
+origins on the same page. And all the code ends up being in the same namespace, which
+
+
+30
+00:03:16,400 --> 00:03:25,720
+is kind of good sides and bad sides. So obviously that makes it easier to combine libraries
+
+
+31
+00:03:25,720 --> 00:03:31,520
+together. But that also means that you can have conflicts. And without the same origin
+
+
+32
+00:03:31,520 --> 00:03:38,360
+policies, that would mean that a site from a malicious origin could exfilter information
+
+
+33
+00:03:38,360 --> 00:03:46,360
+to its own origin. With some APIs, you can just not retrieve
+
+
+34
+00:03:46,360 --> 00:03:52,400
+content cross-origins, like with XMLHTTP request or fetch. We'll see how we can actually do
+
+
+35
+00:03:52,400 --> 00:04:01,360
+it later. And from iframes, you can use postMessage if you're cross-origin, which means that both
+
+
+36
+00:04:01,360 --> 00:04:11,440
+sides can verify who's sending messages. So one issue that you can run into when you
+
+
+37
+00:04:11,440 --> 00:04:18,800
+load scripts from different origins is that you have no real control over what is being
+
+
+38
+00:04:18,800 --> 00:04:26,920
+sent to you by the server. And same for images. There are countless examples of people replacing
+
+
+39
+00:04:26,920 --> 00:04:35,640
+some image that was used by other websites, like for fun or just to show that you should
+
+
+40
+00:04:35,640 --> 00:04:40,220
+maybe not use content that is not under your control.
+
+
+41
+00:04:40,220 --> 00:04:48,400
+But for scripts, it can be pretty bad if you end up with some malicious script instead
+
+
+42
+00:04:48,400 --> 00:04:53,600
+of what you expected. One way to work around that is to use what is called sub-resource
+
+
+43
+00:04:53,600 --> 00:05:00,540
+integrity, which is basically specifying the hash of the script that you expect to load.
+
+
+44
+00:05:00,540 --> 00:05:05,860
+And the browser will load the script, verify the hash, and only actually instantiate the
+
+
+45
+00:05:05,860 --> 00:05:13,280
+script if the hash matches. I guess that looks fairly close to CIDs for
+
+
+46
+00:05:13,280 --> 00:05:21,420
+people in this room. And that's pretty close. You get a hash, and you describe what kind
+
+
+47
+00:05:21,420 --> 00:05:28,520
+of hash it is. It's all in plain text, right? But it's very similar. That means that the
+
+
+48
+00:05:28,520 --> 00:05:35,080
+browser can actually do integrity checks in some situations.
+
+
+49
+00:05:35,080 --> 00:05:40,800
+Of course, you have the issue of bootstrapping that because of the page that contains this
+
+
+50
+00:05:40,800 --> 00:05:51,440
+integrity value needs to be safe. But that's a first good step.
+
+
+51
+00:05:51,440 --> 00:05:57,200
+So we've seen that the same origin policy prevents you from, in general, loading cross-origin
+
+
+52
+00:05:57,200 --> 00:06:02,560
+data. And sometimes it's that use case is where it's legitimate that you want to do
+
+
+53
+00:06:02,560 --> 00:06:13,080
+that or that the third-party API is actually a site you trust or you want to trust. So
+
+
+54
+00:06:13,080 --> 00:06:21,320
+there's a mechanism to allow that. It's called cross-origin resource sharing. It's something
+
+
+55
+00:06:21,320 --> 00:06:31,000
+that people are usually pretty wary of. The rules describe how it works as a bit complex
+
+
+56
+00:06:31,000 --> 00:06:37,920
+if you look at the specs. But overall, it means that in some situations,
+
+
+57
+00:06:37,920 --> 00:06:45,000
+the browser will not fetch directly the content. It will first send what is called a preflight
+
+
+58
+00:06:45,000 --> 00:06:54,360
+request, which is a special HTTP options request. And the server can respond with a list of
+
+
+59
+00:06:54,360 --> 00:06:59,200
+origins that are allowed to load content from this server.
+
+
+60
+00:06:59,200 --> 00:07:05,920
+So on the server side, it's relatively easy now to set up. I think all the server-side
+
+
+61
+00:07:05,920 --> 00:07:13,120
+frameworks have support for that in some way. So you can configure your server to accept
+
+
+62
+00:07:13,120 --> 00:07:21,960
+cross-sharing. I think the main difficulty is to know how granular you want to be. It's
+
+
+63
+00:07:21,960 --> 00:07:27,160
+very easy to allow everyone to fetch. It's a bit more tricky when you want to do something
+
+
+64
+00:07:27,160 --> 00:07:36,680
+more specific. Then you have a bunch of security issues
+
+
+65
+00:07:36,680 --> 00:07:44,680
+that can come from side-channel attacks. And it's both interesting and very tricky. It's
+
+
+66
+00:07:44,680 --> 00:07:51,480
+everything that can happen without using an explicit API. It's stuff that we have to defend
+
+
+67
+00:07:51,480 --> 00:08:00,080
+against. It's like finding ways to extract information based on indirect observation
+
+
+68
+00:08:00,080 --> 00:08:05,720
+of behavior of the browser, basically. And usually, that's something that people try
+
+
+69
+00:08:05,720 --> 00:08:12,760
+to do to learn about user navigation, about data that has been loaded from other sites.
+
+
+70
+00:08:12,760 --> 00:08:21,760
+There are a bunch of various classes of attacks. In the old days, there was cache timing attacks
+
+
+71
+00:08:21,760 --> 00:08:27,000
+because you could try to fetch content. And if it was coming back very fast, it was very
+
+
+72
+00:08:27,000 --> 00:08:33,520
+likely to be in the browser cache, which meant that you had visited this website before.
+
+
+73
+00:08:33,520 --> 00:08:38,880
+That has been mitigated by all the runtimes by using a technique called double-keying
+
+
+74
+00:08:38,880 --> 00:08:45,520
+of cache entries. So, instead of using just the URL of the resource when you put it in
+
+
+75
+00:08:45,520 --> 00:08:53,760
+the cache, the key that you use for the cache is the URL of the page, the referrer, and
+
+
+76
+00:08:53,760 --> 00:08:58,920
+the resource itself. Which means that you end up with multiple copies, potentially in
+
+
+77
+00:08:58,920 --> 00:09:05,200
+the cache of the same resource, but at least you cannot guess that much.
+
+
+78
+00:09:05,200 --> 00:09:14,920
+There were attacks for the history stuff or looking at CSS computing values. Because when
+
+
+79
+00:09:14,920 --> 00:09:20,880
+you have a link in a page, you can use CSS to style it differently based on whether the
+
+
+80
+00:09:20,880 --> 00:09:28,480
+user visited the page before or not. And so, an attacker could just create a page, put
+
+
+81
+00:09:28,480 --> 00:09:36,680
+links in it, and guess if you had been visiting these sites before. That has been mitigated
+
+
+82
+00:09:36,680 --> 00:09:48,600
+also by a bunch of different techniques, like lying, basically, by sending back fake information
+
+
+83
+00:09:48,600 --> 00:09:55,040
+as computed values, and by preventing some CSS selector from having any effect.
+
+
+84
+00:09:55,040 --> 00:10:06,920
+There's a very good write-up about that by David Barron. He implemented the fix initially.
+
+
+85
+00:10:06,920 --> 00:10:15,960
+And it's really very interesting. There are even craziest ways to do stuff, like data
+
+
+86
+00:10:15,960 --> 00:10:26,920
+extraction, like using SVG filters and figuring out how long they run. So it's a constant
+
+
+87
+00:10:26,920 --> 00:10:32,280
+cat and mouse game between attackers and browser vendors that try to find ways to prevent that
+
+
+88
+00:10:32,280 --> 00:10:39,960
+from happening. It looks very much like in the cryptography world, where you want your
+
+
+89
+00:10:39,960 --> 00:10:49,960
+algorithm to run in constant time, if possible. If not, you use some other techniques.
+
+
+90
+00:10:49,960 --> 00:10:57,840
+So one way to have more control over your website security is to use content security
+
+
+91
+00:10:57,840 --> 00:11:06,600
+policies, CSPs. And that's something that a site developer can use to prevent third-party
+
+
+92
+00:11:06,600 --> 00:11:18,640
+attacks by reinforcing rules about what kind of URLs can be used for loading scripts or
+
+
+93
+00:11:18,640 --> 00:11:26,200
+style sheets, or basically anything you can load, even fonts, workers, any media file,
+
+
+94
+00:11:26,200 --> 00:11:31,760
+and so on. You can also define navigation patterns, like preventing a site to navigate
+
+
+95
+00:11:31,760 --> 00:11:38,600
+to some third-party origin. You can decide what kind of form actions are allowed. You
+
+
+96
+00:11:38,600 --> 00:11:44,400
+can control mixed content blocking. You can add sandboxing, similar to what we can do
+
+
+97
+00:11:44,400 --> 00:11:51,200
+on iFrames. So that's a pretty comprehensive list of capabilities that you can turn on
+
+
+98
+00:11:51,200 --> 00:12:02,920
+or off, mostly with CSPs. This is configured by either a HTTP header, or you can use a
+
+
+99
+00:12:02,920 --> 00:12:08,880
+meta tag in your HTML page. That has the same meaning as a HTTP header.
+
+
+100
+00:12:08,880 --> 00:12:18,840
+And one very useful feature there is that you can enable some reporting of CSP variations.
+
+
+101
+00:12:18,840 --> 00:12:28,480
+So you basically specify the URL of a server, and when something is happening, the browser
+
+
+102
+00:12:28,480 --> 00:12:37,080
+will post content describing the policy variation to your server. So if you run a site that
+
+
+103
+00:12:37,080 --> 00:12:46,560
+accepts third-party content, like user-generated content, it's a good idea to turn on reporting
+
+
+104
+00:12:46,560 --> 00:12:57,200
+to know if anything is happening. So a quick recap. I think overall, it's a
+
+
+105
+00:12:57,200 --> 00:13:04,640
+pretty good situation. I mean, it's a pretty comprehensive suite of mechanisms for web
+
+
+106
+00:13:04,640 --> 00:13:14,440
+security. And so that was mostly what I described before, a set of designs and APIs that we
+
+
+107
+00:13:14,440 --> 00:13:26,120
+can use. Browser vendors can add more implementation-specific measures. Site isolation is... Jan talked a
+
+
+108
+00:13:26,120 --> 00:13:36,000
+bit about it. It's making sure that every origin runs in its own OS process. And that's
+
+
+109
+00:13:36,000 --> 00:13:47,000
+mostly the push for that happened when we've seen CPU bugs that led to data leaks across
+
+
+110
+00:13:47,000 --> 00:13:53,840
+processes. So yeah, Blink, Gecko have site isolation. I'm not sure about WebKit. But
+
+
+111
+00:13:53,840 --> 00:13:59,960
+that's coming everywhere. That causes a lot of complexity in web run times, especially
+
+
+112
+00:13:59,960 --> 00:14:04,720
+when you do navigation or when you have multiple origins loaded in the same page because of
+
+
+113
+00:14:04,720 --> 00:14:16,400
+iframes or workers and so on. There's also OS-level sandboxing with SEPCOMP, BPF, various
+
+
+114
+00:14:16,400 --> 00:14:24,320
+secured IPC mechanism, address space layout randomization. All that kind of things are
+
+
+115
+00:14:24,320 --> 00:14:35,480
+used to mitigate code execution attacks mostly. Browser tends also to use different processes
+
+
+116
+00:14:35,480 --> 00:14:43,680
+to run code that we know is a bit more subject to attacks. Typically, like now, any media
+
+
+117
+00:14:43,680 --> 00:14:49,120
+decoding usually happens in its own process because we know that media decoders are good
+
+
+118
+00:14:49,120 --> 00:15:00,560
+at a fairly high attack surface level. And GPU code also now. So all that is to make
+
+
+119
+00:15:00,560 --> 00:15:07,840
+sure that you can run untrusted code safely. So that's good for the users. And also that
+
+
+120
+00:15:07,840 --> 00:15:15,280
+ensures that sites are sandboxed from each other so that if you run a site, you're protected
+
+
+121
+00:15:15,280 --> 00:15:22,960
+against some malicious third-party website getting data from your origin. But that doesn't
+
+
+122
+00:15:22,960 --> 00:15:35,680
+tell anything about how a given site protects their own users. Because that part is mostly
+
+
+123
+00:15:35,680 --> 00:15:43,440
+privacy. It's not much security. And privacy and security, they go together, but they're
+
+
+124
+00:15:43,440 --> 00:15:49,040
+not the same. Of course, you cannot have privacy without security because once your security
+
+
+125
+00:15:49,040 --> 00:15:54,760
+is broken, everything is off. But even if you have very, very good security, you may
+
+
+126
+00:15:54,760 --> 00:16:02,320
+have absolutely no privacy. I'm honestly sure that Google has probably the best security
+
+
+127
+00:16:02,320 --> 00:16:08,720
+on their servers and so on. But you don't have much privacy with them because they don't
+
+
+128
+00:16:08,720 --> 00:16:17,360
+consider themselves part of the privacy threat model. So privacy is mostly about user agency,
+
+
+129
+00:16:17,360 --> 00:16:23,200
+which means like individual autonomy, making sure that people can make choices that they
+
+
+130
+00:16:23,200 --> 00:16:29,040
+understand. And that means that you should not ask users stuff that they cannot give
+
+
+131
+00:16:29,040 --> 00:16:38,320
+meaningful answers for themselves. That's kind of limiting in some ways. At a broader
+
+
+132
+00:16:38,320 --> 00:16:45,320
+level, there are some features like tracking protection, fingerprint protection, that you
+
+
+133
+00:16:45,320 --> 00:16:52,160
+can ask people to make choices. It's kind of like usually you see the results of your
+
+
+134
+00:16:52,160 --> 00:16:58,960
+actions there. So like some sites will break and you can help them saying, hey, try to
+
+
+135
+00:16:58,960 --> 00:17:04,480
+disable tracking protection and see if it works better. Permission prompts are another
+
+
+136
+00:17:04,480 --> 00:17:11,040
+example. So permission prompts are actually very interesting. You can ask people and prompt
+
+
+137
+00:17:11,040 --> 00:17:16,800
+them if the prompt leads to something that is really meaningful, that is like something
+
+
+138
+00:17:16,800 --> 00:17:24,040
+that you can clearly understand. So here's a classic example of you're using a video
+
+
+139
+00:17:24,040 --> 00:17:30,040
+chat service and you can be prompted to decide whether you give camera access and microphone
+
+
+140
+00:17:30,040 --> 00:17:35,200
+access and which one you choose. It's very clear what's going to happen. Same for geolocation.
+
+
+141
+00:17:35,200 --> 00:17:40,760
+If Google Maps asks you, do you want to give your geolocation access, it's very clear what
+
+
+142
+00:17:40,760 --> 00:17:52,160
+can be the consequences. But for some situations, it's not really usable.
+
+
+143
+00:17:52,160 --> 00:17:58,480
+When we were working on Firefox OS, we had a lot of new APIs and I would like to consider
+
+
+144
+00:17:58,480 --> 00:18:07,600
+Powerful slash Dangerous that were useful to bring web capabilities a bit more up to
+
+
+145
+00:18:07,600 --> 00:18:12,720
+par with what's called native. And that's a bunch of capabilities you don't want to
+
+
+146
+00:18:12,720 --> 00:18:19,120
+run by default to the web at large. But you cannot either ask user for consent because
+
+
+147
+00:18:19,120 --> 00:18:26,280
+it's too technical or it just doesn't make sense. Like we have a TCP socket API. What
+
+
+148
+00:18:26,280 --> 00:18:31,920
+does that mean to ask a user, do you want to let this page use TCP sockets? What is
+
+
+149
+00:18:31,920 --> 00:18:37,800
+it going to do with this socket? Where are you going to connect to? It makes no sense.
+
+
+150
+00:18:37,800 --> 00:18:42,880
+You cannot make a decision. Even us that are very technical, we would not know what to
+
+
+151
+00:18:42,880 --> 00:18:47,880
+answer. So people have been thinking about solutions
+
+
+152
+00:18:47,880 --> 00:18:58,720
+about to solve that problem for a while. In Firefox OS, we decided to go with signed code
+
+
+153
+00:18:58,720 --> 00:19:07,160
+and signed package code, basically. So these Powerful APIs were only usable for code that
+
+
+154
+00:19:07,160 --> 00:19:16,960
+was signed by Mozilla, basically, and packaged. Then you would install your package and locally
+
+
+155
+00:19:16,960 --> 00:19:28,800
+we randomized origin to this code. So you can locally link to it. It solves the problem
+
+
+156
+00:19:28,800 --> 00:19:40,840
+of not granting API access to random untrusted code. But we lost linkability overall because
+
+
+157
+00:19:40,840 --> 00:19:47,880
+you could not link to an app from the open web because you first need to install it.
+
+
+158
+00:19:47,880 --> 00:19:54,280
+And anyway, you cannot get CUL. So that was kind of a problem. But at the time, we didn't
+
+
+159
+00:19:54,280 --> 00:20:00,240
+really figure out a better solution. Around the same time, our partners at Google
+
+
+160
+00:20:00,840 --> 00:20:07,080
+couldn't actually find solve a more board Later Goog s started what somepped like projects. It's
+
+
+161
+00:20:07,080 --> 00:20:09,160
+employerA fixture Of  Burtonantee
+
+
+162
+00:20:09,160 --> 00:20:10,000
+52
+
+
+163
+00:20:10,000 --> 00:20:10,560
+50
+
+
+164
+00:20:10,560 --> 00:20:12,600
+Weil
+
+
+165
+00:20:12,600 --> 00:20:14,980
+foundation were very Puerto Rico on 여기에
+
+
+166
+00:20:14,980 --> 00:20:15,740
+electrolink
+
+
+167
+00:20:15,740 --> 00:20:16,600
+53
+
+
+168
+00:20:16,600 --> 00:20:17,320
+portfolio
+
+
+169
+00:20:17,320 --> 00:20:18,140
+ưa
+
+
+170
+00:20:18,140 --> 00:20:21,220
+when that kind ec Burgdorfer
+
+
+171
+00:20:21,220 --> 00:20:23,440
+is w
+
+
+172
+00:20:23,440 --> 00:20:28,440
+And we always disagreed with that on the Firefox side.
+
+
+173
+00:20:28,780 --> 00:20:31,220
+And mostly because we disagreed on the threat model.
+
+
+174
+00:20:31,220 --> 00:20:35,060
+We always ask them, what happens if the server
+
+
+175
+00:20:35,060 --> 00:20:40,060
+is attacked by, and compromised,
+
+
+176
+00:20:40,140 --> 00:20:43,040
+and it starts to serve malicious code?
+
+
+177
+00:20:43,040 --> 00:20:45,980
+How do you protect your users against that?
+
+
+178
+00:20:45,980 --> 00:20:48,940
+Usually the only answer they had is like,
+
+
+179
+00:20:48,940 --> 00:20:51,340
+well, we have the safe browsing service,
+
+
+180
+00:20:51,340 --> 00:20:53,100
+so it should catch that.
+
+
+181
+00:20:53,100 --> 00:20:56,500
+But it's catch stuff after the fact.
+
+
+182
+00:20:56,500 --> 00:20:59,540
+And at the same time, they were pushing for something
+
+
+183
+00:20:59,540 --> 00:21:02,580
+like WebUSB, where you can do something like
+
+
+184
+00:21:02,580 --> 00:21:04,860
+refreshing your phone with it.
+
+
+185
+00:21:04,860 --> 00:21:08,500
+I mean, if it takes a week to detect that someone
+
+
+186
+00:21:08,500 --> 00:21:12,160
+has compromised the server, serving new Android images,
+
+
+187
+00:21:13,380 --> 00:21:15,780
+there's some real damage done.
+
+
+188
+00:21:15,780 --> 00:21:18,820
+So they would say, yeah, it's a trade-off,
+
+
+189
+00:21:18,820 --> 00:21:19,820
+we know, blah, blah.
+
+
+190
+00:21:19,820 --> 00:21:24,820
+Well, last year, or yeah, probably last year,
+
+
+191
+00:21:25,780 --> 00:21:29,660
+Google started to push something called isolated web apps.
+
+
+192
+00:21:29,660 --> 00:21:33,700
+And it's actually just a Firefox security model.
+
+
+193
+00:21:33,700 --> 00:21:37,820
+We visited to just use web bundles instead of zip packages.
+
+
+194
+00:21:37,820 --> 00:21:41,260
+But apart from that, it's exactly the same thing.
+
+
+195
+00:21:41,260 --> 00:21:44,860
+Yeah, so you have signed code that is packaged
+
+
+196
+00:21:44,860 --> 00:21:47,020
+in a web bundle with a CSP.
+
+
+197
+00:21:47,020 --> 00:21:50,380
+Very, very similar.
+
+
+198
+00:21:50,380 --> 00:21:54,380
+Yeah, so web bundles, they come with their own challenges.
+
+
+199
+00:21:55,300 --> 00:21:58,260
+I think this effort by Google is a bit tainted
+
+
+200
+00:21:58,260 --> 00:22:01,300
+by their previous AMP work.
+
+
+201
+00:22:01,300 --> 00:22:04,000
+So I'm a bit cautious about what they are doing there.
+
+
+202
+00:22:07,900 --> 00:22:12,900
+And so, once you add this signed code,
+
+
+203
+00:22:12,900 --> 00:22:17,180
+one issue with the signing mechanism
+
+
+204
+00:22:17,180 --> 00:22:20,540
+is that the signature is used for both
+
+
+205
+00:22:20,540 --> 00:22:22,780
+verifying the package integrity,
+
+
+206
+00:22:22,780 --> 00:22:26,300
+you could verify that the code has not been changed,
+
+
+207
+00:22:26,300 --> 00:22:28,860
+but also as a trust on code.
+
+
+208
+00:22:28,860 --> 00:22:32,980
+Like you would say, okay, it's been signed by Dietrich,
+
+
+209
+00:22:32,980 --> 00:22:36,180
+or it will be, yeah, and so you trust your code.
+
+
+210
+00:22:37,500 --> 00:22:40,100
+Anyway, you have the same,
+
+
+211
+00:22:40,100 --> 00:22:45,100
+you use the same mechanism for two different purposes.
+
+
+212
+00:22:45,100 --> 00:22:50,100
+That are integrity and trust chain, which is not great.
+
+
+213
+00:22:53,740 --> 00:22:56,440
+So we need something a bit better there.
+
+
+214
+00:22:57,780 --> 00:23:01,140
+And a full trust chain is very complicated.
+
+
+215
+00:23:01,140 --> 00:23:06,140
+Like if you go up your software and hardware tool chains,
+
+
+216
+00:23:06,140 --> 00:23:11,140
+hardware supply chain, it's very hard to trust everything.
+
+
+217
+00:23:12,700 --> 00:23:14,460
+So you have to make a choice,
+
+
+218
+00:23:14,460 --> 00:23:16,980
+decide what your threat model is.
+
+
+219
+00:23:16,980 --> 00:23:20,180
+And I think for like everyday people,
+
+
+220
+00:23:20,180 --> 00:23:24,020
+if you're not the target of some state agency,
+
+
+221
+00:23:24,020 --> 00:23:27,060
+you can consider that you can trust your device
+
+
+222
+00:23:27,060 --> 00:23:29,860
+at the hardware level, trust the OS vendor
+
+
+223
+00:23:29,860 --> 00:23:31,820
+and the web runtime founder.
+
+
+224
+00:23:31,820 --> 00:23:34,020
+They probably are not malicious against you.
+
+
+225
+00:23:34,020 --> 00:23:38,580
+But you still want to make sure that
+
+
+226
+00:23:38,580 --> 00:23:41,460
+no malicious code is being served, executed,
+
+
+227
+00:23:41,460 --> 00:23:43,520
+and no private data is being leaked.
+
+
+228
+00:23:44,780 --> 00:23:47,220
+So that's still difficult.
+
+
+229
+00:23:47,220 --> 00:23:51,100
+We, I don't think the current model of the web
+
+
+230
+00:23:51,100 --> 00:23:52,820
+has any good solution for that.
+
+
+231
+00:23:58,060 --> 00:24:00,380
+So, yeah.
+
+
+232
+00:24:00,380 --> 00:24:05,380
+A few months ago, Robin sent a proposal
+
+
+233
+00:24:05,740 --> 00:24:10,060
+about something in this space called web tiles.
+
+
+234
+00:24:10,060 --> 00:24:13,060
+And honestly, when I read it, I was like,
+
+
+235
+00:24:13,060 --> 00:24:15,620
+why didn't we think about that sooner?
+
+
+236
+00:24:15,620 --> 00:24:18,980
+That looks pretty obviously a good solution,
+
+
+237
+00:24:18,980 --> 00:24:21,100
+at least for some of these problems.
+
+
+238
+00:24:21,100 --> 00:24:25,320
+So I'm gonna introduce a bit what this is about.
+
+
+239
+00:24:26,460 --> 00:24:28,700
+So it's a different approach
+
+
+240
+00:24:28,700 --> 00:24:31,740
+to this permission packaging problem.
+
+
+241
+00:24:31,740 --> 00:24:36,740
+Instead of starting with a state where we are kind of unsafe
+
+
+242
+00:24:37,300 --> 00:24:40,260
+and we want to close the gaps,
+
+
+243
+00:24:40,260 --> 00:24:45,260
+we start with a very safe by default state.
+
+
+244
+00:24:45,500 --> 00:24:46,740
+Okay?
+
+
+245
+00:24:46,740 --> 00:24:50,100
+So that means that like a web tile is safe by default.
+
+
+246
+00:24:50,100 --> 00:24:53,700
+You know that we are gonna use mechanism
+
+
+247
+00:24:53,700 --> 00:24:58,700
+to ensure that it provides you privacy.
+
+
+248
+00:24:59,380 --> 00:25:01,820
+We also, because they cannot leak data,
+
+
+249
+00:25:01,820 --> 00:25:05,620
+we can then count them very powerful APIs.
+
+
+250
+00:25:05,620 --> 00:25:07,660
+They can access anything on your device.
+
+
+251
+00:25:07,660 --> 00:25:10,040
+If they cannot leak it out to the world,
+
+
+252
+00:25:10,040 --> 00:25:12,180
+it's fine to let them access stuff.
+
+
+253
+00:25:12,180 --> 00:25:13,980
+There are some nuances to that,
+
+
+254
+00:25:13,980 --> 00:25:17,460
+like user consent still can be required
+
+
+255
+00:25:17,460 --> 00:25:22,460
+to prevent like fooling your device with data or so on.
+
+
+256
+00:25:22,460 --> 00:25:27,460
+But it's much easier to figure out than with the open web.
+
+
+257
+00:25:29,340 --> 00:25:30,900
+Content traceability,
+
+
+258
+00:25:30,900 --> 00:25:33,080
+that gives you integrity guarantees.
+
+
+259
+00:25:34,020 --> 00:25:35,760
+So that's very nice.
+
+
+260
+00:25:35,760 --> 00:25:38,100
+That doesn't solve the trust issue.
+
+
+261
+00:25:38,100 --> 00:25:43,100
+I think we need to figure out the trust part independently.
+
+
+262
+00:25:44,540 --> 00:25:47,660
+And mostly because for me,
+
+
+263
+00:25:47,660 --> 00:25:52,100
+trust is as much a social issue as a technical one.
+
+
+264
+00:25:52,100 --> 00:25:56,300
+So we can do that in a very different way.
+
+
+265
+00:25:56,300 --> 00:26:00,560
+Maybe you can use just your address book
+
+
+266
+00:26:00,560 --> 00:26:04,300
+to see like if several people in your address book
+
+
+267
+00:26:04,300 --> 00:26:06,860
+trust some app you can trust it to,
+
+
+268
+00:26:06,860 --> 00:26:10,320
+and other signals that you could use for that.
+
+
+269
+00:26:12,420 --> 00:26:15,100
+The web tiles, they are bundled and linkable.
+
+
+270
+00:26:15,100 --> 00:26:19,140
+So we can use stable URLs
+
+
+271
+00:26:19,140 --> 00:26:22,260
+thanks to content-based addressing.
+
+
+272
+00:26:22,260 --> 00:26:24,960
+And we know that we need a set of resources.
+
+
+273
+00:26:24,960 --> 00:26:28,860
+So even if we don't create a package like a zip file,
+
+
+274
+00:26:28,860 --> 00:26:32,420
+we need some way to describe that we have a set of resources
+
+
+275
+00:26:32,420 --> 00:26:36,080
+that are linked together and that make a bundle.
+
+
+276
+00:26:38,740 --> 00:26:40,240
+So the way that really works,
+
+
+277
+00:26:40,240 --> 00:26:42,060
+I don't think you need to create a zip
+
+
+278
+00:26:42,060 --> 00:26:45,620
+as long as you have like the list of resources
+
+
+279
+00:26:45,620 --> 00:26:50,620
+and you're unsure that they are pinned properly.
+
+
+280
+00:26:51,980 --> 00:26:55,940
+So what that could look like is
+
+
+281
+00:26:57,120 --> 00:27:02,120
+very similar to IPFS, column slash slash URLs.
+
+
+282
+00:27:02,460 --> 00:27:06,380
+We can create a tile protocol in there.
+
+
+283
+00:27:07,320 --> 00:27:10,380
+And we use a very strict CSP
+
+
+284
+00:27:10,380 --> 00:27:14,420
+so that we make sure that all documents
+
+
+285
+00:27:14,420 --> 00:27:19,420
+using this tile URLs won't be able to access remote content.
+
+
+286
+00:27:21,220 --> 00:27:25,660
+We can install them or restore them in the user agent.
+
+
+287
+00:27:26,980 --> 00:27:31,420
+The demo I will talk about for that,
+
+
+288
+00:27:31,420 --> 00:27:35,460
+we just leverage the PWA,
+
+
+289
+00:27:35,460 --> 00:27:39,280
+Progressive Web Apps manifest with some extensions.
+
+
+290
+00:27:39,280 --> 00:27:42,860
+So that means that we are very much reusing
+
+
+291
+00:27:42,860 --> 00:27:45,220
+a lot of the existing web stack.
+
+
+292
+00:27:45,220 --> 00:27:47,060
+It's a fairly minimal addition.
+
+
+293
+00:27:47,060 --> 00:27:50,020
+It's kind of a customization.
+
+
+294
+00:27:50,020 --> 00:27:54,500
+We have a custom protocol handler, dedicated CSP,
+
+
+295
+00:27:54,500 --> 00:27:57,360
+but we use the CSP mechanism as it is.
+
+
+296
+00:27:57,360 --> 00:28:01,460
+So it's very much into progressive improvement.
+
+
+297
+00:28:01,460 --> 00:28:03,860
+It's not like a radical departure
+
+
+298
+00:28:03,860 --> 00:28:06,280
+saying we are throwing everything out.
+
+
+299
+00:28:06,280 --> 00:28:10,900
+It's what can we do to improve the current stack
+
+
+300
+00:28:10,900 --> 00:28:12,900
+with this new mechanism?
+
+
+301
+00:28:16,060 --> 00:28:18,940
+So yeah, it's important to consider
+
+
+302
+00:28:18,940 --> 00:28:23,100
+what kind of capabilities you can provide with that.
+
+
+303
+00:28:23,100 --> 00:28:26,940
+Because once you have something that is limited in a way
+
+
+304
+00:28:26,940 --> 00:28:29,980
+to local content, you have to think about
+
+
+305
+00:28:29,980 --> 00:28:34,480
+how does that fit into the web at large still.
+
+
+306
+00:28:34,480 --> 00:28:39,480
+So Robin talked a bit about web activities
+
+
+307
+00:28:41,040 --> 00:28:43,280
+and a key piece for that,
+
+
+308
+00:28:43,280 --> 00:28:46,640
+like activities are similar to Android intents.
+
+
+309
+00:28:46,640 --> 00:28:50,060
+That means that you register some capability saying,
+
+
+310
+00:28:50,060 --> 00:28:53,640
+oh, I'm an app that can, or I'm some kind of code
+
+
+311
+00:28:53,640 --> 00:28:58,640
+that can provide some function.
+
+
+312
+00:28:59,680 --> 00:29:01,800
+And several of these apps can be installed
+
+
+313
+00:29:01,800 --> 00:29:06,800
+and if some other piece of code requires this capability,
+
+
+314
+00:29:07,920 --> 00:29:10,380
+we will let the system or the user choose
+
+
+315
+00:29:10,380 --> 00:29:13,560
+which app can be used for that.
+
+
+316
+00:29:13,560 --> 00:29:16,720
+So it's very open because you don't have to bake
+
+
+317
+00:29:16,720 --> 00:29:19,360
+the list of capabilities in the runtime itself.
+
+
+318
+00:29:19,360 --> 00:29:20,280
+It's very flexible.
+
+
+319
+00:29:20,280 --> 00:29:23,200
+You can define them as you go.
+
+
+320
+00:29:24,420 --> 00:29:29,300
+Tiles also can be run without a user visible UI,
+
+
+321
+00:29:29,300 --> 00:29:31,000
+or you can have a UI.
+
+
+322
+00:29:31,000 --> 00:29:36,000
+And that's possible, we'll see later,
+
+
+323
+00:29:37,920 --> 00:29:40,120
+because of the way it is implemented.
+
+
+324
+00:29:41,160 --> 00:29:43,420
+Discovery is important.
+
+
+325
+00:29:45,040 --> 00:29:47,400
+I think it's a bit tricky to do
+
+
+326
+00:29:47,400 --> 00:29:50,000
+in a way that is not centralized,
+
+
+327
+00:29:50,000 --> 00:29:54,280
+but that's still something that needs to happen.
+
+
+328
+00:29:54,280 --> 00:29:57,300
+Inserting, sharing tiles is important too.
+
+
+329
+00:29:57,300 --> 00:30:02,300
+So based on these ideas, I started to prototype
+
+
+330
+00:30:04,600 --> 00:30:08,820
+around the tile protocol handler in Capilune.
+
+
+331
+00:30:08,820 --> 00:30:12,260
+So just a quick recap about Capilune.
+
+
+332
+00:30:12,260 --> 00:30:15,940
+It's a very experimental web-based OS.
+
+
+333
+00:30:15,940 --> 00:30:18,460
+It's based on the Firefox OS code base,
+
+
+334
+00:30:18,460 --> 00:30:23,460
+but with additional support for distributed web protocols
+
+
+335
+00:30:23,460 --> 00:30:28,460
+and mechanisms, so we have support for IPFS,
+
+
+336
+00:30:29,380 --> 00:30:32,100
+IPNS protocol handlers.
+
+
+337
+00:30:32,100 --> 00:30:36,460
+For that, we use a local IPFS node on device
+
+
+338
+00:30:36,460 --> 00:30:41,460
+that is based on number zero, previously called IRO,
+
+
+339
+00:30:41,540 --> 00:30:43,860
+now called Betel code.
+
+
+340
+00:30:43,860 --> 00:30:48,860
+So that's all the Unix FS, basically, IPFS code.
+
+
+341
+00:30:48,860 --> 00:30:53,860
+We use the IDs and UCANs for permissions,
+
+
+342
+00:30:54,180 --> 00:30:59,180
+and the IDs mostly for user IDs.
+
+
+343
+00:31:01,900 --> 00:31:05,360
+We can pin content to third-party providers.
+
+
+344
+00:31:05,360 --> 00:31:08,180
+We started with SQRE, but we could do web-free storage
+
+
+345
+00:31:08,180 --> 00:31:10,300
+or anything else as easily.
+
+
+346
+00:31:10,300 --> 00:31:15,300
+We can exchange locally content using the local node,
+
+
+347
+00:31:15,300 --> 00:31:19,300
+and usually you just create a QR code
+
+
+348
+00:31:19,300 --> 00:31:24,300
+that has the IPFS URL, and you can exchange locally
+
+
+349
+00:31:24,700 --> 00:31:25,700
+content like that.
+
+
+350
+00:31:25,700 --> 00:31:27,140
+And now we have tiles.
+
+
+351
+00:31:28,580 --> 00:31:30,500
+If you want to try it, we have builds available
+
+
+352
+00:31:30,500 --> 00:31:33,040
+for some Android devices, some Linux phones,
+
+
+353
+00:31:33,040 --> 00:31:35,100
+like the Pine phone and the Librem.
+
+
+354
+00:31:35,100 --> 00:31:38,580
+And the easiest way to try it, actually, is on desktop.
+
+
+355
+00:31:38,580 --> 00:31:43,580
+For Linux, Mac, it's very easy to set up a test environment.
+
+
+356
+00:31:43,580 --> 00:31:47,640
+So the tiles in Capilion, what we did is that
+
+
+357
+00:31:47,640 --> 00:31:51,680
+we added a tile protocol handler in Gecko,
+
+
+358
+00:31:51,680 --> 00:31:56,080
+and it's configured to use a default CSP,
+
+
+359
+00:31:56,080 --> 00:32:00,160
+which is very, very strict, very restrictive
+
+
+360
+00:32:00,160 --> 00:32:05,160
+in terms of you can do no outside network access,
+
+
+361
+00:32:05,840 --> 00:32:10,840
+except for some WebRTC things that we need still.
+
+
+362
+00:32:10,840 --> 00:32:15,840
+The installation is very similar to a PWA installation.
+
+
+363
+00:32:17,300 --> 00:32:20,860
+The only difference is that we have an additional step
+
+
+364
+00:32:20,860 --> 00:32:23,620
+at the end of the installation, where in the manifest,
+
+
+365
+00:32:23,620 --> 00:32:28,300
+we added the list of resources that are part of a tile.
+
+
+366
+00:32:28,300 --> 00:32:32,180
+And so we will make sure that we fetch not just the manifest
+
+
+367
+00:32:32,180 --> 00:32:35,380
+but all the resources that are needed to run that app,
+
+
+368
+00:32:35,380 --> 00:32:39,380
+so that we ensure that the app is pinned locally
+
+
+369
+00:32:39,380 --> 00:32:42,940
+in the block store of the IPFS node.
+
+
+370
+00:32:44,420 --> 00:32:47,100
+And we leverage the web activity support
+
+
+371
+00:32:47,100 --> 00:32:49,340
+that we already had in Capilion.
+
+
+372
+00:32:49,340 --> 00:32:54,340
+So there are three, nothing specific to tiles there.
+
+
+373
+00:32:54,900 --> 00:32:58,300
+The interesting thing is for headless support
+
+
+374
+00:32:58,300 --> 00:33:00,860
+is that when you call a web activity,
+
+
+375
+00:33:02,300 --> 00:33:07,140
+the provider actually gets an event dispatched
+
+
+376
+00:33:07,140 --> 00:33:08,620
+to a service worker.
+
+
+377
+00:33:08,620 --> 00:33:12,020
+So at this level, you can decide if you need a UI or not.
+
+
+378
+00:33:12,020 --> 00:33:14,060
+And if you don't need a UI,
+
+
+379
+00:33:14,060 --> 00:33:18,620
+you just have a headless service worker running
+
+
+380
+00:33:18,620 --> 00:33:21,500
+and returning data if needed.
+
+
+381
+00:33:24,180 --> 00:33:29,100
+To help with all creation and installation flow,
+
+
+382
+00:33:30,220 --> 00:33:32,060
+there's a tiles app now in Capilion
+
+
+383
+00:33:32,060 --> 00:33:35,540
+where you can choose existing tiles
+
+
+384
+00:33:35,540 --> 00:33:40,540
+that are already installed on your device or some sample ones
+
+
+385
+00:33:40,860 --> 00:33:45,860
+that we created and do some fairly basic editing
+
+
+386
+00:33:45,900 --> 00:33:48,780
+and changes locally before you publish them
+
+
+387
+00:33:48,780 --> 00:33:49,900
+or that you try them.
+
+
+388
+00:33:56,380 --> 00:33:57,220
+What?
+
+
+389
+00:34:00,660 --> 00:34:03,400
+So yeah, a few use cases quickly.
+
+
+390
+00:34:03,400 --> 00:34:08,040
+The first one is that it's a headless one.
+
+
+391
+00:34:08,040 --> 00:34:10,360
+So in Capilion's home screen,
+
+
+392
+00:34:10,360 --> 00:34:14,320
+when you use a search field
+
+
+393
+00:34:14,320 --> 00:34:18,240
+that pulls data from various sources internally,
+
+
+394
+00:34:18,240 --> 00:34:21,920
+from the navigation history, from your contacts,
+
+
+395
+00:34:21,920 --> 00:34:26,440
+from apps installed and so on.
+
+
+396
+00:34:26,440 --> 00:34:31,440
+Now we also can use a tile to provide results there.
+
+
+397
+00:34:31,440 --> 00:34:36,440
+So here, the sample use a universal calculator converter
+
+
+398
+00:34:37,320 --> 00:34:38,920
+that can do a bunch of things.
+
+
+399
+00:34:38,920 --> 00:34:43,920
+So here I'm just converting Celsius to Fahrenheit
+
+
+400
+00:34:44,700 --> 00:34:48,620
+to do some baking, and that's pretty useful.
+
+
+401
+00:34:49,720 --> 00:34:53,160
+It shows that you really don't have to do
+
+
+402
+00:34:53,160 --> 00:34:55,700
+any UI-specific work,
+
+
+403
+00:34:55,700 --> 00:35:00,200
+and you can embed any code as such.
+
+
+404
+00:35:00,200 --> 00:35:01,760
+Yeah, it's compiled to us.
+
+
+405
+00:35:02,680 --> 00:35:06,500
+The second one is showing more like document editing,
+
+
+406
+00:35:06,500 --> 00:35:11,500
+processing, all the media files in Capilion
+
+
+407
+00:35:11,560 --> 00:35:14,700
+are exposed through a virtual file system.
+
+
+408
+00:35:14,700 --> 00:35:16,680
+And in the file manager,
+
+
+409
+00:35:16,680 --> 00:35:20,240
+now when you have an image, for instance,
+
+
+410
+00:35:20,240 --> 00:35:22,800
+you can use a tile to edit the image.
+
+
+411
+00:35:22,800 --> 00:35:26,840
+So here I just opened the logo
+
+
+412
+00:35:26,840 --> 00:35:31,080
+in what we call an inline activity.
+
+
+413
+00:35:31,080 --> 00:35:34,280
+So the size is a bit smaller than full screen.
+
+
+414
+00:35:34,280 --> 00:35:36,800
+And I just inverted the image color,
+
+
+415
+00:35:36,800 --> 00:35:40,720
+and you end up with the updated version of the image.
+
+
+416
+00:35:40,720 --> 00:35:44,880
+Here also, yeah, it's done using mostly Wasm code
+
+
+417
+00:35:44,880 --> 00:35:46,720
+for the image processing.
+
+
+418
+00:35:46,720 --> 00:35:49,200
+But you could plug in whatever you want.
+
+
+419
+00:35:50,320 --> 00:35:52,160
+And everything is done on device.
+
+
+420
+00:35:52,160 --> 00:35:54,320
+Nothing leaves the device.
+
+
+421
+00:35:54,320 --> 00:35:59,320
+The last one, I think it's a bit more involved,
+
+
+422
+00:35:59,880 --> 00:36:02,420
+but it's very interesting.
+
+
+423
+00:36:02,420 --> 00:36:06,180
+So it shows what you can do with two devices.
+
+
+424
+00:36:07,320 --> 00:36:10,080
+So we have capability in Capilion
+
+
+425
+00:36:10,080 --> 00:36:13,000
+to do device discovery and pairing.
+
+
+426
+00:36:13,000 --> 00:36:16,400
+So it's just using MDNS to do the device discovery.
+
+
+427
+00:36:16,400 --> 00:36:20,000
+So here I have a scenario with a phone
+
+
+428
+00:36:20,000 --> 00:36:22,940
+and something that is more like a media center.
+
+
+429
+00:36:22,940 --> 00:36:27,940
+So the device, we can consider that on the first
+
+
+430
+00:36:28,860 --> 00:36:31,860
+that we paired the two devices.
+
+
+431
+00:36:31,860 --> 00:36:33,020
+And then in your contacts,
+
+
+432
+00:36:33,020 --> 00:36:36,240
+if you have a contact matching the other device,
+
+
+433
+00:36:36,240 --> 00:36:39,040
+you can see that you have this green button
+
+
+434
+00:36:39,040 --> 00:36:40,380
+that says Launch App.
+
+
+435
+00:36:40,380 --> 00:36:42,780
+And that means that you can launch an app
+
+
+436
+00:36:42,780 --> 00:36:45,820
+that will work on both devices at the same time.
+
+
+437
+00:36:45,820 --> 00:36:49,540
+So the target device will accept it.
+
+
+438
+00:36:49,540 --> 00:36:54,540
+And then the SDK helps with setting up
+
+
+439
+00:36:54,980 --> 00:36:58,380
+just a communication channel between both devices.
+
+
+440
+00:36:58,380 --> 00:37:01,980
+And here I use that to,
+
+
+441
+00:37:01,980 --> 00:37:04,860
+first we send the tile to the remote device.
+
+
+442
+00:37:04,860 --> 00:37:07,540
+Remote device doesn't even know initially
+
+
+443
+00:37:07,540 --> 00:37:09,060
+which app really will run.
+
+
+444
+00:37:09,060 --> 00:37:12,500
+So the phone that has published the tile
+
+
+445
+00:37:12,500 --> 00:37:15,580
+sends the tile URL to the media center.
+
+
+446
+00:37:15,580 --> 00:37:17,740
+The media center fetches everything,
+
+
+447
+00:37:17,740 --> 00:37:20,660
+install locally, launch the app,
+
+
+448
+00:37:20,660 --> 00:37:22,620
+and we set up the communication.
+
+
+449
+00:37:22,620 --> 00:37:25,940
+And it's like 10 lines of JS for the app author
+
+
+450
+00:37:25,940 --> 00:37:30,940
+because the SDK does most of the setup behind the scenes.
+
+
+451
+00:37:31,740 --> 00:37:34,380
+And then once you have this communication channel,
+
+
+452
+00:37:34,380 --> 00:37:38,100
+you can do whatever you want between both instances.
+
+
+453
+00:37:38,100 --> 00:37:41,380
+In this case, it's a very basic remote media player.
+
+
+454
+00:37:41,380 --> 00:37:46,380
+So I can pick up a local video file
+
+
+455
+00:37:46,380 --> 00:37:49,460
+on the phone side.
+
+
+456
+00:37:49,460 --> 00:37:52,620
+I just expose it using the new IRL
+
+
+457
+00:37:52,620 --> 00:37:56,140
+to test the streaming capabilities.
+
+
+458
+00:37:56,140 --> 00:38:00,940
+And technically I send a ticket
+
+
+459
+00:38:00,940 --> 00:38:05,140
+representing this media stream to the remote side,
+
+
+460
+00:38:05,140 --> 00:38:06,700
+and it just plays it.
+
+
+461
+00:38:06,700 --> 00:38:09,500
+And that's pretty amazing.
+
+
+462
+00:38:09,500 --> 00:38:12,580
+That's something I want to do just to replace my Android TV.
+
+
+463
+00:38:12,580 --> 00:38:17,580
+And it looks like it's very promising in this regard.
+
+
+464
+00:38:17,700 --> 00:38:18,900
+It should work.
+
+
+465
+00:38:18,900 --> 00:38:20,700
+But it's just one sample.
+
+
+466
+00:38:20,700 --> 00:38:24,580
+Once you have two devices paired and a channel established,
+
+
+467
+00:38:25,780 --> 00:38:29,300
+you can do multiplayer games, whatever you want.
+
+
+468
+00:38:30,620 --> 00:38:32,700
+So what we should do next,
+
+
+469
+00:38:32,700 --> 00:38:34,700
+there's still a lot of exploration to do
+
+
+470
+00:38:34,700 --> 00:38:37,940
+around what kind of content or what kind of apps
+
+
+471
+00:38:37,940 --> 00:38:39,140
+you can build with that.
+
+
+472
+00:38:39,140 --> 00:38:43,020
+Games, content archives.
+
+
+473
+00:38:43,020 --> 00:38:47,180
+You could even embed indexes with your tiles
+
+
+474
+00:38:47,180 --> 00:38:50,620
+so you can get them being searchable easily.
+
+
+475
+00:38:50,620 --> 00:38:54,420
+You could do mashup with local data.
+
+
+476
+00:38:54,420 --> 00:38:58,940
+You could do filtering or recommendation algorithm
+
+
+477
+00:38:58,940 --> 00:39:01,420
+for social feed applications.
+
+
+478
+00:39:01,420 --> 00:39:02,660
+Like I would love to have a way
+
+
+479
+00:39:02,660 --> 00:39:06,780
+to customize my Mastodon feed.
+
+
+480
+00:39:06,780 --> 00:39:08,540
+Right now it's very limited.
+
+
+481
+00:39:08,540 --> 00:39:11,420
+If we could embed something like that, that would be nice.
+
+
+482
+00:39:12,900 --> 00:39:15,860
+And I guess, yeah, I'm sure people
+
+
+483
+00:39:15,860 --> 00:39:17,220
+will have a lot more ideas.
+
+
+484
+00:39:18,420 --> 00:39:20,540
+On my side, I still have some questions
+
+
+485
+00:39:20,540 --> 00:39:22,020
+that are not answered yet.
+
+
+486
+00:39:22,940 --> 00:39:24,900
+That's the question of discovery.
+
+
+487
+00:39:24,900 --> 00:39:28,740
+Yeah, we need a way to find tiles.
+
+
+488
+00:39:28,740 --> 00:39:32,980
+But do we want to have a centralized
+
+
+489
+00:39:32,980 --> 00:39:35,780
+search engine kind of directory?
+
+
+490
+00:39:35,780 --> 00:39:40,380
+That doesn't look great, but is there
+
+
+491
+00:39:40,380 --> 00:39:41,780
+anything better right now?
+
+
+492
+00:39:43,140 --> 00:39:47,420
+We also need to be able to provide updates to tiles.
+
+
+493
+00:39:47,420 --> 00:39:52,420
+And that means that we need some kind of mutability story,
+
+
+494
+00:39:52,780 --> 00:39:56,100
+but we also need some pretty stable naming.
+
+
+495
+00:39:56,100 --> 00:40:06,100
+So yeah, that's it.
+
+
+496
+00:40:00,000 --> 00:40:30,000
+whole problem around mutability. But it's very important to get updates. You cannot think that shipping software that cannot be updated, even just for bug fixes, that's not acceptable. And I wonder if there's something to do in the computable data in general with tiles, because it's very much a different way of bringing data and code together. So maybe there's something to explore around that.
+
+
+497
+00:40:30,000 --> 00:40:37,000
+And yeah, that's it. Thank you.

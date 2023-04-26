@@ -1,0 +1,1158 @@
+1
+00:00:00,000 --> 00:00:07,960
+Hey everyone, I'm going to give a talk about the Web Native File System, which is a versioned
+
+
+2
+00:00:07,960 --> 00:00:18,240
+and encrypted file system on IPFS. So, first of all, hey everyone, I'm Philipp, you can
+
+
+3
+00:00:18,240 --> 00:00:26,920
+find me as Matthias23 on various kind of internet networks, and I work at Fission. And what
+
+
+4
+00:00:26,920 --> 00:00:32,120
+we've been doing at Fission for the past couple of years is we've put encrypted data onto
+
+
+5
+00:00:32,120 --> 00:00:39,880
+IPFS from browsers. And so, the way I like to think about this, and personally how I
+
+
+6
+00:00:39,880 --> 00:00:45,720
+like to explain it, is kind of like a data backpack is what we try to build. So, this
+
+
+7
+00:00:45,720 --> 00:00:51,480
+is Winnie, this is our mascot for WinIFS. It's slightly altered, this image, it's not
+
+
+8
+00:00:51,480 --> 00:00:58,320
+the original author's intent, so to say, but Dali helped me out, put a backpack on her.
+
+
+9
+00:00:58,320 --> 00:01:06,080
+And basically, she wants to have her data in her backpack and take it to different devices.
+
+
+10
+00:01:06,080 --> 00:01:10,400
+So all of her devices now have her data, similar to like Dropbox or something. But she also
+
+
+11
+00:01:10,400 --> 00:01:15,440
+wants to bring this data to different apps that she uses. So there may be like a music
+
+
+12
+00:01:15,440 --> 00:01:21,280
+player like Diffuse, some drive app that is similar to Google Drive or whatever, or something
+
+
+13
+00:01:21,280 --> 00:01:26,000
+like FX Photos, a photo manager, something like that. And that all should work like online
+
+
+14
+00:01:26,000 --> 00:01:29,880
+and offline, so it should be a local first kind of experience where you can be offline
+
+
+15
+00:01:29,880 --> 00:01:38,200
+for an extended period of time. And I think of this as like a data backpack because it's
+
+
+16
+00:01:38,200 --> 00:01:44,880
+really about user agency. And it is about user agency, and I think of that as a backpack
+
+
+17
+00:01:44,880 --> 00:01:50,480
+because you can take it anywhere, you control who you share stuff with from your backpack.
+
+
+18
+00:01:50,480 --> 00:01:54,680
+And at the end of the day, for us, this means you have control over the keys that are used
+
+
+19
+00:01:54,680 --> 00:02:01,400
+to encrypt the backpack or give write access to different parts of it. But this turns out
+
+
+20
+00:02:01,400 --> 00:02:07,880
+to be kind of difficult to build, especially because of this. The browser is quite a hostile
+
+
+21
+00:02:07,880 --> 00:02:13,640
+environment, right? You have malicious extensions, you have cross-site scripting attacks, code
+
+
+22
+00:02:13,640 --> 00:02:19,520
+injection, supply chain problems. And yeah, so at the end of the day, every time we tell
+
+
+23
+00:02:19,520 --> 00:02:23,960
+people that we're doing this from the browser, they're like, what? You're putting keys into
+
+
+24
+00:02:23,960 --> 00:02:30,320
+the browser? What are you doing? But yeah, we do do that. The WebCrypt API, for one,
+
+
+25
+00:02:30,320 --> 00:02:37,480
+is amazing, and thanks, Dietrich, for the work on ED25519. I'm excited for that. And
+
+
+26
+00:02:37,480 --> 00:02:44,920
+non-extractable key pairs are what makes all of this possible, as good as possible, essentially.
+
+
+27
+00:02:44,920 --> 00:02:50,400
+What that means, though, is that, well, you need to have an asymmetric key pair for every
+
+
+28
+00:02:50,400 --> 00:02:56,040
+device because non-extractability basically means you can't take the private key and actually
+
+
+29
+00:02:56,040 --> 00:03:00,640
+read the bytes. All you have is some kind of JavaScript reference to something that
+
+
+30
+00:03:00,640 --> 00:03:09,520
+allows you to sign or to encrypt. But it also gives you revocability. So no malicious code,
+
+
+31
+00:03:09,520 --> 00:03:14,600
+cross-site scripting, or extension can take your private key and steal it forever. You'll
+
+
+32
+00:03:14,600 --> 00:03:19,920
+always be able to revoke things that were signed or encrypt things differently when
+
+
+33
+00:03:19,920 --> 00:03:26,600
+they were once encrypted or decrypted with your key, essentially. But yeah, with decryption,
+
+
+34
+00:03:26,600 --> 00:03:32,000
+this doesn't work that well. Once you decrypt something once, of course, the data needs
+
+
+35
+00:03:32,000 --> 00:03:37,400
+to be readable inside the context of your browser. So what do you do there? Well, we
+
+
+36
+00:03:37,400 --> 00:03:42,160
+were thinking the best you can do is probably using the principle of least authority. I
+
+
+37
+00:03:42,160 --> 00:03:46,560
+mean, sandboxes are another kind of way of trying to solve this issue. But that's what
+
+
+38
+00:03:46,560 --> 00:03:51,440
+we were going for. So essentially, in this context, what I mean by this principle of
+
+
+39
+00:03:51,440 --> 00:03:55,760
+least authority is you want really, really fine-grained access control on all of your
+
+
+40
+00:03:55,760 --> 00:04:02,360
+data. When I go to an image editor app, what I want to have is basically I just give the
+
+
+41
+00:04:02,360 --> 00:04:06,520
+image editor only the image that I want to edit and no read or write access to anything
+
+
+42
+00:04:06,520 --> 00:04:11,640
+else. So that's what we mean by it. Or if you have some kind of compute job that you
+
+
+43
+00:04:11,640 --> 00:04:15,080
+want to run somewhere else, well, you give them your file system, but you give them just
+
+
+44
+00:04:15,080 --> 00:04:22,560
+a snapshot of what the computation needs to know about from your file system. Another
+
+
+45
+00:04:22,560 --> 00:04:28,200
+thing with browsers is persistence. So your browser may just decide to throw away your
+
+
+46
+00:04:28,200 --> 00:04:37,040
+data, which is kind of not ideal. So that means that key recovery becomes a problem,
+
+
+47
+00:04:37,040 --> 00:04:41,000
+because what if your browser actually holds your keys like we have them in WebCrypto?
+
+
+48
+00:04:41,000 --> 00:04:45,440
+So you need to think about key recovery. This talk is not about that, but I'm mentioning
+
+
+49
+00:04:45,440 --> 00:04:50,560
+it for completeness sake. But it also means that encrypted data needs to be persisted
+
+
+50
+00:04:50,560 --> 00:04:58,640
+somewhere else. That's why we put it on IPFS. We want to have, let's say, a pinning service
+
+
+51
+00:04:58,640 --> 00:05:05,240
+or a storage provider or someone should be able to persist your data. But it also means
+
+
+52
+00:05:05,240 --> 00:05:09,200
+this is another point of where it's becoming very difficult, because now it's kind of public
+
+
+53
+00:05:09,200 --> 00:05:15,400
+data you may or may not trust or to different levels you trust a certain storage provider
+
+
+54
+00:05:15,400 --> 00:05:21,560
+or pinning API. So the data that is stored there should be leaking as little information
+
+
+55
+00:05:21,560 --> 00:05:28,520
+as possible. So let's gather up those requirements of what we're trying to build. So we wanted
+
+
+56
+00:05:28,520 --> 00:05:32,720
+to have fine-grained access control. We wanted to store data with untrusted peers, which
+
+
+57
+00:05:32,720 --> 00:05:38,480
+means minimizing leaked information. For example, the file hierarchy shouldn't be readable from
+
+
+58
+00:05:38,480 --> 00:05:46,680
+reading all of the encrypted data. We want to actually verify valid writes without read
+
+
+59
+00:05:46,680 --> 00:05:51,520
+access because, let's say, you have some kind of storage provider. They keep around your
+
+
+60
+00:05:51,520 --> 00:05:57,440
+latest state of the file system, and they will be the entity that most peers will interact
+
+
+61
+00:05:57,440 --> 00:06:05,440
+with when they have updates in order to share them. And so ideally, they would be able to
+
+
+62
+00:06:05,440 --> 00:06:10,680
+figure out which ones of those are actually valid writes, which one are actually signed
+
+
+63
+00:06:10,680 --> 00:06:15,760
+by something that originated in a user's key. So we are using UCANs for that, plus also
+
+
+64
+00:06:15,760 --> 00:06:22,120
+something else that we've built into WinFS. And finally, another problem that happens
+
+
+65
+00:06:22,120 --> 00:06:26,280
+when you have a bunch of devices or you're interacting with a bunch of other people when
+
+
+66
+00:06:26,280 --> 00:06:31,080
+you're sharing data or sharing access to data is that you will have concurrent writes. So
+
+
+67
+00:06:31,080 --> 00:06:38,200
+those are all of the things that we're trying to solve with WinFS. All right, how do we
+
+
+68
+00:06:38,200 --> 00:06:43,440
+make this work? So in this section of the talk, I want to give you, with an example,
+
+
+69
+00:06:43,440 --> 00:06:51,840
+a small peek into what happens underneath the covers. So here's back, we need her novel
+
+
+70
+00:06:51,840 --> 00:06:58,640
+style. And she has a bunch of files. She has some notes on her thesis. She also has a rendered
+
+
+71
+00:06:58,640 --> 00:07:04,480
+thesis. And she also stores a love letter in her file system. Obviously, some of these
+
+
+72
+00:07:04,480 --> 00:07:08,520
+things she wants to share with some people and some of these things she doesn't want
+
+
+73
+00:07:08,520 --> 00:07:13,760
+to share with other people. And actually, we don't only store the latest versions of
+
+
+74
+00:07:13,760 --> 00:07:18,120
+files, we actually store all of the history. So if she accidentally deletes something,
+
+
+75
+00:07:18,120 --> 00:07:26,200
+she can recover it. And in general, you have this kind of Mac OS time machine-like environment
+
+
+76
+00:07:26,200 --> 00:07:31,200
+where you can always go back and look at what the state was before. Or if you're a developer,
+
+
+77
+00:07:31,200 --> 00:07:37,480
+maybe Git makes a lot of sense in that case. But actually, Winnie is very, very tidy. So
+
+
+78
+00:07:37,480 --> 00:07:43,440
+she organizes her data in the file system with a directory hierarchy, and she separates
+
+
+79
+00:07:43,440 --> 00:07:47,840
+her work from her life stuff. And now, if she wants to share something, she wants to
+
+
+80
+00:07:47,840 --> 00:07:54,280
+be able to, for example, only give access to this final rendered thesis for her professor.
+
+
+81
+00:07:54,280 --> 00:07:58,600
+But if she has a work computer, she actually wants to be able to easily have the work computer
+
+
+82
+00:07:58,600 --> 00:08:05,080
+access everything in her work directory. So how do we do that? Well, for one, we encrypt
+
+
+83
+00:08:05,080 --> 00:08:10,240
+all of the files with different keys. So every file having a different key means that if
+
+
+84
+00:08:10,240 --> 00:08:16,480
+you have the key for one file, you won't be able to read anything else, obviously. And
+
+
+85
+00:08:16,480 --> 00:08:21,240
+that also means, though, that now you have to juggle all of these keys. So what do you
+
+
+86
+00:08:21,240 --> 00:08:29,120
+do? You build hierarchies on top of that. So one of the ways we do this is for revisions,
+
+
+87
+00:08:29,120 --> 00:08:36,840
+every time you write a new file revision, you don't want to do another key sharing,
+
+
+88
+00:08:36,840 --> 00:08:44,360
+like, basically dance with someone else. So you organize these keys in a ratchet. So ratchet
+
+
+89
+00:08:44,360 --> 00:08:49,160
+will give you a different key for every revision, but in a deterministic way. If you share the
+
+
+90
+00:08:49,160 --> 00:08:53,360
+state of the ratchet, someone will be able to derive all future keys. But it also gives
+
+
+91
+00:08:53,360 --> 00:08:57,840
+us this distinction between these two access levels where you can have access to a single
+
+
+92
+00:08:57,840 --> 00:09:03,760
+revision of a file only, or you can have access to, let's say, the skip ratchet on the bottom
+
+
+93
+00:09:03,760 --> 00:09:09,520
+left, which will allow you to derive the key for that revision, or go up one step further
+
+
+94
+00:09:09,520 --> 00:09:17,680
+into in the skip ratchet and get that revision's key and so on for any future keys. And now
+
+
+95
+00:09:17,680 --> 00:09:22,120
+this gives us the distinction between temporal and snapshot access levels. Oh, and by the
+
+
+96
+00:09:22,120 --> 00:09:26,880
+way, we're using a skip ratchet for this, which is an invention by Brook, and there's
+
+
+97
+00:09:26,880 --> 00:09:31,480
+a paper about it. If you're interested in these kinds of things, it's super fun. Read
+
+
+98
+00:09:31,480 --> 00:09:38,160
+it. So, yeah, we now have this distinction between temporal and snapshot access levels.
+
+
+99
+00:09:38,160 --> 00:09:42,360
+But we also want a hierarchical kind of access level so that, for example, if she has a work
+
+
+100
+00:09:42,360 --> 00:09:46,840
+computer, she can just have a single key she shares with her work computer once, and at
+
+
+101
+00:09:46,840 --> 00:09:54,440
+that point, it will have access and read all future values or files and directories in
+
+
+102
+00:09:54,440 --> 00:10:02,080
+the work directory without having to do another key sharing dance. So the way we do this is
+
+
+103
+00:10:02,080 --> 00:10:07,320
+we use a basic crypt tree kind of structure where we put the keys of the files into the
+
+
+104
+00:10:07,320 --> 00:10:12,880
+directory, and then we encrypt it, and then we get more keys, and we do this recursively
+
+
+105
+00:10:12,880 --> 00:10:19,080
+up to the root, right? Now, at this point, we basically just have a set of files and
+
+
+106
+00:10:19,080 --> 00:10:24,840
+a bunch of keys. Well, we have one root key that will be able to discover all of the hierarchy,
+
+
+107
+00:10:24,840 --> 00:10:30,520
+but for now, these aren't really, like, organised in any kind of structure. They're kind of
+
+
+108
+00:10:30,520 --> 00:10:36,560
+in a flat namespace, but ideally, in order to link to stuff, you can either use SIDS
+
+
+109
+00:10:36,560 --> 00:10:43,800
+or we use in this case something else to enable verified writes without read access, and the
+
+
+110
+00:10:43,800 --> 00:10:50,120
+way we do this is we give all of these ciphertexts a meaningful label. Right now, I've put the
+
+
+111
+00:10:50,120 --> 00:10:56,360
+file path as a label which obviously is leaking a lot of information about these files or
+
+
+112
+00:10:56,360 --> 00:11:03,920
+these ciphertexts, but from there, I will get on to how we do this so we actually hide
+
+
+113
+00:11:03,920 --> 00:11:09,200
+what the path is. So, first of all, we start with these paths. I will actually make them
+
+
+114
+00:11:09,200 --> 00:11:15,360
+absolute paths, but then we will replace every path segment with a random number. So every
+
+
+115
+00:11:15,360 --> 00:11:20,720
+file now stores both, well, this random number, because, in practice, it's going to be a 256-bit
+
+
+116
+00:11:20,720 --> 00:11:28,560
+number, as well as the human readable name for entries inside directories, let's say.
+
+
+117
+00:11:28,560 --> 00:11:33,480
+We call these numbers iNumbers. I think this is a term, if I'm not mistaken, from the web
+
+
+118
+00:11:33,480 --> 00:11:40,280
+back then. It's a fun idea. Read about it, maybe. Basically, we call these iNumbers.
+
+
+119
+00:11:40,280 --> 00:11:45,320
+And finally, this also still leaks information. We don't know what exactly these files are
+
+
+120
+00:11:45,320 --> 00:11:50,720
+supposed to be, but you see, oh, well, there's a hierarchy in the files, and I see that some
+
+
+121
+00:11:50,720 --> 00:11:55,960
+things are in the same directory. That still leaks information. So, finally, we take out
+
+
+122
+00:11:55,960 --> 00:12:03,020
+of these file segments, or iNumbers, and we hash them together to basically get something
+
+
+123
+00:12:03,020 --> 00:12:09,680
+that deterministically derives a label for each ciphertext. And we also add in the key,
+
+
+124
+00:12:09,680 --> 00:12:13,960
+or something that is derived from the key, so it's unique per revision of the file, into
+
+
+125
+00:12:13,960 --> 00:12:23,400
+that hash. That gives us a very constant-size identifier for all files, and even for across
+
+
+126
+00:12:23,400 --> 00:12:29,380
+revisions. And, actually, this is not probably a hash function as you're thinking of it.
+
+
+127
+00:12:29,380 --> 00:12:34,120
+It is not SHA2, SHA3, or Blake3, or whatever. That's why I put an asterisk in here. We're
+
+
+128
+00:12:34,120 --> 00:12:40,440
+actually using RSA accumulators for this, which means that if you're sharing write access
+
+
+129
+00:12:40,440 --> 00:12:45,280
+with someone else, you can sign something that is going to look like random stuff, but
+
+
+130
+00:12:45,280 --> 00:12:51,280
+the person who received that certificate will be able to present that to a storage provider,
+
+
+131
+00:12:51,280 --> 00:12:56,200
+or a pinning service, whatever, that is aware of WinFS, and will be able to prove that it
+
+
+132
+00:12:56,200 --> 00:13:05,080
+only did writes to paths that contained some subset in this hash, essentially. But more
+
+
+133
+00:13:05,080 --> 00:13:11,200
+on that is much more complicated. Talk to me afterwards if you're interested in that.
+
+
+134
+00:13:11,200 --> 00:13:18,080
+So now we have all of these files. They're actually in kind of like a flat data structure.
+
+
+135
+00:13:18,080 --> 00:13:25,880
+And finally, we put an IP of the Hamt on top. And so we get a root SID, something to pin,
+
+
+136
+00:13:25,880 --> 00:13:31,400
+something to contain all of your data. Ta-da. We call this data structure private forest,
+
+
+137
+00:13:31,400 --> 00:13:35,080
+or sometimes jokingly a dark forest, because technically you don't know what other trees
+
+
+138
+00:13:35,080 --> 00:13:39,440
+are in there. And in practice, we actually use this property. So basically, this is just
+
+
+139
+00:13:39,440 --> 00:13:43,940
+a collection of things that you care about, and you may have one or two or three or whatever
+
+
+140
+00:13:43,940 --> 00:13:50,120
+trees inside of that. So what do we get from this? Well, we're trying to leak as little
+
+
+141
+00:13:50,120 --> 00:13:53,960
+metadata as possible. You just have a flat namespace. If you have no read access, you
+
+
+142
+00:13:53,960 --> 00:14:00,360
+just see a bunch of files, ciphertexts more precisely. The labels of them don't mean anything
+
+
+143
+00:14:00,360 --> 00:14:06,020
+to you unless you can read the data. The hierarchy is scrambled. And also, we split files in
+
+
+144
+00:14:06,020 --> 00:14:13,320
+practice into multiple chunks. So you can't distinguish a 512 kilobyte file from two 256
+
+
+145
+00:14:13,320 --> 00:14:17,880
+kilobyte files. And you can't, in general, see bigger files.
+
+
+146
+00:14:17,880 --> 00:14:22,580
+We also get very fine-grained access control by the Crypt Tree method, as you saw. Basically,
+
+
+147
+00:14:22,580 --> 00:14:27,080
+you can share different parts of your file system with different keys. And you have very
+
+
+148
+00:14:27,080 --> 00:14:33,280
+succinct things that you can share. Sharing something means literally giving someone 200
+
+
+149
+00:14:33,280 --> 00:14:40,440
+bytes maybe. And they'll be able to read some subpart of your tree. And additionally, of
+
+
+150
+00:14:40,440 --> 00:14:44,660
+course, they need to fetch everything else over IPFS.
+
+
+151
+00:14:44,660 --> 00:14:48,540
+We have different levels there. We have a snapshot and temporal level. And that holds
+
+
+152
+00:14:48,540 --> 00:14:53,080
+for both files and directories. So you can have a snapshot access to a whole directory
+
+
+153
+00:14:53,080 --> 00:14:58,460
+or a whole revision of the complete file system, for example.
+
+
+154
+00:14:58,460 --> 00:15:04,140
+We also get write verification without read access. But remember one thing that I mentioned
+
+
+155
+00:15:04,140 --> 00:15:08,280
+in the beginning that I didn't mention yet in there? And that's concurrent writes. So
+
+
+156
+00:15:08,280 --> 00:15:12,800
+what do we do about that? So you have a bunch of devices. And they're doing stuff on their
+
+
+157
+00:15:12,800 --> 00:15:18,820
+own. And now you need to reconcile these changes that they did in case they didn't communicate
+
+
+158
+00:15:18,820 --> 00:15:23,060
+with each other. But you have this problem that the person or the peer that is trying
+
+
+159
+00:15:23,060 --> 00:15:27,180
+to reconcile all of these changes may not be able to read them. So what do you do?
+
+
+160
+00:15:27,180 --> 00:15:32,580
+So you have one device that did a bunch of writes and created this hand. You have another
+
+
+161
+00:15:32,580 --> 00:15:38,220
+device. It did a bunch of writes. And on the one hand, it created some other data. Like,
+
+
+162
+00:15:38,220 --> 00:15:43,780
+you can see that some of the labels overlap and some don't. And in some way, they create
+
+
+163
+00:15:43,780 --> 00:15:51,260
+like conflicting data where the labels overlap. And basically, someone who has to reconcile
+
+
+164
+00:15:51,260 --> 00:15:55,380
+these changes is like, OK, now what do I do? Do I take the left or the right? Basically,
+
+
+165
+00:15:55,380 --> 00:16:00,220
+what we say is you just merge them together. And we actually don't use normal maps. But
+
+
+166
+00:16:00,220 --> 00:16:06,540
+we are making it a multi-map. So you just store both revisions. That's the whole trick.
+
+
+167
+00:16:06,540 --> 00:16:11,160
+But now, obviously, that means you're pushing the problem to the read time because you're
+
+
+168
+00:16:11,160 --> 00:16:16,580
+trying to read this label, but you're getting multiple ciphertexts. It essentially means
+
+
+169
+00:16:16,580 --> 00:16:21,060
+you're trying to read a directory, but you're actually getting multiple. So what do you
+
+
+170
+00:16:21,060 --> 00:16:25,340
+do? Well, you'll see, OK, now you have read access, though, when you're trying to access
+
+
+171
+00:16:25,340 --> 00:16:30,140
+this. So you can see, oh, OK, so there's two different divisions, two different directories
+
+
+172
+00:16:30,140 --> 00:16:37,380
+in the same revision. They seem to be referring to content-wise seem to be not the same. So
+
+
+173
+00:16:37,380 --> 00:16:43,940
+I can't just take one of them. In fact, they seem to link to two different versions of
+
+
+174
+00:16:43,940 --> 00:16:50,700
+a subdirectory at path A. So I go down there, and I look at these two different subdirectories.
+
+
+175
+00:16:50,700 --> 00:16:56,100
+And again, I can't merge them since one of them seems to be different from the other.
+
+
+176
+00:16:56,100 --> 00:17:02,460
+So one of them has a file inside of it, x.png, the other one has y.png. But now, merging
+
+
+177
+00:17:02,460 --> 00:17:05,820
+them together would be pretty easy, right? The obvious thing to do is just create a directory
+
+
+178
+00:17:05,820 --> 00:17:09,940
+that has both of these changes. So that's what we do. In the next revision, we just
+
+
+179
+00:17:09,940 --> 00:17:20,220
+create a directory that contains both of these things. And we go back towards the root and
+
+
+180
+00:17:20,220 --> 00:17:24,400
+fix all of these links so that in the next revision, you actually fix all of these issues.
+
+
+181
+00:17:24,400 --> 00:17:29,160
+We also add in links back into the previous versions so that you can still follow the
+
+
+182
+00:17:29,160 --> 00:17:34,260
+history and figure out what happened. And this also enables deletes to be preserved.
+
+
+183
+00:17:34,260 --> 00:17:40,060
+And in general, it's basically, if I'm hand-waving here a little bit, the CRDT clock that makes
+
+
+184
+00:17:40,060 --> 00:17:48,940
+all of this work. All right. So with that, we're getting concurrent right-reconciliation.
+
+
+185
+00:17:48,940 --> 00:17:57,420
+Yeah, that's basically all we wanted. But where are we actually at? Because not everything
+
+
+186
+00:17:57,420 --> 00:18:03,140
+that I've talked about yet has been implemented. So maybe let's give you an overview of what
+
+
+187
+00:18:03,140 --> 00:18:10,460
+is there at this point in time. So here's some example code. We have created a Rust
+
+
+188
+00:18:10,460 --> 00:18:15,360
+implementation, rswinfs, that is supposed to be very, very, very portable. So you can
+
+
+189
+00:18:15,360 --> 00:18:21,260
+compile it to Wasm. There exist bindings for SwiftUI and Android. So there's people who
+
+
+190
+00:18:21,260 --> 00:18:27,260
+have been using it for iOS apps and Android apps. And we're using it at Vision inside
+
+
+191
+00:18:27,260 --> 00:18:35,540
+the browser. Yeah, here's like, you can find it on Docs.rs. And here's the implementation
+
+
+192
+00:18:35,540 --> 00:18:44,500
+inside of the Winifrest Working Group organization. It is extremely portable because we've abstracted
+
+
+193
+00:18:44,500 --> 00:18:54,220
+out a bunch of things that are very context-specific or host-specific. Specifically, that storage
+
+
+194
+00:18:54,220 --> 00:18:58,940
+network. So you basically just provide a block store with get block and put block as the
+
+
+195
+00:18:58,940 --> 00:19:03,860
+interface. And what we give you is all the DAX surgery and encryption that you need to
+
+
+196
+00:19:03,860 --> 00:19:09,420
+do. And also, you need to provide the secret storage externally. So that is going to be
+
+
+197
+00:19:09,420 --> 00:19:15,260
+very host-dependent, of course. What you get is a read and write and create directory and
+
+
+198
+00:19:15,260 --> 00:19:22,900
+all of that APIs. Essentially, all of the DAX surgery. Yeah, so let's look at some code.
+
+
+199
+00:19:22,900 --> 00:19:28,180
+So this is some Rust code. These aren't like, these APIs exist in this way and you can run
+
+
+200
+00:19:28,180 --> 00:19:36,940
+this code. But we are in the process of improving these APIs so they are more usable and more
+
+
+201
+00:19:36,940 --> 00:19:43,460
+easy to use, basically. But yeah, this works today. You can create some randomness. It
+
+
+202
+00:19:43,460 --> 00:19:48,580
+randomly generates keys for new files and new directories. You create some block store.
+
+
+203
+00:19:48,580 --> 00:19:53,420
+Here we're just using some in-memory block store. And you create this forest to put private
+
+
+204
+00:19:53,420 --> 00:19:59,300
+data into. And there's a new directory. You can create some stuff in this directory. For
+
+
+205
+00:19:59,300 --> 00:20:07,540
+example, here's...
+
+
+206
+00:20:00,000 --> 00:20:30,000
+an MKDIR command that creates a pictures slash cats kind of directory. You also give it the time at which it was created and all of the access to all of the things that it needs. You can write some data to it. For example, here's a picture of Billy the dog. Actually, it's not a picture. It's just it just says hello world. But well, I couldn't fit the picture quite in there. And then you can do something like LS and read what's inside of the pictures directory and
+
+
+207
+00:20:30,000 --> 00:21:00,000
+print that. And finally, you can serialize the whole file system and get the root seed and that's something you could send to a pending API, for example. So yeah, the output of that is that in the console, you can see LSing something gives you like all of the entries in there and some metadata about it when they were created, when they were last modified, and these kind of things. And also I put up a QR code here, what you'll get is I see people happily scanning this, but they'll be disappointed when they see it's just a car file.
+
+
+208
+00:21:00,000 --> 00:21:12,000
+Or basically just a very, very unreadable DAG Seaborg kind of DAG, which is basically the private forest, but look into it and you'll just see a bunch of random looking data, which is exactly the point.
+
+
+209
+00:21:12,000 --> 00:21:41,000
+All right. Also, I'll be sharing the slides and the link at the bottom is clickable. So we do have a public roadmap. So what is implemented? We've implemented basically all the private file sharing stuff that I haven't talked about yet that much. We have some things that we're working on this quarter. We were also working on the RSA accumulator stuff on this day.
+
+
+210
+00:21:41,000 --> 00:21:57,000
+So that isn't quite finished yet, but we're getting there. The spec is basically ready. It's just an implementation matter now. And also we're starting in this quarter now, we're starting on conflict reconciliation stuff and also big data set support, for example.
+
+
+211
+00:21:57,000 --> 00:22:12,000
+So if you want to store like 10,000 entry directories, that's going to be a bit harder for us. We'll need to figure out sharding directories there. And so that's something we haven't done yet. If you're interested in these kinds of things, this is a community project.
+
+
+212
+00:22:12,000 --> 00:22:27,000
+So this is the whole idea, right? So you come and get involved with us. We'll figure something out. This has worked in the past. So for example, the function land folks have created this FX photos app. So this is powered by our SwinifS in the background.
+
+
+213
+00:22:27,000 --> 00:22:44,000
+It's connected to MetaMask as like the secrets kind of storage thing. It stores a bunch of photos that you can upload and encrypts them and puts them on IPFS. So that's these people here. And they have created the Swift and the Android bindings in order to create these apps.
+
+
+214
+00:22:44,000 --> 00:23:01,000
+We've also worked together with Banyan very recently, and they've already been happily creating pull requests and contributing to RS WinifS, which I'm super glad about. So yeah, that's basically what it is. Come use it, talk to us, and get involved. Thank you.
+
+
+215
+00:23:01,000 --> 00:23:21,000
+Any questions? We have plenty of time for questions.
+
+
+216
+00:23:21,000 --> 00:23:34,000
+Is the mic working?
+
+
+217
+00:23:34,000 --> 00:24:02,000
+Okay, this is better. Yeah, so you showed a picture of the conflict resolution when there were two different files added, which is obviously the easy case. What do you do if there are two files added with the same name? So how do you do conflict resolution in that case?
+
+
+218
+00:24:02,000 --> 00:24:19,000
+Yeah, so the interesting thing in that case is, well, we need to do it automatically, obviously, or we strive to do it automatically. So what we do is we compare the hashes and use the lower hash. The most important thing for us is it's going to be consistent across all of your devices.
+
+
+219
+00:24:19,000 --> 00:24:40,000
+What you can do on top and what we're planning to do is once you have these automatic merges, a app that maybe knows how to, let's say it's not images, but instead it is actually some app data, some JSON, and the app knows how to reconcile changes from concurrent writes, then the app can go into the history of this file.
+
+
+220
+00:24:40,000 --> 00:24:54,000
+It can see, oh yeah, there was an automatic merge. It will go into the history and see the two versions that were merged, and it will put on top another revision, another write, where these files were actually merged in the right way.
+
+
+221
+00:24:54,000 --> 00:25:06,000
+Well, the problem we're trying to solve here is we can't have the correct CRDT for all apps, obviously, so we need each app to do it in their own unique way.
+
+
+222
+00:25:06,000 --> 00:25:14,000
+But the history is available where the API is, so you can basically query the history and figure out how to do an app-specific merge. Okay, thanks.
+
+
+223
+00:25:14,000 --> 00:25:16,000
+Yes, exactly.
+
+
+224
+00:25:21,000 --> 00:25:23,000
+There's another question over there.
+
+
+225
+00:25:23,000 --> 00:25:50,000
+I have a question with regard to the write permission management. Does each drive or file system have something like a did or a unique identifier at the root, or how do you delegate permissions to it? Because so far it was all just SIDs, which are immutable, of course.
+
+
+226
+00:25:50,000 --> 00:26:11,000
+Yeah, exactly. So the system that we're... At the end of the day, RS WinFS is very agnostic about all of that. So for example, the function landfogs have based their whole system around wallets, and the wallets being the way that you do verifying these writes and how you store the secrets, etc.
+
+
+227
+00:26:11,000 --> 00:26:25,000
+What we've been doing at Fission is we've had a root pointer that is controlled by a certain DID, and we will use UCANs to delegate to different DIDs that may represent more devices.
+
+
+228
+00:26:25,000 --> 00:26:50,000
+And basically that is stored externally at the point where you have the basically mutable pointer for your file system. You could also imagine that being controlled by IPNS, but at that point you need some extra capabilities in order to make use of, let's say, the verified writes without read permissioning.
+
+
+229
+00:26:50,000 --> 00:26:59,000
+Because IPNS of course only checks if it is a SID written by a certain public key, or signed by a certain public key.
+
+
+230
+00:26:59,000 --> 00:27:26,000
+And is the idea that in RS WinFS, if you open a file system, that it would check all the capabilities in there, or is that externalized to an app on top? Like, if I get some SID and I know the root key, would I be able to check if all writes in there actually had the capability to do these writes?
+
+
+231
+00:27:26,000 --> 00:27:49,000
+Yes. So there's kind of two different levels. At the moment what we're working towards is a kind of like authorized data structure WinFS approach, where you can actually just grab a certain SID that is supposed to be a WinFS, and you can go through it and you can just verify that its state relative to some DID that you know is valid.
+
+
+232
+00:27:49,000 --> 00:27:59,000
+We're not there today, but that's basically on the roadmap is the peer-to-peer write verification implementation thing.

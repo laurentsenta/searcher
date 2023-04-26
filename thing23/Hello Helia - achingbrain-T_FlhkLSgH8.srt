@@ -1,0 +1,2408 @@
+1
+00:00:00,000 --> 00:00:13,000
+Hello Helio, this is a talk about another, it was a new IPFS implementation in JavaScript
+
+
+2
+00:00:13,000 --> 00:00:18,120
+but like obviously since there's about a thousand new IPFS implementations being presented
+
+
+3
+00:00:18,120 --> 00:00:26,000
+this week it's now another new IPFS implementation in JavaScript. My name is Alex Potts-Seedys,
+
+
+4
+00:00:26,000 --> 00:00:32,000
+I am on the IP Stewards team at Protocol Labs, I'm the maintainer of js-ipfs, js-libp2p
+
+
+5
+00:00:32,000 --> 00:00:37,000
+and a whole bunch of supporting libraries, so I'm sorry if I broke something.
+
+
+6
+00:00:37,000 --> 00:00:49,000
+So Helio, so what is it? It's a replacement for js-ipfs. We're trying to apply basically the last five years worth of learning
+
+
+7
+00:00:49,000 --> 00:00:58,000
+of what an IPFS could be. We want to make it smaller, more lightweight, extensible, more observable, and faster
+
+
+8
+00:00:58,000 --> 00:01:07,000
+and hopefully it's going to make you more productive. But why? Why though? Why would you replace js-ipfs?
+
+
+9
+00:01:07,000 --> 00:01:12,000
+Because it's obviously disruptive because lots of people have written applications based on it.
+
+
+10
+00:01:12,000 --> 00:01:17,000
+So there must be a clear benefit to the users, otherwise we're just causing pain and refactoring
+
+
+11
+00:01:17,000 --> 00:01:24,000
+for the sake of refactoring, which can be quite a nice feeling, it's never a good feeling for the users.
+
+
+12
+00:01:24,000 --> 00:01:34,000
+So what are the motivations for this? So from the start, js-ipfs was supposed to be a clone of Go IPFS at the time
+
+
+13
+00:01:34,000 --> 00:01:41,000
+and what is now Qubo, which means it had to copy the same API and implement the same features.
+
+
+14
+00:01:41,000 --> 00:01:46,000
+And there wasn't a whole lot of thought put into whether or not that was actually a good idea,
+
+
+15
+00:01:46,000 --> 00:01:51,000
+it was just like, no, it must be the same. Which has led to some weird stuff.
+
+
+16
+00:01:51,000 --> 00:01:59,000
+So like the Go IPFS, the Qubo API, Qubo was primarily designed, it seems to be a command line tool
+
+
+17
+00:01:59,000 --> 00:02:06,000
+and the APIs reflect that. So the HTTP API is generated from the same, like all the code is generated from the same source
+
+
+18
+00:02:06,000 --> 00:02:12,000
+and you end up with the same API, like you end up with what's an ergonomic CLI API translated into a web API,
+
+
+19
+00:02:12,000 --> 00:02:18,000
+which is a bit weird, which was then translated into a programmatic API, which is kind of the primary use case for JS
+
+
+20
+00:02:18,000 --> 00:02:30,000
+because we all use modules and we write applications on things we generally don't shell out to CLIs.
+
+
+21
+00:02:30,000 --> 00:02:35,000
+So not all the features make sense as well because it's very targeted at a server-side environment,
+
+
+22
+00:02:35,000 --> 00:02:40,000
+definitely not the browser. So there's a lot of stuff that just doesn't really play to the strengths of JS,
+
+
+23
+00:02:40,000 --> 00:02:48,000
+you end up with a lot of stuff bundled, which is generally quite a bad user experience for people who care about
+
+
+24
+00:02:48,000 --> 00:02:54,000
+the time it takes for a website to render, which is definitely not a concern for a CLI.
+
+
+25
+00:02:54,000 --> 00:03:04,000
+So it makes it big. It makes it really big. I was Googling pictures of, well, Mr. Big, it didn't work out,
+
+
+26
+00:03:04,000 --> 00:03:10,000
+but this Mr. Big, I mean, anyway, I guess you have to be quite old to remember this one.
+
+
+27
+00:03:10,000 --> 00:03:17,000
+I don't know if it's good or not. Anyway, so when things are big, it's bad for the users because it becomes complicated
+
+
+28
+00:03:17,000 --> 00:03:22,000
+to understand. It's bad for the maintainers because there's a lot of code to maintain.
+
+
+29
+00:03:22,000 --> 00:03:27,000
+The API had a lot of duplication because there's a lot of shortcuts to do certain commands and they all got replicated
+
+
+30
+00:03:27,000 --> 00:03:35,000
+into the API, which is not a good design tenet for an API. You don't want to repeat yourself.
+
+
+31
+00:03:35,000 --> 00:03:42,000
+And there's lots of wrapping of other modules' APIs, which just increase the amount of maintenance,
+
+
+32
+00:03:42,000 --> 00:03:48,000
+though it does shield you a little bit from breaking changes, so it's not all bad.
+
+
+33
+00:03:48,000 --> 00:03:54,000
+But it meant that because the bundles are so big, you were getting code included whether you wanted it or not.
+
+
+34
+00:03:54,000 --> 00:04:02,000
+And some progress was made towards splitting that out, particularly around sort of more esoteric hashing algorithms
+
+
+35
+00:04:02,000 --> 00:04:08,000
+and that kind of thing. But we kind of need to go a bit further.
+
+
+36
+00:04:08,000 --> 00:04:15,000
+This is a slight tangent, but bad connectivity is definitely a problem with JS IPFS.
+
+
+37
+00:04:15,000 --> 00:04:22,000
+When we had this all thing event last year, the number one thing people were complaining about
+
+
+38
+00:04:22,000 --> 00:04:28,000
+was the fact that it's impossible almost to dial server nodes from browsers.
+
+
+39
+00:04:28,000 --> 00:04:37,000
+The USP of JS IPFS and now Helio is that it runs in the browser. It's no use if you can't talk to the rest of the network.
+
+
+40
+00:04:37,000 --> 00:04:42,000
+And we heard this loud and clear and a whole bunch of work has been done on this.
+
+
+41
+00:04:42,000 --> 00:04:47,000
+It's definitely the number one problem, but it's actually completely unrelated to JS IPFS.
+
+
+42
+00:04:47,000 --> 00:04:53,000
+Some of you may have seen this diagram. This table is from the libp2p website.
+
+
+43
+00:04:53,000 --> 00:05:01,000
+It shows which transports are implemented where and by which implementations.
+
+
+44
+00:05:01,000 --> 00:05:06,000
+As you can see, the bottom section is kind of the web-friendly ones.
+
+
+45
+00:05:06,000 --> 00:05:13,000
+So you've got WebSockets, WebTransport, WebRTC Browser to Server, WebRC Star, WebRC Direct.
+
+
+46
+00:05:13,000 --> 00:05:19,000
+Loads of the implementations do TCP. That's great. Browsers can't talk TCP.
+
+
+47
+00:05:19,000 --> 00:05:25,000
+They mostly all do WebSockets, but the problem with WebSockets is that you need to configure a certificate.
+
+
+48
+00:05:25,000 --> 00:05:30,000
+And that just appears to be a massive stumbling block. No one can configure an SSL certificate.
+
+
+49
+00:05:30,000 --> 00:05:36,000
+This is a web track. We are all web people. Configuring SSL certificates is our bread and butter.
+
+
+50
+00:05:36,000 --> 00:05:42,000
+It's super easy, but it still manages to be this tiny stumbling block that trips everyone up.
+
+
+51
+00:05:42,000 --> 00:05:50,000
+So it's lovely that it's there, but in the real world, when you try to connect to nodes on the network, it's just not a thing.
+
+
+52
+00:05:50,000 --> 00:05:54,000
+It might as well not be there, if I'm honest.
+
+
+53
+00:05:54,000 --> 00:06:03,000
+So then what does that mean? That means that these server-side implementations go primarily, but also Rust as well.
+
+
+54
+00:06:03,000 --> 00:06:10,000
+They don't really cater for browser nodes at all, which is why it's so hard to dial anything.
+
+
+55
+00:06:10,000 --> 00:06:17,000
+No new JS implementation is going to change that, unfortunately.
+
+
+56
+00:06:17,000 --> 00:06:24,000
+But that is changing. So there's this new transport called WebTransport, which is super exciting,
+
+
+57
+00:06:24,000 --> 00:06:29,000
+which lets us dial server nodes from the browser without a certificate.
+
+
+58
+00:06:29,000 --> 00:06:36,000
+There is a certificate, but the protocol allows you to use cell-sign certificates and then does a tiny bit of the noise handshake
+
+
+59
+00:06:36,000 --> 00:06:40,000
+to then do noise encryption on top of that. Oh, no, sorry, it doesn't do it on top of it.
+
+
+60
+00:06:40,000 --> 00:06:47,000
+We validate that the remote peer is the peer we think we're talking to, and then it uses the built-in encryption in the transport itself.
+
+
+61
+00:06:47,000 --> 00:06:51,000
+Suddenly, that tiny, tiny stumbling block is no longer there.
+
+
+62
+00:06:51,000 --> 00:06:59,000
+So we can now have browser nodes dial server nodes directly, which is going to be a complete game changer, I think,
+
+
+63
+00:06:59,000 --> 00:07:05,000
+for JS, IPFS, or IPFS in JS in the browser. I think this is amazing.
+
+
+64
+00:07:05,000 --> 00:07:11,000
+If you're running Chrome, because it doesn't work anywhere else, that is the slide downside.
+
+
+65
+00:07:11,000 --> 00:07:15,000
+But you can run it in web workers, and you can run it in service workers.
+
+
+66
+00:07:15,000 --> 00:07:22,000
+So you don't need to worry about upsetting the UI thread or anything like that. It's fantastic. It's really good. Very excited.
+
+
+67
+00:07:22,000 --> 00:07:30,000
+The other new transport that's arriving is WebRTC. We really had WebRTC. Alex, I've seen it. It's on the repo.
+
+
+68
+00:07:30,000 --> 00:07:36,000
+It was on that diagram you just showed. Yes, I know, but this is the new one, the new, new one, the new WebRTC.
+
+
+69
+00:07:36,000 --> 00:07:41,000
+So the old one had a hard dependency on a signaling server.
+
+
+70
+00:07:41,000 --> 00:07:47,000
+So with WebRTC, the first thing that the two clients need to do is negotiate how they're going to connect to each other.
+
+
+71
+00:07:47,000 --> 00:07:54,000
+And this is called the SDP handshake. Now, the old version had a WebSocket server that you had to run.
+
+
+72
+00:07:54,000 --> 00:07:58,000
+We ran a few, but they always fell over, that kind of thing. You had to run it.
+
+
+73
+00:07:58,000 --> 00:08:03,000
+Made this hard dependency on this other server to communicate with, to do the SDP handshake.
+
+
+74
+00:08:03,000 --> 00:08:08,000
+And then you can connect, which is great. The implementation wasn't perfect.
+
+
+75
+00:08:08,000 --> 00:08:13,000
+It did do full noise encryption on top of that. So you were double encrypting everything.
+
+
+76
+00:08:13,000 --> 00:08:18,000
+WebRTC also has its own stream muxing capability that we completely ignored.
+
+
+77
+00:08:18,000 --> 00:08:22,000
+And did stream muxing on top of the double encryption on a single data channel.
+
+
+78
+00:08:22,000 --> 00:08:29,000
+That has all changed. The new version uses WebRTC's encryption, uses WebRTC's stream muxing.
+
+
+79
+00:08:29,000 --> 00:08:35,000
+It's great. It's really great. Unless you're in a web worker or a service worker where it doesn't work,
+
+
+80
+00:08:35,000 --> 00:08:42,000
+because WebRTC is only available on the main thread. So we've made significant progress.
+
+
+81
+00:08:42,000 --> 00:08:50,000
+But there are some caveats. You should, incidentally, stick around for the universal connectivity demo that happens right after.
+
+
+82
+00:08:50,000 --> 00:08:54,000
+I'm doing this talk and I'm doing the next talk as well. And then it happens after that one.
+
+
+83
+00:08:54,000 --> 00:08:59,000
+It's going to be amazing. They're going to show connecting from all the different implementations to all the different implementations
+
+
+84
+00:08:59,000 --> 00:09:03,000
+and how they all work together. And basically how we now leverage WebRTC and WebTransport
+
+
+85
+00:09:03,000 --> 00:09:10,000
+and all that kind of stuff to actually really, really get JS going in IPFS, in JS going in the browser.
+
+
+86
+00:09:10,000 --> 00:09:14,000
+It's going to be like, I'm super excited about the future for this.
+
+
+87
+00:09:14,000 --> 00:09:18,000
+Enough libP2P. That's a lot of libP2P chat.
+
+
+88
+00:09:18,000 --> 00:09:25,000
+OK. So what is Helia? Helia is a very simple API. We definitely want it to be as minimal as possible
+
+
+89
+00:09:25,000 --> 00:09:31,000
+so that people can build abstractions on top of it rather than it trying to do everything for everyone.
+
+
+90
+00:09:31,000 --> 00:09:35,000
+So I'm going to go through each one. But yeah, so you've basically got a block store where the blocks live.
+
+
+91
+00:09:35,000 --> 00:09:39,000
+You've got a data store where the data lives. You've got some pinning and some garbage collection.
+
+
+92
+00:09:39,000 --> 00:09:43,000
+And then libP2P for all the networking there. So what's a block store?
+
+
+93
+00:09:43,000 --> 00:09:49,000
+It is, hopefully like it sounds, it's a store that you can put blocks into and you put them in with a CID
+
+
+94
+00:09:49,000 --> 00:09:54,000
+and then you can give it a CID later and then you get a block out. If the block is not there, it is wrapped with bitswap.
+
+
+95
+00:09:54,000 --> 00:09:59,000
+So bitswap will kick in and try and fetch from the network. You receive a promise of a block,
+
+
+96
+00:09:59,000 --> 00:10:05,000
+which will then resolve unless you abort it, obviously. And you have your block.
+
+
+97
+00:10:05,000 --> 00:10:09,000
+Other data transfer methods may be available.
+
+
+98
+00:10:09,000 --> 00:10:14,000
+So at the moment, at the moment Helio just bundles bitswap.
+
+
+99
+00:10:14,000 --> 00:10:24,000
+But I would like to look into how we can not do that and just have it able for the user to put their own data transfer protocols into it as well.
+
+
+100
+00:10:24,000 --> 00:10:30,000
+So that we can then experiment with new fun things and not have to, again, like bundle code that isn't being used.
+
+
+101
+00:10:30,000 --> 00:10:37,000
+But for the moment, bitswap is what it has.
+
+
+102
+00:10:37,000 --> 00:10:42,000
+The data store. What's a data store? It's basically a data, like a key value database.
+
+
+103
+00:10:42,000 --> 00:10:46,000
+There are implementations for IDB, for level, even a file system.
+
+
+104
+00:10:46,000 --> 00:10:51,000
+If you want to put the files in the database and the database in the files.
+
+
+105
+00:10:51,000 --> 00:10:55,000
+You can do it if you want. It's very simple.
+
+
+106
+00:10:55,000 --> 00:11:02,000
+And it's used by internal components like the DHT and IPNs name resolution service.
+
+
+107
+00:11:02,000 --> 00:11:10,000
+What else? So pinning. Pinning is really important because you don't want to have, you know, unbounded storage.
+
+
+108
+00:11:10,000 --> 00:11:14,000
+So you need some way of saying, well, these blocks are important and these ones aren't.
+
+
+109
+00:11:14,000 --> 00:11:17,000
+So you have to pin blocks, pin DAGs.
+
+
+110
+00:11:17,000 --> 00:11:24,000
+And in the process of pinning it, you'll walk the DAG and make sure that all the blocks are present.
+
+
+111
+00:11:24,000 --> 00:11:27,000
+Which is obviously important.
+
+
+112
+00:11:27,000 --> 00:11:33,000
+But garbage collection is a thing. So you do actually need to be able to delete those, the unpin blocks quickly.
+
+
+113
+00:11:33,000 --> 00:11:38,000
+And this has been a significant challenge in the past for both JS and for Go.
+
+
+114
+00:11:38,000 --> 00:11:41,000
+And then underneath all that is libp2p.
+
+
+115
+00:11:41,000 --> 00:11:44,000
+Which I'm just going to skim over. It basically provides a networking layer.
+
+
+116
+00:11:44,000 --> 00:11:51,000
+So peer discovery, data transports, etc.
+
+
+117
+00:11:51,000 --> 00:11:54,000
+That's it. That's all. That's all Helio is.
+
+
+118
+00:11:54,000 --> 00:11:57,000
+Data store, pinning, garbage collection, libp2p.
+
+
+119
+00:11:57,000 --> 00:12:00,000
+There's no file system in Helio.
+
+
+120
+00:12:00,000 --> 00:12:02,000
+So maybe, I don't know, interplanetary file.
+
+
+121
+00:12:02,000 --> 00:12:11,000
+Well, IPFS, as we've seen from the new website, is content addressing and transports.
+
+
+122
+00:12:11,000 --> 00:12:14,000
+So it's definitely an IPFS. But there's no file system bundled with Helio.
+
+
+123
+00:12:14,000 --> 00:12:22,000
+All of that will be provided by other modules that you will then compose with the Helio node that you've just configured.
+
+
+124
+00:12:22,000 --> 00:12:25,000
+Enough talk, Alex. This is really boring.
+
+
+125
+00:12:25,000 --> 00:12:34,000
+A demo.
+
+
+126
+00:12:34,000 --> 00:12:39,000
+So the first demo that we have is just putting and getting a block.
+
+
+127
+00:12:39,000 --> 00:12:44,000
+So the first thing that I do is I create a Helio node.
+
+
+128
+00:12:44,000 --> 00:12:46,000
+I create a block. So just text encoder.
+
+
+129
+00:12:46,000 --> 00:12:50,000
+Turn the hello world string into a UNA array.
+
+
+130
+00:12:50,000 --> 00:12:53,000
+Hash it. SHA256.
+
+
+131
+00:12:53,000 --> 00:12:56,000
+Create a V1 CID.
+
+
+132
+00:12:56,000 --> 00:12:58,000
+Put it in a block store.
+
+
+133
+00:12:58,000 --> 00:13:00,000
+Get it from the block store.
+
+
+134
+00:13:00,000 --> 00:13:02,000
+And then just print it out. Nice and easy.
+
+
+135
+00:13:02,000 --> 00:13:06,000
+So if I run node demo 1.
+
+
+136
+00:13:06,000 --> 00:13:11,000
+Amazing. It totally works.
+
+
+137
+00:13:11,000 --> 00:13:15,000
+God.
+
+
+138
+00:13:15,000 --> 00:13:17,000
+Tough crowd, really.
+
+
+139
+00:13:17,000 --> 00:13:20,000
+Crikey.
+
+
+140
+00:13:20,000 --> 00:13:22,000
+Another demo. That's boring.
+
+
+141
+00:13:22,000 --> 00:13:24,000
+So what else?
+
+
+142
+00:13:24,000 --> 00:13:26,000
+So obviously the networking thing is super important.
+
+
+143
+00:13:26,000 --> 00:13:28,000
+So here we're doing a little bit more in our creation.
+
+
+144
+00:13:28,000 --> 00:13:30,000
+So we create a data store and a block store.
+
+
+145
+00:13:30,000 --> 00:13:33,000
+So this is just using in memory data stores and block stores.
+
+
+146
+00:13:33,000 --> 00:13:35,000
+We create a Helio node.
+
+
+147
+00:13:35,000 --> 00:13:38,000
+So we pass the data store and the block store in.
+
+
+148
+00:13:38,000 --> 00:13:41,000
+We actually want to pass the data store into libp2p.
+
+
+149
+00:13:41,000 --> 00:13:43,000
+So it doesn't use its own.
+
+
+150
+00:13:43,000 --> 00:13:45,000
+I mean, it could. That's fine, too.
+
+
+151
+00:13:45,000 --> 00:13:47,000
+So what is it doing? So we create a libp2p node.
+
+
+152
+00:13:47,000 --> 00:13:49,000
+We listen on a WebSocket.
+
+
+153
+00:13:49,000 --> 00:13:51,000
+Socket.
+
+
+154
+00:13:51,000 --> 00:13:53,000
+Configure the WebSocket transport.
+
+
+155
+00:13:53,000 --> 00:13:55,000
+Noise. Yammox.
+
+
+156
+00:13:55,000 --> 00:13:58,000
+Pass the data store in. We're going to create two of them.
+
+
+157
+00:13:58,000 --> 00:14:01,000
+We're going to get one to dial the other.
+
+
+158
+00:14:01,000 --> 00:14:03,000
+And then same, same. So we create a block.
+
+
+159
+00:14:03,000 --> 00:14:05,000
+We put the block into one.
+
+
+160
+00:14:05,000 --> 00:14:07,000
+And then we pull it from the other.
+
+
+161
+00:14:07,000 --> 00:14:12,000
+And then we stop the node.
+
+
+162
+00:14:12,000 --> 00:14:19,000
+It's exactly the same.
+
+
+163
+00:14:19,000 --> 00:14:21,000
+Consistency is key. I should have asked.
+
+
+164
+00:14:21,000 --> 00:14:23,000
+Can you see that? Is that big enough?
+
+
+165
+00:14:23,000 --> 00:14:25,000
+I can make it bigger.
+
+
+166
+00:14:25,000 --> 00:14:27,000
+It looked bigger on my screen, but then I'm closer to my screen.
+
+
+167
+00:14:27,000 --> 00:14:30,000
+So that explains a lot.
+
+
+168
+00:14:30,000 --> 00:14:32,000
+Okay. Great demos.
+
+
+169
+00:14:32,000 --> 00:14:34,000
+Right. File systems.
+
+
+170
+00:14:34,000 --> 00:14:36,000
+Because that's what we're here for.
+
+
+171
+00:14:36,000 --> 00:14:41,000
+This is IPFS, after all.
+
+
+172
+00:14:41,000 --> 00:14:43,000
+So in the beginning, there was a UnixFS.
+
+
+173
+00:14:43,000 --> 00:14:46,000
+And then there was a UnixFS 1.5.
+
+
+174
+00:14:46,000 --> 00:14:48,000
+I mean, sort of.
+
+
+175
+00:14:48,000 --> 00:14:50,000
+Has it landed in Cuba yet?
+
+
+176
+00:14:50,000 --> 00:14:52,000
+I'm not sure. I haven't checked the issue for a while.
+
+
+177
+00:14:52,000 --> 00:14:54,000
+I don't think it has.
+
+
+178
+00:14:54,000 --> 00:14:56,000
+UnixFS v2? Is that a thing?
+
+
+179
+00:14:56,000 --> 00:14:58,000
+Is that a thing?
+
+
+180
+00:14:58,000 --> 00:15:00,000
+Don't ask. I don't want to talk about it.
+
+
+181
+00:15:00,000 --> 00:15:02,000
+Anyway. So what happens after that?
+
+
+182
+00:15:02,000 --> 00:15:06,000
+I mean, why would we couple ourselves to this?
+
+
+183
+00:15:06,000 --> 00:15:08,000
+So let's not. Let's just not do it.
+
+
+184
+00:15:08,000 --> 00:15:10,000
+Let's just try and support anything.
+
+
+185
+00:15:10,000 --> 00:15:13,000
+And let people experiment.
+
+
+186
+00:15:13,000 --> 00:15:18,000
+So there's no blessed file system in Helio.
+
+
+187
+00:15:18,000 --> 00:15:23,000
+Because I would like to see things like WinFS being treated as equally as UnixFS.
+
+
+188
+00:15:23,000 --> 00:15:26,000
+Because it's all down to the application.
+
+
+189
+00:15:26,000 --> 00:15:30,000
+And that gives the users the choice to use the file system that works the best for them.
+
+
+190
+00:15:30,000 --> 00:15:35,000
+All that matters is, as long as it talks blocks.
+
+
+191
+00:15:35,000 --> 00:15:38,000
+Because Helio presents a networked block store.
+
+
+192
+00:15:38,000 --> 00:15:43,000
+So as long as you can put blocks and get blocks, go nuts.
+
+
+193
+00:15:43,000 --> 00:15:46,000
+So a quick demo.
+
+
+194
+00:15:46,000 --> 00:15:51,000
+So here we have, very similar to before, I've moved the create node function into its own file.
+
+
+195
+00:15:51,000 --> 00:15:54,000
+So that we're just not distracted by the noise.
+
+
+196
+00:15:54,000 --> 00:15:58,000
+And so here we have a UnixFS implementation using Helio.
+
+
+197
+00:15:58,000 --> 00:16:02,000
+So we create the two nodes again.
+
+
+198
+00:16:02,000 --> 00:16:04,000
+Get them to dial each other.
+
+
+199
+00:16:04,000 --> 00:16:08,000
+Create a UNA array from a string.
+
+
+200
+00:16:08,000 --> 00:16:10,000
+Create our file system.
+
+
+201
+00:16:10,000 --> 00:16:12,000
+So you'll see, we have a Helio node.
+
+
+202
+00:16:12,000 --> 00:16:14,000
+And we're passing it into UnixFS.
+
+
+203
+00:16:14,000 --> 00:16:16,000
+And so we have a file system.
+
+
+204
+00:16:16,000 --> 00:16:18,000
+And so we call add bytes.
+
+
+205
+00:16:18,000 --> 00:16:19,000
+We add the bytes.
+
+
+206
+00:16:19,000 --> 00:16:22,000
+We get a CID back.
+
+
+207
+00:16:22,000 --> 00:16:24,000
+We're going to create a directory.
+
+
+208
+00:16:24,000 --> 00:16:30,000
+So you'll notice here that we're not really, we're not importing an enormous tree.
+
+
+209
+00:16:30,000 --> 00:16:32,000
+We're just doing a single chunk of bytes.
+
+
+210
+00:16:32,000 --> 00:16:34,000
+So what we're going to do is we're going to put it into a directory.
+
+
+211
+00:16:34,000 --> 00:16:36,000
+So first of all, we need a directory to put it in.
+
+
+212
+00:16:36,000 --> 00:16:38,000
+So we just add a directory.
+
+
+213
+00:16:38,000 --> 00:16:41,000
+We get an empty directory CID.
+
+
+214
+00:16:41,000 --> 00:16:47,000
+And then we can use the copy command to copy the file that we added into the directory.
+
+
+215
+00:16:47,000 --> 00:16:50,000
+And give it the name file.txt.
+
+
+216
+00:16:50,000 --> 00:16:52,000
+And so then we're just going to print the CIDs out.
+
+
+217
+00:16:52,000 --> 00:16:54,000
+And then that's it.
+
+
+218
+00:16:54,000 --> 00:16:56,000
+Then we switch to the other node.
+
+
+219
+00:16:56,000 --> 00:16:58,000
+We create another UnixFS.
+
+
+220
+00:16:58,000 --> 00:16:59,000
+Pass node B in.
+
+
+221
+00:16:59,000 --> 00:17:04,000
+And we just list the CID directory which has been put into node A.
+
+
+222
+00:17:04,000 --> 00:17:12,000
+And then stop the nodes.
+
+
+223
+00:17:12,000 --> 00:17:13,000
+So there you go.
+
+
+224
+00:17:13,000 --> 00:17:16,000
+So we've created a CID.
+
+
+225
+00:17:16,000 --> 00:17:18,000
+Created an empty directory.
+
+
+226
+00:17:18,000 --> 00:17:21,000
+And then we have put the CID into the empty directory.
+
+
+227
+00:17:21,000 --> 00:17:25,000
+And then on the other one we've listed it.
+
+
+228
+00:17:25,000 --> 00:17:28,000
+Where we print out the name and the CID of the directory content.
+
+
+229
+00:17:28,000 --> 00:17:31,000
+So you see file.txt and then the CID.
+
+
+230
+00:17:31,000 --> 00:17:32,000
+That's it.
+
+
+231
+00:17:32,000 --> 00:17:33,000
+That's UnixFS.
+
+
+232
+00:17:33,000 --> 00:17:41,000
+And the important thing is of course it could be anything.
+
+
+233
+00:17:41,000 --> 00:17:45,000
+It could be any file system.
+
+
+234
+00:17:45,000 --> 00:17:47,000
+Okay.
+
+
+235
+00:17:47,000 --> 00:17:49,000
+Observability.
+
+
+236
+00:17:49,000 --> 00:17:50,000
+We have logging.
+
+
+237
+00:17:50,000 --> 00:17:56,000
+Like one of the things that happens a lot with IPFS implementations in general
+
+
+238
+00:17:56,000 --> 00:17:58,000
+is there's a lot of moving parts.
+
+
+239
+00:17:58,000 --> 00:18:01,000
+It's very hard to work out what's going on.
+
+
+240
+00:18:01,000 --> 00:18:04,000
+Logging is definitely your friend in this.
+
+
+241
+00:18:04,000 --> 00:18:10,000
+It's very easy to enable environmental variables or local storage in the browser.
+
+
+242
+00:18:10,000 --> 00:18:13,000
+And you get this incredibly readable display.
+
+
+243
+00:18:13,000 --> 00:18:14,000
+You can all make that out, right?
+
+
+244
+00:18:14,000 --> 00:18:15,000
+You know exactly what's going on.
+
+
+245
+00:18:15,000 --> 00:18:18,000
+There's a bug in there somewhere.
+
+
+246
+00:18:18,000 --> 00:18:19,000
+No, it's awful.
+
+
+247
+00:18:19,000 --> 00:18:22,000
+I mean, not a great user experience.
+
+
+248
+00:18:22,000 --> 00:18:26,000
+What I'm trying to do with Helio is introduce this idea of progress events for everything.
+
+
+249
+00:18:26,000 --> 00:18:32,000
+So we have progress events for things like adding files and exporting files at the moment.
+
+
+250
+00:18:32,000 --> 00:18:37,000
+But it needs to go deeper and be able to, like, you should be able to, like,
+
+
+251
+00:18:37,000 --> 00:18:41,000
+it's an important bit of context that's carried throughout the application,
+
+
+252
+00:18:41,000 --> 00:18:44,000
+like the execution stack of a given operation.
+
+
+253
+00:18:44,000 --> 00:18:49,000
+And then so these progress events can tell you what's happening, where things are stalling,
+
+
+254
+00:18:49,000 --> 00:18:54,000
+and so where you need to look to see why things aren't working.
+
+
+255
+00:18:54,000 --> 00:18:56,000
+Demo.
+
+
+256
+00:18:56,000 --> 00:19:02,000
+I mean, I'm going to actually, no, not a demo.
+
+
+257
+00:19:02,000 --> 00:19:05,000
+Because, like, I'm just going to go on a little tangent.
+
+
+258
+00:19:05,000 --> 00:19:07,000
+So we talk about SIDS quite a lot.
+
+
+259
+00:19:07,000 --> 00:19:09,000
+And I can't call them SIDS.
+
+
+260
+00:19:09,000 --> 00:19:15,000
+Like, I have to call them CIDs because, you know, like when people talk about SIDS,
+
+
+261
+00:19:15,000 --> 00:19:23,000
+maybe they think of this guy from Ice Age, or maybe this guy from Toy Story.
+
+
+262
+00:19:23,000 --> 00:19:28,000
+Maybe this guy, if you remember my talk on debugging things from IPFS camp, SID vicious.
+
+
+263
+00:19:28,000 --> 00:19:29,000
+No, not this SID vicious.
+
+
+264
+00:19:29,000 --> 00:19:31,000
+This SID vicious.
+
+
+265
+00:19:31,000 --> 00:19:32,000
+This is the original SID vicious.
+
+
+266
+00:19:32,000 --> 00:19:35,000
+Incidentally, this picture is in the National Portrait Gallery in London.
+
+
+267
+00:19:35,000 --> 00:19:38,000
+So this is art, actually art.
+
+
+268
+00:19:38,000 --> 00:19:41,000
+But no, I don't think of SID vicious.
+
+
+269
+00:19:41,000 --> 00:19:43,000
+I think of this guy.
+
+
+270
+00:19:43,000 --> 00:19:45,000
+This guy is a guy called Sid James.
+
+
+271
+00:19:45,000 --> 00:19:49,000
+He's a comedian from South Africa.
+
+
+272
+00:19:49,000 --> 00:19:54,000
+But he's on TV a lot, like a lot of movies in the U.K.
+
+
+273
+00:19:54,000 --> 00:19:59,000
+He died on stage, incidentally, which is terrible for a comedian, I guess.
+
+
+274
+00:19:59,000 --> 00:20:14,000
+But like he's a comedian.
+
+
+275
+00:20:00,000 --> 00:20:02,240
+He's not the most famous comedian to have died on stage.
+
+
+276
+00:20:02,400 --> 00:20:05,720
+It was this guy, Tommy Cooper, who actually died on TV.
+
+
+277
+00:20:05,880 --> 00:20:08,840
+He was on stage, but on TV, which is immeasurably worse.
+
+
+278
+00:20:09,000 --> 00:20:11,840
+Anyway, Sid James, he was in the Carry On movies.
+
+
+279
+00:20:12,000 --> 00:20:15,640
+And whenever anyone says Sid, I think of this.
+
+
+280
+00:20:15,800 --> 00:20:17,680
+Anyway, sorry about that.
+
+
+281
+00:20:17,840 --> 00:20:20,440
+So back to the demo.
+
+
+282
+00:20:20,600 --> 00:20:23,680
+So, progress events.
+
+
+283
+00:20:23,840 --> 00:20:25,960
+So this one's a little more in-depth
+
+
+284
+00:20:26,120 --> 00:20:29,080
+because we're going to use IPNS for this one.
+
+
+285
+00:20:29,080 --> 00:20:32,640
+So we have a UnixFS and we have an IPNS,
+
+
+286
+00:20:32,800 --> 00:20:35,240
+which is imported in the same way as UnixFS.
+
+
+287
+00:20:35,400 --> 00:20:39,040
+We have DHT routing for IPNS.
+
+
+288
+00:20:39,200 --> 00:20:42,840
+So one of the things that is really hard to work out
+
+
+289
+00:20:43,000 --> 00:20:45,760
+what's going on with a lot of the time with JSRFS
+
+
+290
+00:20:45,920 --> 00:20:49,040
+is that so much is bundled by default.
+
+
+291
+00:20:49,200 --> 00:20:51,560
+It's not always clear, like, what's going on
+
+
+292
+00:20:51,720 --> 00:20:53,840
+and where things are going wrong.
+
+
+293
+00:20:54,000 --> 00:20:56,120
+So with Healy, you very much have...
+
+
+294
+00:20:56,120 --> 00:20:59,880
+You very much are explicit about the things you want to enable.
+
+
+295
+00:21:00,040 --> 00:21:03,720
+So IPNS has a DHT routing and it has a PubSub routing.
+
+
+296
+00:21:03,880 --> 00:21:06,760
+And the PubSub routing is great, unless it isn't.
+
+
+297
+00:21:06,920 --> 00:21:09,400
+It's hard to work out which is the one that's gone wrong.
+
+
+298
+00:21:09,560 --> 00:21:12,480
+So if you want, if you're trying to debug things,
+
+
+299
+00:21:12,640 --> 00:21:15,040
+now we can just say, right, we'll disable this,
+
+
+300
+00:21:15,200 --> 00:21:18,160
+explicitly enable DHT, explicitly enable PubSub,
+
+
+301
+00:21:18,320 --> 00:21:20,840
+and you can see which one works and which one doesn't.
+
+
+302
+00:21:21,000 --> 00:21:23,800
+Anyway, so in the demo, I've got three nodes.
+
+
+303
+00:21:23,800 --> 00:21:26,000
+We're going to publish a record on one.
+
+
+304
+00:21:26,160 --> 00:21:29,560
+One node is going to host that record
+
+
+305
+00:21:29,720 --> 00:21:32,360
+and then another node is going to resolve it.
+
+
+306
+00:21:32,520 --> 00:21:36,640
+So we create the three nodes and then we connect them in a row.
+
+
+307
+00:21:36,800 --> 00:21:41,000
+So the publisher dials the host, the record host,
+
+
+308
+00:21:41,160 --> 00:21:43,760
+and the record host dials the resolver, so they're connected in a line.
+
+
+309
+00:21:43,920 --> 00:21:46,600
+I've got no peer discovery going on,
+
+
+310
+00:21:46,760 --> 00:21:50,360
+so the publisher will not contact the resolver.
+
+
+311
+00:21:50,360 --> 00:21:52,760
+We add a file, same as before.
+
+
+312
+00:21:52,920 --> 00:21:57,160
+We create an IPNS with the first Helio node.
+
+
+313
+00:21:57,320 --> 00:22:02,360
+We pass in the DHT and we create a key.
+
+
+314
+00:22:02,520 --> 00:22:08,360
+So we create a peer ID that we use to publish the IPNS name.
+
+
+315
+00:22:08,520 --> 00:22:11,560
+Now, there's a little bit of sleight of hand here,
+
+
+316
+00:22:11,720 --> 00:22:15,440
+because, I mean, we all know how IPNS works, right?
+
+
+317
+00:22:15,600 --> 00:22:18,160
+I mean, I have to look it up sometimes.
+
+
+318
+00:22:18,160 --> 00:22:23,160
+So what happens is you have a peer ID
+
+
+319
+00:22:23,320 --> 00:22:27,360
+and you use that as the IPNS name.
+
+
+320
+00:22:27,520 --> 00:22:31,600
+And when someone wants to resolve that IPNS name,
+
+
+321
+00:22:31,760 --> 00:22:33,640
+they look at the peer ID,
+
+
+322
+00:22:33,800 --> 00:22:37,120
+they find the nodes on the network that are close to that peer ID,
+
+
+323
+00:22:37,280 --> 00:22:41,040
+CAD close, with the DHT resolver,
+
+
+324
+00:22:41,200 --> 00:22:43,400
+and they say, do you have the record for this,
+
+
+325
+00:22:43,560 --> 00:22:46,560
+the most up-to-date record for this IPNS name?
+
+
+326
+00:22:46,560 --> 00:22:48,920
+You get a whole bunch in the back, you compare them,
+
+
+327
+00:22:49,080 --> 00:22:51,000
+and you choose the most up-to-date ones.
+
+
+328
+00:22:51,160 --> 00:22:53,360
+So that means that you have to be able to predict
+
+
+329
+00:22:53,520 --> 00:22:55,320
+where the record for the demo to work,
+
+
+330
+00:22:55,480 --> 00:22:58,880
+you have to be able to predict where the record is going to be stored.
+
+
+331
+00:22:59,040 --> 00:23:02,720
+So this createPeerID function, all it does is it generates a peer ID
+
+
+332
+00:23:02,880 --> 00:23:07,360
+that is closest to node B, who, if you remember, is the record host.
+
+
+333
+00:23:07,520 --> 00:23:10,040
+So we can guarantee that the record will be hosted
+
+
+334
+00:23:10,200 --> 00:23:14,600
+by the intermediate node that's sitting in the middle of A and C.
+
+
+335
+00:23:14,600 --> 00:23:19,600
+So we import the peer ID into the keychain of node A,
+
+
+336
+00:23:19,760 --> 00:23:24,760
+and we use the key to publish our IPNS entry.
+
+
+337
+00:23:24,920 --> 00:23:28,920
+And then on node C, we create a UnixFS,
+
+
+338
+00:23:29,080 --> 00:23:32,800
+we create an IPNS with a DHT resolver,
+
+
+339
+00:23:32,960 --> 00:23:34,960
+and we just resolve it.
+
+
+340
+00:23:35,120 --> 00:23:37,800
+I'm just going to comment that out for the time being.
+
+
+341
+00:23:37,960 --> 00:23:41,200
+And there we go.
+
+
+342
+00:23:41,200 --> 00:23:44,480
+There we go. So... And then, yes.
+
+
+343
+00:23:44,640 --> 00:23:48,200
+And then we just... We cap the bytes from that CID,
+
+
+344
+00:23:48,360 --> 00:23:51,160
+and then we print them all to the terminal.
+
+
+345
+00:23:51,320 --> 00:23:55,440
+So if I do node demo4...
+
+
+346
+00:23:58,200 --> 00:24:01,160
+Dun-dun-dun. Hello world. Look, it totally works.
+
+
+347
+00:24:01,320 --> 00:24:05,800
+But don't take my word for it, because we're interested in the progress events.
+
+
+348
+00:24:05,960 --> 00:24:09,760
+So we can see, if I charm that back in,
+
+
+349
+00:24:09,760 --> 00:24:11,760
+when I actually do the resolve...
+
+
+350
+00:24:13,440 --> 00:24:17,440
+So this horrendous mess is the actual IPNS entry.
+
+
+351
+00:24:19,400 --> 00:24:25,400
+Dun-dun-dun. So we scroll down, and suddenly we see lots of events happening.
+
+
+352
+00:24:25,560 --> 00:24:30,560
+So the first thing that we do is we try to get the record from the local datastore.
+
+
+353
+00:24:30,720 --> 00:24:33,800
+It's not found. So then we have to go to the routing.
+
+
+354
+00:24:33,960 --> 00:24:36,560
+So we make a DHT query.
+
+
+355
+00:24:36,560 --> 00:24:39,840
+This is the peer that's responded, and here's the value,
+
+
+356
+00:24:40,000 --> 00:24:44,160
+which is the IPNS record, which we can then resolve to a CID,
+
+
+357
+00:24:44,320 --> 00:24:46,320
+and then pull it down.
+
+
+358
+00:24:46,480 --> 00:24:48,480
+APPLAUSE
+
+
+359
+00:24:50,920 --> 00:24:52,600
+But wait, there's more.
+
+
+360
+00:24:52,760 --> 00:24:57,400
+Because we can put the in-progress events in the actual resolve as well.
+
+
+361
+00:24:57,560 --> 00:25:00,560
+Sorry, when we're capping the CID as well.
+
+
+362
+00:25:01,880 --> 00:25:04,160
+So I'm going to run it again.
+
+
+363
+00:25:04,160 --> 00:25:07,760
+Make it a bit bigger. And now we see the DHT query come back,
+
+
+364
+00:25:07,920 --> 00:25:11,280
+and now we're resolving the CID. So we've gone to bitswap.
+
+
+365
+00:25:11,440 --> 00:25:13,440
+We've done a find providers of the CID.
+
+
+366
+00:25:13,600 --> 00:25:16,000
+We've dialled some peers to do the file providers.
+
+
+367
+00:25:16,160 --> 00:25:18,040
+We send them the what list.
+
+
+368
+00:25:18,200 --> 00:25:21,120
+And in comes the block. Put the block locally.
+
+
+369
+00:25:21,280 --> 00:25:24,600
+And then here we have the actual export.
+
+
+370
+00:25:24,760 --> 00:25:26,760
+Progress events. APPLAUSE
+
+
+371
+00:25:29,880 --> 00:25:31,600
+Amazing. So all these come in in real time as well.
+
+
+372
+00:25:31,600 --> 00:25:34,080
+So I'm looking forward to seeing some wonderful visualisations
+
+
+373
+00:25:34,240 --> 00:25:36,680
+of the internals of IPFS nodes.
+
+
+374
+00:25:36,840 --> 00:25:41,920
+All this stuff will eventually be supported remotely as well via RPC.
+
+
+375
+00:25:42,080 --> 00:25:44,800
+It's going to be great. I'm very excited.
+
+
+376
+00:25:44,960 --> 00:25:47,960
+Thank you for sitting through that demo. That was very long.
+
+
+377
+00:25:49,120 --> 00:25:51,120
+Phew. OK.
+
+
+378
+00:25:53,600 --> 00:25:57,040
+The big questions. Is it ready? Is it ready? Can I use it?
+
+
+379
+00:25:57,200 --> 00:25:59,600
+I mean, we're hyped, right? That was great, right?
+
+
+380
+00:25:59,600 --> 00:26:02,880
+I hope so. I really hope so.
+
+
+381
+00:26:03,040 --> 00:26:05,040
+I mean, Helio 1 v1 has been released.
+
+
+382
+00:26:05,200 --> 00:26:07,200
+So, yes. APPLAUSE
+
+
+383
+00:26:08,960 --> 00:26:11,760
+Not only that, Unix-adverse v1 has been released.
+
+
+384
+00:26:11,920 --> 00:26:13,920
+APPLAUSE
+
+
+385
+00:26:14,960 --> 00:26:16,960
+IPNS v1 has been released.
+
+
+386
+00:26:17,120 --> 00:26:19,120
+This is incredible.
+
+
+387
+00:26:19,280 --> 00:26:22,000
+So, yes, you can totally use it.
+
+
+388
+00:26:24,960 --> 00:26:28,320
+I mean, v1, what does that even mean? All that means is v2 is coming soon.
+
+
+389
+00:26:28,320 --> 00:26:31,280
+Right, really. But, I mean, yes, v1 is here.
+
+
+390
+00:26:31,440 --> 00:26:34,440
+You can totally use it. So how can you get involved?
+
+
+391
+00:26:34,600 --> 00:26:36,600
+Port your apps.
+
+
+392
+00:26:36,760 --> 00:26:40,480
+So there are no features in JSIPFS now that aren't available in Helio.
+
+
+393
+00:26:40,640 --> 00:26:42,640
+I believe.
+
+
+394
+00:26:42,800 --> 00:26:46,160
+Examples. So we have an examples repo.
+
+
+395
+00:26:46,320 --> 00:26:49,800
+Like Russell has been helping out loads, porting examples.
+
+
+396
+00:26:49,960 --> 00:26:52,960
+There's a whole slew more of them. If you check the Helio repo,
+
+
+397
+00:26:53,120 --> 00:26:55,720
+there's a hit list of the most important ones.
+
+
+398
+00:26:55,720 --> 00:26:59,720
+So, yes, please do come and help.
+
+
+399
+00:26:59,880 --> 00:27:01,880
+And talk to me. So I'm here.
+
+
+400
+00:27:02,040 --> 00:27:04,040
+I'm here all week. Try the fish.
+
+
+401
+00:27:04,200 --> 00:27:06,200
+The fish was great last night.
+
+
+402
+00:27:06,360 --> 00:27:09,360
+Anyway, like... This is Tommy Cooper again. Never mind.
+
+
+403
+00:27:09,520 --> 00:27:11,520
+Yes, come and find me.
+
+
+404
+00:27:11,680 --> 00:27:14,680
+Come and tell me your use cases, what you're excited about.
+
+
+405
+00:27:14,840 --> 00:27:17,840
+What are the problems you have with existing implementations?
+
+
+406
+00:27:18,000 --> 00:27:21,000
+And we'll fix it all. It's going to be amazing.
+
+
+407
+00:27:21,160 --> 00:27:25,160
+So, at the last thing, while I'm still on the stage,
+
+
+408
+00:27:25,160 --> 00:27:28,880
+I talked about a Cambrian explosion of IPFS implementations.
+
+
+409
+00:27:29,040 --> 00:27:32,040
+I want to see a pre-Cambrian explosion of browser apps
+
+
+410
+00:27:32,200 --> 00:27:36,200
+written on JSIPFS and IPFS in JS in the browser.
+
+
+411
+00:27:36,360 --> 00:27:39,360
+And Helio, etc. It's going to be amazing. I'm super excited.
+
+
+412
+00:27:40,200 --> 00:27:42,200
+That's it. That's me.
+
+
+413
+00:27:42,360 --> 00:27:44,360
+APPLAUSE
+
+
+414
+00:27:51,360 --> 00:27:53,360
+Are there any questions?
+
+
+415
+00:27:53,360 --> 00:27:55,360
+Go.
+
+
+416
+00:27:55,520 --> 00:27:57,520
+I'm here to you.
+
+
+417
+00:27:57,680 --> 00:27:59,680
+One of us.
+
+
+418
+00:28:02,840 --> 00:28:05,840
+Thanks, Alex. I was just curious. Can someone use Helio in the browser?
+
+
+419
+00:28:06,000 --> 00:28:08,000
+Yes.
+
+
+420
+00:28:08,160 --> 00:28:10,160
+Any gotchas or anything they need to be aware of?
+
+
+421
+00:28:10,320 --> 00:28:12,320
+No.
+
+
+422
+00:28:12,480 --> 00:28:14,480
+Zero defects.
+
+
+423
+00:28:14,640 --> 00:28:16,640
+APPLAUSE
+
+
+424
+00:28:16,800 --> 00:28:19,800
+If you go to the examples repo, there are examples on how to bundle Helio
+
+
+425
+00:28:19,960 --> 00:28:21,960
+with Webpack and ESBuild.
+
+
+426
+00:28:21,960 --> 00:28:25,960
+And there's Next.js as well, I think we have now.
+
+
+427
+00:28:26,120 --> 00:28:29,600
+And there will be more added for more specific browser technologies.
+
+
+428
+00:28:29,760 --> 00:28:31,760
+But yes, absolutely.
+
+
+429
+00:28:31,920 --> 00:28:33,920
+Hi. I have a question.
+
+
+430
+00:28:34,080 --> 00:28:37,080
+I saw during one of the examples,
+
+
+431
+00:28:37,240 --> 00:28:41,240
+you casually just threw a DHT in there.
+
+
+432
+00:28:41,400 --> 00:28:43,400
+I did.
+
+
+433
+00:28:43,560 --> 00:28:45,560
+Is there DHT support?
+
+
+434
+00:28:45,720 --> 00:28:48,720
+Of course there is. You saw it with your own eyes.
+
+
+435
+00:28:48,880 --> 00:28:50,880
+LAUGHTER
+
+
+436
+00:28:50,880 --> 00:28:52,880
+Can I use Helio in Electron?
+
+
+437
+00:28:53,040 --> 00:28:55,040
+Yes, you can. There's a demo.
+
+
+438
+00:28:55,200 --> 00:28:57,200
+There's an example running in Electron.
+
+
+439
+00:28:57,360 --> 00:29:00,360
+Of course Electron doesn't support... Helio is ESM only.
+
+
+440
+00:29:00,520 --> 00:29:05,520
+Electron doesn't support ESM as the entry JS.
+
+
+441
+00:29:05,680 --> 00:29:09,680
+But you can load it using the dynamic import function.
+
+
+442
+00:29:09,840 --> 00:29:11,840
+So yes, with that caveat.
+
+
+443
+00:29:11,840 --> 00:29:20,840
+Thank you. Any other questions for Alex?
+
+
+444
+00:29:21,000 --> 00:29:25,000
+Thanks, Molly. I'm just curious, what's coming next, Alex?
+
+
+445
+00:29:25,160 --> 00:29:27,160
+It's finished. We've won.
+
+
+446
+00:29:27,320 --> 00:29:29,320
+There's nothing coming next.
+
+
+447
+00:29:29,480 --> 00:29:34,480
+What I'm hoping comes next is things like extra file systems.
+
+
+448
+00:29:34,640 --> 00:29:37,640
+So building on top of the primitives that Helio presents.
+
+
+449
+00:29:37,800 --> 00:29:40,800
+So doing things like, I would love to see WinFS.
+
+
+450
+00:29:40,800 --> 00:29:43,800
+I'd love to see WinFS running on top of Helio.
+
+
+451
+00:29:43,960 --> 00:29:46,960
+I believe there's a TypeScript implementation of it.
+
+
+452
+00:29:47,120 --> 00:29:50,120
+Anything that spits out blocks.
+
+
+453
+00:29:50,280 --> 00:29:53,280
+That's what I want to see. People experimenting.
+
+
+454
+00:29:53,440 --> 00:29:56,440
+I'm curious if you know of any examples of...
+
+
+455
+00:29:56,600 --> 00:29:58,600
+I know it's just hitting V1.
+
+
+456
+00:29:58,760 --> 00:30:01,760
+But of things that people are building,
+
+
+457
+00:30:01,920 --> 00:30:04,920
+or that you would like to see people building using Helio.
+
+
+458
+00:30:05,080 --> 00:30:10,080
+What are some examples or use cases that you think are really exciting?
+
+
+459
+00:30:10,080 --> 00:30:13,080
+Or that you know people might already be working on?
+
+
+460
+00:30:13,240 --> 00:30:16,240
+That's a good question. Because it is box fresh.
+
+
+461
+00:30:16,400 --> 00:30:19,400
+I'm really keen to get it...
+
+
+462
+00:30:19,560 --> 00:30:23,560
+I'd love to run a bootstrapper node on it.
+
+
+463
+00:30:23,720 --> 00:30:27,720
+That would be really nice. Properly battle-test it.
+
+
+464
+00:30:27,880 --> 00:30:32,880
+People who are running...
+
+
+465
+00:30:33,040 --> 00:30:38,040
+So there's the service worker example that Russell's put together.
+
+
+466
+00:30:38,040 --> 00:30:41,040
+That's running basically like a gateway in your browser.
+
+
+467
+00:30:41,200 --> 00:30:44,200
+Which is all built on top of Helio.
+
+
+468
+00:30:44,360 --> 00:30:49,360
+Anywhere you would have used JSIPFS, you should be able to replace it with Helio.
+
+
+469
+00:30:49,520 --> 00:30:54,520
+Are there any plans to take things like IPFS Share, I think was the website.
+
+
+470
+00:30:54,680 --> 00:30:59,680
+Or there's the one that Jim Pick worked on back in the day with PeerPad.
+
+
+471
+00:30:59,840 --> 00:31:04,840
+Take any of those more meaty browser to browser applications and get them using Helio?
+
+
+472
+00:31:04,840 --> 00:31:11,280
+Definitely. Because also the latest versions of libP2P will not be backported to JSIPFS.
+
+
+473
+00:31:11,440 --> 00:31:15,440
+It's purely a factor of the development hours that are available.
+
+
+474
+00:31:15,600 --> 00:31:19,600
+So anything moving forward would look to use Helio.
+
+
+475
+00:31:19,760 --> 00:31:24,760
+Because then you get all the nice new transports available in libP2P.
+
+
+476
+00:31:24,920 --> 00:31:27,920
+So WebRTC, WebTransport, etc.
+
+
+477
+00:31:27,920 --> 00:31:34,920
+No more star-star signaling craziness.
+
+
+478
+00:31:38,080 --> 00:31:43,080
+Just to be clear, Alex, what's the future for JSIPFS?
+
+
+479
+00:31:43,240 --> 00:31:46,240
+So the repo...
+
+
+480
+00:31:46,400 --> 00:31:51,400
+If there are any emergency security fixes, I guess we will try to pull those back.
+
+
+481
+00:31:51,560 --> 00:31:56,560
+But the repo itself will not have any further development done on it.
+
+
+482
+00:31:56,560 --> 00:32:01,560
+Because we have the equivalent functionality in Helio.

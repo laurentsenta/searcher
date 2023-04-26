@@ -1,0 +1,1258 @@
+1
+00:00:00,000 --> 00:00:10,000
+My name is Piotr, I work at Protocol Labs in the IPDX team, that stands for Interplanetary
+
+
+2
+00:00:10,000 --> 00:00:16,200
+Developer Experience, and our main goal is to improve developer experience within the
+
+
+3
+00:00:16,200 --> 00:00:21,240
+IP Stewards team, because we do need them in a lot of places and they don't have that
+
+
+4
+00:00:21,240 --> 00:00:22,920
+much time.
+
+
+5
+00:00:22,920 --> 00:00:29,480
+So in this talk I'm going to talk a bit about how we're making it happen through automation.
+
+
+6
+00:00:29,480 --> 00:00:37,200
+I'm going to touch on how we automated Kubo release process, how that connects to our
+
+
+7
+00:00:37,200 --> 00:00:42,680
+migration from CircleCI to GitHub Actions, how we're making GitHub Actions work for us
+
+
+8
+00:00:42,680 --> 00:00:51,080
+so that it's fast enough and reliable enough and available, and finally how we're monitoring
+
+
+9
+00:00:51,080 --> 00:00:55,440
+all of that so that we know where to go next.
+
+
+10
+00:00:55,440 --> 00:01:01,080
+So let's get started, first, I guess that doesn't need that much introduction, you probably
+
+
+11
+00:01:01,080 --> 00:01:05,840
+already are familiar with Kubo, but for the purpose of this talk I want to just mention
+
+
+12
+00:01:05,840 --> 00:01:13,720
+that Kubo is a Go-based IPFS implementation, that it's maintained by IP Stewards and they
+
+
+13
+00:01:13,720 --> 00:01:21,440
+do have a great deal of knowledge that's needed in various places around our ecosystems, so
+
+
+14
+00:01:21,440 --> 00:01:29,120
+whatever we can do to free their time up for use in more important stuff than the burden
+
+
+15
+00:01:29,120 --> 00:01:35,680
+of going through a release process, for example, that has a tremendous impact.
+
+
+16
+00:01:35,680 --> 00:01:42,320
+And while we are on the release process, which I'm going to talk more about just for the
+
+
+17
+00:01:42,320 --> 00:01:50,160
+record, in Kubo it follows a monthly cadence, we do have RC releases before each final release,
+
+
+18
+00:01:50,160 --> 00:01:55,200
+there are some patch releases in between as well, sometimes there are more than one RC
+
+
+19
+00:01:55,200 --> 00:02:05,680
+per release, so as you can imagine, it all adds up and it's time from IP Stewards time.
+
+
+20
+00:02:05,680 --> 00:02:08,280
+So why do we want to automate it?
+
+
+21
+00:02:08,280 --> 00:02:16,880
+First of all, with a process as complex as Kubo release processes, which doesn't really
+
+
+22
+00:02:16,880 --> 00:02:22,920
+entail only releasing Kubo binaries, but also touching on many different other projects
+
+
+23
+00:02:22,920 --> 00:02:34,600
+like upgrading Kubo in different areas or promoting the release via multiple channels,
+
+
+24
+00:02:34,600 --> 00:02:40,480
+it's really complex, so there is a pretty big potential for error and we do want to
+
+
+25
+00:02:40,480 --> 00:02:42,060
+reduce that.
+
+
+26
+00:02:42,060 --> 00:02:45,240
+We also want to make it more reliable.
+
+
+27
+00:02:45,240 --> 00:02:53,520
+As I mentioned before, our main goal is for IP Stewards to have a better experience,
+
+
+28
+00:02:53,520 --> 00:02:58,520
+but also to have more time for more important tasks.
+
+
+29
+00:02:58,520 --> 00:03:04,680
+We also want to make the process more scalable, because as you can imagine, if it's all manual
+
+
+30
+00:03:04,680 --> 00:03:11,640
+and with time, it's only getting more and more complex, and that doesn't scale very
+
+
+31
+00:03:11,640 --> 00:03:12,640
+well.
+
+
+32
+00:03:12,640 --> 00:03:14,800
+So what were we starting with?
+
+
+33
+00:03:14,800 --> 00:03:24,200
+We are starting from a process that was already over 150 manual steps.
+
+
+34
+00:03:24,200 --> 00:03:31,320
+When I first did it, I certainly did miss some steps and didn't realize only days or
+
+
+35
+00:03:31,320 --> 00:03:40,960
+weeks after, so the tree does have a huge room for error, which we do want to minimize.
+
+
+36
+00:03:40,960 --> 00:03:47,040
+It's really lengthy, and a day to go through a release and not being able to work on anything
+
+
+37
+00:03:47,040 --> 00:03:56,240
+else, that's way too much, especially given that a release is not a single event, there
+
+
+38
+00:03:56,240 --> 00:04:01,080
+are many stages of the release.
+
+
+39
+00:04:01,080 --> 00:04:12,160
+It took way too much time from IP Stewards, and also it was only going to get worse with
+
+
+40
+00:04:12,160 --> 00:04:17,360
+time, because we are adding new stuff to it, we are making it more complex and longer.
+
+
+41
+00:04:17,360 --> 00:04:21,520
+So what did we come up with?
+
+
+42
+00:04:21,520 --> 00:04:27,080
+The problem was that we do have to interact with many, many different services during
+
+
+43
+00:04:27,080 --> 00:04:35,920
+Kuber release, so we weren't able to use just any ready-made tool that already is out there
+
+
+44
+00:04:35,920 --> 00:04:38,400
+that deals with release automation.
+
+
+45
+00:04:38,400 --> 00:04:44,440
+Instead, we had to come up with something that pulls all of those services that we need
+
+
+46
+00:04:44,440 --> 00:04:52,300
+to interact with into a single coherent package, and that's how Kuber Releaser came to be.
+
+
+47
+00:04:52,300 --> 00:05:01,000
+We decided to write it in Go, because we wanted Kuber engineers to have an easy entry to contributing
+
+
+48
+00:05:01,000 --> 00:05:04,800
+to the project.
+
+
+49
+00:05:04,800 --> 00:05:13,960
+Kuber Releaser, what it really is, under the surface, it just calls APIs of different services
+
+
+50
+00:05:13,960 --> 00:05:18,320
+that are involved in the Kuber release, and makes sure that the steps that were previously
+
+
+51
+00:05:18,320 --> 00:05:23,320
+manual are now automated.
+
+
+52
+00:05:23,320 --> 00:05:29,680
+It also changes the interface that the release driver has to interact with, because now all
+
+
+53
+00:05:29,680 --> 00:05:37,720
+the commands are grouped together into logical groups.
+
+
+54
+00:05:37,720 --> 00:05:46,720
+For example, you don't have to do 30 different actions to promote release on Discord, Discourse,
+
+
+55
+00:05:46,720 --> 00:05:48,440
+Matrix, and Reddit.
+
+
+56
+00:05:48,440 --> 00:05:53,320
+Instead you just tell Kuber Releaser that now we are at the stage where we want to promote
+
+
+57
+00:05:53,320 --> 00:05:57,280
+the release, please do all those things.
+
+
+58
+00:05:57,280 --> 00:06:02,320
+It's way nicer experience for the person driving the release.
+
+
+59
+00:06:02,320 --> 00:06:05,520
+Some principles that we followed when developing it.
+
+
+60
+00:06:05,520 --> 00:06:11,320
+We did make sure that everything happens in isolation, so there is minimal dependency
+
+
+61
+00:06:11,320 --> 00:06:15,520
+on release driver's system.
+
+
+62
+00:06:15,520 --> 00:06:21,200
+It all runs inside the Docker container, it does all the calls and checkouts in there,
+
+
+63
+00:06:21,200 --> 00:06:28,440
+it has all the dependencies there, so you don't have to worry that the state of your
+
+
+64
+00:06:28,440 --> 00:06:33,040
+system is going to mess up with the release you want to make.
+
+
+65
+00:06:33,040 --> 00:06:35,920
+So that's a really nice feature.
+
+
+66
+00:06:35,920 --> 00:06:40,160
+It's also written in a way that makes sure that the reruns are safe, so we can run the
+
+
+67
+00:06:40,160 --> 00:06:45,800
+same command over and over again, and it's not going to create a hundred releases for
+
+
+68
+00:06:45,800 --> 00:06:48,680
+you.
+
+
+69
+00:06:48,680 --> 00:06:54,200
+Whenever it can't do something because it's not smart enough just yet, it will interact
+
+
+70
+00:06:54,200 --> 00:06:57,960
+with you and it will prompt you for help.
+
+
+71
+00:06:57,960 --> 00:07:05,560
+It's also not tied to your machine, so we do support multiple people coming together
+
+
+72
+00:07:05,560 --> 00:07:13,560
+to drive the release from different machines, which is pretty nice to introduce someone
+
+
+73
+00:07:13,560 --> 00:07:16,280
+to the release process, for example.
+
+
+74
+00:07:16,280 --> 00:07:21,960
+It also tries to provide very clear documentation, it tries to be very verbose, both in code
+
+
+75
+00:07:21,960 --> 00:07:23,280
+and in line.
+
+
+76
+00:07:23,280 --> 00:07:29,840
+We do think that all the steps that come into the release process should be well documented,
+
+
+77
+00:07:29,840 --> 00:07:32,600
+because who knows where we might go with that yet.
+
+
+78
+00:07:32,600 --> 00:07:37,720
+Maybe we'll want to get rid of kubereleaser at some point, so it will be nice to have
+
+
+79
+00:07:37,720 --> 00:07:38,920
+it all documented.
+
+
+80
+00:07:38,920 --> 00:07:44,080
+But also when executing the commands, it tries to be very verbose about what it's doing,
+
+
+81
+00:07:44,080 --> 00:07:50,880
+so that kuboengineers driving the release don't lose the knowledge of how the release
+
+
+82
+00:07:50,880 --> 00:07:56,200
+is done, because we don't want to just lose this expertise for a while to realize later
+
+
+83
+00:07:56,200 --> 00:07:59,320
+that we might actually need it.
+
+
+84
+00:07:59,320 --> 00:08:05,040
+So I think that's really important, and it enables, for example, kuboengineers to contribute
+
+
+85
+00:08:05,040 --> 00:08:10,320
+further to how kubereleaser works.
+
+
+86
+00:08:10,320 --> 00:08:18,520
+So the end product of what we have is a completely new release process that instead of over 150
+
+
+87
+00:08:18,520 --> 00:08:25,160
+steps has only 15, so that's a pretty nice reduction in just the number of things you
+
+
+88
+00:08:25,160 --> 00:08:26,960
+have to do.
+
+
+89
+00:08:26,960 --> 00:08:34,040
+All those commands, as I mentioned, are really logical groupings of things that happen underneath,
+
+
+90
+00:08:34,040 --> 00:08:41,240
+so we are much better suited to deal with further-grown complexity, because usually
+
+
+91
+00:08:41,240 --> 00:08:46,560
+when we want to add something new to the release, it's something to do with those commands we
+
+
+92
+00:08:46,560 --> 00:08:48,720
+already have.
+
+
+93
+00:08:48,720 --> 00:08:53,440
+If you want to, for example, promote a release in yet another channel, it's not really a
+
+
+94
+00:08:53,440 --> 00:08:59,120
+new command for someone to run, it's just a new thing for the command to do.
+
+
+95
+00:08:59,120 --> 00:09:08,160
+So it doesn't make it harder for the release driver to go through the release process.
+
+
+96
+00:09:08,160 --> 00:09:15,520
+It drives the duration of the release process down a lot.
+
+
+97
+00:09:15,520 --> 00:09:22,680
+The last time I did the release using kubereleaser, it took me way less than two hours, and I
+
+
+98
+00:09:22,680 --> 00:09:29,240
+was already one foot out the door, traveling home for holidays.
+
+
+99
+00:09:29,240 --> 00:09:35,360
+I didn't encounter any troubles, so I think that speaks to the improvement to where we
+
+
+100
+00:09:35,360 --> 00:09:38,120
+started with.
+
+
+101
+00:09:38,120 --> 00:09:41,800
+And visually, it looks something like that.
+
+
+102
+00:09:41,800 --> 00:09:49,480
+So the thing you see on the left is where we began, and the thing on the right is where
+
+
+103
+00:09:49,480 --> 00:09:50,840
+we are right now.
+
+
+104
+00:09:50,840 --> 00:09:55,600
+It doesn't have to be the end of the road, but even just by looking at that, you can
+
+
+105
+00:09:55,600 --> 00:09:59,640
+clearly see that the improvement is staggering.
+
+
+106
+00:09:59,640 --> 00:10:07,160
+The list on the right, you can probably even just look at it and have a vague idea what
+
+
+107
+00:10:07,160 --> 00:10:12,200
+it's going to take to do a release.
+
+
+108
+00:10:12,200 --> 00:10:14,140
+You can build up context for it.
+
+
+109
+00:10:14,140 --> 00:10:22,040
+If you look at the things on the left for the first time, you just get scared and want
+
+
+110
+00:10:22,040 --> 00:10:24,040
+to run away.
+
+
+111
+00:10:24,040 --> 00:10:31,640
+But, leaving the release process in the back for a bit, I want to move on to our migration
+
+
+112
+00:10:31,640 --> 00:10:34,800
+to GitHub Actions from CircleCI.
+
+
+113
+00:10:34,800 --> 00:10:40,840
+So it is a bit connected, because when we started working on automation of the release
+
+
+114
+00:10:40,840 --> 00:10:51,280
+process, we realized that it's going to be a lot simpler if we can interact mainly with
+
+
+115
+00:10:51,280 --> 00:10:57,640
+GitHub API to complete the release steps.
+
+
+116
+00:10:57,640 --> 00:10:59,760
+So one less service to integrate.
+
+
+117
+00:10:59,760 --> 00:11:00,760
+So that was great.
+
+
+118
+00:11:00,760 --> 00:11:05,680
+That's how it connects to the previous topic.
+
+
+119
+00:11:05,680 --> 00:11:13,760
+But that isn't really the main reason why we set out to migrate from CircleCI to GitHub
+
+
+120
+00:11:13,760 --> 00:11:15,600
+Actions.
+
+
+121
+00:11:15,600 --> 00:11:23,920
+In my view, the biggest benefit of using GitHub Actions over CircleCI in our case was that
+
+
+122
+00:11:23,920 --> 00:11:29,920
+the experience of using GitHub Actions is much more integrated into where our developers
+
+
+123
+00:11:29,920 --> 00:11:32,040
+already are, which is GitHub.
+
+
+124
+00:11:32,040 --> 00:11:34,080
+That's where they spend most of the time.
+
+
+125
+00:11:34,080 --> 00:11:38,320
+So it's a nice feature that they don't have to leave the platform to, for example, inspect
+
+
+126
+00:11:38,320 --> 00:11:43,080
+CI failures.
+
+
+127
+00:11:43,080 --> 00:11:51,840
+It really makes it much more natural to interact with all the parts of the CI system.
+
+
+128
+00:11:51,840 --> 00:11:58,280
+And for me, that's the biggest selling point that there is when it comes to GitHub Actions.
+
+
+129
+00:11:58,280 --> 00:12:04,280
+But as I mentioned, it did also help us simplify what Kubernetes Releaser became.
+
+
+130
+00:12:04,280 --> 00:12:10,680
+It is easier to manage, but that's a personal preference.
+
+
+131
+00:12:10,680 --> 00:12:17,240
+And also, we do have more expertise with GitHub Actions, so it's easier from the perspective
+
+
+132
+00:12:17,240 --> 00:12:19,760
+of our team to deal with.
+
+
+133
+00:12:19,760 --> 00:12:28,040
+And as we found out, it was much more cost-effective for us, because most of the things we did
+
+
+134
+00:12:28,040 --> 00:12:34,200
+in CircleCI in GitHub Actions we could achieve on three runners.
+
+
+135
+00:12:34,200 --> 00:12:36,120
+So how did we do that?
+
+
+136
+00:12:36,120 --> 00:12:38,800
+That process was mainly manual for us.
+
+
+137
+00:12:38,800 --> 00:12:46,900
+We did go workflow by workflow, read what it was doing, and tried to translate it to
+
+
+138
+00:12:46,900 --> 00:12:49,580
+what GitHub Actions can understand.
+
+
+139
+00:12:49,580 --> 00:12:54,600
+Right now, it doesn't have to be, because GitHub came out with a GitHub Actions Migrator
+
+
+140
+00:12:54,600 --> 00:12:55,600
+tool.
+
+
+141
+00:12:55,600 --> 00:12:59,360
+So if you want to do the same, it's probably going to be a lot easier.
+
+
+142
+00:12:59,360 --> 00:13:06,360
+Though even doing it manually wasn't that bad, because the concepts between the two
+
+
+143
+00:13:06,360 --> 00:13:11,080
+aren't that different, so it was pretty straightforward.
+
+
+144
+00:13:11,080 --> 00:13:18,680
+But we really wanted to ensure that the well-tested workflows that we had running in CircleCI
+
+
+145
+00:13:18,680 --> 00:13:27,040
+for years are behaving at least the same way in GitHub Actions, in terms of both correctness
+
+
+146
+00:13:27,040 --> 00:13:28,940
+and performance.
+
+
+147
+00:13:28,940 --> 00:13:34,760
+So we ran both CI systems, both CircleCI and GitHub Actions, in tandem, next to each other,
+
+
+148
+00:13:34,760 --> 00:13:36,800
+for around two months.
+
+
+149
+00:13:36,800 --> 00:13:43,160
+We gathered some stats that we heard about, so that we could compare them exhaustively
+
+
+150
+00:13:43,160 --> 00:13:53,960
+and be able to back our claims with data that, in fact, GitHub Actions is a better choice
+
+
+151
+00:13:53,960 --> 00:13:56,560
+for us.
+
+
+152
+00:13:56,560 --> 00:14:12,800
+So the benefits we expected were faster builds and reduced wait times, because we wouldn't
+
+
+153
+00:14:12,800 --> 00:14:13,800
+wait.
+
+
+154
+00:14:13,800 --> 00:14:23,560
+Because, as we found out, there was quite a bit of upfront costs to waiting for CircleCI
+
+
+155
+00:14:23,560 --> 00:14:24,560
+runners.
+
+
+156
+00:14:24,560 --> 00:14:34,600
+As I already mentioned, we did find out that we did save money with this migration.
+
+
+157
+00:14:34,600 --> 00:14:44,000
+What also happened was that suddenly our workflows were a bit more stable and reliable.
+
+
+158
+00:14:44,000 --> 00:14:56,440
+So we weren't able to pinpoint the exact source for that improvement, because the configuration
+
+
+159
+00:14:56,440 --> 00:15:04,560
+of the hostage runners in CircleCI and GitHub Actions, to some extent, you can't know everything
+
+
+160
+00:15:04,560 --> 00:15:05,560
+about it.
+
+
+161
+00:15:05,560 --> 00:15:13,960
+But from practice, as it turned out, GitHub Actions runners were more reliable.
+
+
+162
+00:15:13,960 --> 00:15:19,520
+And the metrics we looked at to compare the two were the duration of our workflows, the
+
+
+163
+00:15:19,520 --> 00:15:25,040
+success rate of them, and price that we had to pay.
+
+
+164
+00:15:25,040 --> 00:15:31,720
+So by the end of this experiment, that's pretty much what we were presented with.
+
+
+165
+00:15:31,720 --> 00:15:36,960
+This is an extract from a week-long monitoring of the two.
+
+
+166
+00:15:36,960 --> 00:15:44,920
+So as we can see, GitHub Actions did outperform CircleCI pretty much everywhere in our case,
+
+
+167
+00:15:44,920 --> 00:15:48,320
+especially the pricing column.
+
+
+168
+00:15:48,320 --> 00:15:51,680
+That's a big difference.
+
+
+169
+00:15:51,680 --> 00:15:59,280
+There are two instances where CircleCI is seemingly a bit better than GitHub Actions,
+
+
+170
+00:15:59,280 --> 00:16:02,840
+but if you look closely at the numbers, they're pretty much on par.
+
+
+171
+00:16:02,840 --> 00:16:12,480
+So that's really nothing we worried about, and we were confident enough to shut down
+
+
+172
+00:16:12,480 --> 00:16:16,040
+CircleCI after seeing those numbers.
+
+
+173
+00:16:16,040 --> 00:16:22,920
+But if you also look at the column that presents the cost of the two solutions, one interesting
+
+
+174
+00:16:22,920 --> 00:16:30,360
+thing that you'll notice is that we are not only using free solutions from GitHub Actions,
+
+
+175
+00:16:30,360 --> 00:16:37,560
+and we are on a free plan, so we don't have access to pay large runners in GitHub, but
+
+
+176
+00:16:37,560 --> 00:16:39,920
+we did need faster runners.
+
+
+177
+00:16:39,920 --> 00:16:44,000
+And that's why we set up self-hosted runners.
+
+
+178
+00:16:44,000 --> 00:16:52,360
+And that's exactly to get faster builds, because we needed more powerful machines, and we've
+
+
+179
+00:16:52,360 --> 00:16:57,520
+self-hosted runners, we could get them, and that would speed up the builds.
+
+
+180
+00:16:57,520 --> 00:17:05,880
+But also it would reduce the time our workflows had to wait for an available machine, because
+
+
+181
+00:17:05,880 --> 00:17:16,960
+you can use up to 20 GitHub-hosted runners per organization at any given time.
+
+
+182
+00:17:16,960 --> 00:17:25,400
+So with us promoting GitHub Actions internally everywhere, we started seeing that sometimes
+
+
+183
+00:17:25,400 --> 00:17:33,720
+we do run out of GitHub-hosted machines, so self-hosted runners is also a great fit for
+
+
+184
+00:17:33,720 --> 00:17:34,720
+that.
+
+
+185
+00:17:34,720 --> 00:17:42,400
+It can provide better availability, also because of this reason, we can control how many machines
+
+
+186
+00:17:42,400 --> 00:17:51,680
+we have within our fleet of self-hosted runners, so we can make them available readily to be
+
+
+187
+00:17:51,680 --> 00:17:52,680
+picked up.
+
+
+188
+00:17:52,680 --> 00:17:57,680
+We could customize them, though we don't do much of that, because we do believe that it's
+
+
+189
+00:17:57,680 --> 00:18:05,120
+a nice feature to have workflows that can work both on self-hosted and hosted runners.
+
+
+190
+00:18:05,120 --> 00:18:09,960
+For example, in a scenario where you fork your repository, it would be nice if you could
+
+
+191
+00:18:09,960 --> 00:18:17,600
+run it on GitHub Actions' hosted runner, because you wouldn't have access to our self-hosted
+
+
+192
+00:18:17,600 --> 00:18:18,600
+runner fleet.
+
+
+193
+00:18:18,600 --> 00:18:23,720
+And also, not really a reason why, but I think it's worth mentioning here that we do run
+
+
+194
+00:18:23,720 --> 00:18:30,280
+our self-hosted runners in ephemeral mode, so they only ever do one job and then just
+
+
+195
+00:18:30,280 --> 00:18:34,440
+disappear, and that's for multiple reasons.
+
+
+196
+00:18:34,440 --> 00:18:41,800
+It does make us sleep better at night, because that way we know that a malicious job can't
+
+
+197
+00:18:41,800 --> 00:18:47,680
+just leave something on the runner that would mess with subsequent jobs.
+
+
+198
+00:18:47,680 --> 00:18:55,040
+Also, it doesn't have to be malicious, it can't leave some trash behind you to break
+
+
+199
+00:18:55,040 --> 00:19:00,080
+future jobs, so that's a really nice feature, too.
+
+
+200
+00:19:00,080 --> 00:19:07,360
+And how we set them up, we used a really brilliant project developed by Philips Labs.
+
+
+201
+00:19:07,360 --> 00:19:12,840
+They use it internally, it's called Terraform AWS GitHub Runner.
+
+
+202
+00:19:12,840 --> 00:19:18,980
+It has great documentation, it's a really nice piece of software that pretty much covers
+
+
+203
+00:19:18,980 --> 00:19:25,040
+everything that we needed to do to set up self-hosted runners on AWS.
+
+
+204
+00:19:25,040 --> 00:19:31,640
+We did modify it a bit in a few areas, because for once, back when we started working on
+
+
+205
+00:19:31,640 --> 00:19:41,480
+self-hosted runners, the project from Philips Labs didn't support starting up runners from
+
+
+206
+00:19:41,480 --> 00:19:47,920
+different instance families, and we did want to have that level of customization, that
+
+
+207
+00:19:47,920 --> 00:19:52,080
+we could have machines of different sizes for different needs.
+
+
+208
+00:19:52,080 --> 00:19:55,720
+Now I think it does, but I haven't checked it out in detail just yet.
+
+
+209
+00:19:55,720 --> 00:20:24,800
+And also, we wanted to have more control over what requests for self-hosted runners.
+
+
+210
+00:20:00,000 --> 00:20:17,000
+﷕But we didn't have enough self-hosted Runners we accept, so we wanted additional filtering level that checks whether the request is coming from the repository that we allow to have self-hosted Runners from our fleet.
+
+
+211
+00:20:17,000 --> 00:20:33,000
+When it comes to configuration, there are some obvious things we do care about and we do look at to decide on what kind of instance to assign to a specific workflow.
+
+
+212
+00:20:33,000 --> 00:20:54,000
+CPU, memory, network, bandwidth, and probably the most important part, the disk speed, the IOPS and throughput on the disk. That can really change a lot when it comes to building code.
+
+
+213
+00:20:54,000 --> 00:21:07,000
+To give you some stats, this is the number of self-hosted Runners that we brought up in the last 30 days only for workflows in Kubo.
+
+
+214
+00:21:07,000 --> 00:21:29,000
+We had almost 1000 runs on self-hosted Runners and we only had one issue with it. It's running pretty smoothly and the issue was that GitHub itself was having a bit of trouble and it forgot to send us a webhook.
+
+
+215
+00:21:29,000 --> 00:21:38,000
+So we didn't bring up the machine that we needed. But it's a shame that we had to wait for someone to report it to us.
+
+
+216
+00:21:38,000 --> 00:21:52,000
+We didn't ask us as IPDX, we didn't know about it until we heard about it from our developers and that doesn't seem like an acceptable solution in the long run.
+
+
+217
+00:21:52,000 --> 00:22:05,000
+So we started thinking more about getting more insights into what's going on in our GitHub Actions and that's why we developed yet another thing of our own, which is monitoring GitHub Actions.
+
+
+218
+00:22:05,000 --> 00:22:22,000
+Because unfortunately, GitHub lacks a bit in this area. It doesn't give you a great deal of insights into what's going on in GitHub Actions. We had to go and do it ourselves.
+
+
+219
+00:22:22,000 --> 00:22:39,000
+So we did it. We created a GitHub app, we configured it to receive webhooks on the events related to GitHub Actions, but that's really a detail. It could receive any events like the database standard beyond just monitoring GitHub Actions events.
+
+
+220
+00:22:39,000 --> 00:22:59,000
+So we have a service running that listens for those webhooks. Then when we receive an event, we just store it as is in the raw format in PostgreSQL database because, to be quite frank, when we started doing that, we had no idea what exactly we wanted to look for in this data.
+
+
+221
+00:22:59,000 --> 00:23:19,000
+So we thought, oh, yeah, let's just store our data and figure it out later. And as it turns out, that was a great decision. And then in Grafana, we just query this data directly and build up graphs that tell us many different interesting things about the posture of our GitHub Actions solution.
+
+
+222
+00:23:19,000 --> 00:23:34,000
+They help us debug issues with CICD, it helps us make decisions about where to focus our efforts next, and that's a real superpower because there's only two of us in the team.
+
+
+223
+00:23:34,000 --> 00:23:52,000
+So to have this extra piece of information that tells us which project may need us the most at any given time, that's amazing. And it also helps us optimize our current workflows.
+
+
+224
+00:23:52,000 --> 00:24:07,000
+So here's how it all comes together. Some of the things that we look at right now for our monitoring solution are, for example, durations of workflows and jobs per day.
+
+
+225
+00:24:07,000 --> 00:24:29,000
+We look at how long they wait in queue for a runner to be assigned to a workflow. Even here in the description I took a couple of days ago, you can see that something weird is going on with the sharness workflow in the Kuber repository.
+
+
+226
+00:24:29,000 --> 00:24:45,000
+It's suddenly spiked up to take around 20 minutes per job, and that is a bit worrying, especially if you also notice extra bit of information that sharness workflow in Kuber has a timeout set for 20 minutes.
+
+
+227
+00:24:45,000 --> 00:25:14,000
+So if we were to scroll down here, we would probably see a dramatic drop in the success rate of sharness workflow there. So as you can imagine, that really gives us a lot of insight, and it gives us information that otherwise we would have to rely on user reports to find some of this stuff out.
+
+
+228
+00:25:14,000 --> 00:25:30,000
+So overall, what did we learn through all of these projects and more? One important point that I wanted to make is that I believe that it is really useful not to hide expertise from developers.
+
+
+229
+00:25:30,000 --> 00:25:52,000
+So for example, with the release process, I think that was a right decision and it is going to pay off in the long run that we did spend so much time to make sure that while using the new automation tool, the engineers won't lose the knowledge of what's going on.
+
+
+230
+00:25:52,000 --> 00:26:06,000
+So that's one. When we also were developing Kuberleaser, I got to use the Go Git library that I really liked, so I wanted to give it a shoutout.
+
+
+231
+00:26:06,000 --> 00:26:23,000
+It's surprisingly complete, so there is I think one operation that I needed to do during the Kuberleaser process that it didn't support, but for any other needs, it was there. So it's really great.
+
+
+232
+00:26:23,000 --> 00:26:32,000
+It was a breeze working with Matrix API. It's so much nicer to get started than, for example, Slack or Discord.
+
+
+233
+00:26:32,000 --> 00:26:40,000
+When it comes to self-hosted runners, we did run into a few roadblocks for a second.
+
+
+234
+00:26:40,000 --> 00:26:55,000
+So apparently some third-party services don't always like too many requests coming in from behind a single NAT gateway, but it's nothing that's a single caching proxy in between configs, so that was nice.
+
+
+235
+00:26:55,000 --> 00:27:18,000
+It was especially troubling for Docker Hub because its rate limits are quite small, so to deal with that in our self-hosted runners infrastructure, we just set up a proxy that's now between our runners and Docker Hub
+
+
+236
+00:27:18,000 --> 00:27:28,000
+that basically acts as a read-through cache and stores Docker image layers in S3.
+
+
+237
+00:27:28,000 --> 00:27:38,000
+What else? Oh yeah, collecting raw data for authentices. That was a really smart choice, and I would recommend that if you're not yet sure what you're looking for.
+
+
+238
+00:27:38,000 --> 00:27:46,000
+And also, basing your decision on this data, that's also something I would definitely recommend.
+
+
+239
+00:27:46,000 --> 00:27:52,000
+Some things in the future for us that we would like to explore.
+
+
+240
+00:27:52,000 --> 00:28:03,000
+Fully automating the release process of Kubo, because now we do have pretty much all of it scripted, so we're just one step away from closing the gap to full automation.
+
+
+241
+00:28:03,000 --> 00:28:26,000
+We would like to implement alerts from our dashboards that monitor GitHub actions, because right now it's still a manual process to look through the graphs and try to spot potential things that went wrong with GitHub actions,
+
+
+242
+00:28:26,000 --> 00:28:38,000
+but I guess that will come with time as we learn more patterns of what the graded state of GitHub actions for us looks like.
+
+
+243
+00:28:38,000 --> 00:28:48,000
+We also want to get better at distinguishing between what's running on self-hosted and what's running on hosted runners within our monitoring solution,
+
+
+244
+00:28:48,000 --> 00:29:01,000
+because right now it's all tangled together, so just by looking at some graphs it's hard to tell whether it's GitHub having trouble or whether it's something on our side.
+
+
+245
+00:29:01,000 --> 00:29:07,000
+We don't want to open source our dashboards for monitoring GitHub actions.
+
+
+246
+00:29:07,000 --> 00:29:12,000
+There's nothing really stopping us from doing that other than time.
+
+
+247
+00:29:12,000 --> 00:29:20,000
+We just have to export JSONs and put them in a publicly available space, but it's more of a to-do for myself.
+
+
+248
+00:29:20,000 --> 00:29:37,000
+And lastly, we do want to enhance monitoring self-hosted instances in particular, because we would like to be able to fine-tune the usage of our self-hosted runners more.
+
+
+249
+00:29:37,000 --> 00:29:50,000
+We would like to be able to tell whether some resources on machines that we use are underutilized or overutilized and adjust accordingly.
+
+
+250
+00:29:50,000 --> 00:29:59,000
+We don't have insight to that yet, but we do have all the data available, so hopefully that's coming sometime soon.
+
+
+251
+00:29:59,000 --> 00:30:02,000
+And that's it from me.
+
+
+252
+00:30:02,000 --> 00:30:07,000
+Thank you.

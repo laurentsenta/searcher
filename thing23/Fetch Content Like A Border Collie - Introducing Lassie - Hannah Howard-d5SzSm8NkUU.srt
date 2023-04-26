@@ -1,0 +1,1248 @@
+1
+00:00:00,000 --> 00:00:10,680
+Welcome back. I hope you had a great lunch. So in this afternoon, the first afternoon
+
+
+2
+00:00:10,680 --> 00:00:15,320
+session we're going to hear about a couple of things. First we're going to hear talks
+
+
+3
+00:00:15,320 --> 00:00:21,460
+about some multi-protocol clients. There's going to be a talk from me going into LASI
+
+
+4
+00:00:21,460 --> 00:00:27,400
+and then we're going to hear from Giroppo talking about RAPID. And then we're going
+
+
+5
+00:00:27,400 --> 00:00:33,080
+to have a panel to talk about the Move the Bytes working group, how it went, what we
+
+
+6
+00:00:33,080 --> 00:00:38,720
+can learn from it, and what we should be doing going forward. I promise this talk that you're
+
+
+7
+00:00:38,720 --> 00:00:42,560
+about to hear will be the last time that I will be up here talking at you, so that's
+
+
+8
+00:00:42,560 --> 00:00:49,720
+good if you're tired of hearing from me. But so I want to talk to you for this first
+
+
+9
+00:00:49,720 --> 00:01:01,000
+talk about LASI, which is the new IPFS implementation that we announced this morning at the keynote.
+
+
+10
+00:01:01,000 --> 00:01:08,440
+So this talk, if you came to the keynote, you probably saw the awesome, like, it's great,
+
+
+11
+00:01:08,440 --> 00:01:13,640
+polished, these are the wonderful things it does version. So that was that. This version
+
+
+12
+00:01:13,640 --> 00:01:17,560
+is going to be a little bit more about how the sausage is made. So we're going to go
+
+
+13
+00:01:17,560 --> 00:01:25,680
+into some architectural, technical architecture, how it works, does what it does, and some
+
+
+14
+00:01:25,680 --> 00:01:33,560
+of the compromises we made, some of the messy parts, some of the awesome parts. Cool.
+
+
+15
+00:01:33,560 --> 00:01:37,200
+Before I do that, though, I want to talk about something, which is what I call the coordination
+
+
+16
+00:01:37,200 --> 00:01:43,560
+problem, subtitled protocols are easy, using them is hard. And to illustrate this, I want
+
+
+17
+00:01:43,560 --> 00:01:50,040
+to, I'm hoping there's enough Gen Xers in the room to remember this bit of 80s, 90s
+
+
+18
+00:01:50,040 --> 00:01:58,800
+anti-drug propaganda. So this is BitSwap, the protocol, very straightforward. This is
+
+
+19
+00:01:58,800 --> 00:02:10,720
+Go BitSwap, the library. Essentially, when you go from the protocol to an actual implementation,
+
+
+20
+00:02:10,720 --> 00:02:17,640
+it gets messy. But there's a good reason for that. And the reason is that BitSwap is not
+
+
+21
+00:02:17,640 --> 00:02:24,600
+just like an interface to the BitSwap protocol, it's actually an entire retrieval coordination
+
+
+22
+00:02:24,600 --> 00:02:30,440
+layer. When you make a request to BitSwap, you say, give me this SID. You figure out
+
+
+23
+00:02:30,440 --> 00:02:36,560
+how to get it, you figure out how to distribute requests between peers, you figure out how
+
+
+24
+00:02:36,560 --> 00:02:42,080
+to break up requests. It's so complicated that for a long time, I had trouble convincing
+
+
+25
+00:02:42,080 --> 00:02:47,320
+anyone, convincing folks at Protocol Labs, that you would ever want to build a retrieval
+
+
+26
+00:02:47,320 --> 00:02:52,280
+coordination layer outside of Go BitSwap because they just assumed it was so complicatedly
+
+
+27
+00:02:52,280 --> 00:02:59,440
+packed in that you couldn't extract it. So this is actually the core problem we're thinking
+
+
+28
+00:02:59,440 --> 00:03:06,320
+about addressing in LASI, is how to coordinate retrievals among protocols that already exist.
+
+
+29
+00:03:06,320 --> 00:03:16,320
+Interestingly, this has been a little while coming. This is a long architectural document
+
+
+30
+00:03:16,320 --> 00:03:24,960
+I wrote up in 2021, thinking, oh, we'll get to build this multi-protocol thing any day
+
+
+31
+00:03:24,960 --> 00:03:31,320
+now. As it turned out, it took a little bit of time. But we did have some antecedents.
+
+
+32
+00:03:31,320 --> 00:03:38,640
+Bill Scott built this awesome little prototype Web3 retrieval client that essentially worked
+
+
+33
+00:03:38,640 --> 00:03:46,640
+with the network indexer to transfer data over BitSwap and GraphSync in a very simplified
+
+
+34
+00:03:46,640 --> 00:03:52,600
+way. And a lot of the ideas there are actually fed into LASI.
+
+
+35
+00:03:52,600 --> 00:04:00,160
+And then I want to talk about the actual generation, how LASI came to be. We started with a particular
+
+
+36
+00:04:00,160 --> 00:04:05,840
+problem which might feel a little unfamiliar at IPFS, which is how do we retrieve data
+
+
+37
+00:04:05,840 --> 00:04:17,480
+from Filecoin? And we wanted to... There was a product that we had built to essentially
+
+
+38
+00:04:17,480 --> 00:04:25,000
+try to bridge the gap between Filecoin and IPFS because Filecoin at the time was only
+
+
+39
+00:04:25,000 --> 00:04:31,160
+speaking GraphSync and IPFS still only speaks BitSwap. So we built this server called autoretrieve
+
+
+40
+00:04:31,160 --> 00:04:36,720
+which essentially would listen on BitSwap and then take requests from BitSwap and translate
+
+
+41
+00:04:36,720 --> 00:04:43,240
+them into... Attempt to find the storage providers that had that data and then make a GraphSync
+
+
+42
+00:04:43,240 --> 00:04:49,200
+request. It was a terrible solution to a problem that we had created ourselves when we built
+
+
+43
+00:04:49,200 --> 00:04:55,480
+these two different networks. And my team, the Bedrock team, actually got
+
+
+44
+00:04:55,480 --> 00:05:00,880
+pretty heavily involved in that and we kept sort of iterating on the Filecoin retrieval
+
+
+45
+00:05:00,880 --> 00:05:06,200
+part of it. In particular, we wanted to figure out how can you find data on Filecoin quickly
+
+
+46
+00:05:06,200 --> 00:05:14,960
+and then retrieve it quickly. These are problems that were not initially addressed in the original
+
+
+47
+00:05:14,960 --> 00:05:20,960
+sort of shipping product with Filecoin, which is Lotus. We didn't build a content discovery
+
+
+48
+00:05:20,960 --> 00:05:26,640
+mechanism into it, but in the intervening time, the network indexer had come into being
+
+
+49
+00:05:26,640 --> 00:05:31,680
+and it allows us to find storage providers that have content on Filecoin.
+
+
+50
+00:05:31,680 --> 00:05:38,880
+So we were starting to build coordination around retrieving data from Filecoin through
+
+
+51
+00:05:38,880 --> 00:05:43,040
+GraphSync. And it was getting complex enough that we thought we should make this a separate
+
+
+52
+00:05:43,040 --> 00:05:51,040
+project. So we built Lassie, which is a Filecoin retrieval client. This was the original mission
+
+
+53
+00:05:51,040 --> 00:05:58,120
+of Lassie, was to make Filecoin retrieval really easy. We basically... We wanted to
+
+
+54
+00:05:58,120 --> 00:06:02,280
+build a simple... People would always say, how do I get my data back from Filecoin? And
+
+
+55
+00:06:02,280 --> 00:06:06,000
+we wanted to build a very simple tool you could simply hand to people and say, here's
+
+
+56
+00:06:06,000 --> 00:06:10,640
+how you get it back. And then I made the mistake of getting on a
+
+
+57
+00:06:10,640 --> 00:06:17,800
+plane to Switzerland to meet with the Saturn team. And when I got there, they told me that
+
+
+58
+00:06:17,800 --> 00:06:23,440
+actually this library we built was going to be the backing library for all of Saturn and
+
+
+59
+00:06:23,440 --> 00:06:28,480
+it was going to be an IPFS and Filecoin client. Never show up a day late to a conference at
+
+
+60
+00:06:28,480 --> 00:06:35,280
+PL. And that's how Lassie came to be. And what we ended up doing, the first big task
+
+
+61
+00:06:35,280 --> 00:06:42,200
+was to add BitSwap into Lassie. And through doing that, we have evolved it significantly
+
+
+62
+00:06:42,200 --> 00:06:49,960
+to be a sort of architecture for arbitrary protocol retrieval. Arbitrary retrieval over
+
+
+63
+00:06:49,960 --> 00:06:56,840
+multiple protocols, including finding your content.
+
+
+64
+00:06:56,840 --> 00:07:02,560
+So to get into how it actually works, I want to first look at the larger sort of ecosystem
+
+
+65
+00:07:02,560 --> 00:07:09,240
+it exists in. The primary ecosystem Lassie exists in for the time being is Project Raya,
+
+
+66
+00:07:09,240 --> 00:07:17,240
+which is this decentralized gateway architecture. And so what we built is on each Saturn node,
+
+
+67
+00:07:17,240 --> 00:07:21,880
+each Saturn node runs some Saturn software and then it runs an instance of Lassie. And
+
+
+68
+00:07:21,880 --> 00:07:26,840
+Lassie exposes an HTTP interface within the Saturn node. We actually built it that way
+
+
+69
+00:07:26,840 --> 00:07:31,080
+because Saturn is all written in JavaScript and we needed an easy way to talk to a Go
+
+
+70
+00:07:31,080 --> 00:07:35,280
+program. So Saturn nodes, when they don't have things
+
+
+71
+00:07:35,280 --> 00:07:43,760
+in their Nginx cache, they make an HTTP request to Lassie and then Lassie basically talks
+
+
+72
+00:07:43,760 --> 00:07:49,520
+to the network indexer as a mechanism for finding things and then it talks over either
+
+
+73
+00:07:49,520 --> 00:07:54,920
+BitSwap or GraphSync to people who have the data that you're looking for. But what's going
+
+
+74
+00:07:54,920 --> 00:08:01,640
+on inside of the little Lassie circle right there? Okay. Get ready for a lot of architecture.
+
+
+75
+00:08:01,640 --> 00:08:08,120
+I'm going to spend a second here and hopefully you can read this, and I did my absolute best
+
+
+76
+00:08:08,120 --> 00:08:14,580
+to keep this as small as possible, but it still got big and complicated.
+
+
+77
+00:08:14,580 --> 00:08:20,800
+So this is essentially the high level view of Lassie. At the top of Lassie, you have
+
+
+78
+00:08:20,800 --> 00:08:24,800
+essentially two interfaces for interacting with it. This is assuming you're interacting
+
+
+79
+00:08:24,800 --> 00:08:30,160
+with the Lassie binary and not interacting directly with the library. There's a CLI interface
+
+
+80
+00:08:30,160 --> 00:08:38,520
+and there's an HTTP server. Both of those, I said in the talk this morning
+
+
+81
+00:08:38,520 --> 00:08:46,280
+that Lassie does not actually have a block store. And that's mostly true with a caveat.
+
+
+82
+00:08:46,280 --> 00:08:52,280
+We have a very temporary block store when you make a request. We have essentially a
+
+
+83
+00:08:52,280 --> 00:08:57,760
+car file streaming library that exposes a car version 2 block store to Lassie, but then
+
+
+84
+00:08:57,760 --> 00:09:04,720
+streams a car v1 back to the client as you get data.
+
+
+85
+00:09:04,720 --> 00:09:10,480
+So the CLI and the HTTP server essentially create a new instance of this car stream,
+
+
+86
+00:09:10,480 --> 00:09:15,600
+and they give it to the Lassie library. The Lassie library has sort of a top level retriever
+
+
+87
+00:09:15,600 --> 00:09:23,600
+interface that speaks to a client to the network indexer. And essentially using that client,
+
+
+88
+00:09:23,600 --> 00:09:28,920
+it makes a network request to the network indexer to get back to essentially go from
+
+
+89
+00:09:28,920 --> 00:09:36,120
+a SID to a list of people who might have the content you're looking for.
+
+
+90
+00:09:36,120 --> 00:09:41,920
+And what we get back from the indexer and from the client is a candidate stream. Essentially
+
+
+91
+00:09:41,920 --> 00:09:46,280
+this is an asynchronous stream. We don't get a list of candidates, we get a stream of candidates
+
+
+92
+00:09:46,280 --> 00:09:52,360
+that may be coming in over time. We get a candidate stream and we send that stream into
+
+
+93
+00:09:52,360 --> 00:09:57,360
+essentially a protocol splitter that divides them up into different protocols that we're
+
+
+94
+00:09:57,360 --> 00:10:02,480
+going to want to retrieve with. And then we have clients for each protocol that do the
+
+
+95
+00:10:02,480 --> 00:10:05,120
+retrieval. The coordination between the protocols right
+
+
+96
+00:10:05,120 --> 00:10:10,720
+now is actually pretty simple. We race the two different protocols. And because of the
+
+
+97
+00:10:10,720 --> 00:10:15,520
+way we built this car streaming library, as each protocol gets data, they can put it into
+
+
+98
+00:10:15,520 --> 00:10:20,840
+the car stream and it properly returns the data to the user.
+
+
+99
+00:10:20,840 --> 00:10:25,440
+So that's the basic architecture. Now I want to talk about a couple of features you might
+
+
+100
+00:10:25,440 --> 00:10:34,040
+see here. There's no actual content routing library in Lassie. We work entirely through
+
+
+101
+00:10:34,040 --> 00:10:40,680
+the network indexer. And this is an intentional choice. If anybody was at IPFS camp, you might
+
+
+102
+00:10:40,680 --> 00:10:45,720
+have remembered Dig's talk about BitSwap and how he was complaining that one of the biggest
+
+
+103
+00:10:45,720 --> 00:10:51,600
+mistakes we make in a lot of our software architectures is mixing content discovery
+
+
+104
+00:10:51,600 --> 00:11:00,000
+and data transfer. And so in Lassie, we separate these out by actually moving the content routing
+
+
+105
+00:11:00,000 --> 00:11:08,400
+to a different service. So we have no option to bring content routing into Lassie.
+
+
+106
+00:11:08,400 --> 00:11:13,360
+And it also, there's a couple of advantages to this. First of all, it pushes our network
+
+
+107
+00:11:13,360 --> 00:11:18,340
+indexer team to keep making content routing there a super awesome solution that has super
+
+
+108
+00:11:18,340 --> 00:11:26,000
+fast response times. It limits the amount of, like, one of the most annoying things
+
+
+109
+00:11:26,000 --> 00:11:31,800
+I find in, like, looking through BitSwap code is that it's dealing with, like, multiple
+
+
+110
+00:11:31,800 --> 00:11:38,840
+forms of content discovery instead of a single stream of where things are coming from. So
+
+
+111
+00:11:38,840 --> 00:11:42,520
+you have to decide, oh, well, I'm going to get this BitSwap local content discovery,
+
+
+112
+00:11:42,520 --> 00:11:45,560
+but I'm also going to talk to the DHT and I'm going to have to make decisions about
+
+
+113
+00:11:45,560 --> 00:11:50,320
+it. It just gets complicated. And so what we want to do is just have a stream of candidates.
+
+
+114
+00:11:50,320 --> 00:11:55,800
+And that's what going through the indexer allows us to do.
+
+
+115
+00:11:55,800 --> 00:12:01,360
+Now that does make things a little complicated because in order for the indexer to be performant,
+
+
+116
+00:12:01,360 --> 00:12:06,360
+usually because the indexer also talks to things like the DHT and some fallback BitSwap
+
+
+117
+00:12:06,360 --> 00:12:11,600
+peers that don't announce in the DHT, in order for that to be performant, we want the indexer
+
+
+118
+00:12:11,600 --> 00:12:19,000
+to send back results as soon as it gets them and continue to send back results as it finds
+
+
+119
+00:12:19,000 --> 00:12:23,420
+more through mechanisms that may take more time.
+
+
+120
+00:12:23,420 --> 00:12:27,800
+So that does mean that we have to deal with this asynchronous stream. I spent a lot of
+
+
+121
+00:12:27,800 --> 00:12:32,800
+time thinking about the best way to do it. I used to be a JS programmer and then a Java
+
+
+122
+00:12:32,800 --> 00:12:39,600
+programmer at one point, and I was really into this thing called Rx that's like a ReactiveX,
+
+
+123
+00:12:39,600 --> 00:12:43,680
+reactive programming. It's super cool. So I went on a whole adventure on, like, maybe
+
+
+124
+00:12:43,680 --> 00:12:47,960
+we should be using Rx Go, maybe we should be getting deep into it. And then I realized
+
+
+125
+00:12:47,960 --> 00:12:52,880
+that actually there's a built-in streaming mechanism in Go, and I finally found a use
+
+
+126
+00:12:52,880 --> 00:12:59,120
+for Go channels that makes sense to me. So that was awesome. And once I realized that,
+
+
+127
+00:12:59,120 --> 00:13:04,800
+I was like, oh, Go channels are just streams. They're not like a magic asynchronous mailbox
+
+
+128
+00:13:04,800 --> 00:13:13,360
+like Erlang. So that's how we deal. That's how we pass around candidates. We pass around
+
+
+129
+00:13:13,360 --> 00:13:18,400
+channels of candidates coming in and deal with it.
+
+
+130
+00:13:18,400 --> 00:13:25,280
+Cool. So there's a lot of cool things you can do when you don't have the logic baked
+
+
+131
+00:13:25,280 --> 00:13:31,040
+into your actual library. First of all, you can completely override it and use a manual
+
+
+132
+00:13:31,040 --> 00:13:34,320
+peer list. And we actually allow you to do this in the CLI. If you know who you want
+
+
+133
+00:13:34,320 --> 00:13:40,040
+to retrieve it from, you can specify it, and then it will just retrieve from that person.
+
+
+134
+00:13:40,040 --> 00:13:44,680
+You can do cool stuff like block and filter out peers. This turns out to be really useful
+
+
+135
+00:13:44,680 --> 00:13:50,360
+when you're in a prototype network that's rapidly sending requests around and occasionally
+
+
+136
+00:13:50,360 --> 00:13:58,480
+create AWS bills for certain other groups. You can also do stuff like force it to use
+
+
+137
+00:13:58,480 --> 00:14:05,120
+certain protocols. Because you get results back from the indexer, you can essentially
+
+
+138
+00:14:05,120 --> 00:14:10,440
+say, oh, I'm going to drop all of the candidates that are on this protocol and only use another
+
+
+139
+00:14:10,440 --> 00:14:14,000
+protocol. So that's a pretty cool thing you can do.
+
+
+140
+00:14:14,000 --> 00:14:20,200
+Another thing that may not be evident from the diagram is that once you exit the content
+
+
+141
+00:14:20,200 --> 00:14:27,360
+routing interface, essentially in the retriever architecture, every single module has kind
+
+
+142
+00:14:27,360 --> 00:14:33,320
+of the same interface. The idea is we like to say retrievers all the way down, meaning
+
+
+143
+00:14:33,320 --> 00:14:38,000
+that you've got a bunch of retrievers and each retriever tends to have child retrievers
+
+
+144
+00:14:38,000 --> 00:14:44,440
+if it needs them. This might seem a little bit architecture astronaut-y, but it does
+
+
+145
+00:14:44,440 --> 00:14:48,320
+enable you to do some really cool stuff that we've already started using.
+
+
+146
+00:14:48,320 --> 00:14:54,760
+For example, you can A-B test different retrievers in production, which is something we need
+
+
+147
+00:14:54,760 --> 00:15:02,760
+to do, especially when it comes to performance. You might have seen there was one of the retrievers
+
+
+148
+00:15:02,760 --> 00:15:07,360
+called the protocol splitter, and the simple version of it is that it just puts the graphs
+
+
+149
+00:15:07,360 --> 00:15:10,320
+sync candidates to the graphs sync client and the bitswap candidates to the bitswap
+
+
+150
+00:15:10,320 --> 00:15:15,280
+client, but you can also do other things like, oh, I'm going to actually group a bunch of
+
+
+151
+00:15:15,280 --> 00:15:19,480
+bitswap candidates and not send any graphs sync candidates at first until I send the
+
+
+152
+00:15:19,480 --> 00:15:24,680
+bitswap candidates and get bitswap going first, right, if you want to prioritize a protocol.
+
+
+153
+00:15:24,680 --> 00:15:32,980
+So there's some cool stuff you can do there. You also can separate coordination across
+
+
+154
+00:15:32,980 --> 00:15:38,600
+protocols from coordination within a protocol, which turns out to be pretty useful.
+
+
+155
+00:15:38,600 --> 00:15:46,800
+Cool. So how does bitswap work? Apparently this is what a Kluge machine is. I didn't
+
+
+156
+00:15:46,800 --> 00:15:54,520
+know this until I image searched Kluge. So how does bitswap work? We kind of hacked it
+
+
+157
+00:15:54,520 --> 00:16:01,440
+with GoBitswap for the time being. What we do is we essentially pretend to be the DHT
+
+
+158
+00:16:01,440 --> 00:16:09,120
+for bitswap, and we remove its, we essentially say bitswap currently, when it can't find
+
+
+159
+00:16:09,120 --> 00:16:14,280
+peers in its local set of, local swarm, it goes out to the DHT. Usually there's a delay
+
+
+160
+00:16:14,280 --> 00:16:19,520
+on it. We remove the delay, put it down to zero, and then we provide it with the peers
+
+
+161
+00:16:19,520 --> 00:16:25,060
+from the DHT by overriding the interface that it essentially takes in to query the DHT.
+
+
+162
+00:16:25,060 --> 00:16:32,000
+We did this because we needed to get it up and running. We don't want this to be the
+
+
+163
+00:16:32,000 --> 00:16:38,480
+permanent state. It could look a lot of ways in terms of the evolution. We may end up doing
+
+
+164
+00:16:38,480 --> 00:16:44,000
+some more bitswap implementation inside of Lassie, or we're also working with the Kubo
+
+
+165
+00:16:44,000 --> 00:16:54,680
+team to improve upon the sort of bitswap architecture so you can get a lower level interface.
+
+
+166
+00:16:54,680 --> 00:17:01,960
+One question that's been asked is, is bitswap permanently broken? Is it a terrible protocol
+
+
+167
+00:17:01,960 --> 00:17:08,160
+that we need to move away from? I would ask, is it broken or do we just need to fix it?
+
+
+168
+00:17:08,160 --> 00:17:12,280
+Part of that is that just bitswap tries to do everything, because again, it was built
+
+
+169
+00:17:12,280 --> 00:17:18,560
+with the intent, as it evolved over time, it became the Uber library for retrieving
+
+
+170
+00:17:18,560 --> 00:17:25,520
+data on IPFS. The interfaces to bitswap are super high level. You don't get to tell it
+
+
+171
+00:17:25,520 --> 00:17:30,520
+what peers you want to retrieve from. You don't get to tell it how it's going to find
+
+
+172
+00:17:30,520 --> 00:17:36,200
+peers. What if we built a version of bitswap that had no more broadcasting of wants to
+
+
+173
+00:17:36,200 --> 00:17:42,760
+like all your friendly other peers? That's the source of a ton of network traffic. I
+
+
+174
+00:17:42,760 --> 00:17:47,600
+think there's a talk somewhere else today from ProBlab about the cost of doing broadcasts
+
+
+175
+00:17:47,600 --> 00:17:53,920
+on our network. What if we got rid of the concept of content discovery through bitswap?
+
+
+176
+00:17:53,920 --> 00:17:58,720
+This was a key optimization we put in, but only because there was nothing else. Maybe
+
+
+177
+00:17:58,720 --> 00:18:06,400
+that doesn't make sense. What if we just asked for blocks and got them back? If that were
+
+
+178
+00:18:06,400 --> 00:18:12,720
+all bitswap was, I think it could work. Maybe it's not the best block request protocol,
+
+
+179
+00:18:12,720 --> 00:18:20,120
+but it's not the worst. Let me talk... I'm going to do a... This
+
+
+180
+00:18:20,120 --> 00:18:25,240
+track is kind of jumping around to different parts of LASI. I want to talk a little bit
+
+
+181
+00:18:25,240 --> 00:18:34,240
+about the LASI HTTP interface and how it relates to existing HTTP implementations. LASI's HTTP
+
+
+182
+00:18:34,240 --> 00:18:41,320
+server exposes essentially a single path URL interface. It's get slash IPFS slash SID,
+
+
+183
+00:18:41,320 --> 00:18:47,360
+and then you can optionally put a path of directory and you specify it's in format car.
+
+
+184
+00:18:47,360 --> 00:18:53,600
+Now, if this looks familiar, it's because it's the gateway interface for the most part.
+
+
+185
+00:18:53,600 --> 00:18:59,440
+There's a couple of changes, though. This is what enables us... Basically, in LASI,
+
+
+186
+00:18:59,440 --> 00:19:05,320
+we did not want to do the work of removing the... Of essentially adding trust in by sending
+
+
+187
+00:19:05,320 --> 00:19:12,160
+you back flat files, because we really want people to verify their own data.
+
+
+188
+00:19:12,160 --> 00:19:18,360
+We only support car files, but we do some additional things. One of the missing components
+
+
+189
+00:19:18,360 --> 00:19:26,320
+of the so-called trustless gateway interface specification in the IPFS gateway as it stands
+
+
+190
+00:19:26,320 --> 00:19:35,280
+is that when you fetch a car file, if you fetch it at a path, it only sends you the
+
+
+191
+00:19:35,280 --> 00:19:39,720
+blocks in the car file that make up the result at the end of the path. And the downside of
+
+
+192
+00:19:39,720 --> 00:19:45,320
+that is that you essentially lose the ability to verify your data.
+
+
+193
+00:19:45,320 --> 00:19:52,320
+So LASI, when you ask for a SID at a subdirectory, we're going to send you the SID and the intermediate
+
+
+194
+00:19:52,320 --> 00:19:56,320
+blocks to get you to the end of the path, and then we're going to send you the data
+
+
+195
+00:19:56,320 --> 00:20:24,320
+so you can verify it. We also do a couple of...
+
+
+196
+00:20:00,000 --> 00:20:30,000
+other things. We support some pretty limited but also super useful scopes in what you can request. Right now, by default, all car requests, I believe, attempt to send you an entire DAG from the SID you request. It just traverses until it gets to the end. And we do support that, but we also support some other scopes. And part of this is... Part of the scopes we support is these are intended to support a trustful HTTP gateway being able to make
+
+
+197
+00:20:30,000 --> 00:20:56,000
+the smart requests it needs in order to serve up flat files to another client through LASI. If you remember the architecture or diagram that Will put up for REA, like the gateway, the regular IPFS gateway is just going to be making requests out to Saturn, and it's going to get back car files, but then it's going to do the translation. So we need to be able to make intelligent requests that allow us to get the data we need for translation.
+
+
+198
+00:20:56,000 --> 00:21:22,000
+So one of the... The second scope we support is the so-called file scope, name and work in progress. The file scope essentially returns back data, and if it's UnixFS data, it returns back exactly what you would expect to... Like, it essentially returns back the entire UnixFS entity that you are going to need... That you would expect to get if you made a flat file request.
+
+
+199
+00:21:22,000 --> 00:21:44,000
+So that means if you make a request for a file, then it's going to return back all of the blocks that go into that file. If you made a request for the directory, it's going to return back all the blocks that are needed to essentially LS the directory. Right? It's not going to return back all the subdirectories and files underneath it, because that could get huge, but you can... But the file scope will allow you to essentially LS.
+
+
+200
+00:21:44,000 --> 00:22:08,000
+And then the one other scope we have is the block scope, which is just essentially return back the single block at the end of the path. We also may have support for byte ranges in LASI. I was in the middle of working on that on the plane. We actually support it in Saturn, but for sort of architectural reasons, we intentionally kept it out of LASI for that purpose.
+
+
+201
+00:22:08,000 --> 00:22:24,000
+And the CLI has all these same commands. You can kind of use all of them at the CLI. So, fun fact, this HTTP protocol is the first protocol that we're going to support for backends providing data to us.
+
+
+202
+00:22:24,000 --> 00:22:43,000
+So, we're actually going to be working with a couple of key stakeholders or people who hold a lot of data, namely Filecoin storage providers running Boost and probably Web3.storage to add HTTP transfer to LASI. And the interface will just be the same interface that LASI exposes.
+
+
+203
+00:22:43,000 --> 00:23:00,000
+Now, when we do that, we are still going to verify the data in between, so we're not going to just be a super simple proxy. And we think that's important because we want to make sure that we're not returning stuff to the user that is not the correct stuff.
+
+
+204
+00:23:00,000 --> 00:23:25,000
+So, yeah. That's the HTTP backend. Metrics. I'm going to make a risky move and step out of my presentation for two seconds. One of the things that we have built LASI from the ground up, because this is something that we've encountered with some of our other projects where we built them, where Kubo's evolution, it began as probably one student project way back in the day.
+
+
+205
+00:23:25,000 --> 00:23:39,000
+And then it was iterated on by people who were just trying to figure stuff out. And one thing that we've gotten really clear on is to get to performance in particular, you have to measure everything. And so we have a lot of that built into LASI.
+
+
+206
+00:23:39,000 --> 00:24:01,000
+I'm going to just briefly show you our... This is our mega-grafana. This is actually tracking Raya stuff. You can see the entire funnel of requests. Where are we losing people? We actually lose some people because we can't find their content. We lose people because we filter out their content.
+
+
+207
+00:24:01,000 --> 00:24:25,000
+A bunch of other stuff in here. And then we also have super... We're very intent on getting Filecoin SPs to be a big part of the LASI retrieval story. So we've got a ton of metrics on how LASI's doing with different Filecoin search providers, why they're failing. We've got stuff about time to first byte, time to bandwidth and data transfer, how much data we're moving, success from various stages.
+
+
+208
+00:24:25,000 --> 00:24:51,000
+Anyway, it doesn't really matter. But the point is, we're trying to track everything super closely so that we can iterate and improve. And this is actually... We've shown this over the course of the Raya project, that by having metrics, which is essentially trying experiments, seeing how they affect the metrics, and then iterating from there, you can make a lot of progress in performance.
+
+
+209
+00:24:51,000 --> 00:24:55,000
+And I think that's going to be our strategy probably for a long time.
+
+
+210
+00:24:55,000 --> 00:24:58,000
+Let me talk about what's next.
+
+
+211
+00:24:58,000 --> 00:25:17,000
+So probably we have in LASI... I've said before that LASI is largely stateless. But when it's up as a server, a long-running process, we want to... There's probably some information that we want to track and make some good decisions about.
+
+
+212
+00:25:17,000 --> 00:25:29,000
+But essentially, we want to choose the right peers to get data from. We want to choose the ones that are fastest, the ones that tend to respond successfully. We want to choose the ones that may be closest to us.
+
+
+213
+00:25:29,000 --> 00:25:47,000
+So right now, we are storing some of that information, but we want to keep developing that information. We want to feed it into the requests we make to essentially try to coordinate between multiple protocols the absolute fastest way to get data.
+
+
+214
+00:25:47,000 --> 00:26:00,000
+So we're going to be iterating on that. We want to make good decisions. And this is a little bit like if you've dug into the BitSwap sessions code, it does a lot of this. There's a lot of really intelligent stuff there.
+
+
+215
+00:26:00,000 --> 00:26:06,000
+It's just that it's tied only to BitSwap. And so we are sort of making the protocol-neutral version of that.
+
+
+216
+00:26:06,000 --> 00:26:23,000
+Now, we're going to use some state in memory. We're not going to write anything to disk. And we may not do all of this ourselves. We may also, again, want to delegate out to another party who can sort of perform this at scale more effectively.
+
+
+217
+00:26:23,000 --> 00:26:26,000
+So we'll see where that goes.
+
+
+218
+00:26:26,000 --> 00:26:33,000
+That's it. That's the talk. I don't know if I have time for Q&A. Yes? What? Q. Q. Go ahead.
+
+
+219
+00:26:33,000 --> 00:26:36,000
+Please. What is car scope all?
+
+
+220
+00:26:36,000 --> 00:26:56,000
+So car scope all is – it means essentially at the end of your path in your request, you're going to try to fetch the entire DAG that is beneath the SID at the end of your path until you get to the point where there are no more leaves, no matter how deep it is.
+
+
+221
+00:26:56,000 --> 00:27:05,000
+So if it's a directory, you're going to fetch the directory listing and then the subdirectories and the subfiles and all the way to the very end, whether or not you're in Unix.
+
+
+222
+00:27:05,000 --> 00:27:08,000
+Is that the equivalent of not specifying car scope?
+
+
+223
+00:27:08,000 --> 00:27:19,000
+Yes, it is the equivalent. Yeah. We're trying to be as least breaking as possible. So we are going – the default is currently effectively all. So, yeah.
+
+
+224
+00:27:19,000 --> 00:27:30,000
+Okay. So the second question, hopefully real quick. Are the golden retrievers in LASI, are they pluggable? Can I write my own one and put it in LASI?
+
+
+225
+00:27:30,000 --> 00:27:42,000
+So, I mean, yes, but Go's actual code module linking is not super great. We might need to just make an HTTP-based retriever.
+
+
+226
+00:27:42,000 --> 00:27:48,000
+Yeah. I mean, programmatically I can just – can I just give it another retriever interface and it will just use that as well?
+
+
+227
+00:27:48,000 --> 00:27:53,000
+Yes. Yeah. Currently it actually takes the list of retrievers in to the constructor.
+
+
+228
+00:27:53,000 --> 00:27:55,000
+Got it. Okay. Cool. Thank you.
+
+
+229
+00:27:55,000 --> 00:28:01,000
+Yeah. All right. And I – one more question and then I apologize. I went over, so I want to make sure we don't go too late.
+
+
+230
+00:28:01,000 --> 00:28:02,000
+Hello.
+
+
+231
+00:28:02,000 --> 00:28:03,000
+Hello.
+
+
+232
+00:28:03,000 --> 00:28:16,000
+My question is how would a web client or a mobile client connect to LASI or how do you see an architecture working where those sorts of clients would use this?
+
+
+233
+00:28:16,000 --> 00:28:23,000
+Absolutely. I'm really glad you asked that question because I was like, oh, I didn't put any, like, really information about what's our web story.
+
+
+234
+00:28:23,000 --> 00:28:31,000
+And there's, like, so clearly if web – like, our web story is somewhat limited by the fact that we wrote it in Go.
+
+
+235
+00:28:31,000 --> 00:28:40,000
+And there was a lot of discussion, actually, when we were starting. So should we just try to do this in JS or maybe – mostly JS, like maybe Rust WebAssembler,
+
+
+236
+00:28:40,000 --> 00:28:43,000
+but that really doesn't actually work because of the way WebAssembly works.
+
+
+237
+00:28:43,000 --> 00:28:57,000
+So the reason we stuck with Go is we wanted to build a reference implementation, essentially to show you how you do this coordination with the intent that if somebody wants to do it in JavaScript,
+
+
+238
+00:28:57,000 --> 00:29:00,000
+they'll have an entire architecture that they can draw from. So that's part one.
+
+
+239
+00:29:00,000 --> 00:29:09,000
+Now, that's not really an answer. Yeah. But, I mean, it was pretty intentional because we think the hard problem is the architecture. Right?
+
+
+240
+00:29:09,000 --> 00:29:12,000
+We think the hard problem is how do you coordinate.
+
+
+241
+00:29:12,000 --> 00:29:18,000
+Now, the – however, we do provide an HTTP server.
+
+
+242
+00:29:18,000 --> 00:29:29,000
+So the simple thing you could do is you can, as you write your website, on your server side, expose the LASI Go interface to access Filecoin content,
+
+
+243
+00:29:29,000 --> 00:29:37,000
+the LASI HTTP interface to access Filecoin content, and then in the JavaScript that you put on your web page –
+
+
+244
+00:29:37,000 --> 00:29:49,000
+and this may actually be, for the time being and possibly the foreseeable future, the best way to do this because it produces a light JavaScript client.
+
+
+245
+00:29:49,000 --> 00:29:57,000
+All you do is you write JavaScript code that runs probably in a service worker to intercept HTTP requests, which go to LASI,
+
+
+246
+00:29:57,000 --> 00:30:02,000
+and then as you get car data back, translate it back to the flat file. And that's what Saturn does.
+
+
+247
+00:30:02,000 --> 00:30:04,000
+Saturn actually already has that code in existence.
+
+
+248
+00:30:04,000 --> 00:30:11,000
+So those are the two approaches. I know that's not a complete answer, but, again, we were pretty clear that we wanted to solve a problem,
+
+
+249
+00:30:11,000 --> 00:30:21,000
+which was how do you coordinate the retrieval among protocols, and the way we could do that in not a year was to do it in Go.
+
+
+250
+00:30:21,000 --> 00:30:35,000
+Thank you.

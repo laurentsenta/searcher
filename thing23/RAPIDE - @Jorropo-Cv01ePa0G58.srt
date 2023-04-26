@@ -1,0 +1,1013 @@
+1
+00:00:00,000 --> 00:00:11,000
+Hi, I'm Jeropo, you can also call me Hugo if you want. I work at Protocol Labs in the
+
+
+2
+00:00:11,000 --> 00:00:17,800
+IP Stewards team and we mainly take care of Kubo and Boxo, which is a library that mostly
+
+
+3
+00:00:17,800 --> 00:00:24,480
+spin out of Kubo and the goal of Boxo is to help people that want to build applications
+
+
+4
+00:00:24,480 --> 00:00:30,640
+to build applications using the Kubo primitives. And so I want to show you what I've been working
+
+
+5
+00:00:30,640 --> 00:00:37,720
+on, one of the things, which is RAPID. So the first step is, oh, I first talked about
+
+
+6
+00:00:37,720 --> 00:00:43,000
+this at IPFS camp, so this might be a bit repetitive if you've already seen the talk,
+
+
+7
+00:00:43,000 --> 00:00:51,320
+but I will show pretty numbers. The first thing that's interesting to notice is that
+
+
+8
+00:00:51,320 --> 00:00:55,440
+Torrent is a peer-to-peer network and yet it's probably the fastest way to download
+
+
+9
+00:00:55,440 --> 00:01:02,360
+files on the internet. Assuming you don't dedicate a huge amount of resources to your
+
+
+10
+00:01:02,360 --> 00:01:08,360
+problem, just having a thing and having work, Torrent is very good at that. It takes lots
+
+
+11
+00:01:08,360 --> 00:01:14,320
+of different computers and because everyone is providing the content, you can download
+
+
+12
+00:01:14,320 --> 00:01:21,160
+from lots of people in parallel and so even if each one is a small connection from a residential
+
+
+13
+00:01:21,160 --> 00:01:24,680
+thing with a small upload bandwidth, when you add all of them together, you can still
+
+
+14
+00:01:24,680 --> 00:01:31,200
+download at multi-gigabit speed. We call that negative one scaling because the more users
+
+
+15
+00:01:31,200 --> 00:01:35,160
+you have, the faster your download goes because there are more users that are resharing the
+
+
+16
+00:01:35,160 --> 00:01:43,080
+file. And so it's a question you might have whether we see that on IPFS. One way I wanted
+
+
+17
+00:01:43,080 --> 00:01:51,760
+to try this is we have this.ipfs.io, which is just a website that hosts binaries for
+
+
+18
+00:01:51,760 --> 00:01:56,120
+Kubo and other things. So you would guess that it's popular in the IPFS community. And
+
+
+19
+00:01:56,120 --> 00:02:00,560
+so we see that at the time I've written the comment, we have 42 people that were hosting
+
+
+20
+00:02:00,560 --> 00:02:06,880
+it. So if I try to download it, though, I'm using Kubo right now, and you can see it's
+
+
+21
+00:02:06,880 --> 00:02:11,960
+pretty slow. It's at three maybe bytes per second, which is, I mean, it's not that slow.
+
+
+22
+00:02:11,960 --> 00:02:15,200
+Some people have worse antennas than this, but I have an antenna that's a few hundred
+
+
+23
+00:02:15,200 --> 00:02:19,640
+times faster, so I would expect something faster. And it's still not downloading very
+
+
+24
+00:02:19,640 --> 00:02:22,440
+fast. So I'm going to show you what I've made with
+
+
+25
+00:02:22,440 --> 00:02:27,320
+RAPID. This is a comment. It might look big. It's just because I'm listing a bunch of different
+
+
+26
+00:02:27,320 --> 00:02:30,880
+gateways I want to download. And is there someone smart that realized that I'm downloading
+
+
+27
+00:02:30,880 --> 00:02:37,240
+from localhost? It's because it's hard to find very fast gateways. And I use the TC
+
+
+28
+00:02:37,240 --> 00:02:42,360
+stream shaper, so it actually looks like localhost is far away. So I'm not just very fast because
+
+
+29
+00:02:42,360 --> 00:02:46,200
+I download from myself. I'm actually slowing down the connection.
+
+
+30
+00:02:46,200 --> 00:02:52,600
+And so if I do that, yeah, 600 maybe bytes per second, which is about five gigabit per
+
+
+31
+00:02:52,600 --> 00:02:58,600
+second. I had to do download from localhost because I only have half of that, so when,
+
+
+32
+00:02:58,600 --> 00:03:03,720
+like, my fiber is the bottleneck, I think it's pretty good.
+
+
+33
+00:03:03,720 --> 00:03:09,040
+So that was the demo. Okay. So now I will quickly go over how it works and why it's
+
+
+34
+00:03:09,040 --> 00:03:14,160
+so fast. The main idea is just that we have lots of different nodes that have our content,
+
+
+35
+00:03:14,160 --> 00:03:17,280
+so why don't we just download from all of them at once?
+
+
+36
+00:03:17,280 --> 00:03:20,760
+Now the hard question is, okay, so if I download the same file from everyone at once, I'll
+
+
+37
+00:03:20,760 --> 00:03:25,480
+have the same data 42 times, or, like, how many times how many nodes are in the network,
+
+
+38
+00:03:25,480 --> 00:03:30,680
+which doesn't help me, actually. So now we need a question of how do we want to download
+
+
+39
+00:03:30,680 --> 00:03:35,600
+different parts of the file from different nodes? And the slightly hard part is that
+
+
+40
+00:03:35,600 --> 00:03:44,480
+in IPFS files or DAGs, so that means we have to start somewhere, so at the root, for example,
+
+
+41
+00:03:44,480 --> 00:03:48,000
+because it's the first hash you have, and then going from there, we will be able to
+
+
+42
+00:03:48,000 --> 00:03:51,400
+download. So at the start, we only know about the root.
+
+
+43
+00:03:51,400 --> 00:03:55,000
+So what we're going to do is we're going to take all of the people that we have, all of
+
+
+44
+00:03:55,000 --> 00:03:59,120
+them are, so we have X, Y, and Z, which are people we're downloading from, and we're just
+
+
+45
+00:03:59,120 --> 00:04:03,960
+going to add them to the first block three times, or, like, everyone adds the same block.
+
+
+46
+00:04:03,960 --> 00:04:07,440
+And the point of doing this is to get the faster time to first byte. So we don't know,
+
+
+47
+00:04:07,440 --> 00:04:11,400
+actually, here, like, we don't know the latency of this node yet, because we have not contacted
+
+
+48
+00:04:11,400 --> 00:04:17,160
+them, so the question is, we just want the first, like, starting the baseline as fast
+
+
+49
+00:04:17,160 --> 00:04:23,800
+as possible, and so we raise them together. This is not ideal in the long run, because
+
+
+50
+00:04:23,800 --> 00:04:29,680
+we'll get duplicate data, but the goal is that quickly, let's say X is the first fast
+
+
+51
+00:04:29,680 --> 00:04:35,200
+node, and so X got the root node, so what we'll be able to do is to move other people
+
+
+52
+00:04:35,200 --> 00:04:37,920
+away from the root node to other parts of the DAG.
+
+
+53
+00:04:37,920 --> 00:04:44,860
+So right here, for example, we have X that's downloading both Y, A, and E. Due to how the
+
+
+54
+00:04:44,860 --> 00:04:50,160
+underlying protocol works, which here is a car file from a gateway, we don't precisely
+
+
+55
+00:04:50,160 --> 00:04:55,160
+know where the file is going to be, so we kind of have to take a guess, but then that
+
+
+56
+00:04:55,160 --> 00:05:01,720
+allows us to, like, for example, Y, Z is downloading E, we see that X downloaded I, and so at this
+
+
+57
+00:05:01,720 --> 00:05:07,520
+point we have, like, double the throughput, or at least, like, we have X plus D throughput.
+
+
+58
+00:05:07,520 --> 00:05:12,080
+And so there is this notion of there's numbers on the graph, and the point of the number
+
+
+59
+00:05:12,080 --> 00:05:17,600
+is something that I call the metric, and it's just to stay to, so, like, all of this is
+
+
+60
+00:05:17,600 --> 00:05:22,120
+running on the client, and so we want our client to decide where do we want to go.
+
+
+61
+00:05:22,120 --> 00:05:26,800
+Like, Y right now doesn't know, doesn't have a peer to download from.
+
+
+62
+00:05:26,800 --> 00:05:32,080
+And so the thing that we will use is the metric, and it's a number of how bad do we don't want
+
+
+63
+00:05:32,080 --> 00:05:34,940
+you to download from here, if that makes sense.
+
+
+64
+00:05:34,940 --> 00:05:39,680
+Right now it's just counting how many nodes are maybe going to give us the file, and the
+
+
+65
+00:05:39,680 --> 00:05:46,280
+point of doing this is that then Y can look at the metric and sees that A is not downloaded,
+
+
+66
+00:05:46,280 --> 00:05:47,800
+and it has a metric of one.
+
+
+67
+00:05:47,800 --> 00:05:52,520
+So it's the best node here that we have access to, so Y is going to start downloading A.
+
+
+68
+00:05:52,520 --> 00:05:58,760
+And so basically we just keep going down in the graph, and we search what is the blocks
+
+
+69
+00:05:58,760 --> 00:06:03,520
+that we don't have yet, and what are the blocks that have the lowest metric, because the lower
+
+
+70
+00:06:03,520 --> 00:06:09,120
+the metric, the lower the competition for that block is.
+
+
+71
+00:06:09,120 --> 00:06:11,440
+Now we have something interesting that happens.
+
+
+72
+00:06:11,440 --> 00:06:17,480
+It's kind of, so it's an issue of, sorry, different protocols allow you to do different
+
+
+73
+00:06:17,480 --> 00:06:18,480
+things.
+
+
+74
+00:06:18,480 --> 00:06:21,840
+The particular protocol that is being used right now is Calvigateway, and it doesn't
+
+
+75
+00:06:21,840 --> 00:06:24,480
+allow you to tell you, oh, I don't want a block.
+
+
+76
+00:06:24,480 --> 00:06:28,880
+You tell it, oh, I want some blocks, with recent addition that Hannah has been talking
+
+
+77
+00:06:28,880 --> 00:06:34,280
+earlier, we can guide it more precisely in the DAG, but it's still, you cannot send a
+
+
+78
+00:06:34,280 --> 00:06:36,800
+like a negative want.
+
+
+79
+00:06:36,800 --> 00:06:40,520
+So it will happen sometime that we get duplicate data.
+
+
+80
+00:06:40,520 --> 00:06:44,640
+Here X sends us E that Z already downloaded.
+
+
+81
+00:06:44,640 --> 00:06:49,520
+And so at this point, we do a, I think, it's maybe a hack, but it works well.
+
+
+82
+00:06:49,520 --> 00:06:55,880
+We just kill the connection, because when we kill the connection, then the, we'll stop
+
+
+83
+00:06:55,880 --> 00:06:58,580
+receiving data, and we'll restart somewhere else in the graph.
+
+
+84
+00:06:58,580 --> 00:07:02,560
+So X just killed the connection, and it's going to do in the graph, we see that I have
+
+
+85
+00:07:02,560 --> 00:07:09,840
+a metric of zero, so X started downloading I, and X continued to go down the graph.
+
+
+86
+00:07:09,840 --> 00:07:14,840
+And the last part about the algorithm is what happened when we fully download something.
+
+
+87
+00:07:14,840 --> 00:07:17,960
+So right now, X have been going down.
+
+
+88
+00:07:17,960 --> 00:07:20,920
+Everyone has been going down in the graph, but like X is very fast, so it's going to
+
+
+89
+00:07:20,920 --> 00:07:24,320
+download all the nodes below I, and now it just downloaded.
+
+
+90
+00:07:24,320 --> 00:07:28,880
+So what happened is when a node cannot find work in the local space of the graph that
+
+
+91
+00:07:28,880 --> 00:07:30,960
+it is, we're going to backtrack.
+
+
+92
+00:07:30,960 --> 00:07:35,000
+So we just look at the graph, and we see that we removed I.
+
+
+93
+00:07:35,000 --> 00:07:41,080
+X is back at the root, and so it would re-go down, and would select A in that case, probably.
+
+
+94
+00:07:41,080 --> 00:07:43,880
+So that was the algorithm, which is, it's mostly fine.
+
+
+95
+00:07:43,880 --> 00:07:47,720
+So the good point is that it's actually very light to block, because we're moving a few
+
+
+96
+00:07:47,720 --> 00:07:51,400
+pointers around, allocating a bit of memory.
+
+
+97
+00:07:51,400 --> 00:07:55,600
+Now the other question is, one critical feature that we want to support is that we want to
+
+
+98
+00:07:55,600 --> 00:08:00,760
+have more than one protocol, and so how do we do that?
+
+
+99
+00:08:00,760 --> 00:08:04,880
+The first protocol that's interesting, graphing, this is interesting because it's used by
+
+
+100
+00:08:04,880 --> 00:08:10,640
+Filecoin, and it allows you to express very clearly where you want to go in a graph before
+
+
+101
+00:08:10,640 --> 00:08:12,440
+you even have received the graph.
+
+
+102
+00:08:12,440 --> 00:08:17,480
+So in a single round trip, I can send you a CID, but also a selector, and a selector
+
+
+103
+00:08:17,480 --> 00:08:22,760
+will allow the server to run the traversal logic themselves, and they will reach the
+
+
+104
+00:08:22,760 --> 00:08:28,200
+same result as me, so I don't need to send a message every time I want a new block.
+
+
+105
+00:08:28,200 --> 00:08:30,800
+The server is going to do most of that work for me.
+
+
+106
+00:08:30,800 --> 00:08:35,240
+And so that would be interesting to support, and I don't think it would be that hard.
+
+
+107
+00:08:35,240 --> 00:08:40,000
+The API is mostly the same, like, the behavior is the same as downloading a car over a gateway.
+
+
+108
+00:08:40,000 --> 00:08:44,320
+We just have some IPR work around, like, how do we pass detectors and how do we decode
+
+
+109
+00:08:44,320 --> 00:08:45,320
+them.
+
+
+110
+00:08:45,320 --> 00:08:51,200
+The other one which is very interesting for Kubo, precisely, is BitSwap, because currently
+
+
+111
+00:08:51,200 --> 00:08:55,800
+Kubo already used BitSwap for everything, and so if we stop supporting BitSwap, like,
+
+
+112
+00:08:55,800 --> 00:08:58,320
+you cannot fetch your data, which is kind of sad.
+
+
+113
+00:08:58,320 --> 00:09:04,600
+We want compatibility with older clients, at least for some time, and so BitSwap works
+
+
+114
+00:09:04,600 --> 00:09:06,920
+in a slightly different way.
+
+
+115
+00:09:06,920 --> 00:09:12,920
+So we need to keep track of the metric, and here is the X that's BitSwap here, and so
+
+
+116
+00:09:12,920 --> 00:09:16,480
+to maintain the metric on BitSwap, okay, sorry, one thing.
+
+
+117
+00:09:16,480 --> 00:09:20,400
+BitSwap, because it downloads block one by one, if I just ask you for one block and then
+
+
+118
+00:09:20,400 --> 00:09:27,000
+I move around in the graph, I will have actually most of my connection will not be used, because
+
+
+119
+00:09:27,000 --> 00:09:32,600
+the speed of light is not that fast, so when I send you a request, you send me the answer,
+
+
+120
+00:09:32,600 --> 00:09:35,720
+and there's a bunch of delay where, like, you just don't have more things to send to
+
+
+121
+00:09:35,720 --> 00:09:37,040
+me, so you don't send to me.
+
+
+122
+00:09:37,040 --> 00:09:42,000
+So we need to ask for more than one block, and the way I'm doing this is using a snake,
+
+
+123
+00:09:42,000 --> 00:09:47,720
+so I create a linked list, which is the dotted lines below X, that points to all the nodes
+
+
+124
+00:09:47,720 --> 00:09:54,840
+that X has traversed and is going to download, and basically by following where the snake
+
+
+125
+00:09:54,840 --> 00:09:59,760
+is going, you can, when the snake goes up, do plus one, no, do minus one, and then do
+
+
+126
+00:09:59,760 --> 00:10:03,960
+plus one when it goes down, and so that maintains a metric, and again, the point of the metric
+
+
+127
+00:10:03,960 --> 00:10:11,000
+is to allow the nodes to repartition themselves into that correctly, so they are able to download
+
+
+128
+00:10:11,000 --> 00:10:13,120
+different parts.
+
+
+129
+00:10:13,120 --> 00:10:15,640
+I have written most of the code on the train.
+
+
+130
+00:10:15,640 --> 00:10:21,640
+It doesn't work well, sadly, so I might do a demo by the end of IPFS thing if I finish
+
+
+131
+00:10:21,640 --> 00:10:22,640
+it.
+
+
+132
+00:10:22,640 --> 00:10:27,640
+I'm not sure why I might not finish this next week.
+
+
+133
+00:10:27,640 --> 00:10:34,640
+The features that current RAPID is missing, right now it doesn't do content routing, so
+
+
+134
+00:10:34,640 --> 00:10:39,360
+basically at the start you hard code a bunch of providers, and it's going to try to use
+
+
+135
+00:10:39,360 --> 00:10:41,200
+them.
+
+
+136
+00:10:41,200 --> 00:10:46,600
+I want to do this with similar to congestion control, where basically we look at how fast
+
+
+137
+00:10:46,600 --> 00:10:50,800
+our consumer, so the code that's calling RAPID is consuming blocks, and if the consumer is
+
+
+138
+00:10:50,800 --> 00:10:55,880
+always waiting, like, it can receive more blocks but not giving them, then we'll spot
+
+
+139
+00:10:55,880 --> 00:10:59,720
+a random worker that travels the graph until we find a node that's not downloaded, and
+
+
+140
+00:10:59,720 --> 00:11:08,080
+then it will do either DHT, IPNI, whatever content router you want to use request, and
+
+
+141
+00:11:08,080 --> 00:11:14,040
+so basically that will have a similar behaviour of when we need more workers, we'll spot workers
+
+
+142
+00:11:14,040 --> 00:11:18,720
+at random in the graph when we find them in the content router you're using.
+
+
+143
+00:11:18,720 --> 00:11:20,960
+This other thing is strongly order request.
+
+
+144
+00:11:20,960 --> 00:11:25,440
+Right now it gives you the order, so it always starts from the root to the leaves, but between
+
+
+145
+00:11:25,440 --> 00:11:29,920
+the leaves it doesn't have any preference, so that means that if you're downloading a
+
+
+146
+00:11:29,920 --> 00:11:34,000
+video, you can do an incremental verification of the video, that's perfectly fine, but you
+
+
+147
+00:11:34,000 --> 00:11:38,240
+might view the middle before you view the start, which is slightly annoying for some
+
+
+148
+00:11:38,240 --> 00:11:39,840
+features.
+
+
+149
+00:11:39,840 --> 00:11:41,960
+And the last one is block store caching.
+
+
+150
+00:11:41,960 --> 00:11:44,880
+In Kubo we have a block store.
+
+
+151
+00:11:44,880 --> 00:11:48,560
+We use a block store to not re-download the same blocks twice.
+
+
+152
+00:11:48,560 --> 00:11:53,560
+You would like to, it would be nice if Rapid could also use a block store, so if you already
+
+
+153
+00:11:53,560 --> 00:11:56,160
+have a block, you don't download it again.
+
+
+154
+00:11:56,160 --> 00:11:57,360
+This would be optional.
+
+
+155
+00:11:57,360 --> 00:12:01,200
+If you're using Rapid, you don't have to use the block store, you could add a block store
+
+
+156
+00:12:01,200 --> 00:12:06,080
+or run without one, and without one it will just download everything all the time.
+
+
+157
+00:12:06,080 --> 00:12:11,560
+When hopefully in a Kubo node near you, 2023, at the start we're probably only going to
+
+
+158
+00:12:11,560 --> 00:12:17,960
+use it for IPFS get and IPFS spin, that's because in IPFS get we have a control over
+
+
+159
+00:12:17,960 --> 00:12:22,120
+the file system, and so we can do a smart thing where if I get the middle of the video
+
+
+160
+00:12:22,120 --> 00:12:28,600
+before the start, I just go right in the middle, like Linux support features for seeking and
+
+
+161
+00:12:28,600 --> 00:12:32,600
+writing at arbitrary of type in files, so that means instead of, like, we don't need
+
+
+162
+00:12:32,600 --> 00:12:36,280
+to stream in order, we can write the file as it comes.
+
+
+163
+00:12:36,280 --> 00:12:38,480
+The second one is IPFS spin for the same reason.
+
+
+164
+00:12:38,480 --> 00:12:42,840
+IPFS spin just downloads everything into your block store and makes your node re-share it,
+
+
+165
+00:12:42,840 --> 00:12:47,680
+and so again we don't care about the order it arrives for the block store.
+
+
+166
+00:12:47,680 --> 00:12:52,560
+And it will also be able, it will probably in box, so if you're building an application
+
+
+167
+00:12:52,560 --> 00:12:57,520
+you want a fast download file, hopefully you could use it.
+
+
+168
+00:12:57,520 --> 00:13:02,120
+Then there's more work that I would like to be, like, the ideal state for me.
+
+
+169
+00:13:02,120 --> 00:13:05,800
+Multi-peer group is already really good, like I was saying, as we've seen in the demo, that
+
+
+170
+00:13:05,800 --> 00:13:09,440
+was fast enough.
+
+
+171
+00:13:09,440 --> 00:13:11,640
+Single peer group though is not very good.
+
+
+172
+00:13:11,640 --> 00:13:14,720
+It depends a lot on the underlying protocol you're using.
+
+
+173
+00:13:14,720 --> 00:13:18,760
+If you're using a call gateway it's somewhat fast, but that's basically limited by the
+
+
+174
+00:13:18,760 --> 00:13:20,160
+underlying protocol.
+
+
+175
+00:13:20,160 --> 00:13:26,280
+So if we continue to use bitswap for peer-to-peer connection in Kubo, we'll have to optimize
+
+
+176
+00:13:26,280 --> 00:13:30,640
+the bitswap server so it will be able to send blocks faster, because right now it's sending
+
+
+177
+00:13:30,640 --> 00:13:35,080
+blocks quite slowly, so even if Rapid is asking you for a lot of data, you're going to give
+
+
+178
+00:13:35,080 --> 00:13:40,080
+that lot of data slowly, so Rapid cannot make that faster, so that would be nice if the
+
+
+179
+00:13:40,080 --> 00:13:42,000
+server would be faster itself.
+
+
+180
+00:13:42,000 --> 00:13:48,240
+Then I would like to have faster time to first byte than centralized services.
+
+
+181
+00:13:48,240 --> 00:13:52,360
+It's kind of hard, but basically, ideally in a content routing system, because we don't
+
+
+182
+00:13:52,360 --> 00:13:56,080
+care about where we're downloading the data from, I don't have to connect to a centralized
+
+
+183
+00:13:56,080 --> 00:13:59,040
+server somewhere that is being trusted.
+
+
+184
+00:13:59,040 --> 00:14:04,400
+I can just connect to my neighbor if my neighbor has the data.
+
+
+185
+00:14:04,400 --> 00:14:09,840
+Your neighbor actually in an ISP sense is very wide because of how most ISP networks
+
+
+186
+00:14:09,840 --> 00:14:10,840
+work.
+
+
+187
+00:14:10,840 --> 00:14:16,680
+So there is a somewhat big cost to going from, like, between two customers in the same ISP
+
+
+188
+00:14:16,680 --> 00:14:23,240
+is usually faster than going to another customer in the same city, but in a different ISP.
+
+
+189
+00:14:23,240 --> 00:14:28,240
+Another thing I would like is have it support in more places, because it seems useful to
+
+
+190
+00:14:28,240 --> 00:14:29,800
+have fast downloads.
+
+
+191
+00:14:29,800 --> 00:14:31,400
+I want to try the GoWasm thing.
+
+
+192
+00:14:31,400 --> 00:14:36,160
+I know the performance is not very good, but I kind of want to try it anyway.
+
+
+193
+00:14:36,160 --> 00:14:40,000
+Maybe rewriting it in Rust or JavaScript.
+
+
+194
+00:14:40,000 --> 00:14:43,880
+What I'll probably do for this is make a spec explaining how it works and how you can reimplement
+
+
+195
+00:14:43,880 --> 00:14:45,640
+your own.
+
+
+196
+00:14:45,640 --> 00:14:49,200
+If someone wants to make it in Rust, then we'll be able to use it in Chromium maybe.
+
+
+197
+00:14:49,200 --> 00:14:51,240
+That would be awesome.
+
+
+198
+00:14:51,240 --> 00:14:56,360
+So if you want to find the work, I have a fork here with a pull request, QR code.
+
+
+199
+00:14:56,360 --> 00:14:57,360
+That was it.
+
+
+200
+00:14:57,360 --> 00:14:58,360
+If you have any questions.
+
+
+201
+00:14:58,360 --> 00:14:59,360
+Thank you.
+
+
+202
+00:14:59,360 --> 00:15:15,360
+If you have any swag, or just a question for anybody, let me know.
+
+
+203
+00:15:15,360 --> 00:15:23,320
+I'm here all the time.

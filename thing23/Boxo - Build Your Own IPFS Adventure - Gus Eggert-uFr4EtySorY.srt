@@ -1,0 +1,1123 @@
+1
+00:00:00,000 --> 00:00:11,520
+So yeah, some scenarios some of you might have run into if you're working in the Go ecosystem.
+
+
+2
+00:00:11,520 --> 00:00:14,920
+Imagine for example that you have an application and you want to embed a Kubo node in the application
+
+
+3
+00:00:14,920 --> 00:00:18,400
+and like customize it a little bit for whatever the needs are for your application, right?
+
+
+4
+00:00:18,400 --> 00:00:23,640
+You can just, you think you can just add Kubo as a library, right?
+
+
+5
+00:00:23,640 --> 00:00:29,040
+You're going to quickly run into this, your new dependency graph.
+
+
+6
+00:00:29,040 --> 00:00:34,120
+You're probably like squinting at it going like, what the hell is that thing?
+
+
+7
+00:00:34,120 --> 00:00:37,320
+You can zoom in a little bit on it.
+
+
+8
+00:00:37,320 --> 00:00:43,920
+If you squint hard, you can see some boxes, some circles.
+
+
+9
+00:00:43,920 --> 00:00:47,640
+The boxes are Go modules and the circles are versions.
+
+
+10
+00:00:47,640 --> 00:00:53,560
+So you can see like a lot of these have like multiple versions.
+
+
+11
+00:00:53,560 --> 00:00:58,120
+The Go compiler will resolve these down to like one version when you compile it.
+
+
+12
+00:00:58,120 --> 00:01:04,000
+So like when Kubo compiles, these all get resolved down to like one circle inside of one box.
+
+
+13
+00:01:04,000 --> 00:01:10,080
+But as maintainers of these libraries, you have to know like, it's not just Kubo, right?
+
+
+14
+00:01:10,080 --> 00:01:13,720
+There's a lot of other people using these too, like Lotus and other applications.
+
+
+15
+00:01:13,720 --> 00:01:17,640
+And then when they do their compilation, these may get resolved down to different versions.
+
+
+16
+00:01:17,640 --> 00:01:22,040
+And so you need to know like if you're making a change to a repo, who's using it?
+
+
+17
+00:01:22,040 --> 00:01:24,440
+And like, do I need to port it to different versions?
+
+
+18
+00:01:24,440 --> 00:01:25,440
+Which ones?
+
+
+19
+00:01:25,440 --> 00:01:28,040
+Like all this stuff.
+
+
+20
+00:01:28,040 --> 00:01:29,040
+So that's just one scenario.
+
+
+21
+00:01:29,040 --> 00:01:32,080
+I have a few of these.
+
+
+22
+00:01:32,080 --> 00:01:36,160
+Imagine maybe some of you might not have to imagine very hard for this.
+
+
+23
+00:01:36,160 --> 00:01:40,680
+There's a case where Kubo doesn't perform well for your use case.
+
+
+24
+00:01:40,680 --> 00:01:44,520
+So you want to like reassemble some components or whatever to improve the performance for
+
+
+25
+00:01:44,520 --> 00:01:45,800
+whatever use case it is.
+
+
+26
+00:01:45,800 --> 00:01:46,800
+No problem, right?
+
+
+27
+00:01:46,800 --> 00:01:49,200
+These are all like, we just saw all the different components around there.
+
+
+28
+00:01:49,200 --> 00:01:50,800
+You can just rearrange them, right?
+
+
+29
+00:01:50,800 --> 00:01:54,640
+Well, there's also no documentation for any of this.
+
+
+30
+00:01:54,640 --> 00:01:58,040
+So you're just going to have to like, you know, browse around on GitHub for a couple
+
+
+31
+00:01:58,040 --> 00:02:02,000
+days and try to figure out what all this is and how you're going to reassemble all of
+
+
+32
+00:02:02,000 --> 00:02:06,680
+it.
+
+
+33
+00:02:06,680 --> 00:02:12,240
+That's Jean-Luc laughing at you for trying to do this.
+
+
+34
+00:02:12,240 --> 00:02:14,280
+Another scenario, you've been using Kubo for a while.
+
+
+35
+00:02:14,280 --> 00:02:19,360
+There's a bug somewhere in one of those repos that's used by like all the other repos.
+
+
+36
+00:02:19,360 --> 00:02:23,680
+This one's close to my heart because I've gone through this one.
+
+
+37
+00:02:23,680 --> 00:02:26,040
+You just refactor it and open up a PR, right?
+
+
+38
+00:02:26,040 --> 00:02:32,160
+Well, once again, you've got to open up PRs for all these repositories, figure out which
+
+
+39
+00:02:32,160 --> 00:02:36,160
+ones need backports to which versions, cut all the releases, and you can't even test
+
+
+40
+00:02:36,160 --> 00:02:42,160
+any of it until you bubble it all up into Kubo where all the actual tests are.
+
+
+41
+00:02:42,160 --> 00:02:46,340
+So like, come on.
+
+
+42
+00:02:46,340 --> 00:02:49,240
+Another example.
+
+
+43
+00:02:49,240 --> 00:02:53,880
+If you're a maintainer, which is what I am, in the Go IPFS ecosystem, and you need to
+
+
+44
+00:02:53,880 --> 00:03:00,000
+stay on top of security updates, user requests, pull requests, CI failures, and dependabot
+
+
+45
+00:03:00,000 --> 00:03:08,560
+things coming in, GitHub has stuff for one repo, but for lots of repos, no.
+
+
+46
+00:03:08,560 --> 00:03:13,700
+So we built a custom website to track PRs and issues across all these things.
+
+
+47
+00:03:13,700 --> 00:03:18,840
+We have our own CI frameworks for synchronizing CI across all of these.
+
+
+48
+00:03:18,840 --> 00:03:21,680
+Some of them aren't even migrated to that, so some of them run CircleCI, some of them
+
+
+49
+00:03:21,680 --> 00:03:26,200
+run Travis, some of them run GitHub Actions, and then people are like, why can't I get
+
+
+50
+00:03:26,200 --> 00:03:32,080
+the stewards to respond to my request?
+
+
+51
+00:03:32,080 --> 00:03:33,080
+So yeah.
+
+
+52
+00:03:33,080 --> 00:03:37,880
+I'm sure a lot of us feel this way.
+
+
+53
+00:03:37,880 --> 00:03:40,000
+So anyway, some historical notes on Kubo.
+
+
+54
+00:03:40,000 --> 00:03:42,560
+As a lot of you know, it's old.
+
+
+55
+00:03:42,560 --> 00:03:49,240
+It was written before Go modules even existed, before there was version management stuff for Go.
+
+
+56
+00:03:49,240 --> 00:03:55,440
+It used to be a mono-repo, and then it was split out into lots of repos, into GX packages.
+
+
+57
+00:03:55,440 --> 00:04:00,080
+Some of you may not know what GX is, but it's an IPFS package manager that was made a few
+
+
+58
+00:04:00,080 --> 00:04:06,040
+years ago that has since been abandoned.
+
+
+59
+00:04:06,040 --> 00:04:10,520
+And Go recently has this thing called module graph pruning, where if you depend on a module,
+
+
+60
+00:04:10,520 --> 00:04:12,600
+you don't necessarily depend on all of its dependencies.
+
+
+61
+00:04:12,600 --> 00:04:16,440
+You only depend on the ones that you actually need.
+
+
+62
+00:04:16,440 --> 00:04:19,800
+And lastly, Kubo is a binary first.
+
+
+63
+00:04:19,800 --> 00:04:21,000
+It's a CLI.
+
+
+64
+00:04:21,000 --> 00:04:24,480
+That's the product, not the libraries.
+
+
+65
+00:04:24,480 --> 00:04:27,940
+And it shows.
+
+
+66
+00:04:27,940 --> 00:04:32,780
+And over the years, Kubo has accumulated lots of ways to extend it and get custom functionality
+
+
+67
+00:04:32,780 --> 00:04:33,780
+out of it.
+
+
+68
+00:04:33,780 --> 00:04:36,040
+We've tried Go plugins, which is horrible.
+
+
+69
+00:04:36,040 --> 00:04:40,460
+I haven't found anyone who likes those yet, because you have to get the compiler versions
+
+
+70
+00:04:40,460 --> 00:04:45,360
+exactly the same for all of the different plugins that you have.
+
+
+71
+00:04:45,360 --> 00:04:49,720
+A lot of people use Kubo plugins, which are just an interface that you implement.
+
+
+72
+00:04:49,720 --> 00:04:58,160
+And usually they use it by implementing the interface and then recompiling Kubo.
+
+
+73
+00:04:58,160 --> 00:04:59,160
+It works.
+
+
+74
+00:04:59,160 --> 00:05:00,160
+Not pretty.
+
+
+75
+00:05:00,160 --> 00:05:01,920
+And then we have FX.
+
+
+76
+00:05:01,920 --> 00:05:05,640
+So FX is a dependency injection framework that's used inside of Kubo.
+
+
+77
+00:05:05,640 --> 00:05:12,040
+And so you can use that to swap out implementations of different components or add lifecycle hooks
+
+
+78
+00:05:12,040 --> 00:05:13,040
+to things.
+
+
+79
+00:05:13,040 --> 00:05:17,320
+You can also use Kubo as a library.
+
+
+80
+00:05:17,320 --> 00:05:19,080
+You can fork it.
+
+
+81
+00:05:19,080 --> 00:05:21,640
+That's a fun one.
+
+
+82
+00:05:21,640 --> 00:05:26,940
+There are some bespoke extension points, like delegated routing.
+
+
+83
+00:05:26,940 --> 00:05:33,440
+But Digg said earlier, piling everything into a single binary adds a lot of complexity.
+
+
+84
+00:05:33,440 --> 00:05:35,040
+Once you do this, it's a CLI, right?
+
+
+85
+00:05:35,040 --> 00:05:36,720
+So you've got to have configuration for it.
+
+
+86
+00:05:36,720 --> 00:05:40,120
+Every time you add something in there, there's a whole different abstraction layer for how
+
+
+87
+00:05:40,120 --> 00:05:42,600
+you're going to model it in JSON.
+
+
+88
+00:05:42,600 --> 00:05:44,680
+And then the output's not Go code.
+
+
+89
+00:05:44,680 --> 00:05:45,680
+It's a binary.
+
+
+90
+00:05:45,680 --> 00:05:48,140
+It's like byte code.
+
+
+91
+00:05:48,140 --> 00:05:49,480
+And then the maintainer is us.
+
+
+92
+00:05:49,480 --> 00:05:54,120
+We get swamped just trying to maintain all this stuff and make everybody happy.
+
+
+93
+00:05:54,120 --> 00:05:59,720
+So as Digg said a second ago, only add things in your application you actually need.
+
+
+94
+00:05:59,720 --> 00:06:13,000
+So that's where Boxo comes in.
+
+
+95
+00:06:13,000 --> 00:06:19,400
+So Boxo is basically we're extracting the components from Kubo and from these different
+
+
+96
+00:06:19,400 --> 00:06:23,560
+repositories and consolidating them into a single library.
+
+
+97
+00:06:23,560 --> 00:06:28,000
+Our goal is to help you folks write applications and implementations as quickly as you can
+
+
+98
+00:06:28,000 --> 00:06:31,920
+without having to deal with all that stuff I showed you earlier.
+
+
+99
+00:06:31,920 --> 00:06:35,800
+Part of this is going to be refactoring and simplifying abstractions, adding a bunch of
+
+
+100
+00:06:35,800 --> 00:06:40,000
+documentation and examples, and having snapshots.
+
+
+101
+00:06:40,000 --> 00:06:42,800
+Basically since it's all in one place, it's going to have a snapshot of versions that
+
+
+102
+00:06:42,800 --> 00:06:45,960
+all work together, and you don't have to go through this dependency hell of figuring out
+
+
+103
+00:06:45,960 --> 00:06:49,320
+which versions work with what.
+
+
+104
+00:06:49,320 --> 00:06:54,360
+A non-goal of Boxo is to have everything in Boxo.
+
+
+105
+00:06:54,360 --> 00:06:59,240
+I don't want to misrepresent what Boxo is.
+
+
+106
+00:06:59,240 --> 00:07:00,560
+We don't want to have everything in it.
+
+
+107
+00:07:00,560 --> 00:07:05,440
+We want to focus on the things that are in Kubo for now, that have high leverage, and
+
+
+108
+00:07:05,440 --> 00:07:07,400
+they're not very useful on their own.
+
+
+109
+00:07:07,400 --> 00:07:12,080
+They're useful when they're used with other pieces.
+
+
+110
+00:07:12,080 --> 00:07:13,080
+Hard to use correctly.
+
+
+111
+00:07:13,080 --> 00:07:18,840
+Those are the types of things we're interested in putting into Boxo.
+
+
+112
+00:07:18,840 --> 00:07:21,720
+Sad part of Boxo is the transition period.
+
+
+113
+00:07:21,720 --> 00:07:24,960
+So we're moving a lot of repos around in order to do this.
+
+
+114
+00:07:24,960 --> 00:07:30,280
+So that means a lot of the repos, if you have existing code, they might need to be migrated
+
+
+115
+00:07:30,280 --> 00:07:34,040
+over to the new Boxo repository.
+
+
+116
+00:07:34,040 --> 00:07:37,480
+So we have a tool to help you do that if you need to go through that.
+
+
+117
+00:07:37,480 --> 00:07:42,040
+It basically just adds the right version of Boxo and then updates all your import paths
+
+
+118
+00:07:42,040 --> 00:07:43,040
+automatically.
+
+
+119
+00:07:43,040 --> 00:07:47,760
+It tries to find the repositories that have been migrated into Boxo and updates all the
+
+
+120
+00:07:47,760 --> 00:07:51,800
+paths for you.
+
+
+121
+00:07:51,800 --> 00:07:55,800
+The old repos that we're moving, we're not going to delete them or anything, but we're
+
+
+122
+00:07:55,800 --> 00:07:59,160
+going to stop maintaining them.
+
+
+123
+00:07:59,160 --> 00:08:06,920
+We're leaving them around so that it doesn't break everybody by them disappearing.
+
+
+124
+00:08:06,920 --> 00:08:11,360
+So the current state of Boxo, we've extracted Kubo's gateway code into Boxo so that you
+
+
+125
+00:08:11,360 --> 00:08:17,180
+can run an independent HTTP gateway handler without having to use Kubo.
+
+
+126
+00:08:17,180 --> 00:08:20,840
+That's already being used for the IPFS.io gateway.
+
+
+127
+00:08:20,840 --> 00:08:22,800
+We have some examples for common use cases.
+
+
+128
+00:08:22,800 --> 00:08:28,320
+We've moved over 25 of those repositories that you just saw into Boxo.
+
+
+129
+00:08:28,320 --> 00:08:33,160
+We're starting to move all the tests from Kubo into Boxo.
+
+
+130
+00:08:33,160 --> 00:08:36,800
+Like I just mentioned, we have that tool that will help you migrate.
+
+
+131
+00:08:36,800 --> 00:08:42,820
+Coming up, there's more documentation and communication to do about Boxo, more testing
+
+
+132
+00:08:42,820 --> 00:08:47,840
+stuff to pull over, release automation, and then there's some feature work we have coming
+
+
+133
+00:08:47,840 --> 00:08:58,000
+up around gateways and bit swap and content routing.
+
+
+134
+00:08:58,000 --> 00:09:02,040
+You all from the community, if you're building a new application or an implementation, come
+
+
+135
+00:09:02,040 --> 00:09:07,880
+talk to us in Go because early adopters of this, we want to give some white glove service
+
+
+136
+00:09:07,880 --> 00:09:15,080
+to them so that we can work out how we're going to do this.
+
+
+137
+00:09:15,080 --> 00:09:18,200
+We'll do some of the work for you if you come talk to us.
+
+
+138
+00:09:18,200 --> 00:09:23,640
+We'd also love a bunch of feedback on how to make Boxo better and the Go IPFS community
+
+
+139
+00:09:23,640 --> 00:09:24,640
+in general.
+
+
+140
+00:09:24,640 --> 00:09:28,000
+You can find us on GitHub, open an issue in Boxo.
+
+
+141
+00:09:28,000 --> 00:09:32,400
+We have a Filecoin Slack channel.
+
+
+142
+00:09:32,400 --> 00:09:36,560
+Once again, don't feel like just because you're building something you have to put it in Boxo.
+
+
+143
+00:09:36,560 --> 00:09:40,320
+It's not the place for IPFS components.
+
+
+144
+00:09:40,320 --> 00:09:43,200
+It's just our place.
+
+
+145
+00:09:43,200 --> 00:09:47,560
+If you want to get started, this is the only repository you need to pull in, which will
+
+
+146
+00:09:47,560 --> 00:09:53,480
+make Picard and the Go for happy.
+
+
+147
+00:09:53,480 --> 00:09:54,480
+That was awesome.
+
+
+148
+00:09:54,480 --> 00:09:56,960
+Thank you.
+
+
+149
+00:09:56,960 --> 00:10:06,440
+My question is, what does Boxo do out of the box?
+
+
+150
+00:10:06,440 --> 00:10:09,600
+That's a serious question.
+
+
+151
+00:10:09,600 --> 00:10:13,920
+Right now, not much functionality-wise has changed.
+
+
+152
+00:10:13,920 --> 00:10:19,720
+We're setting the stage for that because these large refactorings were very difficult to
+
+
+153
+00:10:19,720 --> 00:10:22,600
+do when there's 30 repositories.
+
+
+154
+00:10:22,600 --> 00:10:25,480
+We kept running into situations where we wanted to change things and we're like, it's too
+
+
+155
+00:10:25,480 --> 00:10:26,480
+expensive.
+
+
+156
+00:10:26,480 --> 00:10:30,680
+We can't spend weeks doing this.
+
+
+157
+00:10:30,680 --> 00:10:34,160
+We've already had a few PRs opened up with our cross-cutting changes.
+
+
+158
+00:10:34,160 --> 00:10:39,480
+Now that we've moved these in here, it's much easier, you just rename function.
+
+
+159
+00:10:39,480 --> 00:10:47,480
+There's going to be a lot of changes that are enabled by this, but right now nothing
+
+
+160
+00:10:47,480 --> 00:10:50,840
+much has changed other than we've moved stuff into it and we've pulled stuff out of Kubo
+
+
+161
+00:10:50,840 --> 00:10:51,840
+like the gateway.
+
+
+162
+00:10:51,840 --> 00:10:52,840
+It's a serious question.
+
+
+163
+00:10:52,840 --> 00:11:00,440
+Basically, if I take this and compile it, what can I do with it?
+
+
+164
+00:11:00,440 --> 00:11:05,080
+It has a lot of the...
+
+
+165
+00:11:05,080 --> 00:11:06,360
+I'm trying to think of exactly what the list of...
+
+
+166
+00:11:06,360 --> 00:11:07,840
+I can pull it up, actually.
+
+
+167
+00:11:07,840 --> 00:11:08,840
+Let me see here.
+
+
+168
+00:11:08,840 --> 00:11:13,040
+That's a great show, and I can actually repeat it.
+
+
+169
+00:11:13,040 --> 00:11:18,240
+For the recording, Steve Biglep said, we want to focus on having more of an operator-class
+
+
+170
+00:11:18,240 --> 00:11:21,880
+gateway as one of the first goals using Bifrost.
+
+
+171
+00:11:21,880 --> 00:11:22,880
+Amazing.
+
+
+172
+00:11:22,880 --> 00:11:23,880
+Fantastic.
+
+
+173
+00:11:23,880 --> 00:11:31,120
+Obviously, us at Vision, we're like, oh, yeah, we're all of the Picards, so super awesome
+
+
+174
+00:11:31,120 --> 00:11:32,960
+to see this.
+
+
+175
+00:11:32,960 --> 00:11:40,120
+It's the exact kind of thing where, as an example, could we take the CarMirror plugin
+
+
+176
+00:11:40,120 --> 00:11:43,560
+and include that and then have a gateway with CarMirror included?
+
+
+177
+00:11:43,560 --> 00:11:44,560
+That's kind of what you envision?
+
+
+178
+00:11:44,560 --> 00:11:45,560
+Yeah.
+
+
+179
+00:11:45,560 --> 00:11:50,480
+I envision you being able to build your own with these pieces, not having to figure out
+
+
+180
+00:11:50,480 --> 00:11:52,760
+how to write a Kubo plugin or something for it.
+
+
+181
+00:11:52,760 --> 00:11:58,840
+You just build your own binary from the library and from CarMirror.
+
+
+182
+00:11:58,840 --> 00:11:59,840
+That's the vision.
+
+
+183
+00:11:59,840 --> 00:12:04,600
+I'll pull up this list of stuff we've migrated, because these are the things that it can currently
+
+
+184
+00:12:04,600 --> 00:12:06,560
+do, but it's not new stuff.
+
+
+185
+00:12:06,560 --> 00:12:11,840
+These are the things we've moved, like UnixFS and pinners and block stores and all these
+
+
+186
+00:12:11,840 --> 00:12:12,840
+things.
+
+
+187
+00:12:12,840 --> 00:12:13,840
+IPNS, if you didn't know.
+
+
+188
+00:12:13,840 --> 00:12:18,080
+I'll say it more nicely now.
+
+
+189
+00:12:18,080 --> 00:12:24,120
+You're going to have the other repos, but you're not going to delete them, but they're
+
+
+190
+00:12:24,120 --> 00:12:28,280
+not going to be maintained.
+
+
+191
+00:12:28,280 --> 00:12:32,760
+What do you think is going to be the best way to be able to direct people to Boxer,
+
+
+192
+00:12:32,760 --> 00:12:37,880
+given that there's so much history of links and documentation and suggestions to these
+
+
+193
+00:12:37,880 --> 00:12:38,880
+other things?
+
+
+194
+00:12:38,880 --> 00:12:42,200
+Yeah, so we're doing a lot to try to maintain the historical context of these.
+
+
+195
+00:12:42,200 --> 00:12:45,440
+When we move the code over, we're keeping all the Git history.
+
+
+196
+00:12:45,440 --> 00:12:48,800
+That's the first thing we're doing.
+
+
+197
+00:12:48,800 --> 00:12:49,800
+We're going to move over all the issues.
+
+
+198
+00:12:49,800 --> 00:12:54,520
+Pull requests are not easy to move over, so we're probably going to close them and ask
+
+
+199
+00:12:54,520 --> 00:12:55,520
+if any open ones.
+
+
+200
+00:12:55,520 --> 00:13:01,920
+We'll ask the person to reopen them in Boxo, or we'll do it for them.
+
+
+201
+00:13:01,920 --> 00:13:07,080
+The plan is to put big notice at the top of the repo when you go to it, like, hey, this
+
+
+202
+00:13:07,080 --> 00:13:08,660
+is unmaintained.
+
+
+203
+00:13:08,660 --> 00:13:10,600
+If you want to pick it up, go for it.
+
+
+204
+00:13:10,600 --> 00:13:12,480
+Otherwise, this has been moved over here.
+
+
+205
+00:13:12,480 --> 00:13:18,200
+Then we're going to go through and put deprecated tags on the types so that your compilers will
+
+
+206
+00:13:18,200 --> 00:13:20,920
+start warning you.
+
+
+207
+00:13:20,920 --> 00:13:25,960
+If you have linters or something that look at these, you'll get an error in your linter.
+
+
+208
+00:13:25,960 --> 00:13:35,520
+You can ignore it if you want, or you can go to the migration or whatever else you want
+
+
+209
+00:13:35,520 --> 00:13:36,520
+to do.
+
+
+210
+00:13:36,520 --> 00:13:40,920
+That's the plan, is to use the compiler to notify people.
+
+
+211
+00:13:40,920 --> 00:13:46,000
+The only other thing I'd ask is, have you considered making the old ones that are unmaintained
+
+
+212
+00:13:46,000 --> 00:13:52,160
+type aliases over to the Boxo version so that you end up with a single type between the
+
+
+213
+00:13:52,160 --> 00:13:54,560
+old one and the one that's been in Boxo?
+
+
+214
+00:13:54,560 --> 00:13:58,360
+So that if someone's using something and ends up with weird package graph things, they don't
+
+
+215
+00:13:58,360 --> 00:14:01,440
+end up with suddenly incompatible two different types.
+
+
+216
+00:14:01,440 --> 00:14:05,640
+Yeah, we've done that with some of them already.
+
+
+217
+00:14:05,640 --> 00:14:11,240
+By default, I don't know that we're going to do that, but we might do it for some more
+
+
+218
+00:14:11,240 --> 00:14:12,240
+of them.
+
+
+219
+00:14:12,240 --> 00:14:17,040
+I think it depends, because it depends too on who's using the repo and whether or not
+
+
+220
+00:14:17,040 --> 00:14:18,320
+they want us to do that.
+
+
+221
+00:14:18,320 --> 00:14:21,320
+If they don't want us to do that, we're just going to leave it alone for them, and they
+
+
+222
+00:14:21,320 --> 00:14:24,680
+can continue to use the repo on their own.
+
+
+223
+00:14:24,680 --> 00:14:25,680
+All right.
+
+
+224
+00:14:25,680 --> 00:14:26,680
+Thank you.
+
+
+225
+00:14:26,680 --> 00:14:44,460
+Thank you, Patrick.

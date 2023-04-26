@@ -1,0 +1,813 @@
+1
+00:00:00,000 --> 00:00:08,600
+Hello everyone, thank you so much for joining me in the content routing track. For those
+
+
+2
+00:00:08,600 --> 00:00:13,620
+of you who don't know what I look like, refer to that picture above. You will recognize
+
+
+3
+00:00:13,620 --> 00:00:21,880
+me around. My name is Massi, I'm from the IP&I team, part of Bedrock, and here to talk
+
+
+4
+00:00:21,880 --> 00:00:28,160
+about content routing. First of all, welcome. Emojis don't show up properly, but that should
+
+
+5
+00:00:28,160 --> 00:00:33,640
+be a Belgian flag right next to it. We are in a city famous for its beer and famous for
+
+
+6
+00:00:33,640 --> 00:00:39,440
+its chocolate. I mean, apart from faster lookup, what else would you really want in life, right?
+
+
+7
+00:00:39,440 --> 00:00:46,160
+So thank you so much for coming, really appreciate it. So what is content routing? Now, bear
+
+
+8
+00:00:46,160 --> 00:00:51,760
+with me, because I'm aware of the amounts of intellect in the room. We just want to
+
+
+9
+00:00:51,760 --> 00:00:58,960
+walk through this question together. What really is content routing? If you look at
+
+
+10
+00:00:58,960 --> 00:01:05,080
+the previous work, we can see that content routing is typically referred to as finding
+
+
+11
+00:01:05,080 --> 00:01:12,400
+who has a CID. So by content, we really mean just a CID or a content identifier, and by
+
+
+12
+00:01:12,400 --> 00:01:20,520
+who we mean the peer ID and some addresses. So far so good, right? This all makes sense.
+
+
+13
+00:01:20,520 --> 00:01:29,640
+So this simple operation is the very essence of content routing in motion. It's the first
+
+
+14
+00:01:29,640 --> 00:01:37,440
+stepping stone, pretty exciting. But wait, hold on. What about provide? For contents
+
+
+15
+00:01:37,440 --> 00:01:42,000
+to be found, I need to provide it somewhere too, right? So sort of providing content to
+
+
+16
+00:01:42,000 --> 00:01:46,760
+this whole network, telling people that I have a CID is also part of content routing,
+
+
+17
+00:01:46,760 --> 00:01:53,400
+right? So let me backtrack a little bit. These two simple operations are the essence of content
+
+
+18
+00:01:53,400 --> 00:02:00,360
+routing in motion. After we get through turning our famous cat picture into a content addressable
+
+
+19
+00:02:00,360 --> 00:02:06,960
+data, then the very next step is to tell people about it and have people find where to download
+
+
+20
+00:02:06,960 --> 00:02:14,280
+that content address data. So far so good, great. Hold on, but find sort of doesn't always
+
+
+21
+00:02:14,280 --> 00:02:20,160
+result in just peer ID and address. Sometimes it has some extra information in it. Is that
+
+
+22
+00:02:20,160 --> 00:02:26,200
+content routing? Sure, that is content routing too. So I'm going to backtrack again. These
+
+
+23
+00:02:26,200 --> 00:02:32,160
+three simple operations, I'm going to stop you right there.
+
+
+24
+00:02:32,160 --> 00:02:39,320
+So what about find itself? Find might not just want extra information, might want even
+
+
+25
+00:02:39,320 --> 00:02:45,560
+less information, just a peer ID, just for speed's sake, right? What about providing
+
+
+26
+00:02:45,560 --> 00:02:53,200
+content with a you can that enables others to provide on your behalf? As we can see,
+
+
+27
+00:02:53,200 --> 00:02:58,520
+this is progressing, it's going more and more complicated and it's kind of a fuzzy area
+
+
+28
+00:02:58,520 --> 00:03:06,520
+we call content routing in general. It gets worse. What about IPNS? IPNS sort of points
+
+
+29
+00:03:06,520 --> 00:03:12,680
+to a content. It's like an alias to a CID. The characteristic of publishing an IPNS record
+
+
+30
+00:03:12,680 --> 00:03:19,680
+is very similar to the characteristic of publishing a CID. So is IPNS part of content routing?
+
+
+31
+00:03:19,680 --> 00:03:27,200
+It is all a little bit confusing and overwhelming, right? So we have this fuzzy notion of content
+
+
+32
+00:03:27,200 --> 00:03:34,600
+routing, which includes many things. It's different depending on the system that is
+
+
+33
+00:03:34,600 --> 00:03:42,320
+interacting with the network. It is a very not exactly well defined, but it is extremely
+
+
+34
+00:03:42,320 --> 00:03:50,960
+evolving, right? It's changing all the time. So let's take a look back and just look at
+
+
+35
+00:03:50,960 --> 00:03:59,680
+what changes happened in content routing. If we look at 2015, that was when the initial
+
+
+36
+00:03:59,680 --> 00:04:08,560
+IPFS was released. The content routing mechanism in the original IPFS was basically made up
+
+
+37
+00:04:08,560 --> 00:04:14,320
+of two mechanisms. I call it a structured lookup, which uses a structured peer to peer
+
+
+38
+00:04:14,320 --> 00:04:20,840
+networks, DHTs and so on. And somewhat an unstructured lookup, really hybrid of structure
+
+
+39
+00:04:20,840 --> 00:04:27,320
+and unstructured if you want to be very pedantic about it, but it was a there's a concept of
+
+
+40
+00:04:27,320 --> 00:04:32,520
+just gossip and just broadcasting to the network and see what we get back. These were the two
+
+
+41
+00:04:32,520 --> 00:04:40,800
+fundamental beginning, the initial mechanisms for content routing.
+
+
+42
+00:04:40,800 --> 00:04:50,400
+Then BITSOP 1.1 and 1.2 came about. And these two operations, these two advancements focused
+
+
+43
+00:04:50,400 --> 00:04:59,440
+on improving this unstructured way of lookup, this gossip mechanism across the network.
+
+
+44
+00:04:59,440 --> 00:05:06,760
+Then KUBO 0.5 happened. This is way before my time, so I've done a bit of archaeological
+
+
+45
+00:05:06,760 --> 00:05:12,400
+work, talked to folks that have been here for much longer than I have. And this KUBO
+
+
+46
+00:05:12,400 --> 00:05:20,440
+0.5.0 introduced significant improvements into the structured way of looking at data.
+
+
+47
+00:05:20,440 --> 00:05:26,640
+DHT became much more sophisticated, much more healthy. And then after that, we see a series
+
+
+48
+00:05:26,640 --> 00:05:32,720
+of work that pushes on that front. We have Hydra boosters, which introduce highly available
+
+
+49
+00:05:32,720 --> 00:05:41,560
+DHT nodes with shared knowledge that provide high likelihood of you hitting a node that
+
+
+50
+00:05:41,560 --> 00:05:46,600
+has significant information about the DHT, such that it would then improve your lookup
+
+
+51
+00:05:46,600 --> 00:05:52,160
+success significantly. With the great work of Stewards, specifically
+
+
+52
+00:05:52,160 --> 00:06:00,840
+ADIN, we have full RT, full routing table implementation. This is an extension of the
+
+
+53
+00:06:00,840 --> 00:06:13,000
+vanilla cademlia routing table, where rather than having a logarithmic way of finding peers
+
+
+54
+00:06:13,000 --> 00:06:18,600
+by number of hops being logarithmic to the size of the network, you basically try and
+
+
+55
+00:06:18,600 --> 00:06:24,920
+store the full state of the network in the hope that you will only need a single hop
+
+
+56
+00:06:24,920 --> 00:06:30,120
+to find out who has the information. That significantly improves the speed of both
+
+
+57
+00:06:30,120 --> 00:06:35,800
+lookup and providing. And remember, if we refer back to the previous slides, we have
+
+
+58
+00:06:35,800 --> 00:06:40,920
+this mixture of all these operations that are all included under this umbrella of content
+
+
+59
+00:06:40,920 --> 00:06:47,880
+routing. So then something really interesting happened.
+
+
+60
+00:06:47,880 --> 00:06:52,680
+The very beginning of swappable content routing, this is what I call it. And this swappable
+
+
+61
+00:06:52,680 --> 00:07:01,960
+content routing enabled just collaboration and enabled connecting multiple content routing
+
+
+62
+00:07:01,960 --> 00:07:08,080
+systems together, beginning with just one. So we basically took the DHT and took the
+
+
+63
+00:07:08,080 --> 00:07:13,200
+previous structured and unstructured things that we had, and we wrapped it around APIs
+
+
+64
+00:07:13,200 --> 00:07:18,480
+that then allows us to seamlessly exchange, replace them with another mechanism. And the
+
+
+65
+00:07:18,480 --> 00:07:26,160
+point was to introduce tuning knobs. This is one of the first instances of introducing
+
+
+66
+00:07:26,160 --> 00:07:31,000
+these tuning knobs that allows implementers, allows people that are interested in sharing
+
+
+67
+00:07:31,000 --> 00:07:36,000
+information. And remember, we do all of this to have content address data in motion to
+
+
+68
+00:07:36,000 --> 00:07:42,960
+really optimize for their use case. Reframe evolved into HTTP delegated routing,
+
+
+69
+00:07:42,960 --> 00:07:51,320
+a much simpler API with much more focus on human readability. Specifications came out.
+
+
+70
+00:07:51,320 --> 00:07:57,920
+This is now shipped into, shipped in Kubo and allows, and has reasonable defaults, which
+
+
+71
+00:07:57,920 --> 00:08:02,800
+allows you to integrate your own routing system into it. The routing system that makes sense
+
+
+72
+00:08:02,800 --> 00:08:10,400
+to your system, to your network, without having to pay the cost of the routing system that
+
+
+73
+00:08:10,400 --> 00:08:18,640
+should work across a wide area network. This is pretty exciting.
+
+
+74
+00:08:18,640 --> 00:08:25,400
+After that, IPNI happened. This is the beginning of bridging gaps between the network. So before
+
+
+75
+00:08:25,400 --> 00:08:33,400
+IPNI, remember, we have multiple content routing networks. We've got IPFS, which has data,
+
+
+76
+00:08:33,400 --> 00:08:38,160
+content address data. We have Filecoin, which has significantly more content address data
+
+
+77
+00:08:38,160 --> 00:08:44,240
+with much, much different characteristics associated to it, like for example, longevity
+
+
+78
+00:08:44,240 --> 00:08:48,760
+of the storage. But these two networks are completely separate. And the reason for them
+
+
+79
+00:08:48,760 --> 00:08:55,040
+being separate is that the data in Filecoin and other content address networks is just
+
+
+80
+00:08:55,040 --> 00:09:02,880
+massive in comparison. There is a huge amount of it. And the existing sort of content routing
+
+
+81
+00:09:02,880 --> 00:09:08,760
+systems are not really designed for that type of scale and publication. That's where IPNI
+
+
+82
+00:09:08,760 --> 00:09:14,880
+comes in, to bridge this gap by making explicit design decisions that we talk later on today
+
+
+83
+00:09:14,880 --> 00:09:19,480
+about in order to bridge this gap between the two networks.
+
+
+84
+00:09:19,480 --> 00:09:27,720
+With the birth of IPNI, you now can look up content address data full stop. Let's pause
+
+
+85
+00:09:27,720 --> 00:09:34,840
+there and think about that a little bit. This is the thing we've been striving for. Certainly
+
+
+86
+00:09:34,840 --> 00:09:39,040
+not the destination. It's just the beginning. We are just scratching the surface. But we
+
+
+87
+00:09:39,040 --> 00:09:44,480
+are delivering every day more and more on the promise that, hey, if I have the CID,
+
+
+88
+00:09:44,480 --> 00:09:49,720
+I just want the content back. And I want to be able to retrieve it, and so on. For the
+
+
+89
+00:09:49,720 --> 00:09:55,400
+retrieval, we touched on that a little bit yesterday on data transfer track. But this
+
+
+90
+00:09:55,400 --> 00:10:01,200
+development is pretty exciting. We have bridged the gap. We have faster lookup across the
+
+
+91
+00:10:01,200 --> 00:10:08,800
+board with some explicit design decisions. And now we are starting to focus on concerns
+
+
+92
+00:10:08,800 --> 00:10:19,880
+that to me are cross-cutting. Like, for example, privacy. And this is a pretty exciting advancement
+
+
+93
+00:10:19,880 --> 00:10:26,200
+in this whole evolutionary timeline of content routing. Because we're not so much worried
+
+
+94
+00:10:26,200 --> 00:10:31,840
+about just making it work such that we can find the data no matter what the latency.
+
+
+95
+00:10:31,840 --> 00:10:36,320
+We are finding the data. We are finding the data fast. And now we are focusing on the
+
+
+96
+00:10:36,320 --> 00:10:41,680
+sort of solutions that are cross-cutting across any content routing system no matter what.
+
+
+97
+00:10:41,680 --> 00:10:47,760
+Like privacy. In preserving the reader's privacy, they would be preserving the writer's privacy.
+
+
+98
+00:10:47,760 --> 00:10:53,240
+This is just the very beginning, but it is an extremely exciting time. There's one extra
+
+
+99
+00:10:53,240 --> 00:11:00,980
+data point here to point out. The lines in the graph, they're not linear. More than half
+
+
+100
+00:11:00,980 --> 00:11:06,320
+of this stuff happened in the last three years. Think about that for a second. This is an
+
+
+101
+00:11:06,320 --> 00:11:12,120
+acceleration of work and advancement in the area of content routing just in the last three
+
+
+102
+00:11:12,120 --> 00:11:19,760
+years. That is something notable. So what are the evolutionary trends here? Because
+
+
+103
+00:11:19,760 --> 00:11:24,840
+really that's what we care about when we are looking at a timeline. What are the trends
+
+
+104
+00:11:24,840 --> 00:11:32,040
+here? Lookup is getting faster. Both lookup and providing is getting faster. We are becoming
+
+
+105
+00:11:32,040 --> 00:11:36,880
+significantly more scalable when it comes to making content address data available full
+
+
+106
+00:11:36,880 --> 00:11:42,840
+stop. We have systems that accept content routing, content address data by the billion
+
+
+107
+00:11:42,840 --> 00:11:51,680
+and in return provide you with sub 10 millisecond lookup latency. We have increasingly more
+
+
+108
+00:11:51,680 --> 00:11:57,480
+tuning knobs that allow you to share content routing mechanisms and swap them with another
+
+
+109
+00:11:57,480 --> 00:12:04,440
+system such that we stay true to that promise of giving us it, find me information, giving
+
+
+110
+00:12:04,440 --> 00:12:09,640
+us it, tell people about it without having to force the users to learn about really complicated
+
+
+111
+00:12:09,640 --> 00:12:17,600
+stuff. We are increasingly going towards a world that has interconnected networks right
+
+
+112
+00:12:17,600 --> 00:12:25,560
+now. Finding data from IPFS and Filecoin together is old news now and to me that is an exciting
+
+
+113
+00:12:25,560 --> 00:12:31,580
+success. It really should be relevant to the user where the data is and we really should
+
+
+114
+00:12:31,580 --> 00:12:38,880
+focus on how the user can push data and get the data back. And like I mentioned we are
+
+
+115
+00:12:38,880 --> 00:12:45,440
+entering an era of cross cutting solutions that are agnostic of the content routing algorithm
+
+
+116
+00:12:45,440 --> 00:12:52,080
+or mechanism itself and more focused on properties that a sound content routing system should
+
+
+117
+00:12:52,080 --> 00:13:01,240
+possess for the good of the users like privacy. So if I want to sum it up in one sentence
+
+
+118
+00:13:01,240 --> 00:13:06,480
+this is what I came up with which is we are moving towards a fluid content routing. What
+
+
+119
+00:13:06,480 --> 00:13:13,240
+does fluid content routing mean? Imagine a glass of water, you pour it in different glasses
+
+
+120
+00:13:13,240 --> 00:13:18,320
+and it takes the shape of the glass. So this content routing becomes more flexible and
+
+
+121
+00:13:18,320 --> 00:13:31,080
+becomes more sort of ubiquitous. A cross cutting layer that has distinct boundaries but forces
+
+
+122
+00:13:31,080 --> 00:13:38,640
+users less about knowing how it actually works and more about its true functionality. And
+
+
+123
+00:13:38,640 --> 00:13:43,680
+to me that is something really something to celebrate. It's credit to the work of all
+
+
+124
+00:13:43,680 --> 00:13:49,560
+the communities that's been happening over the last 10 years or so. I think it is certainly
+
+
+125
+00:13:49,560 --> 00:13:55,520
+something to celebrate. So what does it look like today? This content routing network that
+
+
+126
+00:13:55,520 --> 00:13:59,320
+we're talking about, what does it look like today? This is the diagram that I put together
+
+
+127
+00:13:59,320 --> 00:14:05,720
+to kind of show you the landscape of content routing today. We have users on the left hand
+
+
+128
+00:14:05,720 --> 00:14:12,440
+side. These users talk through the network via IPFS implementations like Kubo. They may
+
+
+129
+00:14:12,440 --> 00:14:21,400
+be using the gateway to find information. They also may be contacting IPNI directly
+
+
+130
+00:14:21,400 --> 00:14:28,920
+to find information. We have this mist of information that still exists undeniably which
+
+
+131
+00:14:28,920 --> 00:14:36,760
+is BitSwap. Unstructured, you just have to be in the party to see what's happening. Unstructured,
+
+
+132
+00:14:36,760 --> 00:14:43,160
+resilient in specific use cases, not so much when it comes to bulk publishing and bulk
+
+
+133
+00:14:43,160 --> 00:14:52,240
+lookup. But certainly there still. We have Hydra nodes still around. These are those
+
+
+134
+00:14:52,240 --> 00:14:58,040
+red dots that you see. We go through the changes that's happened in Hydra's a little bit in
+
+
+135
+00:14:58,040 --> 00:15:04,920
+the IPNI talk. But Hydra's existed and now they're reduced a little bit but they're still
+
+
+136
+00:15:04,920 --> 00:15:13,240
+around. We have direct connection between Kubo nodes now into other delegated routing
+
+
+137
+00:15:13,240 --> 00:15:23,200
+systems such as IPNI which is also exciting. This was shipped since Kubo 018. So the role
+
+
+138
+00:15:23,200 --> 00:15:27,440
+of Hydra's in terms of propagating search through multiple routing systems is not as
+
+
+139
+00:15:27,440 --> 00:15:33,480
+important anymore. I also find that really interesting because anything that makes any
+
+
+140
+00:15:33,480 --> 00:15:39,440
+of these nodes or collection of any single node more important in a collective network
+
+
+141
+00:15:39,440 --> 00:15:48,280
+to me is a really welcoming development. On the IPNI side, we have cultivated a platform
+
+
+142
+00:15:48,280 --> 00:15:55,400
+that enables a whole new array of connected content routing data. This is something that
+
+
+143
+00:15:55,400 --> 00:15:59,560
+would have not been possible with the sort of design decisions that we've explicitly
+
+
+144
+00:15:59,560 --> 00:16:09,760
+made in IPNI. This is a bulk content that is provided by providers like NXT storage,
+
+
+145
+00:16:09,760 --> 00:16:17,840
+Penyatta and so on. We also have IPNI deeply integrated into storage providers, Filecoin
+
+
+146
+00:16:17,840 --> 00:16:23,440
+storage providers. It's been integrated into Boost from day one and it was integrated into
+
+
+147
+00:16:23,440 --> 00:16:32,360
+Filecoin in its early creation. We are starting to see a whole new way of interaction with
+
+
+148
+00:16:32,360 --> 00:16:37,680
+this whole system which to me kind of points back to that idea of fluid content routing
+
+
+149
+00:16:37,680 --> 00:16:43,360
+that I touched on earlier and that is the use case of RIA which is using the decentralized
+
+
+150
+00:16:43,360 --> 00:16:51,640
+Saturn network to then look up information using LASI. I think that is also pretty exciting.
+
+
+151
+00:16:51,640 --> 00:16:57,120
+So what are we going to cover today? Today we are going to take a closer look at latest
+
+
+152
+00:16:57,120 --> 00:17:04,560
+developments in this big piece in the middle. Then we are going to look at what is IPNI,
+
+
+153
+00:17:04,560 --> 00:17:10,520
+how it is advanced, where is it going, just understanding the direction there. We are
+
+
+154
+00:17:10,520 --> 00:17:13,720
+going to have a break and after that we are going to come back and talk about those cross
+
+
+155
+00:17:13,720 --> 00:17:19,280
+cutting concerns that I talked about like the privacy and how this cross cutting concerns
+
+
+156
+00:17:19,280 --> 00:17:25,040
+that are putting the user at the center of this interaction are affecting other routing
+
+
+157
+00:17:25,040 --> 00:17:33,640
+systems like DHT and IPNI. And we are going to wrap it up with a talk on how we are moving
+
+
+158
+00:17:33,640 --> 00:17:42,120
+towards a more decentralized IPNI network by removing barriers in terms of exchanging
+
+
+159
+00:17:42,120 --> 00:17:47,840
+information about what is available and also enabling other nodes in the network to get
+
+
+160
+00:17:47,840 --> 00:17:53,840
+that information and become up to date. So this is sort of the overview of the track.
+
+
+161
+00:17:53,840 --> 00:18:00,200
+I hope you are as excited as I am and with that I am going to pass it over to Guy to
+
+
+162
+00:18:00,200 --> 00:18:04,840
+tell us a little bit more about what DHT has been up to in terms of scaling that ability
+
+
+163
+00:18:04,840 --> 00:18:19,280
+to provide information. Thank you.

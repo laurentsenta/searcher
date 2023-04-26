@@ -1,0 +1,803 @@
+1
+00:00:00,000 --> 00:00:09,160
+Yeah, first of all, a thanks to chatGPT for suggesting this title. Couldn't have come
+
+
+2
+00:00:09,160 --> 00:00:20,040
+up with that myself. But yes, we are talking about the decentralization heaven today. So,
+
+
+3
+00:00:20,040 --> 00:00:29,160
+why do people use HTTP? Well, there's a long list of reasons why people do that. HTTP has
+
+
+4
+00:00:29,160 --> 00:00:39,000
+been around for 30 years, 30-something years, and it's basically universally supported. Like,
+
+
+5
+00:00:39,000 --> 00:00:43,400
+when people talk about the internet, a lot of people just talk about HTTP, and they don't
+
+
+6
+00:00:43,400 --> 00:00:48,560
+realize that there's a lot of other protocols that are also part of the internet stack.
+
+
+7
+00:00:48,560 --> 00:00:56,720
+Specifically, like, HTTP is supported by all browsers. There's command-line tools like curl
+
+
+8
+00:00:56,720 --> 00:01:04,520
+that are, like, really popular and built in basically everywhere. You can do HTTP from
+
+
+9
+00:01:04,520 --> 00:01:11,840
+cloud edge workers, and probably every programming language around has some kind of HTTP library.
+
+
+10
+00:01:11,840 --> 00:01:22,600
+In these 30 years of HTTP, a lot of companies have spun up and built infrastructure to make
+
+
+11
+00:01:22,600 --> 00:01:32,000
+that ecosystem better and to make it work more smoothly. There's CDNs, Cartoon Distribution
+
+
+12
+00:01:32,000 --> 00:01:37,520
+Networks, that make it super easy. Like, when you have a web server that's serving your website,
+
+
+13
+00:01:37,520 --> 00:01:44,000
+you just sign up, you get an account, you put it in front of your web server, and within,
+
+
+14
+00:01:44,000 --> 00:01:53,440
+like, five minutes, you have a globally distributed edge network that's serving your website very
+
+
+15
+00:01:53,440 --> 00:01:59,880
+close to the user, making your website very fast, because the edge is so close to wherever
+
+
+16
+00:01:59,880 --> 00:02:04,600
+the user might be located in the world. And it would be really nice if we could use this
+
+
+17
+00:02:04,600 --> 00:02:14,040
+for IPFS and for Filecore, right? Because our data is usually content-addressed, which
+
+
+18
+00:02:14,040 --> 00:02:20,400
+means that once you have the hash of the data, the content behind it will never change. It's
+
+
+19
+00:02:20,400 --> 00:02:28,760
+infinitely cacheable. So, why has this been a problem for the libP2P and IPFS ecosystem
+
+
+20
+00:02:28,760 --> 00:02:37,160
+so far? Well, the reason is that you don't do plain HTTP anymore. Nowadays, you do HTTPS.
+
+
+21
+00:02:37,160 --> 00:02:44,000
+And to do HTTPS, you need a valid TLS certificate, meaning a TLS certificate signed by a certificate
+
+
+22
+00:02:44,000 --> 00:02:50,400
+authority like Let's Encrypt. And you can only get a TLS certificate if you also have
+
+
+23
+00:02:50,400 --> 00:02:57,000
+a domain name. Well, technically, it's possible to get IP certificates, like, in practice,
+
+
+24
+00:02:57,000 --> 00:03:06,480
+it's quite hard. This means that you can only set up an HTTPS server if you have at least
+
+
+25
+00:03:06,480 --> 00:03:13,200
+some level of control over the deployment, which means a domain name that you can get
+
+
+26
+00:03:13,200 --> 00:03:21,840
+a TLS certificate for. And that's really easy when you're setting up, like, a big service.
+
+
+27
+00:03:21,840 --> 00:03:29,080
+But when you just spin up a Kubo node on, like, a virtual server that you just clicked
+
+
+28
+00:03:29,080 --> 00:03:34,240
+five minutes ago, the server doesn't have a domain name. The server doesn't have a TLS
+
+
+29
+00:03:34,240 --> 00:03:47,840
+certificate. So, you can't do HTTPS on that server. So, here I have a table of what a
+
+
+30
+00:03:47,840 --> 00:03:54,600
+comparison between HTTP and LibP2P. So, we already went over the amazing caching infrastructure
+
+
+31
+00:03:54,600 --> 00:04:02,200
+that exists for HTTP. We don't have that for LibP2P. We don't have universal support for
+
+
+32
+00:04:02,200 --> 00:04:09,640
+LibP2P. We have implementations in Go and Rust and JavaScript and Nim and Zygnal as
+
+
+33
+00:04:09,640 --> 00:04:15,560
+well. But there are still a lot of programming languages where we don't have proper support
+
+
+34
+00:04:15,560 --> 00:04:21,640
+for LibP2P. If you want to run it in a cloud EdgeWorker environment or from your command
+
+
+35
+00:04:21,640 --> 00:04:28,680
+line, there's no tool for that either. On the other hand, LibP2P comes with some features
+
+
+36
+00:04:28,680 --> 00:04:37,360
+that HTTP doesn't have. Namely, net traversal. Because in HTTP, the assumption is that you
+
+
+37
+00:04:37,360 --> 00:04:41,400
+have the server on the internet that's publicly reachable, so you don't have to care about
+
+
+38
+00:04:41,400 --> 00:04:48,200
+nets. Any client will just be able to connect through its firewall or through its net to
+
+
+39
+00:04:48,200 --> 00:04:53,680
+your server and it just works. But that's not the situation we have in a decentralised
+
+
+40
+00:04:53,680 --> 00:04:59,320
+network like IPFS. We have people who are running nodes in their home networks and they
+
+
+41
+00:04:59,320 --> 00:05:05,080
+want to be able to be participants of the network. They want to be able to offer files
+
+
+42
+00:05:05,080 --> 00:05:10,480
+to the network and have other nodes connect to them and download these files. So, we need
+
+
+43
+00:05:10,480 --> 00:05:19,600
+to do net traversal to get through these nets to have a truly decentralised network. So,
+
+
+44
+00:05:19,600 --> 00:05:26,480
+that's not possible with HTTP, but it's possible with LibP2P. And as we talked about in LibP2P,
+
+
+45
+00:05:26,480 --> 00:05:33,880
+we don't rely on TLS certificates or more precisely TLS certificates issued by certificate
+
+
+46
+00:05:33,880 --> 00:05:43,320
+authorities. So, realising this difference in features between HTTP and LibP2P, this
+
+
+47
+00:05:43,320 --> 00:05:52,280
+started a discussion within the LibP2P team about half a year ago. Why can't we have both?
+
+
+48
+00:05:52,280 --> 00:06:01,080
+Why can't we combine the benefits of HTTP with the benefits of LibP2P and make use of
+
+
+49
+00:06:01,080 --> 00:06:09,760
+all the amazing caching infrastructure that's out there and also make use of the net traversal
+
+
+50
+00:06:09,760 --> 00:06:22,320
+that LibP2P gives you? So, the idea would be that you write an application that you
+
+
+51
+00:06:22,320 --> 00:06:28,560
+would run on an HTTP server. So, that you would write some HTTP handlers when you get
+
+
+52
+00:06:28,560 --> 00:06:34,280
+a GET request for this path, and you do this HTTP response, and when you do a POST request,
+
+
+53
+00:06:34,280 --> 00:06:40,200
+then you get a different response. And all of this logic lives inside, and I'm using
+
+
+54
+00:06:40,200 --> 00:06:47,800
+Go terminology here, your HTTP surf marks. Once you've put all your logic into the surf
+
+
+55
+00:06:47,800 --> 00:06:52,040
+marks, you pass this to an HTTP handler and you run this on your server. This is how you
+
+
+56
+00:06:52,040 --> 00:07:00,720
+would set up an HTTP server in Go, or basically any other programming language. So, the idea
+
+
+57
+00:07:00,720 --> 00:07:06,920
+now is what if you could take all of this logic that you already have, that you already
+
+
+58
+00:07:06,920 --> 00:07:11,520
+programmed, that you already tested and that works, and you just pass that to your LibP2P
+
+
+59
+00:07:11,520 --> 00:07:27,960
+stack. And your LibP2P stack would run your HTTP handlers on top of LibP2P streams. So,
+
+
+60
+00:07:27,960 --> 00:07:34,440
+why is this interesting? This is interesting because of what the LibP2P team has been working
+
+
+61
+00:07:34,440 --> 00:07:41,720
+on over the last year. Over the last year, the main theme of our work was getting our
+
+
+62
+00:07:41,720 --> 00:07:48,960
+connectivity story straight. We added support for web transport and for web RTC, which now
+
+
+63
+00:07:48,960 --> 00:08:03,520
+allows users to connect to LibP2P nodes from their browsers without requiring a TLS certificate.
+
+
+64
+00:08:03,520 --> 00:08:14,600
+They can, any browser can now connect to any public LibP2P node using web transport. And
+
+
+65
+00:08:14,600 --> 00:08:22,880
+to private LibP2P nodes using web RTC. So, now, if we take that HTTP handler, put it
+
+
+66
+00:08:22,880 --> 00:08:30,640
+on top of LibP2P streams, now a browser will be able to connect to a LibP2P node that doesn't
+
+
+67
+00:08:30,640 --> 00:08:39,360
+have a certificate using web transport. And then it does HTTP over that LibP2P connection.
+
+
+68
+00:08:39,360 --> 00:08:46,320
+Some of you might have played around with the go LibP2P HTTP package. It's been around
+
+
+69
+00:08:46,320 --> 00:08:52,040
+for a very long time. And the integration that we wrote is actually compatible with
+
+
+70
+00:08:52,040 --> 00:09:02,520
+this package. So, we do have a specification for that. It's not merged yet. There's a lot
+
+
+71
+00:09:02,520 --> 00:09:10,000
+of discussion ongoing. If you're interested, please head over to our specs repo and participate
+
+
+72
+00:09:10,000 --> 00:09:17,240
+in that discussion. So, now, we have a demo for you. And as all of the demos that are
+
+
+73
+00:09:17,240 --> 00:09:22,040
+happening during this conference, Marco is doing this demo.
+
+
+74
+00:09:22,040 --> 00:09:26,880
+Let's talk about service workers before I actually introduce the demo. So, just by a
+
+
+75
+00:09:26,880 --> 00:09:34,800
+show of hands here, who knows what service workers are? Okay. Cool. That's quite a lot.
+
+
+76
+00:09:34,800 --> 00:09:42,960
+So, for most of you, this will be kind of straightforward. So, normally, we think of
+
+
+77
+00:09:42,960 --> 00:09:49,440
+service workers as something that can intercept HTTP requests from the browser and serve that
+
+
+78
+00:09:49,440 --> 00:09:57,160
+request from an offline cache. This enables, like, these offline apps to work just fine.
+
+
+79
+00:09:57,160 --> 00:10:06,320
+But hmm. We're intercepting a request, serving it from some offline cache. What if we could
+
+
+80
+00:10:06,320 --> 00:10:11,880
+intercept that and I don't know, something, something. There's a something here, right?
+
+
+81
+00:10:11,880 --> 00:10:18,040
+Like, okay, what if we intercept the request and now we ask some random peer in our network
+
+
+82
+00:10:18,040 --> 00:10:29,160
+to fulfill that request? We can do this. So, that's the demo. So, let's see. Let's see
+
+
+83
+00:10:29,160 --> 00:10:41,280
+if it works. Nope. That's the wrong website. Okay. Here we are. I lost my mouse. Okay.
+
+
+84
+00:10:41,280 --> 00:10:53,680
+Here we are. Okay. So, this is so, this is a website I made that loads a service worker
+
+
+85
+00:10:53,680 --> 00:10:58,440
+and that service worker intercepts HTTP request calls and then looks at the URL that you gave
+
+
+86
+00:10:58,440 --> 00:11:04,320
+it. So, in this case, the URL has a hash at the end. And that hash is just a multi-adder
+
+
+87
+00:11:04,320 --> 00:11:13,080
+for a peer. And to make this a bit more interesting, this peer is actually Martin's laptop. And
+
+
+88
+00:11:13,080 --> 00:11:17,160
+you see a little lock icon there? This is, like, all HTTPS. We're not doing, like, any
+
+
+89
+00:11:17,160 --> 00:11:24,760
+trust, I ignore the certificate. This is all, like, totally fine by the browser. And so,
+
+
+90
+00:11:24,760 --> 00:11:30,320
+I'm gonna make this HTTPS request. You'll see here in the URL that we have, like, this
+
+
+91
+00:11:30,320 --> 00:11:38,600
+slash IPFS and this CID. And I'm using this notes because it's a little bigger. So, we're
+
+
+92
+00:11:38,600 --> 00:11:44,920
+gonna refresh the page here. And here on the left, you see, okay, it's IPFS docs. Yeah.
+
+
+93
+00:11:44,920 --> 00:11:53,440
+So what? Here on the right, you see normal HTTP requests from the Chrome network inspector.
+
+
+94
+00:11:53,440 --> 00:11:57,600
+And you're like, okay, yeah. So what? Okay. But look at this. The size here, this is a
+
+
+95
+00:11:57,600 --> 00:12:03,800
+service worker. These requests were intercepted by the service worker to, like, this JS asset.
+
+
+96
+00:12:03,800 --> 00:12:11,800
+Instead of going to this IPFS gateway.io page or server, it's being intercepted, passed
+
+
+97
+00:12:11,800 --> 00:12:19,520
+through a web transport connection to Martin's laptop where he gives me his local IPFS docs
+
+
+98
+00:12:19,520 --> 00:12:23,760
+and then serves it to me. And then my service worker unpacks that response and gives it
+
+
+99
+00:12:23,760 --> 00:12:29,120
+to the browser. So, the browser has no idea that we're doing libp2p here. It's just, like,
+
+
+100
+00:12:29,120 --> 00:12:34,520
+makes a request to, like, I don't know, give me the IPFS docs. And libp2p under the hood
+
+
+101
+00:12:34,520 --> 00:12:38,520
+is like, oh, I know Martin has that. Let me get it from him and gives it to the browser.
+
+
+102
+00:12:38,520 --> 00:12:49,360
+Browser's like, cool. Looks like a normal HTTP request to me. And all the normal Chrome
+
+
+103
+00:12:49,360 --> 00:12:54,520
+debugging tools, dev tools, they all work. It looks like HTTP. Because it is.
+
+
+104
+00:12:54,520 --> 00:13:06,320
+All right. Any questions? Yeah. I mean, that works. I had a whole backup thing to do. But
+
+
+105
+00:13:06,320 --> 00:13:23,400
+just kidding. That was the only thing. I had no worries there.
+
+
+106
+00:13:23,400 --> 00:13:29,120
+One of the big benefits of pulling HTTP into libp2p is to be able to use the server side
+
+
+107
+00:13:29,120 --> 00:13:33,120
+infrastructure. You mentioned, Martin, you mentioned it in terms of caching and load
+
+
+108
+00:13:33,120 --> 00:13:38,280
+balancers and so on. Is there kind of work towards that? Or kind of where are we on that
+
+
+109
+00:13:38,280 --> 00:13:47,760
+landscape? Like, can you right now put libp2p connectivity and services behind that infrastructure?
+
+
+110
+00:13:47,760 --> 00:13:54,600
+Or is that still this is less HTTP inside of a libp2p stream, but it means turn a libp2p
+
+
+111
+00:13:54,600 --> 00:13:58,560
+stream into just using vanilla HTTP as its transport?
+
+
+112
+00:13:58,560 --> 00:14:07,440
+Yeah. We don't have any proxy that would open libp2p and then put it onto HTTP. The idea
+
+
+113
+00:14:07,440 --> 00:14:12,760
+is that you would just reuse the HTTP handler that you have to run it on a server. And you
+
+
+114
+00:14:12,760 --> 00:14:17,880
+can then with that thing that's running on top of HTTP, you can use all that caching
+
+
+115
+00:14:17,880 --> 00:14:24,520
+infrastructure. And then you use the same handler for peers that are behind NATs to
+
+
+116
+00:14:24,520 --> 00:14:26,240
+get the benefits of libp2p.
+
+
+117
+00:14:26,240 --> 00:14:34,200
+But that doesn't work for middle boxes, right? So if you look at a large deployment on HTTP,
+
+
+118
+00:14:34,200 --> 00:14:39,980
+you usually have your server is running on some 10 different web server machines are
+
+
+119
+00:14:39,980 --> 00:14:45,520
+running behind some big load balancer. And then that's running behind some caching infrastructure.
+
+
+120
+00:14:45,520 --> 00:14:48,960
+And all of those work because you can use HTTP and all of those can introspect the request
+
+
+121
+00:14:48,960 --> 00:14:55,800
+and can do all of the smart HTTP things. HTTP inside of another transport can't do that.
+
+
+122
+00:14:55,800 --> 00:15:01,320
+So I'm talking about the reverse of being able to run your libp2p applications over
+
+
+123
+00:15:01,320 --> 00:15:04,160
+HTTP so that you can leverage that.
+
+
+124
+00:15:04,160 --> 00:15:10,760
+Yeah. So I would make the counter argument that if you're running a service that has
+
+
+125
+00:15:10,760 --> 00:15:16,040
+like 10 servers already and you're doing load balancing, then getting the TLS certificate
+
+
+126
+00:15:16,040 --> 00:15:21,080
+and the domain name is probably the least of your problems. So just use HTTP in that
+
+
+127
+00:15:21,080 --> 00:15:22,080
+case.
+
+
+128
+00:15:22,080 --> 00:15:28,840
+But like you have libp2p networks like IPFS and Ethereum 2 and Falcon and so on that want
+
+
+129
+00:15:28,840 --> 00:15:35,200
+to use these infrastructures and they currently can't.
+
+
+130
+00:15:35,200 --> 00:15:43,600
+So I kind of like see this as like the HTTP servers are kind of their own peers as well.
+
+
+131
+00:15:43,600 --> 00:15:51,840
+So like the client would see like, oh, you know, I see these multi-adders have the content,
+
+
+132
+00:15:51,840 --> 00:15:56,400
+but I also see that this like HTTP server has the content as well.
+
+
+133
+00:15:56,400 --> 00:16:02,800
+Like I can ask that HTTP server and okay, yes, this HTTP server now has no idea about
+
+
+134
+00:16:02,800 --> 00:16:08,880
+like it doesn't have libp2p, it just speaks HTTP, but that's fine because the client knows
+
+
+135
+00:16:08,880 --> 00:16:15,480
+that like it's still making the same HTTP request either to like a libp2p node or a
+
+
+136
+00:16:15,480 --> 00:16:16,760
+HTTP server.
+
+
+137
+00:16:16,760 --> 00:16:23,680
+And so we reuse all of that by not changing it, if that makes sense.
+
+
+138
+00:16:23,680 --> 00:16:28,960
+But is it actually reusing it because you couldn't speak to those caches and to those
+
+
+139
+00:16:28,960 --> 00:16:32,440
+load balancers with your application, right?
+
+
+140
+00:16:32,440 --> 00:16:37,120
+So like, because you're sort of wrapping the application in a libp2p stream, you're nuking
+
+
+141
+00:16:37,120 --> 00:16:40,320
+out all of the HTTP logic.
+
+
+142
+00:16:40,320 --> 00:16:45,160
+Like you're bypassing all that you can't use any of the caches because the libp2p connection
+
+
+143
+00:16:45,160 --> 00:16:50,800
+will terminate from the source client all the way to your web server at the very end.
+
+
+144
+00:16:50,800 --> 00:16:53,320
+And it won't be able to like interface with anything in between.
+
+
+145
+00:16:53,320 --> 00:16:54,320
+Right.
+
+
+146
+00:16:54,320 --> 00:16:58,880
+So I guess if your application uses HTTP, right, then like under that HTTP hood, there's
+
+
+147
+00:16:58,880 --> 00:17:02,280
+like, okay, can it use a normal HTTP server?
+
+
+148
+00:17:02,280 --> 00:17:03,280
+Yes.
+
+
+149
+00:17:03,280 --> 00:17:05,080
+It gets all the caching benefits, right?
+
+
+150
+00:17:05,080 --> 00:17:06,080
+Can it not?
+
+
+151
+00:17:06,080 --> 00:17:10,080
+Like is that server behind a NAT or does it not have a TLS cert?
+
+
+152
+00:17:10,080 --> 00:17:11,080
+Okay.
+
+
+153
+00:17:11,080 --> 00:17:12,560
+Then it has to go through libp2p.
+
+
+154
+00:17:12,560 --> 00:17:18,320
+And then in that case, yes, it does not gain any of the caching benefits because like that
+
+
+155
+00:17:18,320 --> 00:17:20,120
+stuff doesn't exist yet.
+
+
+156
+00:17:20,120 --> 00:17:21,120
+Yeah.
+
+
+157
+00:17:21,120 --> 00:17:22,120
+Great.
+
+
+158
+00:17:22,120 --> 00:17:23,120
+Thanks.
+
+
+159
+00:17:23,120 --> 00:17:24,120
+Yeah.
+
+
+160
+00:17:24,120 --> 00:17:25,120
+Yeah.
+
+
+161
+00:17:25,120 --> 00:17:47,200
+Excellent.

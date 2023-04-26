@@ -1,0 +1,448 @@
+1
+00:00:00,000 --> 00:00:07,280
+Well, hello. I'm Steve Lepke. I'm one of the engineering managers with the Protocol
+
+
+2
+00:00:07,280 --> 00:00:11,200
+Labs Engineering Research Group and get to work with our IPFS team. And I'll be kicking
+
+
+3
+00:00:11,200 --> 00:00:17,920
+us off here in the implementation track here just talking about Kubo. And so with that,
+
+
+4
+00:00:17,920 --> 00:00:23,600
+I think many may know that Kubo is IPFS's first implementation. It was also the main
+
+
+5
+00:00:23,600 --> 00:00:29,280
+implementation for many years and as a result has grown with the IPFS project. As a result,
+
+
+6
+00:00:29,280 --> 00:00:35,200
+it is versatile in the way that it has been bent and contorted to meet various needs.
+
+
+7
+00:00:35,200 --> 00:00:41,200
+But stepping back, I believe Kubo is really best suited for the independent self-hoster.
+
+
+8
+00:00:41,200 --> 00:00:45,200
+And that's what we're trying to emphasize here with the new logo that we're showing
+
+
+9
+00:00:45,200 --> 00:00:51,440
+here with a camper, right? That you've got that independence and versatility that we
+
+
+10
+00:00:51,440 --> 00:00:57,240
+believe Kubo can bring. But in practice, Kubo as an implementation is in a lot of ways the
+
+
+11
+00:00:57,240 --> 00:01:03,160
+fallback implementation if there isn't something else for you. But it does power some really
+
+
+12
+00:01:03,160 --> 00:01:08,200
+marquee use cases in onboarding for the IPFS community. One of those is Brave, which probably
+
+
+13
+00:01:08,200 --> 00:01:12,840
+many are aware of. It's admittedly a bit of an awkward marriage, sticking a Go binary
+
+
+14
+00:01:12,840 --> 00:01:18,320
+in a browser. But it's working for now. We do presume that a Rust or JS implementation
+
+
+15
+00:01:18,320 --> 00:01:26,000
+will end up winning there, which would be great. It does power many of the HTTP gateways
+
+
+16
+00:01:26,000 --> 00:01:29,840
+that are out there, including IPFS currently, although that will be shifting with the Saturn
+
+
+17
+00:01:29,840 --> 00:01:37,000
+RIA project that Will was mentioning. But again, most of that traffic is all happening
+
+
+18
+00:01:37,000 --> 00:01:45,800
+through Kubo today. And even that Bifrost gateway part is extracted out Kubo code. And
+
+
+19
+00:01:45,800 --> 00:01:50,200
+side plug in, that'll be getting talked about more here on Monday during the HTTP gateways
+
+
+20
+00:01:50,200 --> 00:01:54,760
+track where I'll be talking about the Bifrost gateway. And then two, there's the IPFS desktop,
+
+
+21
+00:01:54,760 --> 00:01:58,840
+which is oftentimes the entryway or lobby way, or it's a lobby for someone's IPFS journey.
+
+
+22
+00:01:58,840 --> 00:02:03,720
+And that's all Kubo behind the scenes. It may be unexpected, but Kubo is often used
+
+
+23
+00:02:03,720 --> 00:02:08,480
+for experimentation and validation of IPFS specs. Again, while not necessarily optimized
+
+
+24
+00:02:08,480 --> 00:02:12,520
+for it, the fact that it has high network prevalence, which I'll be talking about shortly,
+
+
+25
+00:02:12,520 --> 00:02:17,800
+and auto update mechanisms through IPFS desktop and Brave, it makes it a great place to get
+
+
+26
+00:02:17,800 --> 00:02:24,160
+code out there that you need a large scale network deployment to validate. That said,
+
+
+27
+00:02:24,160 --> 00:02:29,080
+Kubo is not suited for many things, including large infrastructure. Oftentimes, large infrastructure
+
+
+28
+00:02:29,080 --> 00:02:34,160
+providers want more control or introspection than what Kubo provides. And they're looking
+
+
+29
+00:02:34,160 --> 00:02:40,760
+for things like bounds on resource utilization or per ID or IP or peer ID throttling, performant
+
+
+30
+00:02:40,760 --> 00:02:44,480
+garbage collection on large pin sets, policies around specific content. Kubo doesn't provide
+
+
+31
+00:02:44,480 --> 00:02:50,000
+all those things, nor is it ideal for limited platforms like IoT or mobile or things like
+
+
+32
+00:02:50,000 --> 00:02:57,760
+your CI runs. But it's filling the gap. In terms of what's underneath the covers, it
+
+
+33
+00:02:57,760 --> 00:03:01,680
+is multi-platform. We distribute binaries across those platforms. And also, the Docker
+
+
+34
+00:03:01,680 --> 00:03:06,520
+images are very popular. Last time I looked, about almost 50% of the nodes that use Kubo
+
+
+35
+00:03:06,520 --> 00:03:10,760
+are actually using our Docker images. It's a daemon architecture written in Go. It has
+
+
+36
+00:03:10,760 --> 00:03:18,920
+a few different interaction models, a CLI, a home brewed RPC interface, HTTP RPC interface.
+
+
+37
+00:03:18,920 --> 00:03:23,360
+One where it's particularly strict is around the HTTP gateway interface that's been well
+
+
+38
+00:03:23,360 --> 00:03:29,160
+specified. And to control it, it has a ton of configuration knobs, which can be a blessing
+
+
+39
+00:03:29,160 --> 00:03:36,400
+or a curse. Its prevalence, it's still right now the dominant implementation. About 80%
+
+
+40
+00:03:36,400 --> 00:03:42,520
+of the nodes that store DHT provider records on the public IPv6 DHT are all using Kubo.
+
+
+41
+00:03:42,520 --> 00:03:49,880
+And when I looked at the bootstrappers operated by PL, about 80% of the 125,000 unique peer
+
+
+42
+00:03:49,880 --> 00:03:54,680
+IDs were all Kubo. So it's still very much out there.
+
+
+43
+00:03:54,680 --> 00:04:00,600
+In terms of accomplishments since we last gathered in Iceland, one was around configurable
+
+
+44
+00:04:00,600 --> 00:04:07,080
+content routing. The HT routing V1 API is implemented and supported. And that enabled
+
+
+45
+00:04:07,080 --> 00:04:12,960
+us in the network indexers, including CID.contact, to implement that. And so CID.contact is queried
+
+
+46
+00:04:12,960 --> 00:04:20,200
+in parallel by default now in Kubo. We did a soft launch of Boxo. And this is where we
+
+
+47
+00:04:20,200 --> 00:04:27,240
+extracted out and consolidated reusable Kubo functionality into a library to enable spawning
+
+
+48
+00:04:27,240 --> 00:04:33,080
+of other Go-based implementations like the Bifrost gateway. This is used in Kubo, Bifrost
+
+
+49
+00:04:33,080 --> 00:04:38,920
+gateway, IPv6 cluster, even in Lotus currently. And you can learn more about that later today.
+
+
+50
+00:04:38,920 --> 00:04:42,600
+Gus is giving a talk about building your own adventure with Boxo.
+
+
+51
+00:04:42,600 --> 00:04:49,280
+Maybe not the most exciting, but we wrangled the Golub P2P resource manager into Kubo.
+
+
+52
+00:04:49,280 --> 00:04:53,880
+Adding in resource accounting eight years after the fact is not easy or fun. So thanks
+
+
+53
+00:04:53,880 --> 00:04:58,120
+to those who endured that with us, because it did take multiple releases to iron it out.
+
+
+54
+00:04:58,120 --> 00:05:04,880
+The gateway saw a steady trickle of improvements, all of which were specified publicly, and
+
+
+55
+00:05:04,880 --> 00:05:10,800
+particularly leaning in on verifiability now with IPNS records. And we're really trying
+
+
+56
+00:05:10,800 --> 00:05:14,960
+to take advantage of all the connectivity work that the LibP2P team has been doing with
+
+
+57
+00:05:14,960 --> 00:05:20,680
+getting web transport deployed so that Chromium and now nightly Firefox browsers can connect
+
+
+58
+00:05:20,680 --> 00:05:28,240
+directly to a Kubo node, even if it's publicly edible, even if its setup doesn't have a CA
+
+
+59
+00:05:28,240 --> 00:05:29,240
+cert.
+
+
+60
+00:05:29,240 --> 00:05:33,360
+Yeah, so in terms of some of what's coming and Q1, we want to update the content routing
+
+
+61
+00:05:33,360 --> 00:05:38,920
+within Kubo with reader privacy. So this is both on the DHT and network indexer front.
+
+
+62
+00:05:38,920 --> 00:05:42,840
+And there are going to be talks happening on that on Sunday in the content routing track,
+
+
+63
+00:05:42,840 --> 00:05:49,200
+both with Yanis for DHT and Yann with the network indexers. Also, there were various
+
+
+64
+00:05:49,200 --> 00:05:52,840
+network events that happened over the last six months, and there's some improvements
+
+
+65
+00:05:52,840 --> 00:05:57,480
+to make, particularly around routing table resiliency, guiding folks in their providing
+
+
+66
+00:05:57,480 --> 00:06:02,440
+operations, and around bit swap in terms of adding metrics, timeouts, and back pressure.
+
+
+67
+00:06:02,440 --> 00:06:06,280
+So those will be some of the work that's happening at the end of Q1. And you can learn more about
+
+
+68
+00:06:06,280 --> 00:06:10,560
+what happened with the DHT with Yanis' talk later today in the measuring IPFS track.
+
+
+69
+00:06:10,560 --> 00:06:16,520
+Again, we're going to be pushing to test and validate the hypothesis around Boxo and seeing
+
+
+70
+00:06:16,520 --> 00:06:20,360
+if we can get more customized implementations out there that aren't living under the constraints
+
+
+71
+00:06:20,360 --> 00:06:21,360
+of Kubo.
+
+
+72
+00:06:21,360 --> 00:06:29,120
+And, oh, sorry, my bad. Wrong way. Last thing, too, is we want to do for data transfer what
+
+
+73
+00:06:29,120 --> 00:06:34,080
+we did for data, sorry, for content routing within Kubo to enable configurability of having
+
+
+74
+00:06:34,080 --> 00:06:39,760
+different data transfer protocols within it. And yes, we want to be able to support multiple
+
+
+75
+00:06:39,760 --> 00:06:44,840
+in parallel for both getting blocks and graphs, and also take advantage of all the work that
+
+
+76
+00:06:44,840 --> 00:06:48,520
+the Move With The Bytes group has been doing on the data transfer stack.
+
+
+77
+00:06:48,520 --> 00:06:55,000
+Yeah, so in terms of the team, all these folks are here. The core maintainers, Lytle, Ladeen,
+
+
+78
+00:06:55,000 --> 00:06:59,400
+Gus, Henrik, and Jaropo. They love to chat and connect. We also want to say big thanks
+
+
+79
+00:06:59,400 --> 00:07:03,680
+to the over 350 direct contributors that have contributed to Kubo over the last eight years,
+
+
+80
+00:07:03,680 --> 00:07:09,480
+and the many more who have or do provide support, insight, and guidance along the way.
+
+
+81
+00:07:09,480 --> 00:07:13,920
+And in terms of closing, in terms of how we talk about how to help, the team wants to
+
+
+82
+00:07:13,920 --> 00:07:18,040
+acknowledge that what got us to this point in IPFS may not be what's ultimately needed
+
+
+83
+00:07:18,040 --> 00:07:23,120
+to get us where the project is going in the future. Kubo is a linchpin in the ecosystem
+
+
+84
+00:07:23,120 --> 00:07:28,240
+today. But the maintainers really feel the tension around supporting the current users
+
+
+85
+00:07:28,240 --> 00:07:33,160
+and use cases while really wanting to enable others to own their destiny and not be limited
+
+
+86
+00:07:33,160 --> 00:07:37,560
+by what Kubo can do. So in that sense, please share your use cases
+
+
+87
+00:07:37,560 --> 00:07:41,320
+and feedback with us. We would love to be collaborating, particularly on some examples,
+
+
+88
+00:07:41,320 --> 00:07:45,600
+to empower others to own their destiny. And so yeah, please hit us up in the hallway,
+
+
+89
+00:07:45,600 --> 00:07:49,000
+on different channels, or create a GitHub issue and look forward to connecting. Thanks
+
+
+90
+00:07:49,000 --> 00:08:11,520
+a lot.

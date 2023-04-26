@@ -1,0 +1,1078 @@
+1
+00:00:00,000 --> 00:00:05,320
+I'm Yuni and this is Nicole.
+
+
+2
+00:00:05,320 --> 00:00:06,320
+Hello.
+
+
+3
+00:00:06,320 --> 00:00:07,320
+Hello.
+
+
+4
+00:00:07,320 --> 00:00:08,320
+And we are the MIWA team.
+
+
+5
+00:00:08,320 --> 00:00:10,520
+MIWA stands for Milky Way.
+
+
+6
+00:00:10,520 --> 00:00:15,960
+And we had this idea, I don't know, a few months ago to do something called IPFS and
+
+
+7
+00:00:15,960 --> 00:00:16,960
+Friends Cafe.
+
+
+8
+00:00:16,960 --> 00:00:24,680
+I think exact name TBD, but oh yes, we do want to make it bigger.
+
+
+9
+00:00:24,680 --> 00:00:30,600
+And really the purpose at the time was to tag on to larger events.
+
+
+10
+00:00:30,600 --> 00:00:33,480
+For example, East Denver.
+
+
+11
+00:00:33,480 --> 00:00:37,400
+And here you can see where we had our little IPFS and Friends Coffee pop up.
+
+
+12
+00:00:37,400 --> 00:00:38,400
+Our first one.
+
+
+13
+00:00:38,400 --> 00:00:39,400
+It was so awesome.
+
+
+14
+00:00:39,400 --> 00:00:45,280
+So we want to continue to do more.
+
+
+15
+00:00:45,280 --> 00:00:51,760
+And so we tagged on to the Filecoin Foundation Hacker Base and we were open for, was it just
+
+
+16
+00:00:51,760 --> 00:00:52,760
+one day?
+
+
+17
+00:00:52,760 --> 00:00:54,040
+Yeah, we were open for one day.
+
+
+18
+00:00:54,040 --> 00:00:57,560
+We were open like throughout the morning into the afternoon.
+
+
+19
+00:00:57,560 --> 00:00:58,720
+And we were having people come in.
+
+
+20
+00:00:58,720 --> 00:01:03,480
+We were introducing ourselves, having them scan this QR code so everyone scan it, kind
+
+
+21
+00:01:03,480 --> 00:01:07,080
+of get familiar with the link tree and what we're offering.
+
+
+22
+00:01:07,080 --> 00:01:11,360
+And we were also telling individuals there if they're interested in hosting an event
+
+
+23
+00:01:11,360 --> 00:01:16,320
+like this, that we would love to collect their information so they could do so in the future.
+
+
+24
+00:01:16,320 --> 00:01:21,280
+And not just this, like in the link tree we also have pre-registration for IPFS camp,
+
+
+25
+00:01:21,280 --> 00:01:25,360
+IPFS thing, the community events calendar.
+
+
+26
+00:01:25,360 --> 00:01:30,640
+And so really it's just to get more information about other people who might be interested
+
+
+27
+00:01:30,640 --> 00:01:32,360
+in coming or speaking.
+
+
+28
+00:01:32,360 --> 00:01:35,920
+But this one wasn't, there was no content surrounding this.
+
+
+29
+00:01:35,920 --> 00:01:43,440
+The idea really is to create like a, I want to say like a workshop or a cafe where we
+
+
+30
+00:01:43,440 --> 00:01:48,200
+can share ideas and we would be, yeah, collaborate.
+
+
+31
+00:01:48,200 --> 00:01:56,000
+And we would help a community member create their own cafe so that they can continue to
+
+
+32
+00:01:56,000 --> 00:02:00,380
+run it in their own little ecosystem or their community.
+
+
+33
+00:02:00,380 --> 00:02:02,480
+And so here's a map of the world.
+
+
+34
+00:02:02,480 --> 00:02:06,720
+I shared this link in the Slack channel, so feel free to join and we're going to do the
+
+
+35
+00:02:06,720 --> 00:02:08,200
+little heart game again.
+
+
+36
+00:02:08,200 --> 00:02:11,560
+If you can put where we should be hosting the community events.
+
+
+37
+00:02:11,560 --> 00:02:17,000
+We want to know where you think we should be, where we should go next, just unique locations.
+
+
+38
+00:02:17,000 --> 00:02:22,920
+And maybe if you have a recommendation of who could help host that, that would be great.
+
+
+39
+00:02:22,920 --> 00:02:25,840
+But I guess the first one can be in Serbia.
+
+
+40
+00:02:25,840 --> 00:02:26,840
+Yay.
+
+
+41
+00:02:26,840 --> 00:02:27,840
+Wherever.
+
+
+42
+00:02:27,840 --> 00:02:28,840
+There you go.
+
+
+43
+00:02:28,840 --> 00:02:29,840
+Giant, giant heart.
+
+
+44
+00:02:29,840 --> 00:02:30,840
+The giant heart.
+
+
+45
+00:02:30,840 --> 00:02:31,840
+Perfect.
+
+
+46
+00:02:31,840 --> 00:02:39,840
+And let's go ahead and put one in India.
+
+
+47
+00:02:39,840 --> 00:02:44,360
+Oh.
+
+
+48
+00:02:44,360 --> 00:02:45,360
+Where are we going in the US?
+
+
+49
+00:02:45,360 --> 00:02:47,360
+That's a big heart.
+
+
+50
+00:02:47,360 --> 00:02:48,360
+Yeah.
+
+
+51
+00:02:48,360 --> 00:02:49,360
+I love it.
+
+
+52
+00:02:49,360 --> 00:02:50,360
+That's Princeton.
+
+
+53
+00:02:50,360 --> 00:02:53,360
+There's a regular gathering of blockchain meetings, but they're like very, very narrowly blockchainy.
+
+
+54
+00:02:53,360 --> 00:03:01,360
+And I would like to change the minds.
+
+
+55
+00:03:01,360 --> 00:03:02,360
+Nice.
+
+
+56
+00:03:02,360 --> 00:03:03,360
+Yeah.
+
+
+57
+00:03:03,360 --> 00:03:13,800
+So you would be willing to host the cafe there?
+
+
+58
+00:03:13,800 --> 00:03:14,800
+At least once.
+
+
+59
+00:03:14,800 --> 00:03:15,800
+Yeah.
+
+
+60
+00:03:15,800 --> 00:03:16,800
+Okay, cool.
+
+
+61
+00:03:16,800 --> 00:03:17,800
+Yeah.
+
+
+62
+00:03:17,800 --> 00:03:20,280
+We just want to offer the resources to everyone and lend a hand.
+
+
+63
+00:03:20,280 --> 00:03:21,280
+Yeah.
+
+
+64
+00:03:21,280 --> 00:03:24,360
+South Africa would be amazing.
+
+
+65
+00:03:24,360 --> 00:03:25,360
+Yes.
+
+
+66
+00:03:25,360 --> 00:03:26,360
+No Australia.
+
+
+67
+00:03:26,360 --> 00:03:27,360
+I'll do it.
+
+
+68
+00:03:27,360 --> 00:03:28,360
+I'll go.
+
+
+69
+00:03:28,360 --> 00:03:29,360
+Yeah.
+
+
+70
+00:03:29,360 --> 00:03:30,360
+Do you want it in Utah?
+
+
+71
+00:03:30,360 --> 00:03:31,360
+Boris, where's your computer?
+
+
+72
+00:03:31,360 --> 00:03:32,360
+This is the struggle.
+
+
+73
+00:03:32,360 --> 00:03:33,360
+I don't understand.
+
+
+74
+00:03:33,360 --> 00:03:34,360
+I don't understand.
+
+
+75
+00:03:34,360 --> 00:03:35,360
+I don't know.
+
+
+76
+00:03:35,360 --> 00:03:36,360
+I don't understand.
+
+
+77
+00:03:36,360 --> 00:03:37,360
+I don't understand.
+
+
+78
+00:03:37,360 --> 00:03:38,360
+I don't understand.
+
+
+79
+00:03:38,360 --> 00:03:39,360
+I don't understand.
+
+
+80
+00:03:39,360 --> 00:03:40,360
+I don't understand.
+
+
+81
+00:03:40,360 --> 00:03:41,360
+I don't understand.
+
+
+82
+00:03:41,360 --> 00:03:42,360
+I don't understand.
+
+
+83
+00:03:42,360 --> 00:03:43,360
+I don't understand.
+
+
+84
+00:03:43,360 --> 00:03:44,360
+I don't understand.
+
+
+85
+00:03:44,360 --> 00:03:45,360
+I don't understand.
+
+
+86
+00:03:45,360 --> 00:03:46,360
+I don't understand.
+
+
+87
+00:03:46,360 --> 00:03:47,360
+So what are we doing to help you?
+
+
+88
+00:03:47,360 --> 00:03:48,360
+I'm having trouble.
+
+
+89
+00:03:48,360 --> 00:03:49,360
+I'm having trouble.
+
+
+90
+00:03:49,360 --> 00:03:50,360
+Tell us.
+
+
+91
+00:03:50,360 --> 00:03:51,360
+I don't understand.
+
+
+92
+00:03:51,360 --> 00:03:52,360
+I don't understand.
+
+
+93
+00:03:52,360 --> 00:03:53,360
+I don't understand.
+
+
+94
+00:03:53,360 --> 00:03:54,360
+I don't understand.
+
+
+95
+00:03:54,360 --> 00:03:55,360
+You can just tell us.
+
+
+96
+00:03:55,360 --> 00:03:56,360
+Tell us.
+
+
+97
+00:03:56,360 --> 00:03:57,360
+It's covering all of the possible locations.
+
+
+98
+00:03:57,360 --> 00:03:58,360
+Amazing.
+
+
+99
+00:03:58,360 --> 00:03:59,360
+We got it.
+
+
+100
+00:03:59,360 --> 00:04:00,360
+Cool.
+
+
+101
+00:04:00,360 --> 00:04:01,360
+Yeah.
+
+
+102
+00:04:01,360 --> 00:04:02,360
+So we will have-
+
+
+103
+00:04:02,360 --> 00:04:03,360
+Copenhagen.
+
+
+104
+00:04:03,360 --> 00:04:04,360
+Oh, Copenhagen.
+
+
+105
+00:04:04,360 --> 00:04:05,360
+Yes.
+
+
+106
+00:04:05,360 --> 00:04:06,360
+Yes.
+
+
+107
+00:04:06,360 --> 00:04:07,360
+Are you hosting?
+
+
+108
+00:04:07,360 --> 00:04:08,360
+Oh, amazing.
+
+
+109
+00:04:08,360 --> 00:04:09,360
+Yay.
+
+
+110
+00:04:09,360 --> 00:04:10,360
+So cool.
+
+
+111
+00:04:10,360 --> 00:04:11,360
+Perfect.
+
+
+112
+00:04:11,360 --> 00:04:12,360
+We love that.
+
+
+113
+00:04:12,360 --> 00:04:17,360
+I'd say in the beginning, we could offer logistics.
+
+
+114
+00:04:17,360 --> 00:04:19,920
+It's really catered to your needs.
+
+
+115
+00:04:19,920 --> 00:04:25,200
+Like if you need logistical support, help securing PL speakers, we could provide you
+
+
+116
+00:04:25,200 --> 00:04:26,600
+with swag.
+
+
+117
+00:04:26,600 --> 00:04:33,800
+We can offer some small monies to help you secure a venue or something like that.
+
+
+118
+00:04:33,800 --> 00:04:38,860
+And then once you guys have done it once or twice, then you can be off into the world
+
+
+119
+00:04:38,860 --> 00:04:40,800
+and you know how to run your event.
+
+
+120
+00:04:40,800 --> 00:04:44,900
+But any kind of advice or anything like that, we can help support you.
+
+
+121
+00:04:44,900 --> 00:04:47,900
+Did I forget anything?
+
+
+122
+00:04:47,900 --> 00:04:48,900
+No.
+
+
+123
+00:04:48,900 --> 00:04:49,900
+I think that's it.
+
+
+124
+00:04:49,900 --> 00:04:50,900
+Yay!
+
+
+125
+00:04:50,900 --> 00:04:51,900
+Did you want this?
+
+
+126
+00:04:51,900 --> 00:04:52,900
+Yes.
+
+
+127
+00:04:52,900 --> 00:04:53,900
+And you can read this if you want.
+
+
+128
+00:04:53,900 --> 00:05:04,700
+So some of the goals of this IPFS Friends Cafe would be to grow the IPFS community events.
+
+
+129
+00:05:04,700 --> 00:05:07,260
+We don't really have that many going on.
+
+
+130
+00:05:07,260 --> 00:05:10,020
+And so I think this would be a great way to get them involved.
+
+
+131
+00:05:10,020 --> 00:05:13,300
+Build a calendar between IPFS Camp and IPFS Thing.
+
+
+132
+00:05:13,300 --> 00:05:15,540
+Those are the two main events that we have going each year.
+
+
+133
+00:05:15,540 --> 00:05:17,940
+So people are always asking, when's the next thing?
+
+
+134
+00:05:17,940 --> 00:05:19,100
+When are we going to see everyone?
+
+
+135
+00:05:19,100 --> 00:05:22,380
+So this would be nice to supplement in between.
+
+
+136
+00:05:22,380 --> 00:05:24,500
+And obviously keep up the momentum.
+
+
+137
+00:05:24,500 --> 00:05:25,500
+We just want to keep going.
+
+
+138
+00:05:25,500 --> 00:05:26,500
+We want to go further and wider.
+
+
+139
+00:05:26,500 --> 00:05:27,500
+And this is the way to do it.
+
+
+140
+00:05:27,500 --> 00:05:28,500
+And we'll see you soon.
+
+
+141
+00:05:28,500 --> 00:05:29,500
+Thank you.
+
+
+142
+00:05:29,500 --> 00:05:30,500
+Any questions?
+
+
+143
+00:05:30,500 --> 00:05:31,500
+Is this a mini...
+
+
+144
+00:05:31,500 --> 00:05:32,500
+Is this a full-time job?
+
+
+145
+00:05:32,500 --> 00:05:44,540
+I like IPFS and Friends.
+
+
+146
+00:05:44,540 --> 00:05:48,500
+It's very friendly and you could have a number of things on the Friend side of the thing
+
+
+147
+00:05:48,500 --> 00:05:50,300
+while sticking with the IPFS Thing.
+
+
+148
+00:05:50,300 --> 00:05:51,300
+Love it.
+
+
+149
+00:05:51,300 --> 00:05:55,260
+And even just some of the consistency of like, oh, this is what you can expect from this
+
+
+150
+00:05:55,260 --> 00:05:56,260
+sort of thing.
+
+
+151
+00:05:56,260 --> 00:05:57,820
+Do you see this...
+
+
+152
+00:05:57,820 --> 00:06:01,580
+Is this scaled down to local meetup?
+
+
+153
+00:06:01,580 --> 00:06:02,580
+Yeah.
+
+
+154
+00:06:02,580 --> 00:06:12,660
+And what do you see as the sort of main topics or things?
+
+
+155
+00:06:12,660 --> 00:06:14,740
+Is it an evening meetup?
+
+
+156
+00:06:14,740 --> 00:06:17,740
+Is it a side event?
+
+
+157
+00:06:17,740 --> 00:06:18,740
+You said speakers.
+
+
+158
+00:06:18,740 --> 00:06:19,740
+Yeah.
+
+
+159
+00:06:19,740 --> 00:06:20,740
+It can be.
+
+
+160
+00:06:20,740 --> 00:06:27,380
+I feel like what would be nice is if someone is interested, depending on what they want
+
+
+161
+00:06:27,380 --> 00:06:28,380
+to do.
+
+
+162
+00:06:28,380 --> 00:06:30,640
+Because I think the person who has interest has something in mind.
+
+
+163
+00:06:30,640 --> 00:06:33,700
+So if they want to do an evening event, if they want to do something with speakers, they
+
+
+164
+00:06:33,700 --> 00:06:36,180
+want to host a game night, if they want to do...
+
+
+165
+00:06:36,180 --> 00:06:40,540
+Just to get the community together, technical or non, I think that's the more important
+
+
+166
+00:06:40,540 --> 00:06:43,140
+part.
+
+
+167
+00:06:43,140 --> 00:06:46,940
+And we'll help them.
+
+
+168
+00:06:46,940 --> 00:06:47,940
+What are your thoughts?
+
+
+169
+00:06:47,940 --> 00:06:48,940
+Dietrich?
+
+
+170
+00:06:48,940 --> 00:06:57,460
+I was going to say, one of the event series that I loved was called Music Hack Day.
+
+
+171
+00:06:57,460 --> 00:07:01,700
+And Music Hack Day was like what you just described, Nicole, was exactly what was cool
+
+
+172
+00:07:01,700 --> 00:07:05,780
+about Music Hack Day, is that there was no centralized organization.
+
+
+173
+00:07:05,780 --> 00:07:10,660
+It was if somebody wanted to host a Music Hack Day, they just posted a pull request
+
+
+174
+00:07:10,660 --> 00:07:16,180
+to the Music Hack Day website, and the people that started Music Hack Day would either reject
+
+
+175
+00:07:16,180 --> 00:07:19,380
+it and be like, this has nothing to do with music or whatever.
+
+
+176
+00:07:19,380 --> 00:07:23,300
+But if they're okay with it, and there was just a community of people that had held a
+
+
+177
+00:07:23,300 --> 00:07:27,060
+few of these before that were the people making the decision, would just add it.
+
+
+178
+00:07:27,060 --> 00:07:30,380
+And it was just a title and a location and a date.
+
+
+179
+00:07:30,380 --> 00:07:35,660
+And so each one was really unique, and oftentimes they started repeating.
+
+
+180
+00:07:35,660 --> 00:07:40,260
+So like Music Hack Day Austin would happen a bunch of times over because that community
+
+
+181
+00:07:40,260 --> 00:07:43,100
+of people formed around that one thing.
+
+
+182
+00:07:43,100 --> 00:07:45,860
+And each one was then also really different.
+
+
+183
+00:07:45,860 --> 00:07:50,020
+And it reflected the interests of that local community in a way that also didn't have to
+
+
+184
+00:07:50,020 --> 00:07:54,380
+be a meetup group, and it didn't have to sign up, and it didn't have to put the official
+
+
+185
+00:07:54,380 --> 00:07:56,380
+name or logo.
+
+
+186
+00:07:56,380 --> 00:07:59,660
+But it could just be wherever they wanted to be, which was kind of nice.
+
+
+187
+00:07:59,660 --> 00:08:00,660
+Very flexible.
+
+
+188
+00:08:00,660 --> 00:08:01,820
+So I think that sounds really cool.
+
+
+189
+00:08:01,820 --> 00:08:04,340
+The way you described it sounds awesome.
+
+
+190
+00:08:04,340 --> 00:08:07,060
+Thank you.
+
+
+191
+00:08:07,060 --> 00:08:15,100
+Are you interested in DeFi companies, Hyperledger, people like that as well, tying up with them?
+
+
+192
+00:08:15,100 --> 00:08:20,500
+Yeah, if people want to sponsor, if people want to come in and collaborate, that would
+
+
+193
+00:08:20,500 --> 00:08:21,500
+be amazing.
+
+
+194
+00:08:21,500 --> 00:08:22,500
+Because in London, there's quite a bit.
+
+
+195
+00:08:22,500 --> 00:08:23,500
+Friends.
+
+
+196
+00:08:23,500 --> 00:08:27,740
+There's a big community in London that you could probably reach out to around this space,
+
+
+197
+00:08:27,740 --> 00:08:29,180
+the whole blockchain space.
+
+
+198
+00:08:29,180 --> 00:08:30,180
+Perfect.
+
+
+199
+00:08:30,180 --> 00:08:34,620
+Yeah, bring IPFS to them, I think, would help their platforms.
+
+
+200
+00:08:34,620 --> 00:08:36,180
+Please send us those recommendations.
+
+
+201
+00:08:36,180 --> 00:08:38,420
+Yeah, let us know.
+
+
+202
+00:08:38,420 --> 00:08:41,540
+Could we use these events for dogfooding stuff?
+
+
+203
+00:08:41,540 --> 00:08:42,540
+Yes.
+
+
+204
+00:08:42,540 --> 00:08:44,420
+Like force people to use our stuff?
+
+
+205
+00:08:44,420 --> 00:08:45,420
+Yeah, absolutely.
+
+
+206
+00:08:45,420 --> 00:08:47,140
+That's what it's for.
+
+
+207
+00:08:47,140 --> 00:08:53,300
+Like I want to keep the content flowing in between IPFS and IPFS Camp so that we have
+
+
+208
+00:08:53,300 --> 00:08:56,820
+something to present at these two major events.
+
+
+209
+00:08:56,820 --> 00:09:00,100
+So yeah, absolutely.
+
+
+210
+00:09:00,100 --> 00:09:01,100
+Thank you.
+
+
+211
+00:09:01,100 --> 00:09:02,100
+Awesome.
+
+
+212
+00:09:02,100 --> 00:09:03,100
+Any other questions?
+
+
+213
+00:09:03,100 --> 00:09:04,100
+No?
+
+
+214
+00:09:04,100 --> 00:09:05,100
+Well, thank you.
+
+
+215
+00:09:05,100 --> 00:09:06,100
+Thanks.
+
+
+216
+00:09:06,100 --> 00:09:23,660
+Thanks for being here.

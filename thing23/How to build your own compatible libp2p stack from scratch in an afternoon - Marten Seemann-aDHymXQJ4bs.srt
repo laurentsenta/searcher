@@ -1,0 +1,743 @@
+1
+00:00:00,000 --> 00:00:08,000
+Hello, hello. To the what is libp2p talk, I'm Martin and...
+
+
+2
+00:00:08,000 --> 00:00:10,000
+Hey folks, I'm Marco.
+
+
+3
+00:00:10,000 --> 00:00:18,000
+And we're both on the Stewards team and we work on libp2p. So, what is libp2p, Marco?
+
+
+4
+00:00:18,000 --> 00:00:27,000
+Okay, so we start with a raw TCP connection, we use multistream to negotiate noise or TLS, and sorry, to back up, there's these building blocks.
+
+
+5
+00:00:27,000 --> 00:00:29,000
+Wait, wait, our slides are not on.
+
+
+6
+00:00:29,000 --> 00:00:40,000
+Oh no, okay, pause. Wait, okay. Yeah, so libp2p, we have these building blocks, we have transports, we have multiplexers, we have secure channels, we have peer discovery.
+
+
+7
+00:00:40,000 --> 00:00:50,000
+So we start with a raw TCP connection, then we use multistream to negotiate noise or TLS, and then we use multistream to negotiate the multiplexer, yammix, or mplex.
+
+
+8
+00:00:50,000 --> 00:00:54,000
+No, no, Marco, this is not what libp2p is nowadays.
+
+
+9
+00:00:54,000 --> 00:00:56,000
+What?
+
+
+10
+00:00:56,000 --> 00:01:03,000
+So libp2p nowadays is mostly just QUIC on the transport layer.
+
+
+11
+00:01:03,000 --> 00:01:20,000
+So we have QUIC, we have other transports, we have fallbacks for TCP and WebSocket and WebRTC, we have WebTransport, which is basically also just QUIC, and let's look at some numbers.
+
+
+12
+00:01:20,000 --> 00:01:34,000
+So here you see two Grafana dashboards that I generated a couple of days ago, screen-shotted a couple of days ago, and it shows the distribution of transports that my Kubernetes is using.
+
+
+13
+00:01:34,000 --> 00:01:37,000
+So this Kubernetes is not doing anything special.
+
+
+14
+00:01:37,000 --> 00:01:47,000
+I just set it up on a virtual server somewhere at Linode, and as you can see, it is handling about 90% QUIC connections.
+
+
+15
+00:01:47,000 --> 00:01:58,000
+So this is the dark blue and the light blue part here, which then for different QUIC versions, but for the purposes of our talk, this is just QUIC.
+
+
+16
+00:01:58,000 --> 00:02:07,000
+This is 90% QUIC, and then we have a little bit of TCP and a little bit of WebSocket and other transport.
+
+
+17
+00:02:07,000 --> 00:02:17,000
+So these numbers make a lot of sense when you compare them to what Google and Apple are reporting.
+
+
+18
+00:02:17,000 --> 00:02:34,000
+So they obviously have large QUIC deployments, both on the server and on the client side, and they also observe that about 90% of the time that they try a QUIC connection, they actually succeed in getting a QUIC connection.
+
+
+19
+00:02:34,000 --> 00:02:43,000
+In 5 to 10% of the networks, UDP is blocked because network admins think that UDP is evil.
+
+
+20
+00:02:43,000 --> 00:02:52,000
+So you still need a TCP fallback, but for the vast majority of connections, it actually works.
+
+
+21
+00:02:52,000 --> 00:03:01,000
+And in Lip2P, when we dial a new connection to a peer, we dial all of the addresses that this peer gives us simultaneously.
+
+
+22
+00:03:01,000 --> 00:03:08,000
+I know this is not perfect. This is not optimal. We are working on it, but that's what we currently do.
+
+
+23
+00:03:08,000 --> 00:03:14,000
+We don't give QUIC any advantage. We start the QUIC connection and the TCP connection at the same time.
+
+
+24
+00:03:14,000 --> 00:03:19,000
+And then we use the connection where the handshake finishes first.
+
+
+25
+00:03:19,000 --> 00:03:34,000
+And this just shows that QUIC is really QUIC. The handshake just finishes a lot faster than on a TCP connection, and that's how we end up with more than 90% of QUIC connections.
+
+
+26
+00:03:34,000 --> 00:03:45,000
+So now that we've established that Lip2P is basically just QUIC, why do people still use Lip2P, Marco?
+
+
+27
+00:03:45,000 --> 00:03:54,000
+So Lip2P gives you more than just QUIC. We have UPnP and Friends. We do NAT detection.
+
+
+28
+00:03:54,000 --> 00:04:00,000
+We can determine if you're behind a symmetric NAT, full-code NAT.
+
+
+29
+00:04:00,000 --> 00:04:06,000
+We can do automatic relaying with the whole Kubo network, IPFS network.
+
+
+30
+00:04:06,000 --> 00:04:13,000
+And we have hole-punching protocols built in out of the box.
+
+
+31
+00:04:13,000 --> 00:04:19,000
+So another reason why people use Lip2P is because Lip2P comes with building blocks.
+
+
+32
+00:04:19,000 --> 00:04:26,000
+When you're building a peer-to-peer application, you probably want some kind of DHT.
+
+
+33
+00:04:26,000 --> 00:04:29,000
+And Lip2P comes with the Cademlia DHT.
+
+
+34
+00:04:29,000 --> 00:04:39,000
+And Lip2P also comes with GossipSub, which is a protocol to exchange messages between different nodes.
+
+
+35
+00:04:39,000 --> 00:04:43,000
+And that's used by both Filecoin and Ethereum.
+
+
+36
+00:04:43,000 --> 00:04:55,000
+So by building on top of Lip2P, you can just reuse these components and rely on the fact that they are probably just going to work.
+
+
+37
+00:04:55,000 --> 00:05:06,000
+So this is how we think about a modern Lip2P stack.
+
+
+38
+00:05:06,000 --> 00:05:10,000
+So on the transport layer, as I said, it's like 90% QUIC.
+
+
+39
+00:05:10,000 --> 00:05:15,000
+And then we still have the fallback transports for the cases where QUIC doesn't work.
+
+
+40
+00:05:15,000 --> 00:05:20,000
+Then on top of that, we have the NAT traversal magic.
+
+
+41
+00:05:20,000 --> 00:05:26,000
+It's very complicated. It's not fun to deal with NATs and how to get through them.
+
+
+42
+00:05:26,000 --> 00:05:33,000
+So it's really nice to have a stack that just does that for you if you need it.
+
+
+43
+00:05:33,000 --> 00:05:39,000
+And then on top of that, we have the applications like Cademlia and GossipSub.
+
+
+44
+00:05:39,000 --> 00:05:48,000
+And of course, you can build on these building blocks your own protocols that do the actual peer-to-peer stuff that you're interested in.
+
+
+45
+00:05:52,000 --> 00:05:59,000
+All right. So we kind of talked about what the ingredients are for a lean Lip2P stack.
+
+
+46
+00:05:59,000 --> 00:06:08,000
+So just to recap, we can really build any interoperable Lip2P client with really just these four things.
+
+
+47
+00:06:08,000 --> 00:06:15,000
+So we just pick any QUIC stack. Here on the right, we have the Wikipedia entry for QUIC implementations.
+
+
+48
+00:06:15,000 --> 00:06:23,000
+We add the Lip2P TLS extension, which is how Lip2P ties peer IDs to the TLS certificate.
+
+
+49
+00:06:23,000 --> 00:06:27,000
+And then we implement peer ID encoding, which is that slash P2P stuff.
+
+
+50
+00:06:27,000 --> 00:06:34,000
+And then we send the multi-stream header when we negotiate streams in QUIC or whatever.
+
+
+51
+00:06:34,000 --> 00:06:41,000
+And so introducing ZigLip2P, a lean Lip2P stack.
+
+
+52
+00:06:41,000 --> 00:06:48,000
+For this, I picked MSQUIC. It's Microsoft C library for QUIC. I picked it because it's fast and well-tested.
+
+
+53
+00:06:48,000 --> 00:06:53,000
+It's also C, so that makes using it very easy.
+
+
+54
+00:06:53,000 --> 00:06:58,000
+The Lip2P TLS extension was pretty straightforward, probably about 200 lines of code.
+
+
+55
+00:06:58,000 --> 00:07:04,000
+Most of that is because I don't have a protobuf library. I'm using OpenSSL. Things are a little verbose there.
+
+
+56
+00:07:04,000 --> 00:07:11,000
+Peer ID encoding, also around 100 lines of code. I'll say most of that is OpenSSL trickery.
+
+
+57
+00:07:11,000 --> 00:07:14,000
+Multi-adder parsing, pretty straightforward.
+
+
+58
+00:07:14,000 --> 00:07:19,000
+And sending the multi-stream header, also fairly straightforward to implement.
+
+
+59
+00:07:19,000 --> 00:07:24,000
+This is kind of like the source tree of what the implementation looks like.
+
+
+60
+00:07:24,000 --> 00:07:26,000
+You can see it's pretty bare bones.
+
+
+61
+00:07:26,000 --> 00:07:29,000
+But, um...
+
+
+62
+00:07:29,000 --> 00:07:32,000
+Will it blend?
+
+
+63
+00:07:32,000 --> 00:07:41,000
+So, yeah, I mean, it's pretty bare bones, but it still is able to talk to every other QUIC Lip2P implementation.
+
+
+64
+00:07:41,000 --> 00:07:44,000
+And, uh...
+
+
+65
+00:07:44,000 --> 00:07:54,000
+And, yeah, so this data here comes from our interop tester, which makes sure that different implementations can interoperate.
+
+
+66
+00:07:54,000 --> 00:08:02,000
+And if anyone is making their own Lip2P implementation, I would encourage you to also take a look at this and add your thing.
+
+
+67
+00:08:02,000 --> 00:08:06,000
+And we'll talk a little bit more about this in a bit.
+
+
+68
+00:08:06,000 --> 00:08:08,000
+But why? Right?
+
+
+69
+00:08:08,000 --> 00:08:14,000
+Okay, we have all these other great implementations, why do I want the ZigLoop P2P?
+
+
+70
+00:08:14,000 --> 00:08:17,000
+I think it's useful to have this as a proof of concept.
+
+
+71
+00:08:17,000 --> 00:08:21,000
+Starting from QUIC, you can build a very lean interoperable node.
+
+
+72
+00:08:21,000 --> 00:08:27,000
+You don't have to start with Lip2P if you find yourself already in a different path.
+
+
+73
+00:08:27,000 --> 00:08:36,000
+Lip2P gives you a ton of stuff, but with QUIC you're really a stone throw away from being interoperable to the whole Lip2P network.
+
+
+74
+00:08:36,000 --> 00:08:41,000
+I wanted to provide a C API to enable other implementations to bootstrap even quicker.
+
+
+75
+00:08:41,000 --> 00:08:49,000
+If they just want to use my code for the TLS extension stuff or something like that.
+
+
+76
+00:08:49,000 --> 00:08:52,000
+And I wanted to experiment with MSQUIC as a Lip2P node.
+
+
+77
+00:08:52,000 --> 00:08:57,000
+MSQUIC has some really... I'm a really big fan.
+
+
+78
+00:08:57,000 --> 00:09:01,000
+They're really fast and I like their API a lot.
+
+
+79
+00:09:01,000 --> 00:09:05,000
+And so I wanted to see what it would look like to have that as a Lip2P node.
+
+
+80
+00:09:05,000 --> 00:09:09,000
+And really I wanted a different Lip2P library.
+
+
+81
+00:09:09,000 --> 00:09:11,000
+So this thing has three dependencies.
+
+
+82
+00:09:11,000 --> 00:09:14,000
+libc, openSSL, and MSQUIC.
+
+
+83
+00:09:14,000 --> 00:09:17,000
+I make few assumptions of what the caller wants to do.
+
+
+84
+00:09:17,000 --> 00:09:21,000
+And I focus on performance from day one.
+
+
+85
+00:09:21,000 --> 00:09:24,000
+And it's no...
+
+
+86
+00:09:24,000 --> 00:09:32,000
+I submitted the perf protocol very much inspired by this work.
+
+
+87
+00:09:32,000 --> 00:09:35,000
+Okay, so here's a demo.
+
+
+88
+00:09:35,000 --> 00:09:41,000
+Demo.
+
+
+89
+00:09:41,000 --> 00:09:43,000
+Where's my mouse?
+
+
+90
+00:09:43,000 --> 00:09:46,000
+Okay, so this is a node.
+
+
+91
+00:09:46,000 --> 00:09:49,000
+You can see here I'm calling...
+
+
+92
+00:09:49,000 --> 00:09:52,000
+I'm going to run a ping binary and you see a multi-adder.
+
+
+93
+00:09:52,000 --> 00:09:56,000
+This is just some go Lip2P node that...
+
+
+94
+00:09:56,000 --> 00:09:57,000
+You want to increase the font size?
+
+
+95
+00:09:57,000 --> 00:09:58,000
+Yes.
+
+
+96
+00:09:58,000 --> 00:09:59,000
+Good call.
+
+
+97
+00:09:59,000 --> 00:10:03,000
+Can you hold this?
+
+
+98
+00:10:03,000 --> 00:10:05,000
+Okay.
+
+
+99
+00:10:05,000 --> 00:10:06,000
+That's probably big enough.
+
+
+100
+00:10:06,000 --> 00:10:07,000
+Cool.
+
+
+101
+00:10:07,000 --> 00:10:09,000
+So this is just like a standard multi-adder.
+
+
+102
+00:10:09,000 --> 00:10:11,000
+You would see a quick node.
+
+
+103
+00:10:11,000 --> 00:10:13,000
+Yeah.
+
+
+104
+00:10:13,000 --> 00:10:14,000
+And there we go.
+
+
+105
+00:10:14,000 --> 00:10:17,000
+We get some ping responses.
+
+
+106
+00:10:17,000 --> 00:10:22,000
+So that's the Glut2P pinging a go Lip2P node.
+
+
+107
+00:10:22,000 --> 00:10:28,000
+And let's...
+
+
+108
+00:10:28,000 --> 00:10:29,000
+Okay.
+
+
+109
+00:10:29,000 --> 00:10:31,000
+So...
+
+
+110
+00:10:31,000 --> 00:10:33,000
+So should we merge something on stage?
+
+
+111
+00:10:33,000 --> 00:10:36,000
+Let's do it.
+
+
+112
+00:10:36,000 --> 00:10:40,000
+Okay, so we just showed off the interoperability head results,
+
+
+113
+00:10:40,000 --> 00:10:44,000
+which is like, you know, the tip set comparing to all the published versions.
+
+
+114
+00:10:44,000 --> 00:10:46,000
+But I want to take this a step further.
+
+
+115
+00:10:46,000 --> 00:10:49,000
+And let me make this a little bigger.
+
+
+116
+00:10:49,000 --> 00:10:50,000
+Can you hold it good?
+
+
+117
+00:10:50,000 --> 00:10:55,000
+Yep.
+
+
+118
+00:10:55,000 --> 00:10:56,000
+Okay.
+
+
+119
+00:10:56,000 --> 00:10:59,000
+So I mentioned a little bit about this interop tester.
+
+
+120
+00:10:59,000 --> 00:11:06,000
+I showed you a screenshot of Zig head being tested against all the released versions.
+
+
+121
+00:11:06,000 --> 00:11:12,000
+Now I want all the other implementations head to test against Zig.
+
+
+122
+00:11:12,000 --> 00:11:14,000
+So just to be clear, this is now...
+
+
+123
+00:11:14,000 --> 00:11:20,000
+Once this pull request is merged, on every pull request we have in go Lip2P and in Rust Lip2P,
+
+
+124
+00:11:20,000 --> 00:11:22,000
+this test will be...
+
+
+125
+00:11:22,000 --> 00:11:23,000
+And NimLip2P.
+
+
+126
+00:11:23,000 --> 00:11:24,000
+And soon JS Lip2P.
+
+
+127
+00:11:24,000 --> 00:11:25,000
+And JS Lip2P.
+
+
+128
+00:11:25,000 --> 00:11:30,000
+Fill in the description first.
+
+
+129
+00:11:30,000 --> 00:11:34,000
+This is going to test against Zig Lip2P as well.
+
+
+130
+00:11:34,000 --> 00:11:35,000
+All right.
+
+
+131
+00:11:35,000 --> 00:11:38,000
+Three, two, one.
+
+
+132
+00:11:38,000 --> 00:11:45,000
+Cool.
+
+
+133
+00:11:45,000 --> 00:11:46,000
+Cool.
+
+
+134
+00:11:46,000 --> 00:11:47,000
+That's all I got.
+
+
+135
+00:11:47,000 --> 00:11:49,000
+Where are the performance benchmarks?
+
+
+136
+00:11:49,000 --> 00:11:50,000
+Yeah, good question.
+
+
+137
+00:11:50,000 --> 00:11:52,000
+There was a performance talk earlier today.
+
+
+138
+00:11:52,000 --> 00:11:55,000
+Where were you?
+
+
+139
+00:11:55,000 --> 00:11:56,000
+Okay.
+
+
+140
+00:11:56,000 --> 00:11:57,000
+So follow the test plans.
+
+
+141
+00:11:57,000 --> 00:12:01,000
+We have some infrastructure being set up here on performance.
+
+
+142
+00:12:01,000 --> 00:12:06,000
+Like, I think as a bigger Lip2P effort, we really care about performance.
+
+
+143
+00:12:06,000 --> 00:12:10,000
+And we're putting a setup into test plans.
+
+
+144
+00:12:10,000 --> 00:12:14,000
+So if you want to follow along, this isn't ready yet.
+
+
+145
+00:12:14,000 --> 00:12:17,000
+We have numbers, but they're just not ready to share.
+
+
+146
+00:12:17,000 --> 00:12:22,000
+But follow along on the test plans repo and specifically PR number 163.
+
+
+147
+00:12:22,000 --> 00:12:25,000
+That will give you all the perf information.
+
+
+148
+00:12:25,000 --> 00:12:26,000
+Woo!
+
+
+149
+00:12:26,000 --> 00:12:54,000
+Applause

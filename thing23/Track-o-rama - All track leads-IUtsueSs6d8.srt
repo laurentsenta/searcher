@@ -1,0 +1,528 @@
+1
+00:00:00,000 --> 00:00:10,340
+so hey we're Robin and Boris and we're doing the community and governance track
+
+
+2
+00:00:10,340 --> 00:00:16,520
+what do these have in common well they're both about people and basically
+
+
+3
+00:00:16,520 --> 00:00:20,740
+what we're doing here is sociotechnical systems including things like what is
+
+
+4
+00:00:20,740 --> 00:00:26,340
+ipfs so and if we're building open source that's great and who pays for it
+
+
+5
+00:00:26,340 --> 00:00:29,840
+And how do we agree or disagree on how various things work?
+
+
+6
+00:00:29,840 --> 00:00:32,340
+Everything from a bad hash list to,
+
+
+7
+00:00:32,340 --> 00:00:34,840
+let's talk to some regulators.
+
+
+8
+00:00:34,840 --> 00:00:37,040
+And that's about it. It's going to be awesome.
+
+
+9
+00:00:37,040 --> 00:00:39,040
+Come see us.
+
+
+10
+00:00:39,040 --> 00:00:43,740
+All right. I'm Ryan.
+
+
+11
+00:00:43,740 --> 00:00:48,240
+I'm doing the integrating IPFS track on Monday morning.
+
+
+12
+00:00:48,240 --> 00:00:49,540
+Why is this important?
+
+
+13
+00:00:49,540 --> 00:00:51,940
+Well, what good is all your beautiful data
+
+
+14
+00:00:51,940 --> 00:00:54,440
+if it's just stuck in IPFS?
+
+
+15
+00:00:54,440 --> 00:00:57,740
+You know, within our network, we have to get it out to other places, right?
+
+
+16
+00:00:57,740 --> 00:00:59,540
+For it to really be meaningful.
+
+
+17
+00:00:59,540 --> 00:01:05,240
+So we're going to talk about integrations with space and mobile and you can.
+
+
+18
+00:01:05,240 --> 00:01:09,140
+And yeah, just finding ways to get IPFS data outside of IPFS
+
+
+19
+00:01:09,140 --> 00:01:13,640
+and using it in meaningful ways.
+
+
+20
+00:01:13,640 --> 00:01:15,140
+Hello, I'm Yanis.
+
+
+21
+00:01:15,140 --> 00:01:17,540
+I'm leading the measuring IPFS track,
+
+
+22
+00:01:17,540 --> 00:01:20,340
+which I already introduced here in the beginning.
+
+
+23
+00:01:20,340 --> 00:01:25,640
+So I'll give some time back because you know what it's going to be about.
+
+
+24
+00:01:25,640 --> 00:01:26,640
+We've got lots of talks.
+
+
+25
+00:01:26,640 --> 00:01:30,740
+If you want to figure out if IPFS is good for video streaming,
+
+
+26
+00:01:30,740 --> 00:01:33,140
+live video streaming, come along.
+
+
+27
+00:01:33,140 --> 00:01:38,440
+If you want to know why IRO is so fast as it is, come along.
+
+
+28
+00:01:38,440 --> 00:01:40,940
+We'll probably hear about that as well.
+
+
+29
+00:01:40,940 --> 00:01:46,540
+If you want to see what BitSwap does in terms of finding content in the network,
+
+
+30
+00:01:46,540 --> 00:01:49,940
+in terms of the content discovery capabilities, come along.
+
+
+31
+00:01:49,940 --> 00:01:54,140
+And there are a few more things that I'm not going to tell you now
+
+
+32
+00:01:54,140 --> 00:01:57,140
+because they're secret.
+
+
+33
+00:01:57,140 --> 00:02:02,740
+Hi, everyone.
+
+
+34
+00:02:02,740 --> 00:02:05,740
+I'm leading the track called Show and Tell.
+
+
+35
+00:02:05,740 --> 00:02:09,240
+It's on the last day in the afternoon.
+
+
+36
+00:02:09,240 --> 00:02:14,140
+So if throughout IPFS thing you've had a yes, it worked moment
+
+
+37
+00:02:14,140 --> 00:02:17,740
+or say you're planning to, oh, I'm going to make it work moment
+
+
+38
+00:02:17,740 --> 00:02:22,540
+and you want to come talk about it for five to ten minutes, reach out to me.
+
+
+39
+00:02:22,540 --> 00:02:28,540
+You can DM me on IPFS things slack or on the unconf sessions sheet.
+
+
+40
+00:02:28,540 --> 00:02:30,240
+There is an application link.
+
+
+41
+00:02:30,240 --> 00:02:33,440
+It just asks for your name and talk title.
+
+
+42
+00:02:33,440 --> 00:02:34,240
+Fill that out.
+
+
+43
+00:02:34,240 --> 00:02:39,540
+Thank you.
+
+
+44
+00:02:39,540 --> 00:02:41,240
+I'm Will again.
+
+
+45
+00:02:41,240 --> 00:02:44,840
+I will be leading the HTTP gateways talk on Monday.
+
+
+46
+00:02:44,840 --> 00:02:51,240
+We will talk about all things gateways and HTTP interop in various forms to IPFS.
+
+
+47
+00:02:51,240 --> 00:02:55,440
+A lot of great talks, both subcomponent talks in Rhea,
+
+
+48
+00:02:55,440 --> 00:03:01,940
+but also other approaches to what gateways could, can, will be.
+
+
+49
+00:03:01,940 --> 00:03:08,740
+I also am here to pitch the decentralized compute and AI track, which is on Monday.
+
+
+50
+00:03:08,740 --> 00:03:11,240
+I am not, Irina, but she's not here yet.
+
+
+51
+00:03:11,240 --> 00:03:17,840
+So if you are interested in VMs in any form and how the compute happens,
+
+
+52
+00:03:17,840 --> 00:03:24,140
+where the data is, and how we might have some sort of WASM thing in IPFS
+
+
+53
+00:03:24,140 --> 00:03:29,640
+or around IPFS or otherwise stapled against IPFS,
+
+
+54
+00:03:29,640 --> 00:03:39,840
+there will be a whole range of talks to that effect on Monday that will be very exciting.
+
+
+55
+00:03:39,840 --> 00:03:41,240
+Hey, everyone.
+
+
+56
+00:03:41,240 --> 00:03:43,340
+I'm Hannah again.
+
+
+57
+00:03:43,340 --> 00:03:47,940
+I am leading the data transfer Thunderdome track.
+
+
+58
+00:03:47,940 --> 00:03:51,040
+Five protocols enter, one will leave.
+
+
+59
+00:03:51,040 --> 00:03:54,940
+And basically, it's actually a really awesome track.
+
+
+60
+00:03:54,940 --> 00:03:59,740
+We have a, we're going to have talks on a number of new data transfer protocols.
+
+
+61
+00:03:59,740 --> 00:04:05,140
+We're going to have a bunch of talks on how to actually make data transfer protocols work together,
+
+
+62
+00:04:05,140 --> 00:04:08,940
+how we can actually all work together instead of just fighting.
+
+
+63
+00:04:08,940 --> 00:04:13,140
+And it's going to be really awesome.
+
+
+64
+00:04:13,140 --> 00:04:17,340
+And I think a bunch of the talks that you saw announced during the keynote coming up are there.
+
+
+65
+00:04:17,340 --> 00:04:21,540
+And it's happening today in, I believe, the Luxembourg room.
+
+
+66
+00:04:21,540 --> 00:04:23,040
+But I could be wrong about that.
+
+
+67
+00:04:23,040 --> 00:04:26,840
+If you end up in somebody else's track, I'm sure it'll be good, too.
+
+
+68
+00:04:26,840 --> 00:04:30,140
+So, yes, come to it at 11.
+
+
+69
+00:04:30,140 --> 00:04:34,940
+Yay.
+
+
+70
+00:04:34,940 --> 00:04:35,340
+All right.
+
+
+71
+00:04:35,340 --> 00:04:37,840
+Hi, I'm James for the first time.
+
+
+72
+00:04:37,840 --> 00:04:47,840
+I will be leading, pause for laughter, I'll be leading the deployments and operators track in this room this afternoon.
+
+
+73
+00:04:47,840 --> 00:04:52,940
+So a lot of the discussion over the next three days is going to be about implementing and protocols.
+
+
+74
+00:04:52,940 --> 00:04:56,840
+Some of us are foolish enough to try to actually put this into production.
+
+
+75
+00:04:56,840 --> 00:05:03,540
+This track is for you.
+
+
+76
+00:05:03,540 --> 00:05:04,640
+I'm J. Chris.
+
+
+77
+00:05:04,640 --> 00:05:06,440
+I'm leading the databases track.
+
+
+78
+00:05:06,440 --> 00:05:07,940
+That's going to be tomorrow.
+
+
+79
+00:05:07,940 --> 00:05:13,440
+I think IPFS is hitting this inflection point where it's all of a sudden getting a lot easier to use and a lot more capable.
+
+
+80
+00:05:13,440 --> 00:05:20,540
+And databases are that piece of the technology stack that will take something like that and wrap it up and hand it to a user and not even tell them what's going on inside it.
+
+
+81
+00:05:20,540 --> 00:05:24,340
+So 2023 is going to be the year of the database on IPFS.
+
+
+82
+00:05:24,340 --> 00:05:29,840
+That's my prediction.
+
+
+83
+00:05:29,840 --> 00:05:30,640
+Hello.
+
+
+84
+00:05:30,640 --> 00:05:32,740
+Is it Sid you're looking for?
+
+
+85
+00:05:32,740 --> 00:05:35,140
+If so, tomorrow.
+
+
+86
+00:05:35,140 --> 00:05:37,440
+I'm so down Luxembourg rooms.
+
+
+87
+00:05:37,440 --> 00:05:39,040
+I'm leading the content routing track.
+
+
+88
+00:05:39,040 --> 00:05:41,440
+We're going to have a holistic view of the content routing.
+
+
+89
+00:05:41,440 --> 00:05:52,740
+We're going to look at what is IP and I how is it helping projects all around the IPFS network and we're going to finish it off by talking about DHT privacy for the first time.
+
+
+90
+00:05:52,740 --> 00:05:54,140
+So please be there.
+
+
+91
+00:05:54,140 --> 00:05:58,840
+Thank you.
+
+
+92
+00:05:58,840 --> 00:05:59,240
+Hey, folks.
+
+
+93
+00:05:59,240 --> 00:06:08,240
+My name is Matt Hamilton just standing in here on the stage for Irina who I think is somewhere in the air between Tokyo and Brussels at the moment going back from ETH global.
+
+
+94
+00:06:08,240 --> 00:06:15,140
+I reno will be leading the decentralized compute and AI track on Monday.
+
+
+95
+00:06:15,140 --> 00:06:28,840
+So come along if you want to find out anything more about FEM the Falcon virtual machine and things like backyow and ways in which you can use all of your beautiful data that you now have stored on the best decentralized network.
+
+
+96
+00:06:28,840 --> 00:06:35,940
+There is to do useful fun and great things and kind of move into the web 3 more of the web 3 world.
+
+
+97
+00:06:35,940 --> 00:06:41,440
+Thanks a lot.
+
+
+98
+00:06:41,440 --> 00:06:43,240
+Hey again, everybody.
+
+
+99
+00:06:43,240 --> 00:06:45,440
+After I'm done, I think we are actually done.
+
+
+100
+00:06:45,440 --> 00:06:48,840
+I am leading the IPFS on the web track tomorrow.
+
+
+101
+00:06:48,840 --> 00:06:52,440
+It is in a room over there.
+
+
+102
+00:06:52,440 --> 00:06:58,240
+Last year when we had IPFS thing and IPFS camp, we focused on a lot of integrations of IPFS into the web platform.
+
+
+103
+00:06:58,240 --> 00:07:12,340
+But one of the things that we kind of missed out on was talking about the entire the vast spectrum of ways that people get IPFS data onto the HTTP web, publish to it and get the HTTP web onto IPFS.
+
+
+104
+00:07:12,340 --> 00:07:21,540
+So this track is a new and expanded version of that where you're going to hear from a lot of projects that are working around running IPFS code inside HTTP web pages.
+
+
+105
+00:07:21,540 --> 00:07:36,040
+Be able to get country address data out into those pages, things like publication pipelines, workflows and all the tooling you need to be able to work up and down backward forward inside out the HTTP stack with browsers today using IPFS data.
+
+
+106
+00:07:36,040 --> 00:07:41,240
+Thanks.

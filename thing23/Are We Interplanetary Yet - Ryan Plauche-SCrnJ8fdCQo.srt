@@ -1,0 +1,1273 @@
+1
+00:00:00,000 --> 00:00:13,840
+So this is like a will be a follow-up to the brief talk I gave on that was Saturday. Yeah,
+
+
+2
+00:00:13,840 --> 00:00:23,360
+Saturday. So are we interplanetary yet? Building an IPFS implementation for space. So I think we
+
+
+3
+00:00:23,360 --> 00:00:27,920
+have to start with understanding that this is kind of like a tale of two almost different projects
+
+
+4
+00:00:27,920 --> 00:00:35,360
+that are connected to each other. So the first project is really this idea of like a demonstration
+
+
+5
+00:00:35,360 --> 00:00:40,960
+of IPFS in space. This thing that Foghorn Foundation has announced that they're trying to do.
+
+
+6
+00:00:41,600 --> 00:00:46,400
+Then there's sort of another project sitting underneath it, which is more like a long-term
+
+
+7
+00:00:46,400 --> 00:00:54,880
+how do we build an SDK for using IPFS in space. And the demo mission builds on top of this SDK,
+
+
+8
+00:00:54,880 --> 00:01:00,720
+like they're linked together, but in some ways they are separate in that they have slightly
+
+
+9
+00:01:00,720 --> 00:01:06,720
+different objectives and timelines. One is much more long-reaching than the other. Hopefully we'll
+
+
+10
+00:01:06,720 --> 00:01:13,680
+see happen this year. So we'll start with the first one, which I think initially is a lot more
+
+
+11
+00:01:13,680 --> 00:01:18,960
+interesting to people, like how do we get IPFS into space? What is the timeline? So this is like
+
+
+12
+00:01:18,960 --> 00:01:27,360
+a rough timeline of kind of how things have come to be. So in May of last year, Filecoin announced
+
+
+13
+00:01:27,360 --> 00:01:34,880
+this intent to work with Lockheed Martin to put IPFS in space. And then in November of last year,
+
+
+14
+00:01:35,440 --> 00:01:43,360
+development on the software side of this began. And around that time, there was still talk between
+
+
+15
+00:01:43,360 --> 00:01:49,280
+Filecoin and Lockheed on how IPFS would actually get into space, like what mission it would go on
+
+
+16
+00:01:49,280 --> 00:01:57,280
+and those sorts of things. And around the end of 2022, a mission was selected. That's the LM400
+
+
+17
+00:01:57,280 --> 00:02:02,640
+demonstration mission. So that was publicly announced in January of 2023, so this past
+
+
+18
+00:02:02,640 --> 00:02:09,360
+January. So that was really like the kickoff of like, all right, the software can now be more
+
+
+19
+00:02:09,360 --> 00:02:16,240
+tuned to this hardware and meetings can begin with the folks at Lockheed to make sure we're doing
+
+
+20
+00:02:16,240 --> 00:02:22,640
+everything we need to do to get this up into space. So sometime this summer, there will be
+
+
+21
+00:02:22,640 --> 00:02:28,800
+ground testing of the software. And that's like a pretty big milestone of showing, hey, we have
+
+
+22
+00:02:28,800 --> 00:02:34,880
+IPFS in a form that will work on satellite hardware and will run on a ground station. And
+
+
+23
+00:02:34,880 --> 00:02:40,000
+we're running it through all of its paces here on the ground and doing all the things we would do
+
+
+24
+00:02:40,000 --> 00:02:46,320
+in space, but in a more controlled setting. So that will really prove that this does work in a
+
+
+25
+00:02:46,320 --> 00:02:54,560
+less conceptual way. And then sometime late this year, that hardware will get launched on a rocket
+
+
+26
+00:02:54,560 --> 00:03:01,600
+into space and we'll actually get to run a few tests while it's in orbit and actually prove, hey,
+
+
+27
+00:03:01,600 --> 00:03:08,880
+we can use IPFS to transfer data to and from space. So that will be a huge check, a huge win
+
+
+28
+00:03:08,880 --> 00:03:14,800
+for IPFS to be able to say that, to be able to finally claim like, yes, we are interplanetary.
+
+
+29
+00:03:16,160 --> 00:03:21,680
+So what does this demonstration like actually mean? What does that look like? This is like a
+
+
+30
+00:03:21,680 --> 00:03:29,600
+very rough, high-level diagram of what we're going to do on this demonstration mission. So on
+
+
+31
+00:03:29,600 --> 00:03:38,080
+the ground, you see my cursor a little bit, yeah. So on the ground, IPFS there will send up a CID
+
+
+32
+00:03:38,880 --> 00:03:43,920
+to a satellite, to the IPFS running on the satellite and say, hey, here's a CID. Do you
+
+
+33
+00:03:43,920 --> 00:03:50,640
+have any data? That satellite will hopefully recognize that CID and get the data associated
+
+
+34
+00:03:50,640 --> 00:03:57,040
+with it and send it back down. Yes, data is on its way from space to ground. And then I think
+
+
+35
+00:03:57,040 --> 00:04:02,400
+the gold ring we're reaching for is that once that data reaches the ground, we will take that data
+
+
+36
+00:04:02,400 --> 00:04:07,360
+and send it off to Kibo and the broader IPFS network and say, hey, here's some fresh data
+
+
+37
+00:04:07,360 --> 00:04:14,000
+from space. I know that sounds really simple and it is simple, but simple, I think is good here.
+
+
+38
+00:04:14,000 --> 00:04:21,040
+It allows us to really work on the fundamental pieces of IPFS adapted to this environment and
+
+
+39
+00:04:21,040 --> 00:04:27,440
+not get too caught up in some of the more complexities associated with like peer-to-peer,
+
+
+40
+00:04:27,440 --> 00:04:31,200
+which is what you would get into if you're dealing with like a satellite constellation or a ground
+
+
+41
+00:04:31,200 --> 00:04:36,960
+station network. In this case, we're dealing with one satellite and one ground station. So we can
+
+
+42
+00:04:36,960 --> 00:04:43,600
+begin with the fundamentals of IPFS, apply those to this scenario, and then slowly build our way up
+
+
+43
+00:04:43,600 --> 00:04:50,880
+as there are opportunities with more complex hardware configurations or more complex satellite
+
+
+44
+00:04:50,880 --> 00:04:57,120
+configurations. We can then bring in some of the more interesting pieces of IPFS and begin to see
+
+
+45
+00:04:57,120 --> 00:05:07,200
+what we can leverage out of there. So pulling back to like the SDK view and the broader software that
+
+
+46
+00:05:07,200 --> 00:05:14,080
+we're building, this is like an overview of all the different pieces required to pull off this
+
+
+47
+00:05:14,080 --> 00:05:21,040
+sort of ground-to-space, back-to-ground IPFS integration. So starting on the satellite,
+
+
+48
+00:05:21,040 --> 00:05:27,840
+we have this MySelli, which is the IPFS implementation for space. And within the
+
+
+49
+00:05:27,840 --> 00:05:31,840
+satellite, all we really care about right now is that we have MySelli running on there and then we
+
+
+50
+00:05:31,840 --> 00:05:38,400
+have a radio. And MySelli kind of talks roughly directly to the radio, sending data back and
+
+
+51
+00:05:38,400 --> 00:05:44,160
+forth. That radio obviously is our link to the ground. So somewhere there's a ground station with
+
+
+52
+00:05:44,160 --> 00:05:49,920
+a giant antenna and a radio attached to it. And that radio is also connected in some way to MySelli
+
+
+53
+00:05:49,920 --> 00:05:57,680
+on the ground. And it's sending commands, data back and forth. There's also a controller, which
+
+
+54
+00:05:57,680 --> 00:06:03,280
+could be a human, could be ground station software. We don't really care what it is as long as it
+
+
+55
+00:06:03,280 --> 00:06:10,240
+knows how to speak to MySelli using the protocol that we've developed. So it will send commands
+
+
+56
+00:06:10,240 --> 00:06:16,400
+like, hey, what DAGs do you have? What blocks do you have? Can you fetch this DAG from space?
+
+
+57
+00:06:16,400 --> 00:06:22,320
+Can you send this DAG up? Those sorts of things. And it could be sending those commands directly
+
+
+58
+00:06:22,320 --> 00:06:28,560
+up to space via the radio or be commanding MySelli on the ground and then it knows how to talk over
+
+
+59
+00:06:28,560 --> 00:06:36,240
+the radio to MySelli in space. Another important piece here is what we call Hyphy. And this is
+
+
+60
+00:06:36,240 --> 00:06:43,360
+sort of a bridge process between MySelli and Qubo. Think of it as like a block sinker. So it's
+
+
+61
+00:06:43,360 --> 00:06:50,640
+sinking blocks in MySelli over to Qubo and then Qubo is able to take those and spread them out
+
+
+62
+00:06:50,640 --> 00:06:57,360
+to the broader IPFS network. So at a very high level, these are all the pieces that exist right
+
+
+63
+00:06:57,360 --> 00:07:04,800
+now. We may build out more in the future, but this is all that's really required to use content
+
+
+64
+00:07:04,800 --> 00:07:12,800
+addressable data in space and manipulate that in a meaningful way. So taking a deeper look,
+
+
+65
+00:07:12,800 --> 00:07:20,000
+so the current features of MySelli, I should say first this is a Rust-based program. I'm a big
+
+
+66
+00:07:20,560 --> 00:07:24,240
+fan of Rust and I think for embedded software, it's a pretty good choice.
+
+
+67
+00:07:24,240 --> 00:07:33,760
+Um, the cross-compiling story is so nice. The tooling there is so good, it just makes it very
+
+
+68
+00:07:33,760 --> 00:07:41,120
+easy for this sort of application. So right now MySelli can import files and it will break them
+
+
+69
+00:07:41,120 --> 00:07:47,440
+up into blocks and it has a block store internally so it keeps all those there and can also take a
+
+
+70
+00:07:47,440 --> 00:07:54,640
+DAG and export that out to a file on the file system. It's able to send and receive blocks and
+
+
+71
+00:07:54,640 --> 00:08:01,280
+then by association DAGs. Those commands are essentially the same within MySelli right now and
+
+
+72
+00:08:01,280 --> 00:08:09,760
+then it primarily communicates over UDP. So when it comes to like data transfer or the control API,
+
+
+73
+00:08:09,760 --> 00:08:15,600
+sort of all of that is stuffed into UDP. I realize this is really simple, but again you have to
+
+
+74
+00:08:15,600 --> 00:08:22,160
+remember we're like at the beginning stages of adapting IPFS into space. So I went for the
+
+
+75
+00:08:22,160 --> 00:08:28,000
+simplest feature set possible to accomplish what we need to accomplish and tried to stay away from
+
+
+76
+00:08:28,000 --> 00:08:35,680
+bringing in any of the more complex pieces of IPFS. I do want to say on the Rust front, thank you to
+
+
+77
+00:08:35,680 --> 00:08:42,800
+the Iroh folks. I borrowed pretty heavily of the file builder and chunker code. It was very helpful.
+
+
+78
+00:08:42,800 --> 00:08:48,560
+I think that was another good reason for me to go with Rust is there's a lot of good IPFS code out
+
+
+79
+00:08:48,560 --> 00:08:56,000
+there in Rust which allowed me to move very quickly and I really appreciate that. So this UDP
+
+
+80
+00:08:56,000 --> 00:09:03,440
+messaging, I wanted to get into this a little more. So why did we go with UDP? Well the first
+
+
+81
+00:09:03,440 --> 00:09:09,280
+reason is that we're assuming that communication is going to be unreliable and we're assuming that
+
+
+82
+00:09:09,280 --> 00:09:16,560
+we can't make a lot of assumptions about what the radio will look like or what we even get from it.
+
+
+83
+00:09:17,520 --> 00:09:24,080
+In some cases we will get a network interface to a radio and that radio will already be like pretty
+
+
+84
+00:09:24,720 --> 00:09:29,920
+reliable and robust. I think when we deal with like bigger commercial partners that will be the
+
+
+85
+00:09:29,920 --> 00:09:35,520
+case, but if there's like a university that wants to put IPFS on their satellite and they are
+
+
+86
+00:09:35,520 --> 00:09:43,120
+building like a CubeSat, they may not have this nicety. It may be a pretty unreliable radio link.
+
+
+87
+00:09:43,120 --> 00:09:49,520
+I thought it was important that our native language, our network protocol kind of like reflected
+
+
+88
+00:09:49,520 --> 00:09:58,640
+the communication reliability between space and ground. So radio is spelled UDP. What I mean by
+
+
+89
+00:09:58,640 --> 00:10:07,040
+this is I took the approach of abstracting away the radio behind the UDP interface. So in the
+
+
+90
+00:10:07,040 --> 00:10:13,360
+system what happens is whoever's like building this satellite, they're responsible for understanding
+
+
+91
+00:10:13,360 --> 00:10:21,760
+the radio and knowing how to talk to it. And they give me a UDP bridge that just takes in UDP packets,
+
+
+92
+00:10:22,320 --> 00:10:27,760
+sends those over the radio, just sends the payload over the radio, and then reads payloads over their
+
+
+93
+00:10:27,760 --> 00:10:33,280
+radio and sends me UDP packets with the payload inside. They don't need to know about the
+
+
+94
+00:10:33,280 --> 00:10:38,480
+application protocol or the data protocol. They don't need to know about any of that. They just
+
+
+95
+00:10:38,480 --> 00:10:46,720
+need to know how to send and receive UDP packets. And then on the um the IPFS side, my celly doesn't
+
+
+96
+00:10:46,720 --> 00:10:52,160
+need to know about the radio and how it works. It just needs to know where to send and receive UDP
+
+
+97
+00:10:52,160 --> 00:10:58,800
+packets from. So by creating this layer of abstraction at the network level, um kind of able
+
+
+98
+00:10:58,800 --> 00:11:04,880
+to separate concerns really well, keep the radio concerns on the hardware side and keep the IPFS
+
+
+99
+00:11:04,880 --> 00:11:14,880
+protocol concerns within IPFS. Um another piece that was built out here was a data transfer
+
+
+100
+00:11:14,880 --> 00:11:22,000
+protocol. So obviously we're not using bitswap, um we can't handle all the the traffic and noise
+
+
+101
+00:11:22,000 --> 00:11:28,400
+that bitswap creates and it's not really even appropriate for this particular point to point
+
+
+102
+00:11:28,400 --> 00:11:33,360
+scenario where we're not even dealing with peers. We kind of always know where our peer will be
+
+
+103
+00:11:33,360 --> 00:11:41,120
+located. We just need to send and receive blocks. So a uh request and response ish protocol was
+
+
+104
+00:11:41,120 --> 00:11:49,200
+created. I say ish because um it's not always request and response. It sometimes is but there
+
+
+105
+00:11:49,200 --> 00:11:55,760
+are assumptions made particularly when sending blocks that maybe I'm not in a position to receive
+
+
+106
+00:11:55,760 --> 00:12:02,000
+a response or maybe I'm like at the tail end of a pass. So I'm sending a bunch of blocks and then
+
+
+107
+00:12:02,000 --> 00:12:08,800
+I'm gonna lose communication so I don't need to be like waiting for a response. Um I need to wait
+
+
+108
+00:12:08,800 --> 00:12:14,640
+until I know I can communicate the sat with the satellite again and then query for a response
+
+
+109
+00:12:14,640 --> 00:12:21,520
+when I'm ready. Rather than always assuming like okay I'm always in a good place to get a response.
+
+
+110
+00:12:21,520 --> 00:12:25,280
+So there are some places where it's request and response and some places where it's more like
+
+
+111
+00:12:25,280 --> 00:12:33,920
+streaming data over. Um right now the protocol primarily deals in blocks. Um there is some
+
+
+112
+00:12:33,920 --> 00:12:40,080
+notion of like transmitting DAGs but really it's just transmitting a sequence of blocks not like
+
+
+113
+00:12:40,080 --> 00:12:49,120
+a car file or a whole DAG packaged up that way. Um there's also MTU specific fragmentation built
+
+
+114
+00:12:49,760 --> 00:12:55,440
+into the protocol. Um I was kind of forced to do this because in the lab setup the radio that I
+
+
+115
+00:12:55,440 --> 00:13:03,280
+have has a 60 byte MTU and uh if you think about like how big a CID is like making blocks that are
+
+
+116
+00:13:03,280 --> 00:13:09,680
+60 bytes large is not really going to work right. The overhead of just the CID is ridiculous.
+
+
+117
+00:13:09,680 --> 00:13:15,920
+So a dean pointed out really helpfully that hey maybe if you just have larger blocks and you break
+
+
+118
+00:13:15,920 --> 00:13:21,600
+them up into chunks that are tuned to your MTU you know you'll get better throughput. Um that was
+
+
+119
+00:13:21,600 --> 00:13:27,280
+the path that I went down and that's been very helpful. So the MTU is a is a tunable parameter
+
+
+120
+00:13:27,280 --> 00:13:33,280
+within the protocol. Um I'm not assuming that every radio will have a 60 byte MTU. I hope that
+
+
+121
+00:13:33,280 --> 00:13:40,960
+they will have multiples of 60 bytes um to work with. Um yeah and there are a few other parameters
+
+
+122
+00:13:40,960 --> 00:13:47,440
+that we can expose as tunable. Um the plan is to make the protocol a little more flexible so that
+
+
+123
+00:13:48,000 --> 00:13:53,520
+as someone is integrating it in with their system they can really tune it for what the system needs.
+
+
+124
+00:13:56,000 --> 00:14:02,960
+So as far as areas for improvement or what's coming up next, the data transfer itself could be
+
+
+125
+00:14:02,960 --> 00:14:08,800
+a lot more robust. I'm missing some somewhat fundamental features like the ability to
+
+
+126
+00:14:09,520 --> 00:14:15,040
+resume a transfer and only send the blocks that are required. Um something I didn't put on here
+
+
+127
+00:14:15,040 --> 00:14:22,880
+but that would be really helpful is the ability to query for missing blocks in a more concise way.
+
+
+128
+00:14:23,680 --> 00:14:30,480
+Right now when the protocol is asking for blocks that are missing it's literally a list of CIDs
+
+
+129
+00:14:30,480 --> 00:14:37,760
+and um in the case of my lab radio with the 60 byte MTU that means I can only really send like
+
+
+130
+00:14:37,760 --> 00:14:45,680
+one missing CID at a time. Beyond that I have to chunk up my missing block um commands. So a more
+
+
+131
+00:14:45,680 --> 00:14:52,800
+concise way to query for those would be really helpful. Um yeah and deals and blocks and MTU
+
+
+132
+00:14:52,800 --> 00:14:58,560
+specific fragmentation those are definitely from the previous slide. Not areas of improvement
+
+
+133
+00:14:58,560 --> 00:15:06,560
+necessarily. All right so talking about Hyphy which is like the bridge between um Myceli and
+
+
+134
+00:15:06,560 --> 00:15:15,280
+Qubo. Hyphy is actually really simple right now. So it uses the standard Myceli API. Um there's no
+
+
+135
+00:15:15,280 --> 00:15:20,880
+special commands that it uses which is great. It speaks to Myceli the same way that Myceli speaks
+
+
+136
+00:15:20,880 --> 00:15:26,240
+to itself in the same way that like a mission controller would speak to it. And then it speaks
+
+
+137
+00:15:26,240 --> 00:15:33,520
+to Qubo over the standard RPC API which is really nice to have. Really easy to integrate with. So
+
+
+138
+00:15:33,520 --> 00:15:41,600
+it essentially just queries Myceli for what blocks are available and then queries um Qubo for what
+
+
+139
+00:15:41,600 --> 00:15:47,440
+blocks are in the local store and kind of diffs those and sees what blocks does Myceli have
+
+
+140
+00:15:47,440 --> 00:15:54,400
+available that Qubo doesn't currently have and then syncs them over one by one. So how could this
+
+
+141
+00:15:54,400 --> 00:16:01,440
+be improved? Um right now every block in Myceli is synced over which is probably not ideal long
+
+
+142
+00:16:01,440 --> 00:16:07,200
+term. Um that was enough to really prove out that we can do this end to end integration but I think
+
+
+143
+00:16:07,200 --> 00:16:14,160
+we want to be a little more specific about what exactly we are syncing over to Qubo. So probably
+
+
+144
+00:16:14,160 --> 00:16:20,720
+the ability to specify which DAGs we want to sync to Qubo would be something we'd add. Um right now
+
+
+145
+00:16:20,720 --> 00:16:27,040
+Hyphy also pulls Myceli and it probably would be better if we could have Myceli ping out hey I
+
+
+146
+00:16:27,040 --> 00:16:32,640
+have new blocks that are available come and get them. Um and then another thing that um I was
+
+
+147
+00:16:32,640 --> 00:16:40,800
+thinking about yesterday is integrating BitSwap or other protocols directly into Hyphy. That way
+
+
+148
+00:16:40,800 --> 00:16:46,320
+it's not limited to Qubo and what Qubo can do but is really able to take full advantage of all the
+
+
+149
+00:16:46,320 --> 00:16:52,800
+different IPFS implementations out there and talk to them. Um instead of being yeah tied to just
+
+
+150
+00:16:52,800 --> 00:17:08,000
+what the Qubo RPC API allows it to do. Alright so looking at like the broader road map. Um what's
+
+
+151
+00:17:08,000 --> 00:17:17,120
+coming up next is first incorporating past data into uh specifically Myceli. So a pass is the
+
+
+152
+00:17:17,120 --> 00:17:23,200
+time period when a satellite is able to communicate with its ground station. Um satellites cannot
+
+
+153
+00:17:23,200 --> 00:17:28,960
+always communicate. There's usually a limited window of time. So we need to bring that in so
+
+
+154
+00:17:28,960 --> 00:17:34,160
+that Myceli specifically on the ground isn't always trying to communicate with the satellite
+
+
+155
+00:17:34,160 --> 00:17:39,600
+but rather is making intelligent decisions on when it knows it can communicate. Um we also want
+
+
+156
+00:17:39,600 --> 00:17:45,280
+to incorporate some baseline metrics. I think many people this weekend have already said that if we
+
+
+157
+00:17:45,280 --> 00:17:51,120
+can't measure it we can't really improve it. So we need to to incorporate those measurements in
+
+
+158
+00:17:51,120 --> 00:17:57,360
+here that way we can know what to improve and what our performance is actually like. And then in
+
+
+159
+00:17:57,360 --> 00:18:04,080
+general more robust data transfer and file handling. Right now in my lab setup I'm kinda limited on
+
+
+160
+00:18:04,080 --> 00:18:12,320
+how large of files I can send. I found that file transfer scales at about 1 kilobyte per minute. So
+
+
+161
+00:18:13,040 --> 00:18:17,680
+you know a multi megabyte file is not really realistic for me to transfer over the radio that
+
+
+162
+00:18:17,680 --> 00:18:24,960
+I have. But in the real world uh Myceli will need to handle probably multi megabyte possibly even
+
+
+163
+00:18:24,960 --> 00:18:31,760
+gigabyte files depending on what the payload is and what the scenario is. So we need to do more
+
+
+164
+00:18:31,760 --> 00:18:38,160
+testing with larger files. Um and if anyone knows of any good unlicensed radios of high
+
+
+165
+00:18:38,160 --> 00:18:44,320
+bandwidth let me know so I can go get one and test uh you know higher throughput file transfers
+
+
+166
+00:18:44,320 --> 00:18:51,360
+with it. And then looking beyond the road map. So this is really looking beyond this initial
+
+
+167
+00:18:51,360 --> 00:18:57,280
+first mission. Um the thing that we want to start thinking about is how do we handle satellite
+
+
+168
+00:18:57,280 --> 00:19:03,920
+constellations and how do we handle ground station networks. I think this is really where IPFS will
+
+
+169
+00:19:03,920 --> 00:19:11,440
+shine and where you guys will get some really good leverage out of IPFS features in space. For the
+
+
+170
+00:19:11,440 --> 00:19:16,560
+point to point um it's probably going to be a wash honestly between IPFS and a lot of other
+
+
+171
+00:19:16,560 --> 00:19:23,600
+data transfer protocols. And it's really in this like more mesh peer to peer world that IPFS makes
+
+
+172
+00:19:23,600 --> 00:19:29,920
+a lot of sense and can be most useful. So that's kind of what I think we would look at probably
+
+
+173
+00:19:29,920 --> 00:19:35,360
+beyond this year is how do we start to tackle those things and find opportunities to address
+
+
+174
+00:19:35,360 --> 00:19:44,160
+and work in these types of scenarios. Alright demo time. We're gonna try to do a demo. I had a
+
+
+175
+00:19:45,040 --> 00:19:49,760
+physical failure this morning so we'll see we'll see what happens.
+
+
+176
+00:19:49,760 --> 00:19:55,840
+So my uh my radio for my laptop the antenna fell off this morning which is always good.
+
+
+177
+00:20:00,000 --> 00:20:08,160
+if you want to do radio communications. So I've got it taped back on right now. We'll see see if that works.
+
+
+178
+00:20:09,600 --> 00:20:19,040
+Okay so let's see the first thing that we're gonna do is we're gonna start our Hyphy
+
+
+179
+00:20:19,040 --> 00:20:48,640
+um and so it's gonna try to connect a Kibo and my Myceli. We can see it was not able to do either of those things. So now it's found Kibo. It's connected to that. So now we're gonna start off our Myceli. Okay so now we have both of these things running. Sorry in our ground context. So that's all
+
+
+180
+00:20:49,200 --> 00:20:52,640
+good and well. So now we need like something to talk to right.
+
+
+181
+00:20:58,960 --> 00:21:07,840
+We have our little IPFS in space prop right here. This is a Raspberry Pi with a radio attached to it
+
+
+182
+00:21:07,840 --> 00:21:14,640
+and this is like what I use at home in my office to develop on. Obviously not with this whole setup
+
+
+183
+00:21:14,640 --> 00:21:25,440
+but the Raspberry Pi itself is the the same one that I use. So this will take about 40-ish seconds
+
+
+184
+00:21:25,440 --> 00:21:33,040
+to turn on and start talking to us. What we can see happening while we're waiting is um you can
+
+
+185
+00:21:33,040 --> 00:21:40,240
+see over here in Hyphy about like every I think 10 seconds it's um querying for blocks on the Myceli
+
+
+186
+00:21:40,240 --> 00:21:47,520
+side and then syncing those over to Kibo and finding that all the blocks are synced which is
+
+
+187
+00:21:47,520 --> 00:21:54,160
+appropriate because there's no blocks over on the Myceli side and yeah it's a little noisy over here
+
+
+188
+00:21:54,880 --> 00:22:02,240
+because all those messages but that's okay. That is just part of the part of where we're at right now.
+
+
+189
+00:22:02,240 --> 00:22:12,960
+All right hopefully soon we'll start to see some traffic from the the satellite.
+
+
+190
+00:22:14,880 --> 00:22:20,320
+I'm gonna put the radios like right by each other just in case this antenna didn't make it.
+
+
+191
+00:22:20,320 --> 00:22:27,520
+I think Matt maybe sent his uh all his demo gremlins over here to come and get me.
+
+
+192
+00:22:30,720 --> 00:22:37,120
+Oh well this would be really important so I actually never turned on the radio service so
+
+
+193
+00:22:37,120 --> 00:22:40,720
+that would be a big deal that would be part of why this is not working.
+
+
+194
+00:22:40,720 --> 00:22:52,000
+Okay so we're gonna restart Myceli real quick and see okay cool this worked. So whenever
+
+
+195
+00:22:52,000 --> 00:22:56,080
+Myceli turns on it like pings the radio to see if there's anything on the other side
+
+
+196
+00:22:56,960 --> 00:23:04,080
+and um we can see here that uh the the radio is not working. So we're gonna restart
+
+
+197
+00:23:04,080 --> 00:23:10,800
+and it like pings the radio to see if there's anything on the other side and um we can see here that
+
+
+198
+00:23:11,840 --> 00:23:20,240
+it found a dag from a node named Artemis which is what this um Raspberry Pi is called. Artemis. So
+
+
+199
+00:23:20,240 --> 00:23:28,800
+it found a payload.jpg with this CID. So what we're gonna do now is
+
+
+200
+00:23:28,800 --> 00:23:38,320
+is yep so we have this controller and we're gonna ask Myceli which is running at this IP address to
+
+
+201
+00:23:38,320 --> 00:23:49,760
+fetch the dag with this CID. So we'll send that over and yeah so it sent this transmit dag message
+
+
+202
+00:23:49,760 --> 00:23:59,840
+up to the Raspberry Pi and asked it to do that with five retries. So now if you look yeah so we
+
+
+203
+00:23:59,840 --> 00:24:06,320
+can see this block got imported so we're starting to see traffic come over and we can see on the
+
+
+204
+00:24:06,320 --> 00:24:17,120
+hyphy side it's syncing the blocks as they come in over to Qubo. We can all cross our fingers that
+
+
+205
+00:24:17,120 --> 00:24:25,280
+all the blocks actually make it over. Um sometimes this has trouble with the root block because it
+
+
+206
+00:24:25,280 --> 00:24:32,000
+has a little more metadata attached to it. We'll see if it makes it through this time hopefully.
+
+
+207
+00:24:36,800 --> 00:24:42,960
+Yeah this process will just kind of continue of importing blocks and syncing them over and you
+
+
+208
+00:24:42,960 --> 00:24:49,840
+see this message right here missing dag box. So what happened here is Myceli on the Raspberry Pi
+
+
+209
+00:24:50,640 --> 00:24:57,280
+asked Myceli on the ground like hey what blocks are you missing associated with this dag? And then
+
+
+210
+00:24:58,400 --> 00:25:04,720
+on the ground we responded like hey I'm missing this particular block which is the root block
+
+
+211
+00:25:04,720 --> 00:25:10,080
+which is not surprising to me at all that would be the one missing. Yep it still didn't get it.
+
+
+212
+00:25:10,080 --> 00:25:15,360
+All right that's fine you know if you want to see a more extended demo where we can wait this thing
+
+
+213
+00:25:15,360 --> 00:25:20,720
+out and see how long it actually takes to get all the blocks or this final block transferred um
+
+
+214
+00:25:21,440 --> 00:25:30,400
+we can set up some time at the uconf to uncomf to do that. So back to the presentation um
+
+
+215
+00:25:32,000 --> 00:25:36,000
+so are you interested in helping? What are different ways that you can help if you are?
+
+
+216
+00:25:36,000 --> 00:25:40,800
+So first of all just having people like clone this repo and try the software out locally and
+
+
+217
+00:25:41,360 --> 00:25:47,440
+see if you can break it that alone is would be super helpful. Um software is still in like a
+
+
+218
+00:25:47,440 --> 00:25:52,720
+relatively early state so I think there are going to be a lot of rough edges and more eyes would be
+
+
+219
+00:25:52,720 --> 00:25:59,920
+helpful for um pointing those out. Um if you have hardware that you want to try to port this onto
+
+
+220
+00:25:59,920 --> 00:26:06,400
+whether it's a another microcontroller or a radio it would be great to go through the paces of that
+
+
+221
+00:26:06,400 --> 00:26:12,480
+with someone else. I've only integrated it with one set of hardware right now so the more
+
+
+222
+00:26:12,480 --> 00:26:18,960
+integrations we can have the more we can understand better how well the integration process works or
+
+
+223
+00:26:18,960 --> 00:26:26,400
+doesn't work. Um and then thinking through the peer-to-peer story that's still far away but I
+
+
+224
+00:26:26,400 --> 00:26:32,800
+think the more ideas we have about how to address peer-to-peer in space the better chance we have of
+
+
+225
+00:26:32,800 --> 00:26:40,560
+really doing that successfully. And then I haven't put down a time in the uncomf yet but I think it's
+
+
+226
+00:26:40,560 --> 00:26:46,480
+worthwhile to set aside some time there so that will either be tomorrow or Wednesday. Um so you
+
+
+227
+00:26:46,480 --> 00:26:52,320
+use UDP and what do you use like on top of UDP for like application level like how much packet loss
+
+
+228
+00:26:52,320 --> 00:26:57,200
+do you have and how do you recover especially because you decide to fragment your UDP packets
+
+
+229
+00:26:57,200 --> 00:27:02,800
+because otherwise like yeah yeah how does that part work? Yeah so there are two ways that I'm
+
+
+230
+00:27:02,800 --> 00:27:09,760
+approaching that right now. Um at the data transfer level I have a retry timeout base retry bait
+
+
+231
+00:27:09,760 --> 00:27:15,440
+bait baked into the data transfer protocol so it's configurable like let's say every 30 seconds it
+
+
+232
+00:27:15,440 --> 00:27:21,280
+will ask you like hey which blocks are you missing and retry transmitting all those blocks. So that's
+
+
+233
+00:27:21,280 --> 00:27:27,600
+how we account for fragment loss on that side. When it comes to the actual application API though
+
+
+234
+00:27:27,600 --> 00:27:35,200
+right now I keep like a short-lived cache of all the messages that I've sent and I'm able to like
+
+
+235
+00:27:35,200 --> 00:27:41,520
+re-request specific fragments of those messages to try to recover them that way. Um it's kind of like
+
+
+236
+00:27:41,520 --> 00:27:47,120
+a crude method but seems to be working somewhat well over this radio but I think there's a lot
+
+
+237
+00:27:47,120 --> 00:27:53,120
+of room for improvement there and making that robust without also overwhelming the radio link.
+
+
+238
+00:27:54,320 --> 00:27:59,680
+So are you also creating DAGs on the satellite or are they for now just being placed there
+
+
+239
+00:27:59,680 --> 00:28:05,040
+beforehand and is hashing a problem in terms of performance on the satellite hardware?
+
+
+240
+00:28:06,400 --> 00:28:13,040
+So I think hashing could be a problem dealing with bigger files and thinking about um what
+
+
+241
+00:28:13,040 --> 00:28:20,320
+hardware we may have but I haven't like scaled up enough yet to hit that ceiling. Um as far as where
+
+
+242
+00:28:20,320 --> 00:28:25,120
+the DAGs come from they could be created on the satellite or they could be created on the ground.
+
+
+243
+00:28:26,320 --> 00:28:33,280
+The mycelli software has the ability to turn a file into a DAG and it runs the same way in space
+
+
+244
+00:28:33,280 --> 00:28:39,200
+and on the ground. So I think what would happen realistically is let's say you have a imagery
+
+
+245
+00:28:39,200 --> 00:28:45,120
+satellite and it's taking pictures some process is asking mycelli to import those pictures and
+
+
+246
+00:28:45,120 --> 00:28:50,640
+create DAGs out of them so that they can be sent down to the ground. When the satellite creates a
+
+
+247
+00:28:50,640 --> 00:28:57,200
+DAG it also creates the hash I guess. How do you do you have any discovery of like what how do you
+
+
+248
+00:28:57,200 --> 00:29:04,000
+know because your very first slide or somewhere you showed that the ground station asks for a CID.
+
+
+249
+00:29:04,000 --> 00:29:09,600
+Mm-hmm. How does it know what CIDs to ask for basically do you have any discovery for that?
+
+
+250
+00:29:09,600 --> 00:29:17,520
+Yeah so right now well when a mycelli node boots it broadcasts what DAGs it has and then
+
+
+251
+00:29:18,080 --> 00:29:25,440
+when it imports a file it also broadcasts those DAGs out to the network. Um and I think there's
+
+
+252
+00:29:25,440 --> 00:29:31,840
+room also to create a specific discovery command. I don't have one quite yet. I have something
+
+
+253
+00:29:31,840 --> 00:29:37,440
+kind of like discovery command that pings out and gets a little bit of that metadata back from
+
+
+254
+00:29:37,440 --> 00:29:42,080
+whoever's listening on the other side. But I think that that's definitely a room for improvement.
+
+
+255
+00:29:42,080 --> 00:30:02,240
+An area that we could build more in. Awesome we can call it there then. Thanks y'all.

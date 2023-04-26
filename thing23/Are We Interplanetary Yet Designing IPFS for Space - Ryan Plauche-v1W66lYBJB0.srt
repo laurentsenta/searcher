@@ -1,0 +1,273 @@
+1
+00:00:00,000 --> 00:00:10,720
+My name is Ryan. I work with Little Bear Labs, and Dietrich volunteered me to attempt to answer
+
+
+2
+00:00:10,720 --> 00:00:17,320
+this question of, are we interplanetary yet? Which, of course, is referring to the effort
+
+
+3
+00:00:17,320 --> 00:00:24,640
+to put IPFS in space and live up to this name of the interplanetary file system, not the
+
+
+4
+00:00:24,640 --> 00:00:31,920
+intraplanetary file system. So, like a true engineer, I'm not going to promise anything
+
+
+5
+00:00:31,920 --> 00:00:36,600
+I can't deliver, and I'm going to talk around the answer to this question and talk about
+
+
+6
+00:00:36,600 --> 00:00:41,880
+what we're doing right now, and probably eventually let Dietrich actually answer this question.
+
+
+7
+00:00:41,880 --> 00:00:49,200
+So, first, I want to introduce MySelli. So this is the new IPFS implementation. I'm thinking
+
+
+8
+00:00:49,200 --> 00:00:54,960
+of it more as a building block for deploying IPFS into space. I'm sorry I don't have any
+
+
+9
+00:00:54,960 --> 00:01:02,120
+cool logo right now. If someone wants to contribute a logo of fungus in space, that would be great.
+
+
+10
+00:01:02,120 --> 00:01:06,360
+Design isn't really my thing, but if someone else out there has some great ideas, I would
+
+
+11
+00:01:06,360 --> 00:01:14,440
+love to have a logo contributed to this. So, IPFS in space. Obviously, this cannot be your
+
+
+12
+00:01:14,440 --> 00:01:20,880
+cloud server's IPFS. Whatever works here on Earth in our high-performance servers with
+
+
+13
+00:01:20,880 --> 00:01:27,080
+all these connections isn't going to work well on some satellite that maybe has an unreliable
+
+
+14
+00:01:27,080 --> 00:01:36,120
+connection. Maybe in the case of my hardware in my office, like a 60-byte MTU isn't going
+
+
+15
+00:01:36,120 --> 00:01:40,840
+to work for the software that we use here on Earth with our mobile phones and laptops
+
+
+16
+00:01:40,840 --> 00:01:45,680
+and all that. So, kind of have to go back to first principles. In some ways, ask, like,
+
+
+17
+00:01:45,680 --> 00:01:51,840
+what even is IPFS? And I appreciate Robin bringing that up and helping give us the flexibility
+
+
+18
+00:01:51,840 --> 00:01:57,640
+to reimagine what these implementations mean, what they do. In our case, what this means
+
+
+19
+00:01:57,640 --> 00:02:03,160
+is starting out with just content-addressable data, finding some way to move that across
+
+
+20
+00:02:03,160 --> 00:02:07,520
+the radio link from satellite to a ground station, and maybe calling that good enough
+
+
+21
+00:02:07,520 --> 00:02:14,320
+for now to say, okay, yes, this is IPFS. We're shipping SIDS into space or from space to
+
+
+22
+00:02:14,320 --> 00:02:20,320
+the ground. But, you know, as we dig into this, as we look at this, we've realized maybe
+
+
+23
+00:02:20,320 --> 00:02:25,400
+satellites are a little more like cloud servers than we've realized. Or maybe we can think
+
+
+24
+00:02:25,400 --> 00:02:31,480
+of them a little more like cloud servers. So, one of my goals with building this is
+
+
+25
+00:02:31,480 --> 00:02:37,000
+I want to give you all a platform where you can iterate on things like a better data transfer
+
+
+26
+00:02:37,000 --> 00:02:42,760
+protocol or maybe solving the peer-to-peer problem in space without worrying about the
+
+
+27
+00:02:42,760 --> 00:02:47,280
+hardware constraints of satellites or the specific details there. So, attempting to
+
+
+28
+00:02:47,280 --> 00:02:56,120
+use network layers as an abstraction to push away specificity of hardware and maybe emulate
+
+
+29
+00:02:56,120 --> 00:03:01,800
+or approximate some of those constraints so we can build a more general solution that
+
+
+30
+00:03:01,800 --> 00:03:07,040
+we can test on the ground and still run in space. But we'll let the system integrators,
+
+
+31
+00:03:07,040 --> 00:03:11,920
+they worry about the radio, and we just worry about building the protocol and thinking about
+
+
+32
+00:03:11,920 --> 00:03:19,640
+how it's going to work. So, how do we actually become interplanetary?
+
+
+33
+00:03:19,640 --> 00:03:25,840
+So at some point later this year, this software will be running in a satellite in an orbit
+
+
+34
+00:03:25,840 --> 00:03:31,180
+near you. I can't say exactly when that will happen. I'm going to let Dietrich be the one
+
+
+35
+00:03:31,180 --> 00:03:35,680
+to announce that once we actually know. I don't think we actually know right now, though,
+
+
+36
+00:03:35,680 --> 00:03:39,600
+when that's going to happen, and that's okay. That's like the reality of space, that things
+
+
+37
+00:03:39,600 --> 00:03:44,880
+change, schedules shift, especially when you're like a little tag-along like this mission
+
+
+38
+00:03:44,880 --> 00:03:50,720
+will be. But the reality is, as FogCoin announced, we are planning a demonstration mission, and
+
+
+39
+00:03:50,720 --> 00:03:55,320
+what this will look like is transmitting data from a single satellite to a single ground
+
+
+40
+00:03:55,320 --> 00:04:00,440
+station, so shipping some blocks back and forth, and maybe even seeing those blocks
+
+
+41
+00:04:00,440 --> 00:04:06,960
+go from satellite to ground station to Qubo to the broader public IPFS network. I think
+
+
+42
+00:04:06,960 --> 00:04:11,040
+that's like the gold star that we're reaching for in terms of demos, so really seeing a
+
+
+43
+00:04:11,040 --> 00:04:16,920
+whole integration of space to big IPFS. So if you want to hear more details about that
+
+
+44
+00:04:16,920 --> 00:04:21,880
+and see a live demo of how it's working, I'm giving a talk on Monday in the integrating
+
+
+45
+00:04:21,880 --> 00:04:29,320
+IPFS track. Functionally, this software is essentially complete. We can show shipping
+
+
+46
+00:04:29,320 --> 00:04:35,000
+bytes or shipping blocks from a satellite over a radio to a ground station and then
+
+
+47
+00:04:35,000 --> 00:04:40,920
+to Qubo and resolving that as a complete DAG and a file that you can do something with.
+
+
+48
+00:04:40,920 --> 00:04:46,920
+So I'll be showing that off. If you know someone who could use this, if you know of a space
+
+
+49
+00:04:46,920 --> 00:04:52,320
+opportunity, please come talk to me or Dietrich. We would love to hear about other people that
+
+
+50
+00:04:52,320 --> 00:04:59,120
+can use this and try to publicize it to them and get more usage here. And if you want to
+
+
+51
+00:04:59,120 --> 00:05:05,240
+take a look at the code, see how it works, maybe give it a try. We have the space repo
+
+
+52
+00:05:05,240 --> 00:05:11,360
+in the IPFS shipyard organization and also we hang out in the space channel on the Falcoin
+
+
+53
+00:05:11,360 --> 00:05:16,760
+Slack. So we would love to hear from anyone who's interested or please come talk to me.
+
+
+54
+00:05:16,760 --> 00:05:21,720
+I'll be here the whole time. Let's talk about space and IPFS and the different challenges
+
+
+55
+00:05:21,720 --> 00:05:28,720
+there and what we can do with that. Thank you.

@@ -1,0 +1,983 @@
+1
+00:00:00,000 --> 00:00:09,480
+Alright, so I'm going to talk about a measurement that we run at ProbeLabs.
+
+
+2
+00:00:09,480 --> 00:00:17,560
+So I'm Guy, I'm working with Protocol Labs on the ProbeLabs team with Yanis, among others,
+
+
+3
+00:00:17,560 --> 00:00:25,920
+and we run mostly measurement and protocol optimization all around libp2p, ipfs, and
+
+
+4
+00:00:25,920 --> 00:00:28,320
+also filecoin.
+
+
+5
+00:00:28,320 --> 00:00:37,200
+And that's a measurement that we've run this year in December, and we wanted to get some
+
+
+6
+00:00:37,200 --> 00:00:39,240
+more data around bitswap.
+
+
+7
+00:00:39,240 --> 00:00:46,560
+So for those who aren't familiar with bitswap, bitswap is mostly a data transfer protocol
+
+
+8
+00:00:46,560 --> 00:00:53,880
+that is used by ipfs to just transfer data from one computer to another, but it's also
+
+
+9
+00:00:53,880 --> 00:00:57,360
+doing some content routing.
+
+
+10
+00:00:57,360 --> 00:01:03,880
+Not sure if it was meant to be from the start, but that's what we're going to evaluate today,
+
+
+11
+00:01:03,880 --> 00:01:10,800
+not the data transfer, but rather the content discovery, content routing.
+
+
+12
+00:01:10,800 --> 00:01:21,480
+So the motivation that led us to do this is the way bitswap works is there is a static
+
+
+13
+00:01:21,480 --> 00:01:26,600
+provider search delay, which is a magic parameter that has been set to one second, which means
+
+
+14
+00:01:26,600 --> 00:01:34,160
+that bitswap will wait for one second before making a DHT query in order to find the content,
+
+
+15
+00:01:34,160 --> 00:01:38,860
+and we wanted to know whether this value of one second was right, or if we should maybe
+
+
+16
+00:01:38,860 --> 00:01:46,680
+increase it or decrease it or get rid of it at all, in order to optimize content routing
+
+
+17
+00:01:46,680 --> 00:01:48,820
+efficiency.
+
+
+18
+00:01:48,820 --> 00:01:55,580
+So just a few words about how content discovery works in bitswap.
+
+
+19
+00:01:55,580 --> 00:02:00,900
+So first, let's take the Kubo example.
+
+
+20
+00:02:00,900 --> 00:02:07,920
+When you want to look up for a CID in Kubo, Kubo is going to call go bitswap and it's
+
+
+21
+00:02:07,920 --> 00:02:11,080
+going to say, hey, I want to have this CID.
+
+
+22
+00:02:11,080 --> 00:02:18,520
+And what go bitswap is going to do is for one second, it's going to broadcast, hey,
+
+
+23
+00:02:18,520 --> 00:02:23,120
+I want this CID to all of its directly connected peers.
+
+
+24
+00:02:23,120 --> 00:02:33,400
+And if within one second, none of them say, hey, I got the file, here you go, it will
+
+
+25
+00:02:33,400 --> 00:02:35,760
+say, hey, DHT, I need some help.
+
+
+26
+00:02:35,760 --> 00:02:41,080
+Can you look this CID up for me and tell me who is storing it?
+
+
+27
+00:02:41,080 --> 00:02:49,360
+But the DHT walk doesn't happen if the bitswap broadcast is successful in the first place.
+
+
+28
+00:02:49,360 --> 00:02:58,400
+So what we did in order to measure it and to get data around this is we got a huge list
+
+
+29
+00:02:58,400 --> 00:03:03,280
+of CIDs that we got by just sniffing the bitswap traffic.
+
+
+30
+00:03:03,280 --> 00:03:08,080
+So just listening to all of the requests saying, hey, I want this file, I want this file, I
+
+
+31
+00:03:08,080 --> 00:03:11,240
+want this file.
+
+
+32
+00:03:11,240 --> 00:03:17,440
+And we gave bitswap not just one second, but 15 seconds to find and retrieve a block.
+
+
+33
+00:03:17,440 --> 00:03:22,040
+And we made sure that bitswap didn't call the DHT, which means that Kubo is going to
+
+
+34
+00:03:22,040 --> 00:03:24,600
+tell bitswap, hey, can you find this CID for me?
+
+
+35
+00:03:24,600 --> 00:03:29,720
+And now bitswap is on its own, has 15 seconds, and it's either you get it or you don't get
+
+
+36
+00:03:29,720 --> 00:03:31,240
+it.
+
+
+37
+00:03:31,240 --> 00:03:36,200
+And in the cases where bitswap wasn't able to find the content, we still wanted to make
+
+
+38
+00:03:36,200 --> 00:03:41,260
+sure that the content exists and is reachable somewhere.
+
+
+39
+00:03:41,260 --> 00:03:44,280
+So we just make a DHT query.
+
+
+40
+00:03:44,280 --> 00:03:49,760
+And if the DHT query succeeds, it means that bitswap failed to retrieve the content.
+
+
+41
+00:03:49,760 --> 00:03:54,880
+And if the DHT query doesn't find anything, it means that the content isn't unreachable.
+
+
+42
+00:03:54,880 --> 00:03:58,280
+And so it's not a bitswap problem.
+
+
+43
+00:03:58,280 --> 00:04:06,400
+I will also prevent recursive content resolution, which means that for CIDs, if you request
+
+
+44
+00:04:06,400 --> 00:04:12,600
+a root CID in Kubo, it's going to retrieve all of the content that is included inside
+
+
+45
+00:04:12,600 --> 00:04:13,600
+this block.
+
+
+46
+00:04:13,600 --> 00:04:14,600
+So we didn't want that.
+
+
+47
+00:04:14,600 --> 00:04:18,440
+We wanted to retrieve a single block only.
+
+
+48
+00:04:18,440 --> 00:04:26,480
+And this experiment has been run in December last year from Google Cloud VM in Central
+
+
+49
+00:04:26,480 --> 00:04:30,280
+Europe, which is relevant for the latencies.
+
+
+50
+00:04:30,280 --> 00:04:35,680
+I mean, it's relevant to know this information when we get to latencies.
+
+
+51
+00:04:35,680 --> 00:04:38,800
+Now some numbers, some statistics.
+
+
+52
+00:04:38,800 --> 00:04:48,280
+So we discovered that more than 98% of discoveries were successful, which means that bitswap
+
+
+53
+00:04:48,280 --> 00:04:52,200
+is great at discovering content.
+
+
+54
+00:04:52,200 --> 00:04:59,880
+However, for each request, bitswap has to solicit more than 800 peers.
+
+
+55
+00:04:59,880 --> 00:05:02,040
+That's really a lot.
+
+
+56
+00:05:02,040 --> 00:05:05,800
+So it means that when you're looking for content, you literally just broadcast, hey, I want
+
+
+57
+00:05:05,800 --> 00:05:06,800
+this.
+
+
+58
+00:05:06,800 --> 00:05:10,640
+I'm not sure it will work, but at what price?
+
+
+59
+00:05:10,640 --> 00:05:14,760
+And so, yeah, that's a lot of messages to be sent.
+
+
+60
+00:05:14,760 --> 00:05:20,120
+And also we got some statistics about the content providers.
+
+
+61
+00:05:20,120 --> 00:05:30,320
+And what we've seen is, for instance, the top 20 providers are serving 75% of the CIDs
+
+
+62
+00:05:30,320 --> 00:05:32,880
+that are requested a lot.
+
+
+63
+00:05:32,880 --> 00:05:38,760
+So it's not you list all of the CIDs that exist in the IPFS network and just see who's
+
+
+64
+00:05:38,760 --> 00:05:40,560
+providing them.
+
+
+65
+00:05:40,560 --> 00:05:44,560
+Now it's the CIDs that are actually accessed.
+
+
+66
+00:05:44,560 --> 00:05:46,160
+So during the measurement period.
+
+
+67
+00:05:46,160 --> 00:05:52,060
+So it means that only a few providers are providing a lot of content.
+
+
+68
+00:05:52,060 --> 00:06:00,440
+So on the huge list of CID we got, we only had a bit more than 700 content providers,
+
+
+69
+00:06:00,440 --> 00:06:09,240
+which is not a lot, given that, for instance, the public DHT has around 20,000 participants.
+
+
+70
+00:06:09,240 --> 00:06:18,440
+And what we also observed is that NFT.storage, so that's on the right hand side, the top
+
+
+71
+00:06:18,440 --> 00:06:22,000
+10 peer IDs that were serving blocks.
+
+
+72
+00:06:22,000 --> 00:06:28,260
+And most of the requests were towards probably NFTs provided by NFT.storage.
+
+
+73
+00:06:28,260 --> 00:06:36,080
+But we couldn't find all of the operators of the top 10 peer IDs.
+
+
+74
+00:06:36,080 --> 00:06:38,480
+So now to latencies.
+
+
+75
+00:06:38,480 --> 00:06:43,420
+So that's only for successful bit swap discoveries.
+
+
+76
+00:06:43,420 --> 00:06:49,360
+And we can see that the majority of the requests will succeed within one second, if it is successful
+
+
+77
+00:06:49,360 --> 00:06:50,600
+at all.
+
+
+78
+00:06:50,600 --> 00:06:58,040
+However, we can see that some of the requests will succeed up to 15 seconds, because there
+
+
+79
+00:06:58,040 --> 00:06:59,320
+was the given time.
+
+
+80
+00:06:59,320 --> 00:07:04,680
+So it means that sometimes you're requesting for some content and bit swap will eventually
+
+
+81
+00:07:04,680 --> 00:07:06,520
+get it after some seconds.
+
+
+82
+00:07:06,520 --> 00:07:09,520
+But in most of the case, you get it under a second.
+
+
+83
+00:07:09,520 --> 00:07:16,200
+And now if we zoom it a little, we can see that even most of the content, like almost
+
+
+84
+00:07:16,200 --> 00:07:24,400
+80%, is obtained within 200 milliseconds, which is very fast.
+
+
+85
+00:07:24,400 --> 00:07:31,560
+So to get the content within 200 milliseconds, it's two RTTs, which means that a node that
+
+
+86
+00:07:31,560 --> 00:07:37,480
+is going to be located close to you is going to be directly connected to you first and
+
+
+87
+00:07:37,480 --> 00:07:38,700
+provide you this file.
+
+
+88
+00:07:38,700 --> 00:07:40,440
+So we ran the measurement from Europe.
+
+
+89
+00:07:40,440 --> 00:07:45,760
+It means that content was available somewhere in Europe probably, so that we could get it
+
+
+90
+00:07:45,760 --> 00:07:49,440
+this fast.
+
+
+91
+00:07:49,440 --> 00:07:56,800
+Now since the measurement, there have been some recent developments around this bit swap
+
+
+92
+00:07:56,800 --> 00:07:58,560
+in general.
+
+
+93
+00:07:58,560 --> 00:08:04,840
+And there's been an upgrade on the connection manager, limiting the inbound connection to
+
+
+94
+00:08:04,840 --> 00:08:12,120
+a bit less than 100, which means that now bit swap isn't connected anymore to like 800,
+
+
+95
+00:08:12,120 --> 00:08:14,040
+900 peers.
+
+
+96
+00:08:14,040 --> 00:08:17,500
+And so the broadcast is less efficient.
+
+
+97
+00:08:17,500 --> 00:08:20,400
+So it's good because it's less spammy.
+
+
+98
+00:08:20,400 --> 00:08:24,840
+You're going to spam less peers in order to find your content.
+
+
+99
+00:08:24,840 --> 00:08:30,400
+But it's also going to be less successful probably.
+
+
+100
+00:08:30,400 --> 00:08:34,680
+So we don't have numbers since this happened.
+
+
+101
+00:08:34,680 --> 00:08:41,520
+We've also tried to just get rid of the provider search delay.
+
+
+102
+00:08:41,520 --> 00:08:47,040
+So set it to zero second, which means that at the moment, Kubo wants to look up for a
+
+
+103
+00:08:47,040 --> 00:08:48,040
+TAD.
+
+
+104
+00:08:48,040 --> 00:08:54,720
+It's going to in parallel query the THC and do a bit swap broadcast.
+
+
+105
+00:08:54,720 --> 00:09:01,880
+But unfortunately, probably due to some side effects or bugs in the way session are handled
+
+
+106
+00:09:01,880 --> 00:09:08,300
+in bit swap, this didn't turn out to give a better TFB.
+
+
+107
+00:09:08,300 --> 00:09:14,320
+So the performance to get the time to first byte was actually worse when we reduced the
+
+
+108
+00:09:14,320 --> 00:09:18,720
+delay, which from a protocol perspective doesn't make sense.
+
+
+109
+00:09:18,720 --> 00:09:21,320
+But yeah, it happens.
+
+
+110
+00:09:21,320 --> 00:09:24,040
+And yeah.
+
+
+111
+00:09:24,040 --> 00:09:31,920
+So now the takeaway that we have is that bit swap is a fast and accurate way to discover
+
+
+112
+00:09:31,920 --> 00:09:32,920
+content.
+
+
+113
+00:09:32,920 --> 00:09:34,000
+It's true.
+
+
+114
+00:09:34,000 --> 00:09:36,120
+But it's just very inefficient.
+
+
+115
+00:09:36,120 --> 00:09:42,280
+You're going to need to pay a lot and generate a lot of traffic in the network in order to
+
+
+116
+00:09:42,280 --> 00:09:47,840
+find the content, which is probably not what we want.
+
+
+117
+00:09:47,840 --> 00:09:53,480
+And also bit swap as a content discovery mechanism doesn't scale.
+
+
+118
+00:09:53,480 --> 00:10:01,560
+Because in order to keep the same, let's say, success rate when you discover content, you
+
+
+119
+00:10:01,560 --> 00:10:04,020
+need to be connected to the same ratio of the peers.
+
+
+120
+00:10:04,020 --> 00:10:10,520
+Which means that if the network scales, but we got 10x peers in the networks, which is
+
+
+121
+00:10:10,520 --> 00:10:15,920
+like 10x providers as well, then you will need to be connected to 10x more peers in
+
+
+122
+00:10:15,920 --> 00:10:19,280
+order to get the same success rate.
+
+
+123
+00:10:19,280 --> 00:10:20,720
+And it's linear.
+
+
+124
+00:10:20,720 --> 00:10:23,160
+It just doesn't scale.
+
+
+125
+00:10:23,160 --> 00:10:30,440
+And also what we observed is that, which was quite surprising for us, is that the top 20
+
+
+126
+00:10:30,440 --> 00:10:39,280
+peers, the top 20 providers were actually serving like 75% of the requests on bit swap,
+
+
+127
+00:10:39,280 --> 00:10:40,840
+which is surprising.
+
+
+128
+00:10:40,840 --> 00:10:47,880
+But it also means that if you are to broadcast requests, you could just broadcast your request
+
+
+129
+00:10:47,880 --> 00:10:58,320
+to these 20 top peers and you will have a 75% success rate, which isn't that bad and
+
+
+130
+00:10:58,320 --> 00:11:01,960
+it's not so noisy.
+
+
+131
+00:11:01,960 --> 00:11:09,800
+And so then it brings us to the question, do we really want to bundle data transfer
+
+
+132
+00:11:09,800 --> 00:11:15,480
+and content routing together in the same, let's say, component bit swap?
+
+
+133
+00:11:15,480 --> 00:11:22,440
+Or should we have like a distinct data transfer so bit swap could still do bit swap stuff,
+
+
+134
+00:11:22,440 --> 00:11:31,600
+but just not broadcast and we could use more efficient content router such as the DHT or
+
+
+135
+00:11:31,600 --> 00:11:38,040
+IPNI or any other content routers that are a bit smart and don't just broadcast, hey,
+
+
+136
+00:11:38,040 --> 00:11:42,000
+can you give me this to all of the peers?
+
+
+137
+00:11:42,000 --> 00:11:44,880
+So yeah, that was mostly it.
+
+
+138
+00:11:44,880 --> 00:11:52,320
+So there's a full report on the GitHub repository network measurement that you can scan the
+
+
+139
+00:11:52,320 --> 00:11:54,640
+QR code to get to.
+
+
+140
+00:11:54,640 --> 00:12:03,320
+And it contains the additional data, more plots, and also some improvement recommendation.
+
+
+141
+00:12:03,320 --> 00:12:05,080
+And yep, that was it for me.
+
+
+142
+00:12:05,080 --> 00:12:17,680
+I'm happy to take any questions you may have.
+
+
+143
+00:12:17,680 --> 00:12:19,680
+You might have answered this before and I might have missed it.
+
+
+144
+00:12:19,680 --> 00:12:27,520
+Where were those metrics of availability of CIDs?
+
+
+145
+00:12:27,520 --> 00:12:29,560
+Where did those come from?
+
+
+146
+00:12:29,560 --> 00:12:30,720
+How did you collect them?
+
+
+147
+00:12:30,720 --> 00:12:32,720
+The availability of CID?
+
+
+148
+00:12:32,720 --> 00:12:33,720
+Yeah.
+
+
+149
+00:12:33,720 --> 00:12:37,160
+Like that 75% number that you're using?
+
+
+150
+00:12:37,160 --> 00:12:40,520
+Were you making those requests yourself or are these based on gateway traffic?
+
+
+151
+00:12:40,520 --> 00:12:44,080
+No, it's traffic that we sniff from bit swap.
+
+
+152
+00:12:44,080 --> 00:12:45,080
+So it's...
+
+
+153
+00:12:45,080 --> 00:12:46,080
+Oh, I see.
+
+
+154
+00:12:46,080 --> 00:12:48,960
+So you just have a passive node and it's just getting...
+
+
+155
+00:12:48,960 --> 00:12:49,960
+Okay.
+
+
+156
+00:12:49,960 --> 00:12:54,680
+And we made sure that each CID...
+
+
+157
+00:12:54,680 --> 00:13:01,720
+If we were requested twice the same CID, we didn't replicate twice the traffic.
+
+
+158
+00:13:01,720 --> 00:13:04,200
+So we made each CID unique.
+
+
+159
+00:13:04,200 --> 00:13:05,200
+Yeah.
+
+
+160
+00:13:05,200 --> 00:13:06,200
+Okay.
+
+
+161
+00:13:06,200 --> 00:13:07,200
+Thanks.
+
+
+162
+00:13:07,200 --> 00:13:08,200
+Thanks, Lachie.
+
+
+163
+00:13:08,200 --> 00:13:09,200
+I'm just curious what...
+
+
+164
+00:13:09,200 --> 00:13:17,040
+It's probably in that link at the end, but what are your suggested next steps?
+
+
+165
+00:13:17,040 --> 00:13:23,800
+I'd say if we can get a bit swap, like fix bit swap to make sure that we can have provider
+
+
+166
+00:13:23,800 --> 00:13:31,160
+search delay at zero so that we can start the DHT walk at the same time, then we would
+
+
+167
+00:13:31,160 --> 00:13:34,760
+see the performance of the DHT compared with bit swap.
+
+
+168
+00:13:34,760 --> 00:13:41,560
+And then gradually we can walk away from this general broadcast and make a bit swap and
+
+
+169
+00:13:41,560 --> 00:13:44,200
+Kubo much less spammy.
+
+
+170
+00:13:44,200 --> 00:13:48,880
+So I think the DHT is a much more... or IP and I are much more efficient content routing
+
+
+171
+00:13:48,880 --> 00:13:57,960
+mechanism and we should go towards this and gradually turn off the bit swap broadcast.
+
+
+172
+00:13:57,960 --> 00:14:03,400
+Thank you.
+
+
+173
+00:14:03,400 --> 00:14:07,320
+I have a question while we wait for others, perhaps.
+
+
+174
+00:14:07,320 --> 00:14:14,600
+So it's interesting that 200 milliseconds graph that we've seen in the past, it just
+
+
+175
+00:14:14,600 --> 00:14:19,280
+occurred to me that maybe what we should have done is run some of these experiments from
+
+
+176
+00:14:19,280 --> 00:14:25,840
+a remote location to see if that would go to 400 milliseconds or something.
+
+
+177
+00:14:25,840 --> 00:14:32,440
+Because yeah, as you said, we were running this experiment from within the EU and then
+
+
+178
+00:14:32,440 --> 00:14:37,400
+if content is also within the EU, then we have that 200 there, but maybe it's not the
+
+
+179
+00:14:37,400 --> 00:14:38,920
+case for all of the world.
+
+
+180
+00:14:38,920 --> 00:14:45,000
+So yeah, it would have been interesting maybe something to think about.
+
+
+181
+00:14:45,000 --> 00:14:46,000
+Yeah.
+
+
+182
+00:14:46,000 --> 00:14:52,080
+But as a lot of content is NFTs coming from NFT storage, I guess NFT storage has multiple
+
+
+183
+00:14:52,080 --> 00:14:54,920
+replicas of all the data all around the world.
+
+
+184
+00:14:54,920 --> 00:14:59,520
+So I expect maybe the performance in North America to be similar.
+
+
+185
+00:14:59,520 --> 00:15:06,760
+But maybe accessing from a remote place would just shift the graph to the right, I think.
+
+
+186
+00:15:06,760 --> 00:15:07,760
+Yeah.
+
+
+187
+00:15:07,760 --> 00:15:08,760
+Yeah.
+
+
+188
+00:15:08,760 --> 00:15:09,760
+Okay.
+
+
+189
+00:15:09,760 --> 00:15:16,920
+Is NFT.storage that 75% of the nodes that are quick to respond?
+
+
+190
+00:15:16,920 --> 00:15:19,040
+So we didn't look into all details.
+
+
+191
+00:15:19,040 --> 00:15:26,040
+And so maybe, so that's, so the NFT storage node, we're sure that it's NFT storage node
+
+
+192
+00:15:26,040 --> 00:15:31,960
+and the ones that don't have a label could be NFT storage or other providers.
+
+
+193
+00:15:31,960 --> 00:15:36,480
+So that's a lower bound of the NFT storage traffic.
+
+
+194
+00:15:36,480 --> 00:15:42,120
+And yeah, so for instance, for the 75% is the top 20 providers.
+
+
+195
+00:15:42,120 --> 00:15:46,600
+Here you can see the top 10 and we have six, at least six NFT storage.
+
+
+196
+00:15:46,600 --> 00:15:49,600
+So that's an estimate.
+
+
+197
+00:15:49,600 --> 00:16:02,920
+Okay, then let's thank Guillaume again.

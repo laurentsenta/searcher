@@ -1,0 +1,303 @@
+1
+00:00:00,000 --> 00:00:09,360
+Hi, I'm going to present the interpreter specifications. The slides were mostly done by Robin, so thank
+
+
+2
+00:00:09,360 --> 00:00:20,040
+you. We have a website, specs.ipfs.tech. Very nice. There's a QR code. And it looks like
+
+
+3
+00:00:20,040 --> 00:00:27,560
+this. We have some basic specifications for now. We only have the architecture, meta specifications,
+
+
+4
+00:00:27,560 --> 00:00:35,920
+HTTP gateways, and the IPNS specifications, which might get updated soon.
+
+
+5
+00:00:35,920 --> 00:00:39,720
+So why did we do this? Why standards? Well, it should be possible to implement something
+
+
+6
+00:00:39,720 --> 00:00:45,840
+without having to look at Kubo and other things. In the long term, documentation will be better
+
+
+7
+00:00:45,840 --> 00:00:51,240
+than code, because code might have bugs, might not be clearly readable for everyone, so documentation
+
+
+8
+00:00:51,240 --> 00:00:57,240
+is always good. We will also be able to maintain a clear track record of everything that all
+
+
+9
+00:00:57,240 --> 00:01:01,480
+the consensus, all the decisions that were made, and we will also support better test
+
+
+10
+00:01:01,480 --> 00:01:06,520
+writing. For example, for the gateway, we already have some work in progress for the
+
+
+11
+00:01:06,520 --> 00:01:15,720
+conformance test that Pietro talked about yesterday. And yeah, it's also a good way
+
+
+12
+00:01:15,720 --> 00:01:22,360
+to make it clear to bridge to other systems. So what are the goals of this very small project?
+
+
+13
+00:01:22,360 --> 00:01:29,040
+Well, small in size for now, but it's going to be big, we hope. Project, well, to look
+
+
+14
+00:01:29,040 --> 00:01:34,080
+good and give visibility to the specifications, because before this, they were just in a repository,
+
+
+15
+00:01:34,080 --> 00:01:38,600
+marked on files. It's not something nice to look at, and people are not going to look
+
+
+16
+00:01:38,600 --> 00:01:46,200
+for it. And if we have a website, it's easier, and it's an easier way to reference the specifications.
+
+
+17
+00:01:46,200 --> 00:01:49,400
+But at the end of the day, we keep it simple. It's still mostly marked down. It has some
+
+
+18
+00:01:49,400 --> 00:01:57,800
+add-ons that are specified, by the way, and it has table links and reference management,
+
+
+19
+00:01:57,800 --> 00:02:02,800
+and we support the typical specification features, such as definition references, the keywords
+
+
+20
+00:02:02,800 --> 00:02:10,560
+from the RFC 2119. And yeah, we will be progressively adding more tooling in order to make it better.
+
+
+21
+00:02:10,560 --> 00:02:14,840
+So if you want to participate in this project, you can see the repository for the specifications
+
+
+22
+00:02:14,840 --> 00:02:22,800
+at ipfs.specs.generator, which is ipfs.spec.generator. How creative. And you can read the specs for
+
+
+23
+00:02:22,800 --> 00:02:28,480
+specs, which is mostly marked down with some additions. Or you can also just copy-paste
+
+
+24
+00:02:28,480 --> 00:02:35,120
+some spec and figure it out. And you can just run makewatch, and it will work. And yeah,
+
+
+25
+00:02:35,120 --> 00:02:43,880
+that was a very short talk. So we're now on track again.
+
+
+26
+00:02:43,880 --> 00:02:45,600
+What do you need?
+
+
+27
+00:02:45,600 --> 00:02:46,600
+What do I need?
+
+
+28
+00:02:46,600 --> 00:02:51,040
+It's all done. You don't need any help. What's next?
+
+
+29
+00:02:51,040 --> 00:02:52,040
+Write more specs.
+
+
+30
+00:02:52,040 --> 00:02:53,040
+Dark mode.
+
+
+31
+00:02:53,040 --> 00:02:54,040
+What's that?
+
+
+32
+00:02:54,040 --> 00:02:55,040
+Dark mode.
+
+
+33
+00:02:55,040 --> 00:02:56,040
+Dark mode.
+
+
+34
+00:02:56,040 --> 00:02:57,040
+Dark mode.
+
+
+35
+00:02:57,040 --> 00:03:05,040
+We had dark mode, but it was not very good, so we had to remove it before releasing it.
+
+
+36
+00:03:05,040 --> 00:03:07,040
+Coming soon.
+
+
+37
+00:03:07,040 --> 00:03:08,040
+Yes.
+
+
+38
+00:03:08,040 --> 00:03:11,040
+We'll bring it back.
+
+
+39
+00:03:11,040 --> 00:03:12,040
+Yes.
+
+
+40
+00:03:12,040 --> 00:03:17,040
+We're waiting for your answers on what's coming. Is there any additions to the site that you're
+
+
+41
+00:03:17,040 --> 00:03:19,040
+planning? Is there any additions to the site that you're planning to make?
+
+
+42
+00:03:19,040 --> 00:03:23,040
+Yes, there's some updates we want to move. We want to add the IPIPs, which Lydell is
+
+
+43
+00:03:23,040 --> 00:03:28,040
+going to talk about in a minute. There's some other tweaks to make to the website, but it's
+
+
+44
+00:03:28,040 --> 00:03:33,040
+mostly working well. And add more specs.
+
+
+45
+00:03:33,040 --> 00:03:37,040
+Can the same spec generator be used outside of IPIP?
+
+
+46
+00:03:37,040 --> 00:03:39,040
+Yes, that's the goal.
+
+
+47
+00:03:39,040 --> 00:03:48,040
+We're in talks about using that to do specs.libp2p. I think probably next week we're going to
+
+
+48
+00:03:48,040 --> 00:03:53,040
+start working on that. I also have a code thing to bring out of storage about using
+
+
+49
+00:03:53,040 --> 00:04:01,040
+that for multi-formats. We'll see how that intersects with the ITF thing. If IPLD, IPNI
+
+
+50
+00:04:01,040 --> 00:04:07,040
+want to put their specs on this, this is meant to be generic, so we can absolutely reuse
+
+
+51
+00:04:07,040 --> 00:04:14,040
+it. And the working group can work on the spec for specs and help everyone get this
+
+
+52
+00:04:14,040 --> 00:04:16,040
+moving along.
+
+
+53
+00:04:16,040 --> 00:04:20,040
+I was kind of wondering that. Should the working group working group also be a place that's
+
+
+54
+00:04:20,040 --> 00:04:27,040
+surfacing where all the different specs are?
+
+
+55
+00:04:27,040 --> 00:04:32,040
+We're keeping the name. I should shut up some days.
+
+
+56
+00:04:32,040 --> 00:04:39,040
+I don't think that the working group working group needs to do a list of specs. I think
+
+
+57
+00:04:39,040 --> 00:04:46,040
+we can have a list of spec sites. My thinking was to basically in the footer of all these
+
+
+58
+00:04:46,040 --> 00:04:54,040
+things have a web ring kind of thing for those who are old enough to remember. So that everyone
+
+
+59
+00:04:54,040 --> 00:05:01,040
+can have their own theme and their own community for each segment, but also they are all tied
+
+
+60
+00:05:01,040 --> 00:05:02,040
+together.
+
+
+61
+00:05:02,040 --> 00:05:31,040
+Awesome. Thank you.

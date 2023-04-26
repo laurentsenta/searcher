@@ -1,0 +1,843 @@
+1
+00:00:00,000 --> 00:00:09,720
+and so on. So, actually, these should be a fast, I mean, I was planning to attend there
+
+
+2
+00:00:09,720 --> 00:00:13,720
+in person, then some personal matters happened. I was supposed to do a workshop and I was hoping
+
+
+3
+00:00:13,720 --> 00:00:21,920
+to show you IPC in, like, working, so that everyone had a chance to see what is this
+
+
+4
+00:00:21,920 --> 00:00:26,700
+IPC. But what I'm going to do now is try and pitch the system, get this in the back of
+
+
+5
+00:00:26,700 --> 00:00:31,700
+your mind, and hopefully in the future we can get in touch. Because, like, right now,
+
+
+6
+00:00:31,700 --> 00:00:36,000
+what we're trying to do with IPC is getting into production, now that FEM is out, and
+
+
+7
+00:00:36,000 --> 00:00:42,320
+the idea behind IPC is a way of scaling, so adding consensus to existing distributed systems
+
+
+8
+00:00:42,320 --> 00:00:48,560
+and having a way of scaling Falcon. And in this talk, my idea is to give you a glimpse
+
+
+9
+00:00:48,560 --> 00:00:52,520
+of what is the system, and hopefully we can have follow-ups and see if we are a match
+
+
+10
+00:00:52,520 --> 00:00:59,520
+to your projects or whatever you are doing in the scope of computation or any other system.
+
+
+11
+00:00:59,520 --> 00:01:05,520
+Really briefly, like, where does this IPC idea come from? Well, with Web3, what we're
+
+
+12
+00:01:05,520 --> 00:01:09,120
+trying to do is decentralize a lot of the critical systems that we have out there, like,
+
+
+13
+00:01:09,120 --> 00:01:15,480
+for instance, the internet, computation as many of the projects in this track, and one
+
+
+14
+00:01:15,480 --> 00:01:20,920
+of the core modules of Web3 are blockchains, and unfortunately, there's a key part in blockchains
+
+
+15
+00:01:20,920 --> 00:01:27,160
+which is the consensus layer, that it has some limitations. If we look at today's technology,
+
+
+16
+00:01:27,160 --> 00:01:32,960
+we go to the, like, OG systems like Bitcoin and Ethereum, what we see is that we will
+
+
+17
+00:01:32,960 --> 00:01:37,280
+never be able to scale them, at least in their current state, to the kind of loads that we
+
+
+18
+00:01:37,280 --> 00:01:41,240
+have in Web2 and the kind of loads that the projects around computation, like the ones
+
+
+19
+00:01:41,240 --> 00:01:45,600
+you've been pitching in this track, need, because we have around, like, 7,000 and a
+
+
+20
+00:01:45,600 --> 00:01:49,800
+few thousand transactions per second. But even if we go to these, like, next-generation
+
+
+21
+00:01:49,800 --> 00:01:57,080
+blockchain systems, where supposedly they are able to reach up to the thousands and
+
+
+22
+00:01:57,080 --> 00:02:01,160
+millions of transactions, there's also a limitation in the consensus layer, because in the end,
+
+
+23
+00:02:01,160 --> 00:02:06,000
+we are limited as they sequentialize every operation and every transaction, they are
+
+
+24
+00:02:06,000 --> 00:02:14,440
+limited by the specifications and by the performance of the validators running that consensus layer.
+
+
+25
+00:02:14,440 --> 00:02:19,440
+So the idea behind IPC was to try and achieve these kinds of goals. So in the end, we want
+
+
+26
+00:02:19,440 --> 00:02:25,720
+to start accommodating the Web2 loads into Web3 as we advance the technology. So we want
+
+
+27
+00:02:25,720 --> 00:02:30,640
+around the giga and the tera transactions per second of throughput in our systems and
+
+
+28
+00:02:30,640 --> 00:02:36,720
+have consistency and, like, security over these systems with this amount of load. Ideally,
+
+
+29
+00:02:36,720 --> 00:02:41,560
+I think that this is something that not every blockchain approaches, which is fast, optimistic,
+
+
+30
+00:02:41,560 --> 00:02:45,880
+local finality. So right now, we're seeing that in order to run a transaction, generally,
+
+
+31
+00:02:45,880 --> 00:02:50,880
+I mean, there are caveats, because some projects are building workarounds around this, but
+
+
+32
+00:02:50,880 --> 00:02:55,840
+generally, it's hard to achieve below one second transactions, even when the validators
+
+
+33
+00:02:55,840 --> 00:03:01,120
+are in the same data center. The idea is that some use cases may need, like, fast finality
+
+
+34
+00:03:01,120 --> 00:03:07,880
+or at least fast optimistic finality, and we'll be able to settle the more, like, secure
+
+
+35
+00:03:07,880 --> 00:03:16,440
+requirements further up, but we cannot fine-tune the... There's no consensus that this one
+
+
+36
+00:03:16,440 --> 00:03:21,240
+size fits all to every application. So the idea behind IPC is to not only accommodate
+
+
+37
+00:03:21,240 --> 00:03:27,960
+this kind of Web2 scale loads, but also be able to fine-tune the underlying consensus
+
+
+38
+00:03:27,960 --> 00:03:32,600
+algorithm and the underlying blockchain to fit the needs of our applications. And along
+
+
+39
+00:03:32,600 --> 00:03:37,280
+with this, we want to achieve, like, censorship resistance, partition tolerance, secure global
+
+
+40
+00:03:37,280 --> 00:03:41,920
+finality, the kind of things that other blockchains are trying to tackle. And the way that IPC
+
+
+41
+00:03:41,920 --> 00:03:47,800
+achieves this is through horizontal scaling. So the same way that we horizontally scale
+
+
+42
+00:03:47,800 --> 00:03:52,560
+our AWS instances whenever we have more load, the idea is that let's... Our idea was let's
+
+
+43
+00:03:52,560 --> 00:03:58,000
+build a framework where instead of, like, explicitly partitioning the state or explicitly
+
+
+44
+00:03:58,000 --> 00:04:03,400
+partitioning how transactions are validated, like in many other sharding proposals, let's
+
+
+45
+00:04:03,400 --> 00:04:08,720
+try and build a framework that allow users to deploy horizontally the kind of blockchains
+
+
+46
+00:04:08,720 --> 00:04:15,840
+and the kind of consensus layers that they need. And this is the idea behind IPC. So
+
+
+47
+00:04:15,840 --> 00:04:20,360
+it's an on-demand horizontal scalability for Filecoin, where what we're trying to do is
+
+
+48
+00:04:20,360 --> 00:04:25,680
+to build a hierarchy where users are able to deploy their new, let's call it blockchain
+
+
+49
+00:04:25,680 --> 00:04:32,680
+substrates or consensus substrates, that anchor their security to the upper layer networks.
+
+
+50
+00:04:32,680 --> 00:04:38,800
+Like for instance, Filecoin. So it would be kind of like building a layer two or layer
+
+
+51
+00:04:38,800 --> 00:04:46,120
+three or a recursive secondary layers of blockchains where instead of having an out-of-the-box
+
+
+52
+00:04:46,120 --> 00:04:51,360
+blockchain, you would be able to fine tune the blockchain to what you need. So in the
+
+
+53
+00:04:51,360 --> 00:04:55,880
+end, you will be able to choose your consensus algorithm, choose your security trade-offs,
+
+
+54
+00:04:55,880 --> 00:05:01,680
+because as I mentioned, like, there's no easy way to find the best, like, trade-off for
+
+
+55
+00:05:01,680 --> 00:05:07,040
+every kind of application. Like some computation systems may not require that much security,
+
+
+56
+00:05:07,040 --> 00:05:11,600
+but they want to go fast. And then if you're doing a DeFi application, you may want a lot
+
+
+57
+00:05:11,600 --> 00:05:15,600
+of security and you don't mind if finality is a bit lower. So that's the idea behind
+
+
+58
+00:05:15,600 --> 00:05:21,280
+IPC, to give a framework that allows you to do this kind of stuff. And to give you a high
+
+
+59
+00:05:21,280 --> 00:05:28,000
+level overview of how is this being deployed, let's consider the Filecoin network, Filecoin
+
+
+60
+00:05:28,000 --> 00:05:33,200
+mainnet, which is currently our, what we call our rootnet. So it's our anchor of trust from
+
+
+61
+00:05:33,200 --> 00:05:39,440
+which all of the subnets are going to be spawned and from which we are going to start building
+
+
+62
+00:05:39,440 --> 00:05:45,280
+our new layer twos and layer threes recursively. So Filecoin has a 30 seconds block time and
+
+
+63
+00:05:45,280 --> 00:05:50,560
+like many more blocks of finality, which makes it not great for certain applications, especially
+
+
+64
+00:05:50,560 --> 00:05:58,400
+on unit like fast finality and fast block times. So the idea is that with IPC, you will
+
+
+65
+00:05:58,400 --> 00:06:05,440
+be able to deploy new networks that are able to interact seamlessly with the states in
+
+
+66
+00:06:05,440 --> 00:06:10,960
+the Filecoin network, but go a bit faster and like do local operations faster. So this
+
+
+67
+00:06:10,960 --> 00:06:16,080
+is the case of Spacenet. In Spacenet is one of our, so it's our test network where we're
+
+
+68
+00:06:16,080 --> 00:06:20,400
+deploying IPC and all of the innovations that we're doing at ConsensusLab. And this is a
+
+
+69
+00:06:20,400 --> 00:06:25,360
+test net that is exactly like Filecoin, but with a new consensus algorithm that is called
+
+
+70
+00:06:25,360 --> 00:06:30,720
+Mir and that allows us to have one second block times. So in this way, someone that
+
+
+71
+00:06:30,720 --> 00:06:36,560
+is trying to have like high performance and have a blockchain that goes really fast and
+
+
+72
+00:06:36,560 --> 00:06:40,880
+with fast finality, they will go to Spacenet and with Spacenet, we will be able to still
+
+
+73
+00:06:40,880 --> 00:06:45,600
+interact with states in Filecoin. But the idea is that we wouldn't like one second finality
+
+
+74
+00:06:45,600 --> 00:06:51,120
+with a few dozens of validators may not be enough for a certain application. So they
+
+
+75
+00:06:51,120 --> 00:06:57,840
+will be able to deploy, for instance, their subnet, like spawn a new subnet from Spacenet
+
+
+76
+00:06:57,840 --> 00:07:03,040
+that anchors their security to Spacenet and recursively to Filecoin and build their application
+
+
+77
+00:07:03,040 --> 00:07:08,480
+like that. So the idea is in this way to be able to build a hierarchy of different kinds
+
+
+78
+00:07:08,480 --> 00:07:12,480
+of blockchains that anchor their security and are able to interact seamlessly between
+
+
+79
+00:07:12,480 --> 00:07:17,840
+each other and deploy the consensus layer and the blockchain substrate to the needs
+
+
+80
+00:07:17,840 --> 00:07:26,960
+of their application. And this is, sorry, and just to give you a bit of technical details,
+
+
+81
+00:07:26,960 --> 00:07:31,840
+how is this powered is that there are two user defined FVM actors that are the ones
+
+
+82
+00:07:31,840 --> 00:07:37,120
+that handle all of the interactions between all of these blockchain substrates and handle
+
+
+83
+00:07:37,120 --> 00:07:42,640
+all of the interoperability, anchoring the security, exchanging the messages and so on.
+
+
+84
+00:07:43,680 --> 00:07:52,080
+So how would this work? If we have a rootnet and we want to deploy a new subnet, the first
+
+
+85
+00:07:52,080 --> 00:07:58,320
+thing that we do is we request the deployment of a new subnet in the rootnet. We see here
+
+
+86
+00:07:58,320 --> 00:08:02,960
+that we will deploy an actor that governs the policy of the subnet and this will trigger
+
+
+87
+00:08:02,960 --> 00:08:07,520
+in its own the different subnets and this is something that we can do recursively.
+
+
+88
+00:08:08,400 --> 00:08:18,080
+As I said, this is run by two main IPC, sorry, by two main FVM actors and so there's a lot
+
+
+89
+00:08:18,080 --> 00:08:23,520
+of on-chain logic between all of these actors and then there's an off-chain, let's call it
+
+
+90
+00:08:23,520 --> 00:08:28,960
+peer implementation or process, that is the APC agent, which is the one that orchestrates
+
+
+91
+00:08:28,960 --> 00:08:32,880
+the exchange of messages between the different blockchains. So for instance, if you have an
+
+
+92
+00:08:32,880 --> 00:08:37,520
+application that wants to interact with the subnet and with the mainnet and wants to interact
+
+
+93
+00:08:37,520 --> 00:08:43,520
+with several of these networks to implement their operation, they will interact with an
+
+
+94
+00:08:43,520 --> 00:08:50,960
+IPC agent that is the key off-chain component that knows how to speak the IPC protocol and
+
+
+95
+00:08:50,960 --> 00:08:54,880
+knows how to speak to the different subnets and the different rootnets that are part of
+
+
+96
+00:08:54,880 --> 00:08:59,600
+your application. So you define in your config what are the subnets in the system that you want
+
+
+97
+00:08:59,600 --> 00:09:04,800
+to interact with and it will abstract for you all of the operations and when you want to, I don't
+
+
+98
+00:09:04,800 --> 00:09:09,600
+know, put more collateral, if you want to send a message, if you want to send a crossnet message,
+
+
+99
+00:09:09,600 --> 00:09:16,800
+it handles for you all of this back and forth with the underlying blockchain substrates.
+
+
+100
+00:09:16,800 --> 00:09:23,280
+And these subnets that I'm mentioning in the end is just a fork of Lotus. So when I'm
+
+
+101
+00:09:23,280 --> 00:09:28,560
+saying that we deploy a subnet, the peer implementation of each of these subnets is
+
+
+102
+00:09:28,560 --> 00:09:33,040
+just a fork of Lotus with a modified consensus algorithm and some other modifications. But in
+
+
+103
+00:09:33,040 --> 00:09:41,760
+the end, it's the same kind of good old stack that we're used to. So we use IPLD for the
+
+
+104
+00:09:42,480 --> 00:09:47,920
+data store, we use FEM for all the runtime of the blockchain, and all of the types, the
+
+
+105
+00:09:47,920 --> 00:09:51,920
+types and the semantics of the blockchain that the subnet substrates are the same as we see in
+
+
+106
+00:09:51,920 --> 00:09:58,160
+Filecoin. And this is really interesting because it means that we have subnets and content address
+
+
+107
+00:09:58,160 --> 00:10:02,960
+blockchains as we would have currently in the Filecoin mainnet.
+
+
+108
+00:10:05,840 --> 00:10:13,280
+Yeah, and as I mentioned, if you want to start giving a try to IPC, I will tell that, I mean,
+
+
+109
+00:10:13,840 --> 00:10:19,840
+the entry point is this APC agent, which is the off-chain process that handles all of the
+
+
+110
+00:10:19,840 --> 00:10:24,800
+interaction with the different subnets. So if, for instance, we want to have an application that
+
+
+111
+00:10:24,800 --> 00:10:31,920
+requires these three levels of subnets, you would have a full node replica for each of these
+
+
+112
+00:10:31,920 --> 00:10:36,880
+peers that is syncing with the network, and then your IPC agent will abstract all of this
+
+
+113
+00:10:37,440 --> 00:10:41,440
+complexity of interacting with the different blockchains and will give you all of the
+
+
+114
+00:10:41,440 --> 00:10:47,120
+operations that you need to handle all of this complex hierarchy.
+
+
+115
+00:10:47,120 --> 00:10:53,280
+And all the state of these networks. And to leave you this as a food for thought,
+
+
+116
+00:10:53,280 --> 00:10:59,440
+when and how can IPC be useful? So if you need consistency in your data or in some operations
+
+
+117
+00:10:59,440 --> 00:11:04,400
+that have happened in a distributed system and you don't have a way of handling this,
+
+
+118
+00:11:04,400 --> 00:11:09,840
+because if you go to Ethereum or some other slower network, it makes no sense. So this can be
+
+
+119
+00:11:09,840 --> 00:11:15,920
+a good first use case for IPC. Or if you have this problem, the use case, like IPC may help you
+
+
+120
+00:11:17,280 --> 00:11:24,320
+solve it or at least tackle it. Then we have, for instance, use cases that require faster finality
+
+
+121
+00:11:24,320 --> 00:11:28,400
+and higher throughput. So I guess some of the builders are having some trouble with this 30
+
+
+122
+00:11:28,400 --> 00:11:32,400
+second types of Filecoin mainnet. So the idea is that when we release IPC, you will be able to
+
+
+123
+00:11:32,400 --> 00:11:37,760
+deploy your subnet and have a more consistent and more efficient way of handling the different
+
+
+124
+00:11:37,760 --> 00:11:42,560
+types of files. You will be able to deploy your subnet and have faster finality and faster
+
+
+125
+00:11:42,560 --> 00:11:50,080
+block times if you need so. Also, like Spot, in the end, you saw that I didn't go into the details,
+
+
+126
+00:11:50,080 --> 00:11:57,440
+but deploying a subnet is just deploying an actor, an FVM actor over a network, which means that it's
+
+
+127
+00:11:57,440 --> 00:12:02,400
+kind of cheap to deploy your own subnet and try a few things. And you can make subnets ephemeral.
+
+
+128
+00:12:02,400 --> 00:12:07,200
+And it's really low barrier and low overhead to deploy a subnet. And this is going to be
+
+
+129
+00:12:07,200 --> 00:12:12,320
+like, we want to have ephemeral subnets with a small number of members that want to run some
+
+
+130
+00:12:12,320 --> 00:12:20,720
+kind of job or agree on something and then report the result into the Filecoin mainnet or whatever
+
+
+131
+00:12:20,720 --> 00:12:25,760
+rootnet that they're using. And also, it's really interesting when you need verifiable computation
+
+
+132
+00:12:25,760 --> 00:12:31,280
+or incentive mechanism. Because in the end, with this consensus layer, you can define all these
+
+
+133
+00:12:31,280 --> 00:12:37,280
+semantics, and you can define how a set of members in a distributed systems need to agree on
+
+
+134
+00:12:37,280 --> 00:12:42,880
+something, all leveraging the consensus layer that we're giving and the FVM as a runtime.
+
+
+135
+00:12:44,320 --> 00:12:49,200
+And there's a bunch of resources that I share here where you can start learning about IPC,
+
+
+136
+00:12:49,200 --> 00:12:54,160
+because I just had 15 minutes. I didn't know how to put all of the knowledge forward. But we
+
+
+137
+00:12:54,160 --> 00:12:58,880
+already have Spacenet, which is the IPC testnet where you can start tinkering with deploying your
+
+
+138
+00:12:58,880 --> 00:13:06,000
+own subnets. You have a bunch of design docs and analysis around all of the research that we did
+
+
+139
+00:13:06,000 --> 00:13:11,680
+to deploy the system. And if you have any kind of question, we have these Filecoin Slack channels,
+
+
+140
+00:13:11,680 --> 00:13:16,640
+like Consensus, IPC, and Spacenet, where you can ask us questions, and we can guide you through
+
+
+141
+00:13:17,840 --> 00:13:24,720
+starting to use IPC. So IPC is currently without crossnet messages in Spacenet. And by the end of
+
+
+142
+00:13:24,720 --> 00:13:28,160
+this week, hopefully, we will have also crossnet messages. So between the different subnets,
+
+
+143
+00:13:28,160 --> 00:13:34,720
+you will be able to interact seamlessly by sending messages to some smart contract that may leave in
+
+
+144
+00:13:34,720 --> 00:13:42,320
+some other subnet. And if you want to run, as I said, the IPC agent is your entry point to IPC.
+
+
+145
+00:13:42,320 --> 00:13:50,400
+In the readme, you can see a lot of getting started tutorials and some notes on how to run
+
+
+146
+00:13:50,400 --> 00:13:57,520
+your first IPC subnet. Both the docs and the tech is still a bit rough because it's quite new. So
+
+
+147
+00:13:57,520 --> 00:14:03,440
+let's say this is a bleeding edge. There may be a lot of potential bugs or rough edges that need to
+
+
+148
+00:14:03,440 --> 00:14:08,960
+be polished. So feel free to open issues, to directly ping me if you have any problem, and
+
+
+149
+00:14:08,960 --> 00:14:14,080
+let's discuss how we can improve the tech. This is the roadmap to give you a high-level overview.
+
+
+150
+00:14:14,080 --> 00:14:20,720
+So we're here in the M1 – sorry, now we call it M2 – but here in M2, where IPC is going to be
+
+
+151
+00:14:20,720 --> 00:14:26,480
+deployed on Spacenet, this is happening. So we had the first phase of this in the end of March,
+
+
+152
+00:14:26,480 --> 00:14:31,440
+and this is happening this week. So hopefully, from this week, you will be able to test in the
+
+
+153
+00:14:31,440 --> 00:14:38,400
+Spacenet testnet, deploying new subnets. And we are aiming for Q2 or beginning of Q3 for the
+
+
+154
+00:14:38,400 --> 00:14:42,240
+deployment of Spacenet in Fibonacci mainnet so that you can start testing subnets not only in
+
+
+155
+00:14:42,240 --> 00:14:48,960
+testnet but also over the actual file code. And that's all from my side. Sorry about the
+
+
+156
+00:14:48,960 --> 00:14:54,080
+equations. I was hoping to have a bit more time to introduce IPC, but this is just like – take
+
+
+157
+00:14:54,080 --> 00:15:02,720
+this just as a pitch for you to at least know what IPC is, and feel free to just ping me if you want
+
+
+158
+00:15:02,720 --> 00:15:07,520
+any follow-up or you want to discuss this thing. Thank you very much. And yeah, if there are
+
+
+159
+00:15:07,520 --> 00:15:13,120
+questions, we can probably take them, I think. So I had one question. Could you please tell me,
+
+
+160
+00:15:13,120 --> 00:15:18,160
+you mentioned that verification is faster than 30 seconds. Do you have any numbers?
+
+
+161
+00:15:20,320 --> 00:15:26,480
+So the reason is because we are – I mean, in the end, we're running a BFT-like consensus,
+
+
+162
+00:15:26,480 --> 00:15:33,360
+right? So you can go as fast as the rounds of BFT that you need to do. So it doesn't depend
+
+
+163
+00:15:33,360 --> 00:15:39,200
+on the amount of computation that you need to do. It depends on the latency and the delay,
+
+
+164
+00:15:39,200 --> 00:15:42,880
+the RTTs and the number of messages that you exchanged with the rest of validators.
+
+
+165
+00:15:43,520 --> 00:15:48,640
+So right now in Spacenet, we have a dozen validators, and we have less than a second
+
+
+166
+00:15:48,640 --> 00:15:55,280
+block times because in the end, it's just the time of executing the – so it's like any other
+
+
+167
+00:15:55,280 --> 00:15:59,920
+consensus algorithm in a blockchain. You run the block, you trigger the state changes,
+
+
+168
+00:15:59,920 --> 00:16:05,200
+see if they are consistent with the rest of the network, and if they are, you can go.
+
+
+169
+00:16:05,200 --> 00:16:31,360
+So it's more of a distributed system. Thanks.
