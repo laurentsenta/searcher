@@ -6,12 +6,35 @@
 
 ## Overview
 
-Lajdel, a member of IPFS2 at Protocol Labs, presents a year in review of specification IPIPs. The Interplanetary Improvement Proposal (IPIP) process was announced last year to the community, providing an opening for revising, improving or writing a specification. Lajdel's talk will discuss the highlights of the IPIPs that happened in between the announcement and the current date.
+In this video, Lijdel from Protocol Labs reviews the progress made in Interplanetary Improvement Proposals (IPIPs) during the last year, focusing on communication and the achievements in implementing new features in IPFS. He covers various IPIPs related to gateway specifications, denial lists, delegated routing, and other improvements necessary for the IPFS ecosystem.
 
-## Content
+## IPIPs in Review
 
-Lajdel's speech was quick-paced and touched on various improvements made in the IPIP process throughout the year. The most notable highlights are the design of a project board by which to track the lifecycle of IPIPs, an ad hoc group of spec stewards who manage concerns related to long term possibility of supporting specs across implementations, the shipping of gateway specs for files and redirects, support for fetching bigger directory trees as a tar stream, and building verification within the IPFS ecosystem.
+IPIPs are a four-letter acronym for Interplanetary Improvement Proposal. These proposals allow the community to suggest improvements or changes to specifications and discuss them in a structured manner.
 
-Lajdel emphasized the importance of a simple language when constructing software specs in order to create a community memory and promote understanding. Additionally, Lajdel mentioned that currently, the IPFS implementers working group holds biweekly calls to discuss specs and proposals.
+The IPIP process has resulted in the implementation of many features, including gateway-related features, denial lists, delegated routing, and other improvements necessary for the IPFS ecosystem. Lijdel gives an overview of these changes, some of which have been ratified and implemented, and others that are still in progress or have been rejected.
 
-Throughout the speech, Lajdel encouraged the community to participate by writing and improving specs or by reviewing and testing them. Lajdel also highlighted the importance of test fixtures, which cover all the edge cases of specs, as a means of building confidence among the community, promoting ease of understanding, and raising the quality of the spec process.
+### Highlights of Implemented IPIPs
+
+- Gateway Redirects File was community-driven and enables slow shifting of website hosting to gateways.
+- Ability to fetch larger directory trees as a serialized TAR stream.
+- DAG C-BOR and DAG JSON representation of IPLD data models.
+- IPNS Signature and DNS over HTTPS.
+- Graph API for partial car export, allowing for more efficient light clients.
+
+### On-Going IPIPs
+
+- Bad Bits and Deny lists are being proposed and discussed by the community, with various organizations potentially building their lists using the same format.
+- Delegated routing, including content, peer, and HTTP/IPFS routing for improved efficiency.
+- Improve IPFS DHT specification and introduce double hashing DHT for better privacy.
+- Improve UnixFS and gateway interaction, data onboarding with HTTP post, and the indexer story.
+
+### Engaging with the IPIP Process
+
+Lijdel encourages community members to engage with the IPIP process, either by writing specs or suggesting improvements. All feedback helps improve the current ecosystem and makes the specs sounder and more comprehensive in their language.
+
+## Key Takeaways
+
+- IPIPs have significantly contributed to the IPFS ecosystem, improving gateway specifications, denial lists, delegated routing, and other areas.
+- The community-driven IPIP process has enabled extensive discussions and collaboration, leading to better development and implementation of features.
+- Community involvement in the IPIP process, whether it is through suggesting improvements, writing specs or proofreading existing ones, is essential to the continued growth and development of the IPFS ecosystem.

@@ -2,20 +2,32 @@
 
 <https://youtube.com/watch?v=w2uguWM3Hp0>
 
-![image for IPFS Camp Announcement - Yuni Graham & Niki Gokani](/thing23/w2uguWM3Hp0.jpg?raw=true)
+![image for IPFS Camp Announcement - Yuni Graham & Niki Gokani](/thing23/w2uguWM3Hp0.jpg)
 
 ## Overview
 
-Get ready for IPFS Camp 2023, which is taking place from November 3rd to 5th in Bangalore, India! In this video, Yuni Graham and Niki Gokani share some exciting news about the event and explain why India is the perfect location for it. Watch the video to find out more about IPFS Camp 2023, how to pre-register, and the insights about India as a hub for web 3.0 developers.
+In this video, Yuni Graham and Niki Gokani announce the dates and location for IPFS Camp 2023. They also discuss the growth of the developer community in India and recent successful events held in the country. 
 
-## Article
+## IPFS Camp 2023 Details
 
-Yuni starts the announcement by welcoming old and new faces to the IPFS community. She reveals the date and location for IPFS Camp 2023, which is going to take place in Bangalore, India on November 3rd to 5th. The two then share the reasons why India is the perfect place for the event.
+Yuni and Niki are excited to announce that the IPFS Camp 2023 will take place from November 3rd through the 5th in Bangalore, India. Pre-registration can be done by scanning the QR code provided in the video or by following the links mentioned. 
 
-Niki explains that India is home to 2.5 million out of the 20 million new developers that GitHub gained in 2022. By 2025, there will be 10 million developers from India alone. In the next one to two years, India will have the highest number of web 3.0 developers worldwide. With a population of 1.4 billion, 60% of which own smartphones, India is an excellent audience for scaling IPFS and a distributed web.
+## India's Growing Developer Community
 
-The IPFS team also had an amazing experience last year at India Blockchain Week in 2022, where they did Phil Bangalore, a PL network company built on top of Lippie2P and Filecoin. The event saw an attendance of 1,300 strong developers. In addition, the team participated in ETH India, a hackathon by ETH Global, with 1,750 hackers, 2,100 total attendees, and 450 projects built in two days.
+Niki, who leads the Hackathons program at Protocol Labs and coordinates India-related initiatives, provides some background on the choice of India as the IPFS Camp location:
 
-Niki expresses her excitement for the upcoming initiatives with the community before IPFS Camp 2023 to strengthen the Indian community of developers. She invites attendees to come talk to her and share their interests and ideas.
+- According to GitHub, 2.5 million out of the 20 million new developers in 2022 were from India.
+- By 2025, 10 million developers will be from India.
+- In one to two years, the highest number of web 3.0 developers globally will be from India.
+- The country has 1.4 billion people, and 60% own smartphones, providing a huge potential audience for IPFS and the distributed web.
 
-Don't miss out on the chance to attend IPFS Camp 2023 in Bangalore, India! Pre-register by scanning the QR code in the video to stay updated on all the news and updates.
+## Recent Successful Events in India
+
+Niki highlights their experiences at India Blockchain Week in 2022, including:
+
+- Phil Bangalore: a Protocol Labs event with 1,300 attendees, strong developers, and organized by Hudlo1, a PL network company built on top of Libp2p and Filecoin.
+- ETH India: the largest hackathon organized by ETH Global, with 1,750 hackers, 2,100 attendees, and 450 projects built in two days.
+
+## Upcoming Initiatives
+
+Niki encourages everyone to talk to her about potential collaborations and initiatives, as they plan to establish and grow the India IPFS community before the upcoming IPFS Camp.

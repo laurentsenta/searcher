@@ -6,18 +6,78 @@
 
 ## Overview
 
-In this video, each track leader at IPFS Camp 2019 introduces their respective track, sharing information on what the track includes and what it aims to achieve.
+In this video, various track leads introduce their respective tracks that will be presented during the conference. These tracks cover a diverse range of topics, such as community and governance, integrating IPFS, measuring IPFS, show and tell, HTTP gateways, decentralized compute and AI, data transfer protocols, deployments and operators, databases, content routing, and IPFS on the web.
 
-## Article
+## Track Introductions
 
-Robin and Boris will be leading the Community and Governance track, which focuses on sociotechnical systems, discussing topics such as IPFS, open-source projects, and how agreement around various topics, from hash lists to regulators, is reached.
+### Community and Governance
 
-Ryan will be leading the Integrating IPFS track, which covers integrations with mobile and space, and ways to get IPFS data outside of IPFS. Yanis will be leading the Measuring IPFS track, which delves into topics such as IPFS' performance in video streaming and content discovery capabilities.
+**By Robin and Boris**
 
-Will will be leading the HTTP Gateways talk, which covers the various gateway options available and HTTP interop in IPFS. James will be leading the Deployments and Operators track, focused on discussions surrounding implementing and protocols. J. Chris will be leading the databases track, which will discuss wrapping up the capabilities of IPFS into a user-friendly format via databases.
+This track involves sociotechnical systems and discusses topics ranging from open source development to dealing with regulators.
 
-Sid will lead the Content Routing track, which covers a holistic view of content routing, IPNS, and DHT privacy. Matt Hamilton will take the lead for Irina and lead the Decentralized Compute and AI track, which focuses on the Falcon virtual machine and useful ways to use stored data on the best decentralized network. Hannah is the leader of the Data Transfer Thunderdome track, which discusses new data transfer protocols and how we can make them work together.
+### Integrating IPFS
 
-Lastly, Michael will be leading the IPFS on the Web track, discussing integrations of IPFS into the web platform and how we can move forward with IPFS data on HTTP stack using browsers today.
+**By Ryan**
 
-Join the respective tracks to learn more!
+The track is dedicated to finding ways of integrating IPFS data with other platforms and making it more accessible and meaningful.
+
+### Measuring IPFS
+
+**By Yanis**
+
+In this track, participants will learn how IPFS performs in different scenarios, such as video streaming, and understand its content discovery capabilities.
+
+### Show and Tell
+
+**By unknown (track lead not mentioned)**
+
+This track invites participants to share their experiences, challenges, and successful implementations of IPFS in various projects.
+
+### HTTP Gateways
+
+**By Will**
+
+This track explores various approaches to gateways and HTTP interoperability with IPFS.
+
+### Decentralized Compute and AI
+
+**By Irina (not present during the video)**
+
+This track will discuss VMs and how they can be used with IPFS to enable more efficient data processing and decentralized computing.
+
+### Data Transfer Thunderdome
+
+**By Hannah**
+
+This track aims to showcase different data transfer protocols, discuss their compatibility, and encourage collaboration among participants.
+
+### Deployments and Operators
+
+**By James**
+
+This track targets those who are interested in putting IPFS and related protocols into production systems.
+
+### Databases
+
+**By J. Chris**
+
+This track will highlight the role of databases in the IPFS ecosystem, supporting the idea that 2023 will be the year of databases on IPFS.
+
+### Content Routing
+
+**By Sid**
+
+Explore the content routing features of IPFS and learn about DHT privacy in this track.
+
+### Decentralized Compute and AI
+
+**By Matt Hamilton (standing in for Irina)**
+
+This track will cover topics such as the Falcon virtual machine, decentralized computing, and using IPFS to create a more interconnected web3 world.
+
+### IPFS on the Web
+
+**By unknown (track lead not mentioned)**
+
+This track will focus on how IPFS data can be used with HTTP web pages and discuss the tools required to bridge the gap between IPFS and HTTP.

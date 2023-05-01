@@ -6,24 +6,32 @@
 
 ## Overview
 
-In this video, Gus Eggert presents Boxo, a library that simplifies the process of writing IPFS applications by consolidating components from Kubo and other repositories into a single library. This article will explore the challenges that Boxo aims to solve, its goals and limitations, and its current state.
+In this video, Gus Eggert introduces Boxo, a project aimed at consolidating and simplifying the components of Kubo to make it easier for developers to build IPFS applications. Eggert presents the challenges faced by developers working in the Go IPFS ecosystem and how Boxo aims to address them.
 
-## Article
+## The Challenges of the IPFS Go Ecosystem
 
-Gus Eggert starts by explaining some of the challenges that developers face when working with the Go ecosystem. One of the scenarios he describes involves embedding a Kubo node in an application and customizing it, which exposes the complexity of the dependency graph landscape. Each box represents a Go module, and each circle represents a version. As maintainers of these libraries, it is crucial to consider the different versions that might be resolved and used by other dependencies. The lack of documentation for these scenarios also complicates the process, making it challenging to browse GitHub and figure out how to reassemble components.
+Developers working with Kubo may run into several issues:
 
-Another challenge that Gus addresses is when Kubo does not perform well for a particular use case, and developers need to reassemble components to improve performance. With no documentation, developers must browse through repos on GitHub to figure out how to reassemble them.
+- Complex dependency graphs
+- Lack of documentation for reassembling components for specific use cases
+- Difficulties in refactoring and staying on top of updates in multiple repositories
 
-Gus explains the challenges of maintaining Kubo repositories and staying on top of security updates, user requests, pull requests, CI failures, and Dependabot. While GitHub has tools for managing individual repositories, managing multiple repositories poses additional challenges.
+These obstacles often lead to frustration and slow progress for developers. Boxo was created to alleviate these difficulties.
 
-To address these challenges, Gus and his team created Boxo, which aims to help developers quickly write IPFS applications without dealing with the complexities of the dependency graph. Boxo extracts components from Kubo and other repositories and consolidates them into a single library. Additionally, Boxo simplifies abstractions, adds documentation and examples, and provides snapshots of versions that all work together. Developers can add bespoke extension points and swap out different implementations of components using a dependency injection framework called FX.
+## Introducing Boxo
 
-Boxo aims to focus on the components that have high leverage and are useful when used with other pieces but are hard to use correctly. Boxo's goal is not to include everything in one place but to focus on what developers need to build applications quickly.
+Boxo aims to extract and consolidate components from Kubo and various repositories into a single library, simplifying abstractions, adding documentation and examples, and ensuring compatibility between different versions. As a result, developers can create IPFS applications and implementations more efficiently without having to deal with the cumbersome management of multiple repositories.
 
-However, the transition period can be challenging for developers. The team is moving many repositories and providing a tool to migrate code to the new Boxo repository. The team plans to put notices on the top of repositories, keep Git history, move over all issues, close pull requests, and add deprecated tags on types. 
+However, not everything will be included in Boxo—only components that offer high leverage will be added to the library.
 
-Boxo's current state includes extracting Kubo's gateway code, migrating over 25 repositories, moving tests from Kubo to Boxo, and providing examples for common use cases. However, nothing much has changed functionality-wise, and Boxo is not the place for IPFS components. Developers can find more information on Boxo on GitHub or the Filecoin Slack channel.
+## Transition to Boxo
 
-Gus also highlights that Boxo can be compiled and used to build custom applications with IPFS gateway handlers, among other things. Early adopters can benefit from white-glove service, and the team is open to feedback to make Boxo and the Go IPFS community better. 
+During the transition period, developers will need to migrate their existing codes to the new Boxo repository. To assist with the migration, a tool has been developed to automatically add the appropriate version of Boxo and update import paths.
 
-In conclusion, Boxo is a promising initiative that aims to simplify the process of building IPFS applications by consolidating components into a single library. By addressing the complexity of dependencies, documentation, and maintenance, developers can focus on building applications quickly without worrying about the underlying complexity.
+Further support will be provided, including additional documentation for Boxo, more testing, and release automation. Developers who become early adopters will receive additional support and guidance.
+
+## Getting Started with Boxo
+
+For developers keen on exploring Boxo and using it in their projects, they can find the Boxo repository on GitHub, provide feedback or ask for assistance through GitHub issues, or join the Filecoin Slack channel.
+
+Remember, the goal of Boxo is to help developers build applications and implementations faster and more efficiently, without getting bogged down in the challenges of managing multiple repositories and dependencies. The adoption of Boxo should ultimately make the development process smoother and more enjoyable.

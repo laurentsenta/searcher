@@ -1,29 +1,35 @@
-# Compute on Data in Space with CryptoSat
+# Compute on Data in Space - Yan Michalevsky
 
 <https://youtube.com/watch?v=nCI2qgH1Ha4>
 
-![image for Compute on data in space - Yan Michalevsky](/thing23/nCI2qgH1Ha4.jpg?raw=true)
+![image for Compute on data in space - Yan Michalevsky](/thing23/nCI2qgH1Ha4.jpg)
 
 ## Overview
 
-In this video, Yan Michalevsky, one of the founders of Cryptosat, discusses the company's work on compute on data in space, and the integration with Protocol Labs specific projects. He talks about the company's vision of providing a trust infrastructure for Web3, and how they are achieving this by launching, building, integrating, and launching satellites into low Earth orbits for Web3 use cases, cryptographic protocols, and confidential computing. Yan also discusses the use of trusted execution environments for decentralized clouds and explains the concept of attestation.
+In this video, Yan Michalevsky, co-founder of [Cryptosat](https://cryptosat.com/), discusses their work on building the trust infrastructure for Web3 applications in space. Cryptosat focuses on launching, building, and integrating satellites into low Earth orbits for specific Web3 use cases. Yan provides real-world examples of how their project contributes to trusted setups and cryptographic schemes, and how it can be applied to decentralized cloud computing. 
 
-## Article
+## Content
 
-Yan Michalevsky discusses the work of Cryptosat and how it is contributing to building a trust infrastructure for Web3. The company achieves this by launching, building, integrating, and launching satellites into low Earth orbits for Web3 use cases, cryptographic protocols, and confidential computing.
+### CryptoSat Mission and Achievements
 
-One of the main objectives for Cryptosat, as mentioned by Yan, is to provide a trusted execution environment that is physically isolated, secure, and ensures confidentiality and integrity for various sensitive workloads, often processing sensitive data. To achieve this goal, Yan explains, the company uses trusted execution environments, and the lack of any physical access and the ability to compromise anything in memory, use any side channels, and so on. Cryptosat provides this kind of trusted execution environment by launching satellites into low Earth orbits and connecting to a ground station infrastructure with convenient APIs for users to issue requests directly to those satellites.
+Cryptosat aims to build the trust infrastructure for Web3 in space through the development, integration, and deployment of satellites into low Earth orbits. The purpose of these satellites is to serve Web3 use cases, cryptographic protocols, and confidential computing. The project has launched two satellites already, one in May 2022 and another one in January 2023. CryptoSat has also participated in the KCG ceremony related to Ethereum scaling and creating trusted setups.
 
-Yan also talks about the company's vision of getting to a simple, trustful API, plus direct integrations with smart contracts that would enable users to request certain operations and have them completed in space. This has already been achieved to some extent, where Cryptosat provides a simulator known as the CryptoSat simulator, which is an interactive tutorial, satellite tracker, and a playground in JavaScript where developers can try different APIs.
+### Architecture and Tools
 
-One of the use cases Yan mentions for Cryptosat is providing a trusted execution environment for cryptographic schemes that require public parameters, just some numbers that need to be produced in a certain way, which if not being done correctly, can potentially compromise the entire protocol. Cryptosat provides a trusted execution environment that can do those things for you, and two examples of that were the participation in the KZG ceremony and producing a trusted setup for a ZK-SNARK scheme that's used by the DoraHax DAO that serves for community project funding.
+The satellites' onboard computer and servers are designed for the cryptographic operations the company aims to perform. Users can directly issue requests to the satellites via APIs or connect to ground station infrastructures. Cryptosat also provides a satellite tracker, the [CryptoSat Simulator](https://simulator.cryptosat.io/), which serves as an onboarding tool for developers and showcases various use cases for the satellite.
 
-Yan also explains the concept of attestation in this space of trusted execution environments, which is the concept of proving that you're running whatever you want to run in an actual trusted execution environment and not somewhere else. To achieve this, Cryptosat has this key generation ceremony that starts after the launch of each of their satellites, where they generate a keeper or a couple of keepers after the launch. Yan explains that the private keys never leave the satellite, and they start broadcasting the public key for a certain time such that multiple participants, multiple ground stations can receive it, and gossip between them and see that they agree that they're getting the same public key.
+### Real-World Use Cases
 
-Yan concludes the talk by discussing Cryptosat's interest in working with decentralized clouds like Bacayau's architecture and Super Protocol's architecture, among others. In both of these examples, Yan proposes the idea of having a satellite provide a trusted execution environment that can process data and provide results with the attestation that it all happened on an authentic crypto-satellite.
+Cryptosat serves several practical use cases, one of which is trusted setups for cryptographic schemes. Some cryptographic schemes require specific public parameters to be generated in a trusted execution environment. Two examples of this include ZK-SNARKs, a proof system used in the Ethereum platform, and polynomial commitments, used in the KZG ceremony. By providing a trusted execution environment, Cryptosat can help produce authentic public parameters.
 
-In summary, Cryptosat's work on compute on data in space and trusted execution environments for decentralized clouds is a revolutionary concept in the space of Web3 security and confidentiality. The company's vision of providing a trusted infrastructure for Web3 is indeed a game-changer that will take blockchain technology to the next level. 
+### Decentralized Cloud Compute and Confidentiality
 
-## Conclusion
+Yan Michalevsky discusses how providing such trusted execution environments on satellite can be integrated with decentralized cloud computing. By creating physically isolated environments in space, Cryptosat can ensure the confidentiality and integrity of sensitive workloads. Yan provides specific examples of how Cryptosat can integrate into the architectures of [Bacayau](https://baca.yau/) and [Super Protocol]() as trusted execution environments, and explains the process of generating encryption and signing keys for attestation.
 
-In this talk, Yan Michalevsky discusses the work of Cryptosat and their contribution to building a trust infrastructure for Web3. The company uses trusted execution environments that ensure confidentiality and integrity for various sensitive workloads to achieve this goal. Yan also discusses the company's vision for providing direct integrations with smart contracts and simplifying the API for users. Cryptosat's work is a game-changer in the world of Web3, and the use of trusted execution environments for decentralized clouds will take blockchain technology to the next level.
+## Key Takeaways
+
+- Cryptosat is building the trust infrastructure for Web3 applications in space by developing, integrating, and launching satellites into low Earth orbits to serve various Web3 use cases.
+- The project provides APIs and tracking tools for developers to interact with the satellites and explore their use cases.
+- One practical use case for Cryptosat's satellites is trusted setups for cryptographic schemes like ZK-SNARKs and polynomial commitments.
+- Cryptosat's trusted execution environments can be integrated with decentralized cloud computing architectures, such as Bacayau and Super Protocol, for increased confidentiality and integrity.
+- Attestation and key generation are vital components of the Cryptosat project, ensuring that user data is encrypted and authenticated via the satellite.

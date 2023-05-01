@@ -6,10 +6,22 @@
 
 ## Overview
 
-In this video, Alfonso De la Rocha introduces InterPlanetary Consensus (IPC), a way of scaling Falcon and adding consensus to existing distributed systems. With IPC, users are able to deploy horizontally the kind of blockchains and the kind of consensus layers that they need to accommodate Web2 scale loads into Web3, and fine-tune the underlying consensus algorithm and the underlying blockchain to fit the needs of their applications. The hierarchy of different kinds of blockchains is anchored to different upper layer networks, and the same technology stack as Filecoin's IPLD for the data store, and FEM for all the blockchain runtime is used. This talk provides a high-level overview of IPC, its use cases, and how it can be useful.
+In this video, Alfonso De la Rocha introduces IPC, a framework for scalable consensus in existing distributed systems, focusing on Filecoin. The talk provides a high-level overview of IPC and its current status, including the [Spacenet testnet](https://github.com/ConsensusLabs/spacenet) and [APC agent](https://github.com/ConsensusLabs/apc-agent). 
 
-## Article
+## Video Content
 
-Alfonso De la Rocha introduces InterPlanetary Consensus (IPC), a way of scaling Falcon and adding consensus to existing distributed systems. The goal with IPC is to get into production after the release of Filecoin and provide a way of scaling the system by adding consensus to existing distributed systems. With IPC, users can horizontally scale their systems and fine-tune their underlying consensus algorithm and the underlying blockchain to fit the needs of their applications.
+Alfonso explains that IPC is meant to accommodate the scale of the Web2 model while providing more efficient consensus layers. The IPC framework provides horizontal scaling, allowing users to deploy different blockchain and consensus layers that they need. IPC can be thought of as a Layer 2 or Layer 3 solution for blockchain applications, anchoring security to upper-layer networks like Filecoin.
 
-IPC was designed to overcome the limitations of blockchains which have a sequentialized operation and transaction processing, which limits scalability. IPC provides a way of adding fast optimistic local finality to your application, and with
+He presents a high-level overview of how IPC works by creating a hierarchy of different blockchains that anchor their security and interact seamlessly with each other. This allows consensus algorithms to be fine-tuned to fit the needs of specific applications, and Alfonso cites some use cases where IPC can be beneficial, such as faster finality, higher throughput, and secure global finality.
+
+The IPC agent, an off-chain process that handles interaction with different subnets, is introduced as the key entry point to experimenting with IPC. The agent abstracts the complexity of interacting with various blockchains and provides developers with a straightforward method for implementing IPC solutions in their applications. Alfonso stresses that both the documentation and technology are still new and may contain potential issues, but he welcomes user feedback to improve the system.
+
+IPC is currently deployed in the Spacenet testnet, which can be used to test various deployments options. Alfonso mentions plans to deploy IPC to Filecoin mainnet in the second quarter of 2021.
+
+## Key Takeaways
+
+- IPC is a framework for adding scalable consensus to existing distributed systems.
+- The system provides horizontal scalability and allows for fine-tuning of consensus algorithms to fit specific application needs.
+- Layer 2 and Layer 3 solutions provide security and seamless interaction with other networks.
+- IPC agent is the key entry point for users to experiment with the technology.
+- IPC is currently deployed in the Spacenet testnet, with a planned deployment to Filecoin mainnet in Q2 2021.

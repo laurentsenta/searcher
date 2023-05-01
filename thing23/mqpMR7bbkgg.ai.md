@@ -6,16 +6,28 @@
 
 ## Overview
 
-In this video, achingbrain provides an overview of Helia - a new implementation of IPFS written entirely in JavaScript. Helia aims to apply the learnings gathered over the last few years to create a new implementation that is smaller, more composable and more observable, with redesigned top-level APIs for better usability in various environments including Node, browsers, Electron and Deno.
+In this video, Alex (achingbrain) from IP Stewards team at Protocol Labs introduced a new implementation of IPFS called Helia. The aim is to create a more usable and better-designed IPFS solution, specifically for JavaScript. While it shares common components with existing JSIPFS, Helia offers a redesigned, top-level API with more flexibility and functionality. Alex encouraged users to discuss their use cases and open issues about Helia and its integration with various technologies.
 
 ## Content
 
-Alex, also known as achingbrain, works on the IP Stewards team at Protocol Labs, and in this video, he talks about Helia - a new implementation of IPFS all written in JavaScript. Aiming to apply learnings gathered in the last few years, Helia seeks to be smaller and more composable with new top-level APIs that are more ergonomic and usable.
+Hello everyone! My name is Alex, and I am achingbrain on the internet. I am part of the IP Stewards team at Protocol Labs, and I am responsible for JSIPFS and JSLibP2P. Today, I want to talk to you about Helia, a new implementation of IPFS, entirely written in JavaScript.
 
-While Helia shares many of the lower level components with existing JSIPFS, such as libp2p, bitswap, and UnixFS, the top level APIs have been completely redesigned. The goal is to make it more usable to integrate IPFS with different applications. This redesign also aims to make Helia more observable by enabling people to dig deep into it and get a better understanding of how it works when something isn't working correctly.
+Helia aims to apply the learnings from the past five years of IPFS development and reimagine what a new implementation could look like. It shares many components with the existing JSIPFS, such as libp2p, bitswap, UnixFS, but its top-level APIs have been entirely redesigned to be more ergonomic and usable, focusing on users' needs when integrating IPFS with their applications.
 
-Helia focuses on usability by being smaller and more composable, which allows for better alignment between the different components. This helps to ensure better functionality and faster progress.
+Some key points about Helia:
 
-Helia targets different environments, including Node, browsers, Electron, and hopefully Deno. The team behind Helia is interested in gathering as much feedback as possible, so they ask that people open issues and contact them to share their use cases and problems.
+- It is smaller, with less duplication.
+- More composable, allowing users to combine its parts to create different functionality.
+- More observable, enabling users to dig deeper and understand what's happening if something isn't working.
 
-If you want to learn more about Helia, you can attend Alex's presentations on the IPFS on the web track. The first talk, "Hello Helia," is scheduled to start at 1:30 pm, and the second talk, which covers performance considerations, is scheduled for 2 pm.
+Helia targets various environments, such as Node, browsers, Electron, and Deno (once certain APIs are implemented). If you want to learn more about Helia, I have two talks lined up in the IPFS on the web track:
+
+1. "Hello Helia" at 1:30 PM
+2. "Performance considerations" at 2:00 PM
+
+These talks will be held in one of the rooms over there, and I encourage you to meet and discuss use cases, problems, and open issues about Helia. There are two repositories for you to explore:
+
+- The [Helia repo](https://github.com/achingbrain/helia) contains the source code and documentation.
+- The [examples repo](https://github.com/achingbrain/helia-examples) features examples on how to integrate Helia with different bundlers, technologies, and tasks.
+
+Please open issues and share your thoughts about Helia. Thank you very much for your time!
